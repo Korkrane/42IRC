@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:24:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/23 15:29:01 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/23 20:23:27 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@
 #include <errno.h>
 #include <signal.h>
 
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <cstring>
+
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -27,5 +33,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+
+#include "replies.hpp"
 
 #endif
