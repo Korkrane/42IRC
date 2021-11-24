@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 19:43:12 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/23 21:53:08 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/24 11:23:28 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,71 +93,78 @@
 #define RPL_WHOWASUSER (nick, user, host, real_name)(nick + " " + user + " " + host + " * :" + real_name + "\r\n")                                            // 314
 #define RPL_ENDOFWHOWAS (nick)(nick + " :End of WHOAS\r\n")                                                                                                   // 369
 //#define RPL_LISTSTART                                                                                                                                          // 321 obsolete. Not used
-#define RPL_LIST                                                                                          // 322 weird one, not sure of the output
-#define RPL_LISTEND ()(+":End of LIST\r\n")                                                               // 323
-#define RPL_UNIQOPIS (channel, nickname)(channel + " " + nickname + "\r\n")                               // 325
-#define RPL_CHANNELMODEIS (channel, mode, mode_params)(channel + " " + mode + " " + mode_params + "\r\n") // 324
-#define RPL_NOTOPIC (channel)(channel + " :No topic is set\r\n")                                          // 331
-#define RPL_TOPIC (channel, topic)(channel + " :" + topic + "\r\n")                                       // 332
-#define RPL_INVITING (channel, nick)(channel + " " + nick "\r\n")                                         // 341
-#define RPL_SUMMONING (user)(user + " :Summoning user to IRC\r\n")                                        // 342
-#define RPL_INVITELIST (channel, invitemask)(channel + " " + invitemask + "\r\n")                         // 346
-#define RPL_ENDOFINTIELIST (channel)(channel + " :End of channel invite list\r\n")                        // 347
-#define RPL_EXCEPTLIST (channel, exceptionmask)(channel + " " + exceptionmask + "\r\n")                   // 348
-#define RPL_ENDOFEXCEPTLIST (channel)(channel + " :End of channel exception list\r\n")                    // 349
-#define RPL_VERSION                                                                                       // 351
-#define RPL_WHOREPLY                                                                                      // 352
-#define RPL_ENDOFWHO q                                                                                    // 315
-#define RPL_NAMREPLY                                                                                      // 353
-#define RPL_ENDOFNAMES                                                                                    // 366
-#define RPL_LINKS                                                                                         // 364
-#define RPL_ENDOFLINKS                                                                                    // 365
-#define RPL_BANLIST                                                                                       // 367
-#define RPL_ENDOFBANLIST                                                                                  // 368
-#define RPL_INFO                                                                                          // 371
-#define RPL_ENDOFINFO                                                                                     // 374
-#define RPL_MOTDSTART                                                                                     // 375
-#define RPL_MOTD                                                                                          // 372
-#define RPL_ENDOFMOTD                                                                                     // 376
-#define RPL_YOUREOPER                                                                                     // 381
-#define RPL_REHASHING                                                                                     // 382
-#define RPL_TIME                                                                                          // 391
-#define RPL_USERSSTART                                                                                    // 392
-#define RPL_USERS                                                                                         // 393
-#define RPL_ENDOFUSERS                                                                                    // 394
-#define RPL_NOUSERS                                                                                       // 395
-#define RPL_TRACELINK                                                                                     // 200
-#define RPL_TRACECONNECTING                                                                               // 201
-#define RPL_TRACEHANDSHAKE                                                                                // 202
-#define RPL_TRACEUNKNOWN                                                                                  // 203
-#define RPL_TRACEOPERATOR                                                                                 // 204
-#define RPL_TRACEUSER                                                                                     // 205
-#define RPL_TRACESERVER                                                                                   // 206
-#define RPL_TRACENEWTYPE                                                                                  // 208
-#define RPL_TRACELOG                                                                                      // 261
-#define RPL_STATSLINKINFO                                                                                 // 211
-#define RPL_STATSCOMMANDS                                                                                 // 212
+#define RPL_LIST                                                                                                                     // 322 weird one, not sure of the output
+#define RPL_LISTEND ()(+":End of LIST\r\n")                                                                                          // 323
+#define RPL_UNIQOPIS (channel, nickname)(channel + " " + nickname + "\r\n")                                                          // 325
+#define RPL_CHANNELMODEIS (channel, mode, mode_params)(channel + " " + mode + " " + mode_params + "\r\n")                            // 324
+#define RPL_NOTOPIC (channel)(channel + " :No topic is set\r\n")                                                                     // 331
+#define RPL_TOPIC (channel, topic)(channel + " :" + topic + "\r\n")                                                                  // 332
+#define RPL_INVITING (channel, nick)(channel + " " + nick "\r\n")                                                                    // 341
+#define RPL_SUMMONING (user)(user + " :Summoning user to IRC\r\n")                                                                   // 342
+#define RPL_INVITELIST (channel, invitemask)(channel + " " + invitemask + "\r\n")                                                    // 346
+#define RPL_ENDOFINTIELIST (channel)(channel + " :End of channel invite list\r\n")                                                   // 347
+#define RPL_EXCEPTLIST (channel, exceptionmask)(channel + " " + exceptionmask + "\r\n")                                              // 348
+#define RPL_ENDOFEXCEPTLIST (channel)(channel + " :End of channel exception list\r\n")                                               // 349
+#define RPL_VERSION (version, debuglevel, server, comments)(version + "." + debuglevel + " " + server " :" + comments + "\r\n")      // 351
+#define RPL_WHOREPLY                                                                                                                 // 352 weird one, not sure of the output
+#define RPL_ENDOFWHO (name)(name + " :End of WHO list\r\n")                                                                          // 315
+#define RPL_NAMREPLY                                                                                                                 // 353 weird one, not sure of the output
+#define RPL_ENDOFNAMES (channel)(channel + " :End of NAMES list\r\n")                                                                // 366
+#define RPL_LINKS (mask, server, hopcount, server_info)(mask + " " + server + " :" + hopcount + " " + server_info + "\r\n")          // 364
+#define RPL_ENDOFLINKS (mask)(mask + " :End of LINKS list\r\n")                                                                      // 365
+#define RPL_BANLIST (channel, banmask)(channel + " " + banmask + "\r\n")                                                             // 367
+#define RPL_ENDOFBANLIST (channel)(channel + " :End of channel ban list\r\n")                                                        // 368
+#define RPL_INFO (string)(":" + string + "\r\n")                                                                                     // 371
+#define RPL_ENDOFINFO ()(":End of INFO list\r\n")                                                                                    // 374
+#define RPL_MOTDSTART (server)(":- " + server + " Message of the day - \r\n")                                                        // 375
+#define RPL_MOTD (text)(":- " + text + "\r\n")                                                                                       // 372
+#define RPL_ENDOFMOTD ()(":End of MOTD command\r\n")                                                                                 // 376
+#define RPL_YOUREOPER ()(":You are now an IRC operator\r\n")                                                                         // 381
+#define RPL_REHASHING (config_file)(config_file + " :Rehashing\r\n")                                                                 // 382
+#define RPL_YOURESERVICE (servicename)("You are service " + servicename + "\r\n")                                                    // 383
+#define RPL_TIME (server, local_time)(server + " :" + local_tome + "\r\n")                                                           // 391
+#define RPL_USERSSTART ()(":UserID Terminal Host\r\n")                                                                               // 392
+#define RPL_USERS (username, ttyline, hostname)(":" + username + " " + ttyline + " " + hostname + "\r\n")                            // 393
+#define RPL_ENDOFUSERS ()(":End of users\r\n")                                                                                       // 394
+#define RPL_NOUSERS ()(":Nobody logged in\r\n")                                                                                      // 395
+#define RPL_TRACELINK                                                                                                                // 200 weird one, not sure of the output
+#define RPL_TRACECONNECTING (class, server)("Try. " + class + " " + server + "\r\n")                                                 // 201
+#define RPL_TRACEHANDSHAKE (class, server)("H.S " + class + " " + server + "\r\n")                                                   // 202
+#define RPL_TRACEUNKNOWN (class, client_ip)("??? " + class + " [" + client_ip + "]\r\n")                                             // 203
+#define RPL_TRACEOPERATOR (class, nick)("Oper " + class + " " + nick + "\r\n")                                                       // 204
+#define RPL_TRACEUSER (class, nick)("User " + class + " " + nick + "\r\n")                                                           // 205
+#define RPL_TRACESERVER                                                                                                              // 206 weird one, not sure of the output
+#define RPL_TRACESERVICE (class, name, type, active_type)("Service " + class + " " + name + " " + type + " " + active_type + "\r\n") // 207
+#define RPL_TRACENEWTYPE (newtype, client_name)(newtype + " 0 " + client_name + "\r\n")                                              // 208
+#define RPL_TRACECLASS (class, count)("Class " + class + " " + count + "\r\n")                                                       // 209
+// #define RPL_TRACERECONNECT                                                                                                                // 210 Unused
+#define RPL_TRACELOG (logfile, debug_level)("File" + logfile + " " + debug_level + "\r\n")                                                   // 261
+#define RPL_TRACEEND (server_name, v_debug_level)(server_name + " " + v_debug_level + " :End of TRACE\r\n")                                  // 262
+#define RPL_STATSLINKINFO (linkname, sendq, sent_mssg, sent_Kbytes, recv_mssg, recv_Kbytes, time_open)(linkname + " " + sendq + "\r\n")      // 211 check if used
+#define RPL_STATSCOMMANDS (command, count, byte_count, remote_count)(command + " " + count + " " + byte_count + " " + remote_count + "\r\n") // 212
 //#define RPL_STATSCLINE      // 213
 //#define RPL_STATSNLINE      // 214
 //#define RPL_STATSILINE      // 215
 //#define RPL_STATSKLINE      // 216
 //#define RPL_STATSQLINE      // 217
 //#define RPL_STATSYLINE      // 218
-#define RPL_ENDOFSTATS // 219
-//#define RPL_STATSVLINE    // 240
-//#define RPL_STATSLLINE    // 241
-#define RPL_STATSUPTIME // 242
-#define RPL_STATSOLINE  // 243
-//#define RPL_STATSHLINE    // 244
-#define RPL_UMODEIS       // 221
-#define RPL_LUSERCLIENT   // 251
-#define RPL_LUSEROP       // 252
-#define RPL_LUSERUNKNOWN  // 253
-#define RPL_LUSERCHANNELS // 254
-#define RPL_LUSERME       // 255
-#define RPL_ADMINME       // 256
-#define RPL_ADMINLOC1     // 257
-#define RPL_ADMINLOC2     // 258
-#define RPL_ADMINEMAIL    // 259
+#define RPL_ENDOFSTATS (stats_letter)(stats_letter + " :End of STATS report\r\n") // 219
+//#define RPL_STATSVLINE      // 240
+//#define RPL_STATSLLINE      // 241
+#define RPL_STATSUPTIME (up_format)(":Server Up " + up_format + "\r\n")          // 242
+#define RPL_STATSOLINE (hostmask, name)("O " + hostmask + " * " + name + "\r\n") // 243
+//#define RPL_STATSHLINE      // 244
+#define RPL_UMODEIS (user_mode_string)(user_mode_string + "\r\n")                                                                                                              // 221
+#define RPL_SERVLIST (name, server, mask, type, hopcount, info)(name + " " + server + " " + mask + " " + type + " " + hopcount + " " + info + "\r\n")                          // 234
+#define RPL_SERVLISTEND (mask, type)(mask + " " + type + " :End of service listing\r\n")                                                                                       // 235
+#define RPL_LUSERCLIENT (integer_c, intger_service, integer_serv)(":There are " + integer_c + " users and " + integer_service + " services on" + integer_serv + "servers\r\n") // 251
+#define RPL_LUSEROP (integer)(integer + " :operator(s) online\r\n")                                                                                                            // 252
+#define RPL_LUSERUNKNOWN (integer)(integer + " :unknown connection(s)\r\n")                                                                                                    // 253
+#define RPL_LUSERCHANNELS (integer)(integer + " :channels formed\r\n")                                                                                                         // 254
+#define RPL_LUSERME (integer_c, integer_s)(":I have " + integer_c + " clients and " + integer_s + "servers\r\n")                                                               // 255
+#define RPL_ADMINME (server)(server + " :Administrative info\r\n")                                                                                                             // 256
+#define RPL_ADMINLOC1 (admin_info)(":" + admin_info + "\r\n")                                                                                                                  // 257
+#define RPL_ADMINLOC2 (admin_info)(":" + admin_info + "\r\n")                                                                                                                  // 258
+#define RPL_ADMINEMAIL (admin_info)(":" + admin_info + "\r\n")                                                                                                                 // 259
 
 #endif // !REPLIES_HPP
