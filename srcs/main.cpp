@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:44:00 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/23 20:20:30 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/24 18:24:03 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int main(int ac, char **av)
 {
-    const std::string nick = "bahaas";
-    std::cout << ERR_NOSUCHNICK(nick) << std::endl;
+    Server *server;
+
+    buildServer(server, av);
     return (0);
 }
