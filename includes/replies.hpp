@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 19:43:12 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/24 15:01:00 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/25 17:55:39 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@
 #define RPL_YOUREOPER()                                    (":You are now an IRC operator\r\n")                                        // 381
 #define RPL_REHASHING(config_file)                         (config_file + " :Rehashing\r\n")                                           // 382
 #define RPL_YOURESERVICE(servicename)                      ("You are service " + servicename + "\r\n")                                 // 383
-#define RPL_TIME(server, local_time)                       (server + " :" + local_tome + "\r\n")                                       // 391
+#define RPL_TIME(server, local_time)                       (server + " :" + local_time + "\r\n")                                       // 391
 #define RPL_USERSSTART()                                   (":UserID Terminal Host\r\n")                                               // 392
 #define RPL_USERS(username, ttyline, hostname)             (":" + username + " " + ttyline + " " + hostname + "\r\n")                  // 393
 #define RPL_ENDOFUSERS()                                   (":End of users\r\n")                                                       // 394
