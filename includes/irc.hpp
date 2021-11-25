@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:24:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/24 18:25:56 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/25 17:18:19 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <string>
 
 #include <list>
+#include <map>
 #include <vector>
 
 #include <arpa/inet.h>
@@ -43,6 +44,16 @@
 #include "replies.hpp"
 #include "server.hpp"
 
+struct t_cmd
+{
+        std::string              prefix;
+        std::string              cmd;
+        std::vector<std::string> params;
+};
+
 void buildServer(Server *server, char **av);
 
+std::string build_reply(int code, Client *client, std::vector<std::string> params);
+
+void timeCmd(t_cmd *cmd, Client *client);
 #endif // !IRC_HPP
