@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 13:02:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/24 15:09:47 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/25 16:25:52 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ std::string format_code_str(int code)
  * @param code
  * @return std::string
  */
-std::string build_reply(int code, Client *client)
+std::string build_reply(int code, Client *client, std::vector<std::string> params)
 {
     std::string code_str;
     std::string prefix;
@@ -54,24 +54,29 @@ std::string build_reply(int code, Client *client)
             return prefix + RPL_CREATED(date);
         case 4: // TODO remove hardcoded value
             return prefix + RPL_MYINFO(client->get_hostname(), "1.0", "|list of user mode avai|", "|list of user mode avai|");
+        case 391:
+            return prefix + RPL_TIME(params[0], params[1]);
         default:
             return std::string("");
     }
 }
 
 // TEST MAIN FOR REPLY FORMAT //
+/*
 int main(int ac, char **av)
 {
-    Client *my_test_client = new Client();
+    Client                  *my_test_client = new Client();
+    std::vector<std::string> reply_params;
 
     my_test_client->set_nickname("bahaas");
     my_test_client->set_username("bahaas");
     my_test_client->set_hostname("www.ft_irc.com");
 
-    std::cout << build_reply(1, my_test_client) << std::endl;
-    std::cout << build_reply(2, my_test_client) << std::endl;
-    std::cout << build_reply(3, my_test_client) << std::endl;
-    std::cout << build_reply(4, my_test_client) << std::endl;
+    std::cout << build_reply(1, my_test_client, reply_params) << std::endl;
+    std::cout << build_reply(2, my_test_client, reply_params) << std::endl;
+    std::cout << build_reply(3, my_test_client, reply_params) << std::endl;
+    std::cout << build_reply(4, my_test_client, reply_params) << std::endl;
 
     delete my_test_client;
 }
+*/
