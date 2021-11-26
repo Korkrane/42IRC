@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:24:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/25 17:18:19 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/26 14:33:08 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,15 @@
 
 #include "channel.hpp"
 #include "client.hpp"
+#include "colors.hpp"
 #include "exceptions.hpp"
 #include "replies.hpp"
 #include "server.hpp"
 
+/**
+ * @brief content of the command send by a client
+ *
+ */
 struct t_cmd
 {
         std::string              prefix;
@@ -55,5 +60,11 @@ void buildServer(Server *server, char **av);
 
 std::string build_reply(int code, Client *client, std::vector<std::string> params);
 
-void timeCmd(t_cmd *cmd, Client *client);
+void send_reply(std::string reply);
+
+// REMOVABLE, BUT NEEDED FOR CMD TESTS
+void awayCmd(t_cmd *cmd, Client *client, Server *serv);
+void timeCmd(t_cmd *cmd, Client *client, Server *serv);
+void versionCmd(t_cmd *cmd, Client *client, Server *serv);
+
 #endif // !IRC_HPP

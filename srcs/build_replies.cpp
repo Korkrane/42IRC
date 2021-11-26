@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 13:02:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/25 16:25:52 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/26 14:24:40 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,16 @@ std::string build_reply(int code, Client *client, std::vector<std::string> param
             return prefix + RPL_CREATED(date);
         case 4: // TODO remove hardcoded value
             return prefix + RPL_MYINFO(client->get_hostname(), "1.0", "|list of user mode avai|", "|list of user mode avai|");
+        case 305:
+            return prefix + RPL_UNAWAY();
+        case 306:
+            return prefix + RPL_NOWAWAY();
+        case 351:
+            return prefix + RPL_VERSION(params[0], params[1], params[2], params[3]);
         case 391:
             return prefix + RPL_TIME(params[0], params[1]);
+        case 402:
+            return prefix + ERR_NOSUCHSERVER(params[0]);
         default:
             return std::string("");
     }

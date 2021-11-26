@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 19:43:12 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/25 17:55:39 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/26 14:14:08 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@
 #define RPL_ENDOFINTIELIST(channel)                        (channel + " :End of channel invite list\r\n")                              // 347
 #define RPL_EXCEPTLIST(channel, exceptionmask)             (channel + " " + exceptionmask + "\r\n")                                    // 348
 #define RPL_ENDOFEXCEPTLIST(channel)                       (channel + " :End of channel exception list\r\n")                           // 349
-#define RPL_VERSION(version, debuglevel, server, comments) (version + "." + debuglevel + " " + server " :" + comments + "\r\n")        // 351
+#define RPL_VERSION(version, debuglevel, server, comments) (version + "." + debuglevel + " " + server + " :" + comments + "\r\n")      // 351
 #define RPL_WHOREPLY                                                                                                                   // 352 weird one, not sure of the output
 #define RPL_ENDOFWHO(name)                                 (name + " :End of WHO list\r\n")                                            // 315
 #define RPL_NAMREPLY                                                                                                                   // 353 weird one, not sure of the output
