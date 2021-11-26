@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:24:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/26 17:10:21 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/26 18:01:27 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,6 @@ void buildServer(Server *server, char **av);
 std::string build_reply(int code, Client *client, std::vector<std::string> params);
 
 void send_reply(std::string reply);
+
+void client_cmd_parser(t_cmd *client_command, Client *my_test_client, Server *server);
 #endif // !IRC_HPP
