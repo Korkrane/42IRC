@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 16:37:06 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/26 14:18:39 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/26 17:47:59 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "irc.hpp"
 
 struct t_cmd;
+class Server;
 
 // every function pointer will be stored as this type
 // typedef void (*cmdFunction)(t_cmd *cmd, Client *client, Server *serv);
@@ -39,12 +40,15 @@ void whoisCmd(t_cmd *cmd, Client *client, Server *serv);
 void whowasCmd(t_cmd *cmd, Client *client, Server *serv);
 void operCmd(t_cmd *cmd, Client *client, Server *serv);
 void quitCmd(t_cmd *cmd, Client *client, Server *serv);
+*/
 void timeCmd(t_cmd *cmd, Client *client, Server *serv);
 void versionCmd(t_cmd *cmd, Client *client, Server *serv);
-void infoCmd(t_cmd *cmd, Client *client, Server *serv);
+// void infoCmd(t_cmd *cmd, Client *client, Server *serv);
 void awayCmd(t_cmd *cmd, Client *client, Server *serv);
-void usersCmd(t_cmd *cmd, Client *client, Server *serv);
-*/
+// void usersCmd(t_cmd *cmd, Client *client, Server *serv);
+void adminCmd(t_cmd *cmd, Client *client, Server *serv);
+
+void unknownCmd(t_cmd *cmd, Client *client, Server *server);
 
 class Server
 {
@@ -120,11 +124,12 @@ class Server
             cmds["WHOWAS"]  = whowasCmd;
             cmds["OPER"]    = operCmd;
             cmds["QUIT"]    = quitCmd;
-            cmds["VERSION"] = versionCmd;
-            cmds["INFO"]    = infoCmd;
-            cmds["AWAY"]    = awayCmd;
-            cmds["TIME"] = timeCmd;
             */
+            // cmds["VERSION"] = versionCmd;
+            // cmds["INFO"]  = infoCmd;
+            cmds["AWAY"]  = awayCmd;
+            cmds["TIME"]  = timeCmd;
+            cmds["ADMIN"] = adminCmd;
             return cmds;
         }
 };

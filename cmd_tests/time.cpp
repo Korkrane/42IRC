@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 13:36:48 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/26 14:01:38 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/26 17:18:55 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,6 @@ void test_1()
     client_command.params.push_back("my_server");
 
     timeCmd(&client_command, &my_test_client, &server);
-    /*
-        std::map<std::string, void (*)(t_cmd *, Client *)>::iterator it;
-        it              = server._cmdsFunction.begin();
-        std::string key = it->first;
-        std::cout << key << " " << std::endl;
-    */
 }
 
 int main(int ac, char **av)

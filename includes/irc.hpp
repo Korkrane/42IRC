@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:24:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/26 16:53:42 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/26 17:10:21 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,4 @@ void buildServer(Server *server, char **av);
 std::string build_reply(int code, Client *client, std::vector<std::string> params);
 
 void send_reply(std::string reply);
-
-// REMOVABLE, BUT NEEDED FOR CMD TESTS
-void awayCmd(t_cmd *cmd, Client *client, Server *serv);
-void timeCmd(t_cmd *cmd, Client *client, Server *serv);
-void versionCmd(t_cmd *cmd, Client *client, Server *serv);
-void adminCmd(t_cmd *cmd, Client *client, Server *serv);
 #endif // !IRC_HPP

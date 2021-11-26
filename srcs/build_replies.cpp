@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 13:02:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/26 14:24:40 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/26 17:49:41 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ std::string build_reply(int code, Client *client, std::vector<std::string> param
             return prefix + RPL_TIME(params[0], params[1]);
         case 402:
             return prefix + ERR_NOSUCHSERVER(params[0]);
+        case 421:
+            return prefix + ERR_UNKNOWNCOMMAND(params[0]);
         default:
             return std::string("");
     }
