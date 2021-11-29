@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:24:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/26 18:01:27 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/29 17:03:42 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@
  */
 struct t_cmd
 {
-        std::string              prefix;
-        std::string              cmd;
+        std::string prefix;
+        std::string cmd;
         std::vector<std::string> params;
 };
 
@@ -63,4 +63,7 @@ std::string build_reply(int code, Client *client, std::vector<std::string> param
 void send_reply(std::string reply);
 
 void client_cmd_parser(t_cmd *client_command, Client *my_test_client, Server *server);
+
+void printClientCommand(t_cmd *cmd);
+void split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c);
 #endif // !IRC_HPP
