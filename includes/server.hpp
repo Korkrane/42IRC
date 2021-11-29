@@ -6,7 +6,7 @@
 /*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 16:37:06 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/26 17:47:59 by bahaas           ###   ########.fr       */
+/*   Updated: 2021/11/29 22:51:04 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,72 +41,72 @@ void whowasCmd(t_cmd *cmd, Client *client, Server *serv);
 void operCmd(t_cmd *cmd, Client *client, Server *serv);
 void quitCmd(t_cmd *cmd, Client *client, Server *serv);
 */
+// void infoCmd(t_cmd *cmd, Client *client, Server *serv);
 void timeCmd(t_cmd *cmd, Client *client, Server *serv);
 void versionCmd(t_cmd *cmd, Client *client, Server *serv);
-// void infoCmd(t_cmd *cmd, Client *client, Server *serv);
 void awayCmd(t_cmd *cmd, Client *client, Server *serv);
-// void usersCmd(t_cmd *cmd, Client *client, Server *serv);
+void usersCmd(t_cmd *cmd, Client *client, Server *serv);
 void adminCmd(t_cmd *cmd, Client *client, Server *serv);
 
 void unknownCmd(t_cmd *cmd, Client *client, Server *server);
 
 class Server
 {
-    private:
-    public:
-        int         _socket;
-        int         _port;
-        int         _totChannels;
-        int         _totClients;
-        std::string _name;
-        std::string _password;
-        std::string _version;
-        std::string _userModes;
-        std::string _channelModes;
+private:
+public:
+    int _socket;
+    int _port;
+    int _totChannels;
+    int _totClients;
+    std::string _name;
+    std::string _password;
+    std::string _version;
+    std::string _userModes;
+    std::string _channelModes;
 
-        time_t      _init_time; // FIXME time_t over std::string _str_time
-        std::string _str_date;  // FIXME one has to be deleted
+    time_t _init_time;     // FIXME time_t over std::string _str_time
+    std::string _str_date; // FIXME one has to be deleted
 
-        std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _cmdsFunction;
+    std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _cmdsFunction;
 
-        Server()
-        {
-            _cmdsFunction = _initCmds();
-        }
+    Server()
+    {
+        _cmdsFunction = _initCmds();
+    }
 
-        ~Server(){};
+    ~Server(){};
 
-        /*** SETTERS ***/
-        void set_name(std::string name)
-        {
-            this->_name = name;
-        }
+    /*** SETTERS ***/
+    void set_name(std::string name)
+    {
+        this->_name = name;
+    }
 
-        void set_version(std::string version)
-        {
-            this->_version = version;
-        }
+    void set_version(std::string version)
+    {
+        this->_version = version;
+    }
 
-        /*** GETTERS ***/
-        std::string get_name()
-        {
-            return this->_name;
-        }
+    /*** GETTERS ***/
+    std::string get_name()
+    {
+        return this->_name;
+    }
 
-        std::string get_version()
-        {
-            return this->_version;
-        }
+    std::string get_version()
+    {
+        return this->_version;
+    }
 
-        /**
+    /**
          * @brief map cmd params to it's ptr function
          *
          * @return std::map<std::string, void (*)(t_cmd *, Client *, Server *)>
          */
-        std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds()
-        {
-            std::map<std::string, void (*)(t_cmd *, Client *, Server *)> cmds;
-            /*
+    std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds()
+    {
+        std::map<std::string, void (*)(t_cmd *, Client *, Server *)> cmds;
+        /*
             cmds["PASS"]    = passCmd;
             cmds["NICK"]    = nickCmd;
             cmds["USER"]    = userCmd;
@@ -125,13 +125,14 @@ class Server
             cmds["OPER"]    = operCmd;
             cmds["QUIT"]    = quitCmd;
             */
-            // cmds["VERSION"] = versionCmd;
-            // cmds["INFO"]  = infoCmd;
-            cmds["AWAY"]  = awayCmd;
-            cmds["TIME"]  = timeCmd;
-            cmds["ADMIN"] = adminCmd;
-            return cmds;
-        }
+        // cmds["INFO"]  = infoCmd;
+        cmds["VERSION"] = versionCmd;
+        cmds["USERS"] = usersCmd;
+        cmds["AWAY"] = awayCmd;
+        cmds["TIME"] = timeCmd;
+        cmds["ADMIN"] = adminCmd;
+        return cmds;
+    }
 };
 
 #endif // !SERVER_HPP
