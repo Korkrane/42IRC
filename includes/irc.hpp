@@ -6,7 +6,7 @@
 /*   By: mahautlatinis <mahautlatinis@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:24:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/30 14:38:49 by mahautlatin      ###   ########.fr       */
+/*   Updated: 2021/11/30 18:49:14 by mahautlatin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/select.h>
 
 #include "channel.hpp"
 #include "client.hpp"
