@@ -1,15 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Who.cpp                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mahautlatinis <mahautlatinis@student.42    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/29 18:12:57 by mahautlatin       #+#    #+#             */
-/*   Updated: 2021/11/29 18:14:07 by mahautlatin      ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "../../includes/irc.hpp"
 
-/*
-** Mahaut
-*/
+/**
+ * @brief
+ * Mahaut
+ * The WHO command is used by a client to generate a query which returns
+   a list of information which 'matches' the <mask> parameter given by
+   the client.
+ */
+
+void whoCmd(t_cmd *cmd, Client *client, Server *server)
+{
+
+}

@@ -1,20 +1,25 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   client.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/24 11:56:11 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/24 14:24:28 by bahaas           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "irc.hpp"
+#include <vector>
 
+#pragma once
+
+//class Channels;
+
+/**
+ * @brief
+ *TODO: separer la declaration de la definition en faisant un cpp ?
+ */
 class Client
 {
     private:
+
+        /*
+        ** Fonctions membres de la classe canonique
+        */
+       Client(Client const &src);
+       Client & operator=(Client const &src);
+
+        //Faire une structure pour les select fd
         std::string _nickname;
         std::string _username;
         std::string _hostname;
@@ -24,10 +29,13 @@ class Client
 
         bool        _is_away;
         std::string _away_mssg;
+        std::string _password;
+        //std::vector<Channels *>  _channels;
 
     public:
-        Client(){};
-        ~Client(){};
+        Client(void) {};
+        Client(void){};
+        virtual ~Client(){};
 
         /*** SETTERS ***/
         void set_nickname(std::string nickname)
