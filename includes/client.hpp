@@ -45,10 +45,14 @@ class Client
 
         /* Liste des channels auxquelles l'user est membre */
         std::vector<Channel *>      _channels;
-        //int                     _socket;
+        //voir diff socket et fd
+        int                         _socket;
         //vector contenant toutes les commandes faites par l'user
         std::vector<std::string>    _commands;
-        //bool  _registration_status
+        //voir l'importance du registration status
+        bool                        _registration_status;
+        bool                        _pass_registered;
+        bool                        _nick_registered;
         std::string                 _port;
         bool                        _user_is_oper;
         bool                        _user_is_away;
@@ -84,12 +88,12 @@ class Client
         ** Added getters
         */
         std::string                 get_password(void) const;
+        int                         get_fd(void) const;
         std::string                 get_server_port(void) const;
         std::string                 get_message(void) const;
         int                         get_message_status(void) const;
         int                         get_socket(void) const;
-        int                         get_channels(void) const;
-        bool                        get_away_message(void) const;
+        int                         get_channels_nb(void) const;
 
         /*
         ** Utils
@@ -104,9 +108,9 @@ class Client
         /*
         ** Utils relatifs au server
         */
-        bool                        get_server_name(void) const;
-        bool                        get_server_ip(void) const;
-        bool                        get_server_creation(void) const;
+        std::string                 get_server_name(void) const;
+        std::string                 get_server_ip(void) const;
+        std::string                 get_server_creation(void) const;
 
         /*** SETTERS ***/
         void                        set_nickname(std::string nickname);
@@ -124,9 +128,9 @@ class Client
         void                        set_password_as_registered(bool is_set);
         void                        set_registered_nickname(bool is_set);
         void                        set_registered_user(bool is_set);
-        void                        set_operators(bool is_set);
+        void                        set_operator(bool is_set);
         int                         set_message_status(int status);
-        void                        set_registration(bool is_set);
+       // void                        set_registration(bool is_set);
         void                        set_init_socket(int socket);
 
         void                        set_server_name(std::string server_name);
@@ -139,13 +143,14 @@ class Client
        void                         clear_client_message(void);
        void                         clear_client_command(void);
        void                         send_message_to_server(void);
-       //void                         check_message(void);
-       //void                         join_channel(Channel *channel);
-       //void                         quit_channel(Channel *channel);
-       //void                           quit_all_channels(void);
+       void                         check_message(void);
+       void                         join_channel(Channel *channel);
+       void                         quit_channel(Channel *channel);
+       void                         quit_all_channels(void);
 
         /*
         ** Display and debug
         */
        void                         displayClientInfo(void);
+       void                         displayChannels(void);
 };
