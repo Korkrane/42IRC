@@ -173,6 +173,11 @@ std::map<std::string, void (*)(t_cmd *, Client *, Server *)>		    Server::get_cm
 	return (cmds);
 }
 
+void add_channel(Channel *new_channel)
+{
+	_this->channels.push_back(new_channel);
+}
+
 std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds()
 {
     std::map<std::string, void (*)(t_cmd *, Client *, Server *)> cmds;

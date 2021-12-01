@@ -72,6 +72,8 @@ private:
     std::string         _server_ip;
     std::string         _server_creation;
 
+    std::vector<Channel *> _channels;
+
 public:
     /*
     ** Fonctions membres (classe canonique)
@@ -103,6 +105,8 @@ public:
     /*** MEMBERS FUNCTIONS ***/
     std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds();
 
+    void add_channel(Channel *);
+
     /**
     ** Connections management
     ** TODO: a implementer
@@ -123,6 +127,8 @@ public:
     void    sendGreetings(Client *client);
     void    welcomeClient(Client *client);
 
+    /* Display / Debug */ //TODO
+        void                    display_channels(void);
 };
 
 #endif // !SERVER_HPP
