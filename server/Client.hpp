@@ -14,10 +14,23 @@ private:
 	Client();		// default constructor is not allowed
 	Client(int fd);
 
+	
+
 public:
-	~Client() {}
+	~Client();
 
 	friend class IRCServer;	// only lets server handle clients
 };
+
+Client::Client(int fd) :
+	_fd(fd)
+{
+	fcntl(fd, F_SETFL, O_NONBLOCK);
+}
+
+Client::~Client()
+{
+	close(_fd);
+}
 
 #endif
