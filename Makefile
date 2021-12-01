@@ -1,13 +1,19 @@
 NAME	=	ircserv
 
 SRCS	=	./srcs/main.cpp \
-			./srcs/client_query_parser.cpp \
-			./srcs/build_replies.cpp \
-			./srcs/build_server.cpp \
-			./srcs/client_cmd_parser.cpp \
+			./srcs/Server/Server.cpp \
+			./srcs/Client/Client.cpp \
+			./srcs/Channel/Channel.cpp \
 			./srcs/tmp_utils.cpp \
+			./srcs/build_server.cpp \
+			./srcs/build_replies.cpp \
+			./srcs/client_query_parser.cpp \
+			./srcs/client_cmd_parser.cpp \
+			./srcs/Commands/Admin.cpp \
 			./srcs/Commands/Away.cpp \
 			./srcs/Commands/Cap.cpp \
+			./srcs/Commands/Info.cpp \
+			./srcs/Commands/Invite.cpp \
 			./srcs/Commands/Join.cpp \
 			./srcs/Commands/Kick.cpp \
 			./srcs/Commands/Kill.cpp \
@@ -19,42 +25,47 @@ SRCS	=	./srcs/main.cpp \
 			./srcs/Commands/Notice.cpp \
 			./srcs/Commands/Oper.cpp \
 			./srcs/Commands/Part.cpp \
-			./srcs/Commands/Primsg.cpp \
+			./srcs/Commands/Privmsg.cpp \
 			./srcs/Commands/Quit.cpp \
+			./srcs/Commands/Time.cpp \
 			./srcs/Commands/Topic.cpp \
+			./srcs/Commands/Unknown.cpp \
 			./srcs/Commands/User.cpp \
-			./srcs/Commands/Who.cpp
+			./srcs/Commands/Users.cpp \
+			./srcs/Commands/Version.cpp \
+			./srcs/Commands/Who.cpp \
+			./srcs/Commands/Whois.cpp \
+			./srcs/Commands/Whowas.cpp
 
 OBJS		=	${SRCS:.cpp=.o}
 
-FLAGS		=	-Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
+CFLAGS		=	#-Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
 
 RM			=	rm -rf
 
-# Verifier s'il faut clang++ ou c++
-CC			=	c++
+CC			=	clang++
 
 INCLUDES	=	./includes/channel.hpp \
 				./includes/client.hpp \
 				./includes/colors.hpp \
 				./includes/Commands.hpp \
 				./includes/exceptions.hpp \
-				./includes/Headers.hpp \
 				./includes/irc.hpp \
 				./includes/replies.hpp \
-				./includes/server.hpp
+				./includes/server.hpp \
+				./includes/Headers.hpp
 
-HEAD		=	./includes/
+HEADER		=	./includes/
 
 ${NAME}	:	${OBJS}
-			${CC} -o $@ ${OBJS} ${FLAGS}
+			${CC} -o $@ ${OBJS} ${CFLAGS}
 
 #echo "ircserv compiled !"
 
 all:		${NAME}
 
-%.o: %.c
-			@${CC} ${CLAGS} -I${HEAD} -c $< -o $@
+%.o: %.cpp
+			@${CC} ${CFLAGS} -I${HEADER} -c $< -o $@
 
 clean	:
 			${RM} ${OBJS}

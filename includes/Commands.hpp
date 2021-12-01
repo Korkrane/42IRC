@@ -1,12 +1,9 @@
+#ifndef COMMANDS_HPP
+#define COMMANDS_HPP
+
 #pragma once
 
 #include "Headers.hpp"
-
-class Client;
-
-//class Server;
-
-class Channel;
 
 /*
 ** Classe Command(s)
@@ -59,16 +56,10 @@ protected:
 	*/
 
 	/*
-	** Autres attributs (strings)
-	*/
-	std::string	_serverPass;
-	std::string	_serverName;
-	std::string	_serverIP;
-	std::string	_serverCreationDate;
-
-	/*
 	** Voir la partie Oper ?
 	*/
 	std::string	_operName;
 	std::string _operPass;
 };
+
+#endif

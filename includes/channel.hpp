@@ -1,8 +1,9 @@
-#include "irc.hpp"
-#include "client.hpp"
+#ifndef CHANNEL_HPP
+# define CHANNEL_HPP
 
 #pragma once
 
+#include "client.hpp"
 class Client;
 
 class Channel
@@ -91,3 +92,5 @@ class Channel
         void                    displayOperators(void);
         void                    displayBanned(void);
 };
+
+#endif
