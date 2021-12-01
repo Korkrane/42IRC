@@ -1,5 +1,7 @@
 #include "../../includes/irc.hpp"
 
+class Commands;
+
 /**
  * @brief 
  * 
@@ -12,7 +14,8 @@
  * It MAY be available to users who have the operator status
  * See more on RFC 2812.
  */
-void		kill(Commands *command, Client *client, Server *server, bool nick_collision)
+
+void		Commands::kill(Commands *command, Client *client, Server *server, bool nick_collision)
 {
     //Si il y a moins de trois parameteres renvoyer une erreur correspondante
     //TODO: error need more param.

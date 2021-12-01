@@ -8,7 +8,7 @@
    the client.
  */
 
-void  who(Commands *command, Client *client, Server *server)
+void  Commands::who(Commands *command, Client *client, Server *server)
 {
   //Voir le nombre de parametre 
   //S il n y en a qu un alors appeler une fonction de classe (statique)

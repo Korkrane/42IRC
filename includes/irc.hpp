@@ -45,6 +45,7 @@
 #include "exceptions.hpp"
 #include "replies.hpp"
 #include "server.hpp"
+#include "Commands.hpp"
 
 /**
  * @brief content of the command send by a client

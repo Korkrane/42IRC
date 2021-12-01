@@ -3,14 +3,6 @@
 //#include "Headers.hpp"
 #include "irc.hpp"
 
-class Client;
-class Server;
-class Channel;
-
-//class Server;
-
-class Channel;
-
 /*
 ** Classe Command(s)
 ** Les fonctions qui en font une classe canonique sont partagees
@@ -29,11 +21,7 @@ public:
 	*/
 	virtual ~Commands(void);
 
-/*
-** Fonctions membres principales
-*/
-void	join();
-protected:
+private:
 	/*
 	** Constructeur par defaut
 	*/
@@ -80,6 +68,7 @@ protected:
 	** appelee a la fin de chaque commande (pour envoyer code/info au serveur ?)
 	*/
 
+public:
 	/**
 	** Fonctions necessaires pour la commande who (notamment)
 	** Pas sure a 100% des protos
@@ -131,4 +120,36 @@ protected:
 	 * TODO: par sure si cette commande est necessaire
 	 */
 	void		cap(Commands *command, Client *client, Server *server);
+
+	/**
+	 * @brief 
+	 * 
+	 * @param command 
+	 * @param client 
+	 * @param server 
+	 */
+	void		nick(Commands *command, Client *client, Server *server);
+	/*
+	** Autres fonctions necessaires a nick
+	*/
+	static bool	checkNickGrammar(std::string nick);
+
+	/**
+	 * @brief 
+	 * 
+	 * @param command 
+	 * @param client 
+	 * @param server 
+	 */
+	void		part(Commands *command, Client *client, Server *server);
+
 };
+
+/* 
+** Attention cas particulier :
+** Note that this message accepts a special argument ("0"), which is
+   a special request to leave all channels the user is currently a member
+   of.  The server will process this message as if the user had sent
+   a PART command (See Section 3.2.2) for each channel he is a member
+   of.
+*/

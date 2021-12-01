@@ -7,7 +7,8 @@
  * @param client 
  * @param server 
  */
-void		join(Commands *command, Client *client, Server *server)
+
+void		Commands::join(Commands *command, Client *client, Server *server)
 {
     //S'il n'y a qu'un param, retourner 
     //erreur ERR_NEEDMOREPARAMS
