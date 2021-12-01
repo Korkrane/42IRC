@@ -1,8 +1,11 @@
 #pragma once
 
-#include "Headers.hpp"
+//#include "Headers.hpp"
+#include "irc.hpp"
 
 class Client;
+class Server;
+class Channel;
 
 //class Server;
 
@@ -71,4 +74,61 @@ protected:
 	*/
 	std::string	_operName;
 	std::string _operPass;
+
+	/**
+	** Important : il nous faudrait une fonction reply qui va etre
+	** appelee a la fin de chaque commande (pour envoyer code/info au serveur ?)
+	*/
+
+	/**
+	** Fonctions necessaires pour la commande who (notamment)
+	** Pas sure a 100% des protos
+	** Le param de who pour correspondre au une channel ou a autre chose
+	** TODO: mahaut WHO
+	*/
+	void		who(Commands *command, Client *client, Server *server);
+	static void	displayAllClients(Channel *channel);
+	//Appelera la sous fonction displayClientsFromChannel ?
+	static void	displayChannel(Channel *channel, Client *client);
+	//Affichage specifique si le client est operateur ?
+	static void	displayClientsFromChannel(Channel *channel, Client *client);
+	//Va permettre de verifier si la channel passee en parametre existe bien
+	static void	paramsIsCorrectChannel(Commands *command, Server *server);
+	static void	paramsIsCorrectOther(Commands *command, Server *server);
+
+	/**
+	** Commande KILL
+	** TODO: Mahaut
+	** Voir comment le serveur doit reagir si il y a une nick collision
+	*/
+	void		kill(Commands *command, Client *client, Server *server, bool nick_collision);
+	//verifier les fonctions annexes relatives aux clients sont bien implementees
+	//nickname exists
+	//leave all channels
+	//set message status
+
+	/**
+	 * @brief 
+	 * 
+	 * @param command 
+	 * @param client 
+	 * @param server 
+	 * Parameters: ( <channel> *( "," <channel> ) [ <key> *( "," <key> ) ] )
+	 ** Is used by user to request to start listening to a specific channel.
+	 ** Server "should not use lists when reading JOIN messages to clients".
+	 ** Once a user has join a channel, he is aware when a command is affecting the server :
+	 ** JOIN, MODE, KICK, PART, QUIT and PRIVMSG/NOTICE.
+	 ** See details on RFC 2812.
+	 */
+	void		join(Commands *command, Client *client, Server *server);
+
+	/**
+	 * @brief 
+	 * 
+	 * @param command 
+	 * @param client 
+	 * @param server 
+	 * TODO: par sure si cette commande est necessaire
+	 */
+	void		cap(Commands *command, Client *client, Server *server);
 };
