@@ -1,6 +1,4 @@
 #pragma once
-
-//#include "Headers.hpp"
 #include "irc.hpp"
 
 /*
@@ -45,17 +43,10 @@ private:
 	** Liste des commandes (sous forme de map ?)
 	*/
 
-	/*
-	** Commande parsee (sous forme de vecteur ?)
-	*/
-
-	/*
-	** Autres attributs (strings)
-	*/
-	std::string	_serverPass;
-	std::string	_serverName;
-	std::string	_serverIP;
-	std::string	_serverCreationDate;
+	std::string _unparsed_client_command;		/* raw client command before parsing */
+	std::string _prefix;
+	std::string _command_name;
+	std::vector<std::string> _params;
 
 	/*
 	** Voir la partie Oper ?

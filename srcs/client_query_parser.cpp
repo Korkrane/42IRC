@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   client_query_parser.cpp                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/26 18:12:31 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/29 17:03:27 by bahaas           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../includes/irc.hpp"
 
 /**
@@ -76,7 +64,7 @@ void patch_params(std::vector<std::string> *params)
     }
 
     std::vector<std::string>::iterator ite = params->end();
-    for (elem_to_erase; elem_to_erase != 0; --elem_to_erase)
+    for (int erase = elem_to_erase; erase != 0; --erase)
         params->erase(ite);
 }
 
@@ -86,6 +74,7 @@ void storeParams(t_cmd *cmd, std::string *query)
     patch_params(&cmd->params);
 }
 
+/*
 int main(int ac, char **av)
 {
     //    Server server;
@@ -103,3 +92,4 @@ int main(int ac, char **av)
         throw TooMuchParamsFromClient();
     printClientCommand(&client_command);
 }
+*/

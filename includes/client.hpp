@@ -1,11 +1,11 @@
-#include "irc.hpp"
-#include <vector>
+#ifndef CLIENT_HPP
+#define CLIENT_HPP
 
 #pragma once
-
-class Channels;
-
-class Commands;
+#include "Headers.hpp"
+#include "channel.hpp"
+#include "Commands.hpp"
+class Channel;
 
 /**
  * @brief
@@ -29,7 +29,6 @@ class Client
         bool                        _is_away;
         std::string                 _away_mssg;
         std::string                 _password;
-        //std::vector<Channels *>  _channels;
         //Pas sure - utilisation pour select
         int                         _fd;
         int                         _message_status;
@@ -45,6 +44,7 @@ class Client
 
         /* Liste des channels auxquelles l'user est membre */
         std::vector<Channel *>      _channels;
+        Commands                    _commands;
         //voir diff socket et fd
         int                         _socket;
         //vector contenant toutes les commandes faites par l'user
@@ -64,7 +64,6 @@ class Client
         //std::vector<std::string>  _user;
 
     public:
-        //Voir si mettre le constructeur par defaut en prive
         /*
         ** Fonctions membres classe canonique
         */
@@ -83,10 +82,6 @@ class Client
         bool                        get_operator_status(void) const;
         bool                        get_is_away(void) const;
         std::string                 get_away_mssg(void) const;
-
-        /*
-        ** Added getters
-        */
         std::string                 get_password(void) const;
         int                         get_fd(void) const;
         std::string                 get_server_port(void) const;
@@ -129,7 +124,7 @@ class Client
         void                        set_registered_nickname(bool is_set);
         void                        set_registered_user(bool is_set);
         void                        set_operator(bool is_set);
-        int                         set_message_status(int status);
+        void                         set_message_status(int status);
        // void                        set_registration(bool is_set);
         void                        set_init_socket(int socket);
 
@@ -154,3 +149,5 @@ class Client
        void                         displayClientInfo(void);
        void                         displayChannels(void);
 };
+
+#endif

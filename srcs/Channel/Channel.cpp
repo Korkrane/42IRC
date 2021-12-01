@@ -1,11 +1,10 @@
 #include "../../includes/channel.hpp"
-#include "../../includes/client.hpp"
 
 /*
 ** Last editor: Mahaut
 ** TODO: voir comment initialiser la clients list
 */
-Channel::Channel(std::string name, Client *client) : _name(name), _topic("null"), _modes("null"), _operators(NULL), _clients(NULL), _banned_clients(NULL), _invited_clients(NULL), _voice_priv_clients(NULL), _channel_owner(NULL), _members_nb(0), _topic_set(false)
+Channel::Channel(std::string name, Client *client) : _name(name), _topic("null"), _modes("null"), _operators(0), _clients(0), _banned_clients(0), _invited_clients(0), _voice_priv_clients(0), _channel_owner(0), _members_nb(0), _topic_set(false)
 {
 #if DEBUG
 	std::cout << "Channel constructor called" << std::endl;
@@ -16,7 +15,7 @@ Channel::Channel(std::string name, Client *client) : _name(name), _topic("null")
 /*
 ** TODO: voir si il faut mieux le mettre en prive et ne pas l'utiliser
 */
-Channel::Channel(void) : _name("null"), _topic("null"), _modes("null"), _operators(NULL), _clients(NULL), _banned_clients(NULL), _invited_clients(NULL), _voice_priv_clients(NULL), _channel_owner(NULL), _members_nb(0), _topic_set(false)
+Channel::Channel(void) : _name("null"), _topic("null"), _modes("null"), _operators(0), _clients(0), _banned_clients(0), _invited_clients(0), _voice_priv_clients(0), _channel_owner(0), _members_nb(0), _topic_set(false)
 {
 #if DEBUG
 	std::cout << "Channel default constructor called" << std::endl;
