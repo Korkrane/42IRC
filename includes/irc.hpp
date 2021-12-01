@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mahautlatinis <mahautlatinis@student.42    +#+  +:+       +#+        */
+/*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:24:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/30 18:49:14 by mahautlatin      ###   ########.fr       */
+/*   Updated: 2021/12/01 17:37:31 by bahaas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@
 #include "replies.hpp"
 #include "server.hpp"
 
+class Server;
+class Client;
+class Channel;
+
 /**
  * @brief content of the command send by a client
  *
@@ -58,13 +62,10 @@ struct t_cmd
 };
 
 void buildServer(Server *server, char **av);
-
 std::string build_reply(int code, Client *client, std::vector<std::string> params);
-
 void send_reply(std::string reply);
-
 void client_cmd_parser(t_cmd *client_command, Client *my_test_client, Server *server);
-
 void printClientCommand(t_cmd *cmd);
 void split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c);
+
 #endif // !IRC_HPP

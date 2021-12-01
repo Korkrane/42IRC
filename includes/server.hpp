@@ -1,22 +1,12 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-//valeur a confirmer
 #define MAX_CLIENT 10
-#define PORT_SERVER "6667"
-
-#include "irc.hpp"
-
-/**
-** TODO: signal handler
-*/
+#define PORT_SERVER 6667
 
 struct t_cmd;
-class Server;
-//class Commands;
-
-// every function pointer will be stored as this type
-// typedef void (*cmdFunction)(t_cmd *cmd, Client *client, Server *serv);
+#include "channel.hpp"
+#include "client.hpp"
 
 /*
 void passCmd(t_cmd *cmd, Client *client, Server *serv);
@@ -37,15 +27,17 @@ void whoisCmd(t_cmd *cmd, Client *client, Server *serv);
 void whowasCmd(t_cmd *cmd, Client *client, Server *serv);
 void operCmd(t_cmd *cmd, Client *client, Server *serv);
 void quitCmd(t_cmd *cmd, Client *client, Server *serv);
+void infoCmd(t_cmd *cmd, Client *client, Server *serv);
 */
-// void infoCmd(t_cmd *cmd, Client *client, Server *serv);
+
+/*
 void timeCmd(t_cmd *cmd, Client *client, Server *serv);
 void versionCmd(t_cmd *cmd, Client *client, Server *serv);
 void awayCmd(t_cmd *cmd, Client *client, Server *serv);
 void usersCmd(t_cmd *cmd, Client *client, Server *serv);
 void adminCmd(t_cmd *cmd, Client *client, Server *serv);
-
 void unknownCmd(t_cmd *cmd, Client *client, Server *server);
+*/
 
 /**
  * @brief
@@ -59,7 +51,7 @@ private:
     ** Attributs membres
     */
     int                 _socket;
-    std::string         _port;
+    int                 _port;
     int                 _totChannels;
     int                 _totClients;
     std::string         _name;
@@ -67,10 +59,12 @@ private:
     std::string         _version;
     std::string         _userModes;
     std::string         _channelModes;
-    time_t              _init_time;     // FIXME time_t over std::string _str_time
-    std::string         _str_date; // FIXME one has to be deleted
+    time_t              _init_time;     // FIXME time_t over std::string _date
+    std::string         _date;          // FIXME one has to be deleted
+
     //"Command book"
-    std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _cmdsFunction;
+    std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _cmds;
+
     //A creuser
     struct addrinfo*    _serv_info;
     struct addrinfo*    _hints; //needed to initialize server
@@ -78,39 +72,35 @@ private:
     std::string         _server_ip;
     std::string         _server_creation;
 
+public:
     /*
     ** Fonctions membres (classe canonique)
     */
     Server();
     Server(Server const &src);
     Server & operator=(Server const &src);
-
-public:
     Server(std::string port, std::string password);
     virtual ~Server();
 
     /*** SETTERS ***/
     void                set_name(std::string name);
     void                set_version(std::string version);
-    /* Added - a implementer */
-    void                set_creation(std::string date);
+    void                set_creation(std::string date, time_t time);
+    void                set_port(int port);
+    void                set_password(std::string password);
 
     /*** GETTERS ***/
     std::string         get_name(void) const ;
     std::string         get_version(void) const;
-    /* Added - a implementer*/
-    int                 getSocket(void) const;
-    std::string         getPort(void) const;
-    std::string         getPassword(void) const;
-    struct addrinfo*    getServInfo(void) const;
+    int                 get_port(void) const;
+    std::string         get_password(void) const;
+    int                 get_socket(void) const;
+    struct addrinfo*    get_serv_info(void) const;
     std::string         get_ip(void) const;
     std::string         get_server_creation(void) const;
+    std::map<std::string, void (*)(t_cmd *, Client *, Server *)>    get_cmds(void) const;
 
-    /**
-         * @brief map cmd params to it's ptr function
-         *
-         * @return std::map<std::string, void (*)(t_cmd *, Client *, Server *)>
-         */
+    /*** MEMBERS FUNCTIONS ***/
     std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds();
 
     /**
