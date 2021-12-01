@@ -51,9 +51,10 @@ protected:
 	** Liste des commandes (sous forme de map ?)
 	*/
 
-	/*
-	** Commande parsee (sous forme de vecteur ?)
-	*/
+	std::string _unparsed_client_command;		/* raw client command before parsing */
+	std::string _prefix;
+	std::string _command_name;
+	std::vector<std::string> _params;
 
 	/*
 	** Voir la partie Oper ?
