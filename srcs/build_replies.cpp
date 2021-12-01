@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   build_replies.cpp                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/24 13:02:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/26 17:49:41 by bahaas           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../includes/irc.hpp"
 
 /**
@@ -70,23 +58,3 @@ std::string build_reply(int code, Client *client, std::vector<std::string> param
             return std::string("");
     }
 }
-
-// TEST MAIN FOR REPLY FORMAT //
-/*
-int main(int ac, char **av)
-{
-    Client                  *my_test_client = new Client();
-    std::vector<std::string> reply_params;
-
-    my_test_client->set_nickname("bahaas");
-    my_test_client->set_username("bahaas");
-    my_test_client->set_hostname("www.ft_irc.com");
-
-    std::cout << build_reply(1, my_test_client, reply_params) << std::endl;
-    std::cout << build_reply(2, my_test_client, reply_params) << std::endl;
-    std::cout << build_reply(3, my_test_client, reply_params) << std::endl;
-    std::cout << build_reply(4, my_test_client, reply_params) << std::endl;
-
-    delete my_test_client;
-}
-*/
