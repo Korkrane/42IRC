@@ -142,6 +142,7 @@ public:
 	 * @param server 
 	 */
 	void		part(Commands *command, Client *client, Server *server);
+	//verifier qu on a bien un leave channel dans client
 
 };
 
