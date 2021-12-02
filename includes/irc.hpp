@@ -45,6 +45,7 @@
 #include "exceptions.hpp"
 #include "replies.hpp"
 #include "server.hpp"
+#include "Commands.hpp"
 
 class Server;
 class Client;
