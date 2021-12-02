@@ -1,21 +1,74 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 15:44:00 by bahaas            #+#    #+#             */
-/*   Updated: 2021/11/24 18:24:03 by bahaas           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "Server.hpp"
 
-#include "../includes/irc.hpp"
 
-int main(int ac, char **av)
+// Global pointers (only accessible from this source file)
+Server	*gServer = nullptr;
+IRC		*gIRC = nullptr;
+
+static void	exitProperly()
 {
-    Server *server;
+	if (gServer)
+		delete gServer;
+	if (gIRC)
+		delete gIRC;
+}
 
-    buildServer(server, av);
-    return (0);
+static void	handleSignal(int signum)
+{
+	if (signum == SIGINT || signum == SIGQUIT)
+		std::cout << "\b\bServer is stopped. Good bye!\n";
+	exit(0);
+}
+
+static bool	checkArgs(int ac, char **av, int &port, std::string &password)
+{
+	int	iPort, iPassword;
+
+	switch (ac)
+	{
+	case 4:
+		std::cout << "Multi-server is not implemented, second argument is ignored.\n";
+		iPort = 2;
+		iPassword = 3;
+		break;
+	case 3:
+		iPort = 1;
+		iPassword = 2;
+		break;
+	default:
+		std::cerr << "Invalid number of arguments\n";
+		return false;
+	}
+
+	port = atoi(av[iPort]);
+	if (port <= 0 || port > UINT16_MAX)
+	{
+		std::cerr << "Invalid port number\n";
+		return false;
+	}
+	password = std::string(av[iPassword]);
+	return true;
+}
+
+int	main(int ac, char **av)
+{
+	// Register clean up function at exit
+	atexit(exitProperly);
+
+	// Register signals to end program
+	signal(SIGINT, handleSignal);
+	signal(SIGQUIT, handleSignal);
+
+	// Check and obtain information from arguments
+	int			port;
+	std::string	password;
+	if (!checkArgs(ac, av, port, password))
+		exit(1);
+	
+	// Create an instance of the server and program
+	gServer = new Server(port, password);
+	gIRC = new IRC(password);
+
+	gServer->SetUp(gIRC);
+	gServer->Run();
 }
