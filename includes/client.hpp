@@ -5,6 +5,9 @@
 #include "Headers.hpp"
 #include "channel.hpp"
 #include "Commands.hpp"
+#include "server.hpp"
+#include "colors.hpp"
+class Server;
 class Channel;
 
 /**
@@ -20,6 +23,7 @@ class Client
        Client(Client const &src);
        Client & operator=(Client const &src);
 
+        int                         _socket;
         std::string                 _nickname;
         std::string                 _username;
         std::string                 _hostname;
@@ -29,31 +33,23 @@ class Client
         bool                        _is_away;
         std::string                 _away_mssg;
         std::string                 _password;
-        //Pas sure - utilisation pour select
-        int                         _fd;
         int                         _message_status;
         std::string                 _message;
+        std::vector<Channel *>      _channels;
 
         /*
-        ** Information relative au server
+        ** Info relative au server
         ** comprendre dans quel cadre c'est utilisé
         */
+
         std::string                 _server_name;
         std::string                 _server_ip;
         std::string                 _server_creation;
 
-        /* Liste des channels auxquelles l'user est membre */
-        std::vector<Channel *>      _channels;
-        //voir diff socket et fd
-        int                         _socket;
-        //vector contenant toutes les commandes faites par l'user
-        //std::vector<std::string>    _commands;
-
         /**
-         * info relative à l'exec de la commande.
-         *
+         * Info relative à l'exec de la commande.
          */
-        std::string _unparsed_client_command;		/* raw client command before parsing */
+        std::string _unparsed_client_command;
 	    std::string _prefix;
 	    std::string _command_name;
 	    std::vector<std::string> _params;
@@ -67,12 +63,13 @@ class Client
         bool                        _user_is_away;
         bool                        _user_has_registered_pass;
         bool                        _user_has_registered_nick;
-        bool                        _user_is_registered;//?
+        bool                        _user_is_registered;    //?
         //std::vector<std::string>  _cap;
         //std::vector<std::string>  _nick;
         //std::vector<std::string>  _user;
 
     public:
+        Server                      *_server;
         /*
         ** Fonctions membres classe canonique
         */
@@ -92,13 +89,14 @@ class Client
         bool                        get_is_away(void) const;
         std::string                 get_away_mssg(void) const;
         std::string                 get_password(void) const;
-        int                         get_fd(void) const;
         std::string                 get_server_port(void) const;
         std::string                 get_message(void) const;
         int                         get_message_status(void) const;
         int                         get_socket(void) const;
         int                         get_channels_nb(void) const;
         std::vector<std::string>    get_params(void) const;
+        std::string                 get_command_name(void) const;
+        std::string                 get_prefix(void) const;
 
         /*
         ** Utils
@@ -116,6 +114,7 @@ class Client
         std::string                 get_server_name(void) const;
         std::string                 get_server_ip(void) const;
         std::string                 get_server_creation(void) const;
+        Server                      *get_server(void);
 
         /*** SETTERS ***/
         void                        set_nickname(std::string nickname);
@@ -126,6 +125,8 @@ class Client
         void                        set_operator_status(bool value);
         void                        set_is_away(bool value);
         void                        set_away_mssg(std::string message);
+        void set_server(Server server);
+        void set_unparsed_client_command(std::string client_command);
 
         /*
         ** Added
@@ -154,10 +155,26 @@ class Client
        void                         quit_all_channels(void);
 
         /*
+        ** Parsing client mssg
+        */
+
+       int store_string_until_char(std::string *dest, std::string *src, char c, int len);
+       void patch_params(std::vector<std::string> *params);
+       void split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c);
+       void store_prefix(void);
+       void store_command(void);
+       void store_params(void);
+
+       void check_command(void);
+       void exec_command(void);
+
+
+        /*
         ** Display and debug
         */
        void                         displayClientInfo(void);
        void                         displayChannels(void);
+       void                         display_command(void);
 };
 
 #endif

@@ -5,12 +5,10 @@
 */
 Server::Server(void): _socket(0), _port(PORT_SERVER), _totChannels(0), _totClients(0), _name("null"), _password("null"), _version("null"), _userModes("null"), _channelModes("null"), _init_time(), _date("null"), _serv_info(NULL), _hints(NULL), _server_ip("null"), _server_creation("null")
 {
-	/*
-	this->_cmds = _initCmds();
 #if DEBUG
 	std::cout << "Server constructor called" << std::endl;
 #endif
-*/
+_commands = new Commands();
 }
 
 /**
@@ -23,7 +21,6 @@ Server::Server(void): _socket(0), _port(PORT_SERVER), _totChannels(0), _totClien
 Server::Server(std::string port, std::string password): _socket(0), _port(PORT_SERVER), _totChannels(0), _totClients(0), _name("null"), _password("null"), _version("null"), _userModes("null"), _channelModes("null"), _init_time(), _date("null"), _serv_info(NULL), _hints(NULL), _server_ip("null"), _server_creation("null")
 {
 	/*
-	this->_cmds = _initCmds();
 	//gerer les attributs membres relatifs au temps
 	//initialiser hints
 #if DEBUG
@@ -38,6 +35,7 @@ Server::Server(std::string port, std::string password): _socket(0), _port(PORT_S
  */
 Server::~Server()
 {
+	delete this->_commands;
 	//A implementer
 	return;
 }
@@ -102,7 +100,7 @@ std::string			Server::get_name(void) const
 {
 	std::string name = this->_name;
 #if DEBUG
-	std::cout << "Server version is " << version << std::endl;
+	std::cout << "Server version is " << _version << std::endl;
 #endif
 	return (name);
 }
@@ -177,45 +175,3 @@ void Server::add_channel(Channel *new_channel)
 {
 	this->_channels.push_back(new_channel);
 }
-
-//TODO Move to commands class
-/*
-std::map<std::string, void (*)(Client *, Server *)>		    Server::get_cmds(void) const
-{
-	std::map<std::string, void (*)(Client *, Server *)> cmds= this->_cmds;
-	return (cmds);
-}
-*/
-
-//TODO Move to commands class
-/*
-std::map<std::string, void (*)(Client *, Server *)> _initCmds()
-{
-    std::map<std::string, void (*)(Client *, Server *)> cmds;
-    cmds["PASS"]    = passCmd;
-    cmds["NICK"]    = nickCmd;
-    cmds["USER"]    = userCmd;
-    cmds["JOIN"]    = joinCmd;
-    cmds["PART"]    = partCmd;
-	cmds["MODE"]    = modeCmd;
-    cmds["TOPIC"]   = topicCmd;
-    cmds["NAMES"]   = namesCmd;
-    cmds["LIST"]    = listCmd;
-    cmds["INVITE"]  = inviteCmd;
-    cmds["KICK"]    = kickCmd;
-	cmds["PRIVMSG"] = privmsgCmd;
-    cmds["WHO"]     = whoCmd;
-    cmds["WHOIS"]   = whoisCmd;
-    cmds["WHOWAS"]  = whowasCmd;
-    cmds["OPER"]    = operCmd;
-    cmds["QUIT"]    = quitCmd;
-    cmds["INFO"]  = infoCmd;
-    cmds["VERSION"] = versionCmd;
-    cmds["USERS"] = usersCmd;
-    cmds["AWAY"] = awayCmd;
-    cmds["TIME"] = timeCmd;
-    cmds["ADMIN"] = adminCmd;
-	cmds["ADMIN"] = NULL;
-    return cmds;
-}
-*/

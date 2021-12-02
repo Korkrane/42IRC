@@ -5,7 +5,7 @@
 ** TODO: voir ce qu'il y a de mieux pour initialiser les valeurs
 ** Attention particuliere a porter sur le nickname et le password (?)
 */
-Client::Client(void): _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _fd(0), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
+Client::Client(void): _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
 {
 #if DEBUG
 	std::cout << "Client default constructor called" << std::endl;
@@ -16,7 +16,7 @@ Client::Client(void): _nickname("null"), _username("null"), _hostname("null"), _
 /*
 ** Faire des tests pour voir ce qui est important pour l'initialisation
 */
-Client::Client(std::string server_name, std::string server_ip, std::string server_creation, std::string port): _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _fd(0), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
+Client::Client(std::string server_name, std::string server_ip, std::string server_creation, std::string port): _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
 {
 #if DEBUG
 	std::cout << "Client default constructor called" << std::endl;
@@ -189,6 +189,19 @@ void						Client::set_server_creation(std::string creation)
 #endif
 }
 
+void						Client::set_server(Server server)
+{
+	this->_server = &server;
+}
+
+void						Client::set_unparsed_client_command(std::string client_command)
+{
+	this->_unparsed_client_command = client_command;
+#if DEBUG
+	std::cout << "Client unparsed_client_command has been set to " << client_command << std::endl;
+#endif
+}
+
 /*
 ** Getters
 */
@@ -272,21 +285,9 @@ std::string					Client::get_password(void) const
 {
 	std::string pass = this->_password;
 #if DEBUG
-	std::cout << "Client's away message is " << away << std::endl;
+	std::cout << "Client's password is " << pass << std::endl;
 #endif
 	return (pass);
-}
-
-/*
-** Checker les valeurs du fd ?
-*/
-int							Client::get_fd(void) const
-{
-	int fd = this->_fd;
-#if DEBUG
-	std::cout << "Client's fd is " << fd << std::endl;
-#endif
-	return (fd);
 }
 
 std::string					Client::get_server_port(void) const
@@ -350,6 +351,28 @@ std::vector<std::string>	Client::get_params(void) const
 	return (params);
 }
 
+Server						*Client::get_server(void)
+{
+	return this->_server;
+}
+
+std::string							Client::get_prefix(void) const
+{
+	std::string prefix = this->_prefix;
+#if DEBUG
+	std::cout << "This client cmd prefix is " << prefix << std::endl;
+#endif
+	return (prefix);
+}
+
+std::string							Client::get_command_name(void) const
+{
+	std::string command_name = this->_command_name;
+#if DEBUG
+	std::cout << "This client cmd command_name is " << command_name << std::endl;
+#endif
+	return (command_name);
+}
 
 /*
 ** Utils
@@ -401,22 +424,10 @@ bool						Client::user_is_operator(void) const
 {
 	bool ope = this->_user_is_oper;
 #if DEBUG
-	std::cout << "The client is operator ? " << away << std::endl;
+	std::cout << "The client is operator ? " << ope << std::endl;
 #endif
 	return (ope);
 }
-
-/*
-** Voir comment gerer cette liste
-*/
-/*
-std::vector<std::string>	Client::user_commands(void) const
-{
-	std::vector<std::string> list_cmd = this->_commands;
-	//TODO: faire fonction d'affichage
-	return (list_cmd);
-}
-*/
 
 /*
 ** Info server
@@ -564,6 +575,132 @@ void						Client::quit_all_channels(void)
 }
 
 /*
+** Parsing client message
+*/
+
+int Client::store_string_until_char(std::string *dest, std::string *src, char c, int len)
+{
+    for (std::string::iterator it = src->begin(); it != src->end(); ++it)
+    {
+        if (*it == c)
+        {
+            *dest = src->substr(0, len);
+            len++;
+            break;
+        }
+        len++;
+    }
+    return (len);
+}
+
+void Client::store_prefix()
+{
+	if(this->_unparsed_client_command != "")
+	{
+    	std::string::iterator it = this->_unparsed_client_command.begin();
+
+    	int i = 0;
+    	if (*it == ':')
+        	i = store_string_until_char(&this->_prefix, &this->_unparsed_client_command, ' ', i);
+    	this->_unparsed_client_command.replace(0, i, "");
+	}
+}
+
+void Client::store_command()
+{
+	if(this->_unparsed_client_command != "")
+	{
+    	std::string::iterator it = this->_unparsed_client_command.begin();
+
+    	int i = 0;
+    	i = store_string_until_char(&this->_command_name, &this->_unparsed_client_command, ' ', i);
+    	this->_unparsed_client_command.replace(0, i, "");
+	}
+}
+
+void Client::split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c)
+{
+    size_t pos = str->find(c);
+    size_t initialPos = 0;
+
+    // Decompose each element
+    while (pos != std::string::npos)
+    {
+        vec->push_back(str->substr(initialPos, pos - initialPos));
+        initialPos = pos + 1;
+        pos = str->find(c, initialPos);
+    }
+    // Add the last element
+    vec->push_back(str->substr(initialPos, std::min(pos, str->size()) - initialPos + 1));
+}
+
+void Client::patch_params(std::vector<std::string> *params)
+{
+    int elem_to_erase = 0;
+    for (std::vector<std::string>::iterator it = params->begin(); it != params->end(); it++)
+    {
+        if ((*it)[0] == ':')
+        {
+            for (std::vector<std::string>::iterator it2 = it + 1; it2 != params->end(); it2++)
+            {
+                (*it).append(" " + *it2);
+                elem_to_erase++;
+            }
+            break;
+        }
+    }
+
+    std::vector<std::string>::iterator ite = params->end();
+    for (int erase = elem_to_erase; erase != 0; --erase)
+        params->erase(ite);
+}
+
+void Client::store_params()
+{
+	if(this->_unparsed_client_command != "")
+	{
+    	split_string_to_vector(&this->_params, &this->_unparsed_client_command, ' ');
+    	patch_params(&this->_params);
+	}
+}
+
+//TODO
+void Client::check_command()
+{
+}
+
+void Client::exec_command()
+{
+    std::map<std::string, void (*)(Client *, Server *)>::iterator it;
+    int                                                           known_command = 0;
+
+	/*
+	std::map<std::string, void (*)(Client *, Server *)>::iterator ite;
+	ite = this->_server->_commands->get_cmds().end();
+	std::cout << "map key value:" << ite->first << std::endl;
+	*/
+    for (it = this->_server->_commands->get_cmds().begin(); it != this->_server->_commands->get_cmds().end(); it++)
+    {
+        std::string key = it->first;
+        if (key == this->_command_name)
+        {
+#if DEBUG
+            std::cout << GREEN << "DEBUG: " << key << " execute the command -->" << NC << std::endl;
+#endif
+            (*it->second)(this, this->_server);
+            known_command += 1;
+        }
+    }
+    if (known_command == 0)
+    {
+#if DEBUG
+        std::cout << RED << "DEBUG: " << this->_command_name << " return the error command -->" << NC << std::endl;
+#endif
+        this->_server->_commands->unknown_cmd(this, this->_server);
+	}
+}
+
+/*
 ** Display / Debug
 */
 void						Client::displayClientInfo(void)
@@ -585,6 +722,20 @@ void						Client::displayChannels(void)
 		it++;
 	}
 	std::cout << "------------------------" << std::endl;
+}
+
+void						Client::display_command(void)
+{
+	std::cout << "--- Displaying Last command parsed ---" << std::endl;
+	std::cout << "unparsed=" << this->_unparsed_client_command << std::endl;
+	std::cout << "prefix=" << this->_prefix << std::endl;
+    std::cout << "cmd=" << this->_command_name << std::endl;
+    int i = 0;
+    for (std::vector<std::string>::iterator itr = this->_params.begin(); itr != this->_params.end(); itr++)
+    {
+        std::cout << "param(" << i << ")=" << *itr << std::endl;
+        i++;
+    }
 }
 
 /**

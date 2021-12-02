@@ -84,7 +84,7 @@ std::string			Channel::get_modes(void) const
 {
 	std::string m = this->_modes;
 #if DEBUG
-	std::cout << "modes getter called, mode is " << t << std::endl;
+	std::cout << "modes getter called, mode is " << m << std::endl;
 #endif
 	return (m);
 }

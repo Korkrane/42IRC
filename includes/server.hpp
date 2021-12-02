@@ -21,13 +21,12 @@ class Client;
 class Server
 {
 private:
-    /*
-    ** Attributs membres
-    */
     int                 _socket;
     int                 _port;
     int                 _totChannels;
     int                 _totClients;
+    std::vector<Channel *> _channels;
+    //TODO std::vector<Client *> _clients;
     std::string         _name;
     std::string         _password;
     std::string         _version;
@@ -36,29 +35,21 @@ private:
     time_t              _init_time;     // FIXME time_t over std::string _date
     std::string         _date;          // FIXME one has to be deleted
 
-    //"Command book" //TODO move it to cmds class
-    //std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _cmds;
 
-    //A creuser
     struct addrinfo*    _serv_info;
-    struct addrinfo*    _hints; //needed to initialize server
-    //std::string       _domain;//?
+    struct addrinfo*    _hints;            //needed to initialize server
+    std::string         _domain;        //?
     std::string         _server_ip;
     std::string         _server_creation;
 
-    std::vector<Channel *> _channels;
-
 public:
-    /*
-    ** Fonctions membres (classe canonique)
-    */
     Server();
     Server(Server const &src);
     Server & operator=(Server const &src);
     Server(std::string port, std::string password);
     virtual ~Server();
 
-    //TODO mettre en public ou privé ? pour l'exec de commande : client->server->join() ou client->get_server()->join();
+    //public ou privé ?
     Commands *_commands;
 
     /*** SETTERS ***/
@@ -78,11 +69,8 @@ public:
     std::string         get_ip(void) const;
     std::string         get_server_creation(void) const;
     std::vector<Channel *> get_channels(void) const;
-    //std::map<std::string, void (*)(t_cmd *, Client *, Server *)>    get_cmds(void) const;
 
-    /*** MEMBERS FUNCTIONS ***/
-    //std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds();
-
+    /** FONCTIONS MEMBRES **/
     void add_channel(Channel *);
 
     /**

@@ -7,8 +7,6 @@ SRCS	=	./srcs/main.cpp \
 			./srcs/tmp_utils.cpp \
 			./srcs/build_server.cpp \
 			./srcs/build_replies.cpp \
-			./srcs/client_query_parser.cpp \
-			./srcs/client_cmd_parser.cpp \
 			./srcs/Commands/Admin.cpp \
 			./srcs/Commands/Away.cpp \
 			./srcs/Commands/Cap.cpp \
@@ -39,7 +37,7 @@ SRCS	=	./srcs/main.cpp \
 
 OBJS		=	${SRCS:.cpp=.o}
 
-CFLAGS		=	#-Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
+CFLAGS		=	-g -DDEBUG#-DDEBUG#-Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
 
 RM			=	rm -rf
 
@@ -60,12 +58,10 @@ HEADER		=	./includes/
 ${NAME}	:	${OBJS}
 			${CC} -o $@ ${OBJS} ${CFLAGS}
 
-#echo "ircserv compiled !"
-
 all:		${NAME}
 
 %.o: %.cpp
-			@${CC} ${CFLAGS} -I${HEADER} -c $< -o $@
+			${CC} ${CFLAGS} -I${HEADER} -c $< -o $@
 
 clean	:
 			${RM} ${OBJS}
