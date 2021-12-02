@@ -24,7 +24,7 @@
 #define ERR_NOTEXTTOSEND()                   (":No text to send\r\n")                                               // 412
 #define C_ERR_NOTEXTTOSEND                    "412"
 #define ERR_NOTOPLEVEL(mask)                 (mask + " :No toplevel domain specified\r\n")                          // 413
-#define C_ERR_NOTTOPLEVEL                     "413"
+#define C_ERR_NOTOPLEVEL                      "413"
 #define ERR_WILDTOPLEVEL(mask)               (mask + " :Wildcard in toplevel domain\r\n")                           // 414
 #define C_ERR_WILDTOPLEVEL                    "414"
 #define ERR_BADMASK(mask)                    (mask + " :Bad Server/host mask\r\n")                                  // 415
@@ -70,7 +70,8 @@
 #define ERR_PASSWDMISMATCH()                 ("Password incorect\r\n")                                              // 464
 #define C_ERR_PASSWDMISMATCH                  "464"
 #define ERR_YOUREBANNEDCREEP()               ("You are banned from this server\r\n")                                // 465
-#define C_ERR_YOUREBANNEDCREEP                "465"                
+#define C_ERR_YOUREBANNEDCREEP                "465"
+//Attention celle ci n a pas de valeur associee ?               
 #define ERR_YOUWILLBEBANNED                                                                                         // no mssg defined yet  ?
 #define C_ERR_YOUWILLBEBANNED                 "466"                                                                   // 466
 #define ERR_KEYSET(channel)                  (channel + " :Channel key already set\r\n")                            // 467
