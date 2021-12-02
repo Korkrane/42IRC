@@ -4,7 +4,11 @@
 #pragma once
 
 #include "Headers.hpp"
+#include "server.hpp"
+#include "client.hpp"
 
+class Client;
+class Server;
 /*
 ** Classe Command(s)
 ** Les fonctions qui en font une classe canonique sont partagees
@@ -26,6 +30,11 @@ public:
 /*
 ** Fonctions membres principales
 */
+
+//default prototype:
+void	timeCmd(Client *client, Server *server);
+
+
 void	join();
 protected:
 	/*
@@ -46,15 +55,11 @@ protected:
 	/*
 	** Attributs membres
 	*/
+	Server *_server;
 
 	/*
 	** Liste des commandes (sous forme de map ?)
 	*/
-
-	std::string _unparsed_client_command;		/* raw client command before parsing */
-	std::string _prefix;
-	std::string _command_name;
-	std::vector<std::string> _params;
 
 	/*
 	** Voir la partie Oper ?

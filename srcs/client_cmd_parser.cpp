@@ -2,6 +2,7 @@
 
 void client_cmd_parser(t_cmd *cmd, Client *client, Server *server)
 {
+    /*
     std::map<std::string, void (*)(t_cmd *, Client *, Server *)>::iterator it;
     int                                                                    known_command = 0;
 
@@ -25,4 +26,5 @@ void client_cmd_parser(t_cmd *cmd, Client *client, Server *server)
         //TODO uncomment when class well implemented
         //unknownCmd(cmd, client, server);
     }
+    */
 }

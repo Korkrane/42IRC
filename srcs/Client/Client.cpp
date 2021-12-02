@@ -5,7 +5,7 @@
 ** TODO: voir ce qu'il y a de mieux pour initialiser les valeurs
 ** Attention particuliere a porter sur le nickname et le password (?)
 */
-Client::Client(void): _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _fd(0), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _commands(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
+Client::Client(void): _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _fd(0), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
 {
 #if DEBUG
 	std::cout << "Client default constructor called" << std::endl;
@@ -16,7 +16,7 @@ Client::Client(void): _nickname("null"), _username("null"), _hostname("null"), _
 /*
 ** Faire des tests pour voir ce qui est important pour l'initialisation
 */
-Client::Client(std::string server_name, std::string server_ip, std::string server_creation, std::string port): _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _fd(0), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _commands(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
+Client::Client(std::string server_name, std::string server_ip, std::string server_creation, std::string port): _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _fd(0), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
 {
 #if DEBUG
 	std::cout << "Client default constructor called" << std::endl;
@@ -344,6 +344,13 @@ int							Client::get_channels_nb(void) const
 	return (size);
 }
 
+std::vector<std::string>	Client::get_params(void) const
+{
+	std::vector<std::string> params = this->_params;
+	return (params);
+}
+
+
 /*
 ** Utils
 */
@@ -402,12 +409,14 @@ bool						Client::user_is_operator(void) const
 /*
 ** Voir comment gerer cette liste
 */
+/*
 std::vector<std::string>	Client::user_commands(void) const
 {
 	std::vector<std::string> list_cmd = this->_commands;
-//TODO: faire fonction d'affichage
+	//TODO: faire fonction d'affichage
 	return (list_cmd);
 }
+*/
 
 /*
 ** Info server
@@ -455,6 +464,7 @@ void						Client::clear_client_message(void)
 #endif
 }
 
+/*
 void						Client::clear_client_command(void)
 {
 	this->_commands.clear();
@@ -462,6 +472,7 @@ void						Client::clear_client_command(void)
 	std::cout << "Client commands vector has been cleared." << std::endl;
 #endif
 }
+*/
 
 /**
 ** recv (a voir)

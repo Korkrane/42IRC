@@ -167,21 +167,31 @@ std::string			Server::get_server_creation(void) const
 	return (server_creation);
 }
 
-std::map<std::string, void (*)(t_cmd *, Client *, Server *)>		    Server::get_cmds(void) const
+std::vector<Channel *>	Server::get_channels(void) const
 {
-	std::map<std::string, void (*)(t_cmd *, Client *, Server *)> cmds= this->_cmds;
+	std::vector<Channel *> channels = this->_channels;
+	return (channels);
+}
+
+void Server::add_channel(Channel *new_channel)
+{
+	this->_channels.push_back(new_channel);
+}
+
+//TODO Move to commands class
+/*
+std::map<std::string, void (*)(Client *, Server *)>		    Server::get_cmds(void) const
+{
+	std::map<std::string, void (*)(Client *, Server *)> cmds= this->_cmds;
 	return (cmds);
 }
+*/
 
-void add_channel(Channel *new_channel)
+//TODO Move to commands class
+/*
+std::map<std::string, void (*)(Client *, Server *)> _initCmds()
 {
-	_this->channels.push_back(new_channel);
-}
-
-std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds()
-{
-    std::map<std::string, void (*)(t_cmd *, Client *, Server *)> cmds;
-    /*
+    std::map<std::string, void (*)(Client *, Server *)> cmds;
     cmds["PASS"]    = passCmd;
     cmds["NICK"]    = nickCmd;
     cmds["USER"]    = userCmd;
@@ -199,16 +209,13 @@ std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds()
     cmds["WHOWAS"]  = whowasCmd;
     cmds["OPER"]    = operCmd;
     cmds["QUIT"]    = quitCmd;
-    */
-    // cmds["INFO"]  = infoCmd;
-
-	/*
+    cmds["INFO"]  = infoCmd;
     cmds["VERSION"] = versionCmd;
     cmds["USERS"] = usersCmd;
     cmds["AWAY"] = awayCmd;
     cmds["TIME"] = timeCmd;
     cmds["ADMIN"] = adminCmd;
-	*/
 	cmds["ADMIN"] = NULL;
     return cmds;
 }
+*/

@@ -7,37 +7,11 @@
 struct t_cmd;
 #include "channel.hpp"
 #include "client.hpp"
+#include "Commands.hpp"
 
-/*
-void passCmd(t_cmd *cmd, Client *client, Server *serv);
-void nickCmd(t_cmd *cmd, Client *client, Server *serv);
-void userCmd(t_cmd *cmd, Client *client, Server *serv);
-void joinCmd(t_cmd *cmd, Client *client, Server *serv);
-void partCmd(t_cmd *cmd, Client *client, Server *serv);
-void modeCmd(t_cmd *cmd, Client *client, Server *serv);
-void topicCmd(t_cmd *cmd, Client *client, Server *serv);
-void namesCmd(t_cmd *cmd, Client *client, Server *serv);
-void listCmd(t_cmd *cmd, Client *client, Server *serv);
-void inviteCmd(t_cmd *cmd, Client *client, Server *serv);
-void kickCmd(t_cmd *cmd, Client *client, Server *serv);
-void privmsgCmd(t_cmd *cmd, Client *client, Server *serv);
-void noticeCmd(t_cmd *cmd, Client *client, Server *serv);
-void whoCmd(t_cmd *cmd, Client *client, Server *serv);
-void whoisCmd(t_cmd *cmd, Client *client, Server *serv);
-void whowasCmd(t_cmd *cmd, Client *client, Server *serv);
-void operCmd(t_cmd *cmd, Client *client, Server *serv);
-void quitCmd(t_cmd *cmd, Client *client, Server *serv);
-void infoCmd(t_cmd *cmd, Client *client, Server *serv);
-*/
-
-/*
-void timeCmd(t_cmd *cmd, Client *client, Server *serv);
-void versionCmd(t_cmd *cmd, Client *client, Server *serv);
-void awayCmd(t_cmd *cmd, Client *client, Server *serv);
-void usersCmd(t_cmd *cmd, Client *client, Server *serv);
-void adminCmd(t_cmd *cmd, Client *client, Server *serv);
-void unknownCmd(t_cmd *cmd, Client *client, Server *server);
-*/
+class Channel;
+class Commands;
+class Client;
 
 /**
  * @brief
@@ -62,8 +36,8 @@ private:
     time_t              _init_time;     // FIXME time_t over std::string _date
     std::string         _date;          // FIXME one has to be deleted
 
-    //"Command book"
-    std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _cmds;
+    //"Command book" //TODO move it to cmds class
+    //std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _cmds;
 
     //A creuser
     struct addrinfo*    _serv_info;
@@ -84,6 +58,9 @@ public:
     Server(std::string port, std::string password);
     virtual ~Server();
 
+    //TODO mettre en public ou privé ? pour l'exec de commande : client->server->join() ou client->get_server()->join();
+    Commands *_commands;
+
     /*** SETTERS ***/
     void                set_name(std::string name);
     void                set_version(std::string version);
@@ -100,10 +77,11 @@ public:
     struct addrinfo*    get_serv_info(void) const;
     std::string         get_ip(void) const;
     std::string         get_server_creation(void) const;
-    std::map<std::string, void (*)(t_cmd *, Client *, Server *)>    get_cmds(void) const;
+    std::vector<Channel *> get_channels(void) const;
+    //std::map<std::string, void (*)(t_cmd *, Client *, Server *)>    get_cmds(void) const;
 
     /*** MEMBERS FUNCTIONS ***/
-    std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds();
+    //std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds();
 
     void add_channel(Channel *);
 
@@ -128,7 +106,7 @@ public:
     void    welcomeClient(Client *client);
 
     /* Display / Debug */ //TODO
-        void                    display_channels(void);
+    void                    display_channels(void);
 };
 
 #endif // !SERVER_HPP

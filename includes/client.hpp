@@ -44,11 +44,20 @@ class Client
 
         /* Liste des channels auxquelles l'user est membre */
         std::vector<Channel *>      _channels;
-        Commands                    _commands;
         //voir diff socket et fd
         int                         _socket;
         //vector contenant toutes les commandes faites par l'user
-        std::vector<std::string>    _commands;
+        //std::vector<std::string>    _commands;
+
+        /**
+         * info relative à l'exec de la commande.
+         *
+         */
+        std::string _unparsed_client_command;		/* raw client command before parsing */
+	    std::string _prefix;
+	    std::string _command_name;
+	    std::vector<std::string> _params;
+
         //voir l'importance du registration status
         bool                        _registration_status;
         bool                        _pass_registered;
@@ -89,6 +98,7 @@ class Client
         int                         get_message_status(void) const;
         int                         get_socket(void) const;
         int                         get_channels_nb(void) const;
+        std::vector<std::string>    get_params(void) const;
 
         /*
         ** Utils
