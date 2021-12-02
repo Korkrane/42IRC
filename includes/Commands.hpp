@@ -28,7 +28,12 @@ public:
 	Commands(Commands const &src);
 	Commands	&operator=(Commands const &src);
 	Commands(std::string const &serverPass, std::string serverName, std::string serverIP, std::string serverCreationDate);
-	virtual ~Commands(){};
+	virtual ~Commands()
+	{
+		#if DEBUG
+			std::cout << "DEBUG: " << "Command destructor called" << std::endl;
+		#endif
+	};
 
 
 	/*** Fonctions membres ***/

@@ -36,7 +36,9 @@ Server::Server(std::string port, std::string password): _socket(0), _port(PORT_S
 Server::~Server()
 {
 	delete this->_commands;
-	//A implementer
+	#if DEBUG
+	std::cout << "DEBUG: " << "Server destructor called" << std::endl;
+	#endif
 	return;
 }
 

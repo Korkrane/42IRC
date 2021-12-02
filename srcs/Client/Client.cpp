@@ -674,21 +674,16 @@ void Client::exec_command()
     std::map<std::string, void (*)(Client *, Server *)>::iterator it;
     int                                                           known_command = 0;
 
-	/*
-	std::map<std::string, void (*)(Client *, Server *)>::iterator ite;
-	ite = this->_server->_commands->get_cmds().end();
-	std::cout << "map key value:" << ite->first << std::endl;
-	*/
     for (it = this->_server->_commands->get_cmds().begin(); it != this->_server->_commands->get_cmds().end(); it++)
     {
-        std::string key = it->first;
-        if (key == this->_command_name)
+        if (it->first == this->_command_name)
         {
-#if DEBUG
-            std::cout << GREEN << "DEBUG: " << key << " execute the command -->" << NC << std::endl;
-#endif
+			#if DEBUG
+            	std::cout << GREEN << "DEBUG: " << it->first << " execute the command -->" << NC << std::endl;
+			#endif
             (*it->second)(this, this->_server);
             known_command += 1;
+			break;
         }
     }
     if (known_command == 0)
