@@ -351,6 +351,22 @@ std::vector<std::string> Client::get_params(void) const
 	return (params);
 }
 
+/**
+ * @brief : Va etre tres regulierement utilise dans les commandes
+ * pour verifier dans un premier temps que le nombre d args est correct
+ * 
+ * @return unsigned int 
+ * TODO: a tester
+ */
+unsigned int			Client::get_params_size(void) const
+{
+	unsigned int size = this->get_params().size();
+#if DEBUG
+	std::cout << "The param size is " << size << std::endl;
+#endif
+	return (size);
+}
+
 Server *Client::get_server(void)
 {
 	return this->_server;
@@ -719,17 +735,39 @@ void Client::displayChannels(void)
 	std::cout << "------------------------" << std::endl;
 }
 
+/**
+ * @brief 
+ * Question Mahaut: je n ai pas bien compris la partie unparsed ?
+ */
 void Client::display_command(void)
 {
 	std::cout << "--- Displaying Last command parsed ---" << std::endl;
-	std::cout << "unparsed=" << this->_unparsed_client_command << std::endl;
-	std::cout << "prefix=" << this->_prefix << std::endl;
-	std::cout << "cmd=" << this->_command_name << std::endl;
+	//TODO: faire un getter pour cette commande ?
+	if (this->_unparsed_client_command.empty())
+		std::cout << "There is no unparsed part" << std::endl;
+	else
+		std::cout << "Unparsed = " << this->_unparsed_client_command << std::endl;
+	if (this->get_prefix().empty())
+		std::cout << "Prefix = " << this->_prefix << std::endl;
+	else
+		std::cout << "There is no prefix" << std::endl;
+	//TODO: faire un getter ?
+	if (this->_command_name.empty())
+		std::cout << "Command = " << this->_command_name << std::endl;
+	else
+		std::cout << "No command parsed" << std::endl;
 	int i = 0;
-	for (std::vector<std::string>::iterator itr = this->_params.begin(); itr != this->_params.end(); itr++)
+	if (this->_params.size() >= 1)
 	{
-		std::cout << "param(" << i << ")=" << *itr << std::endl;
-		i++;
+		for (std::vector<std::string>::iterator itr = this->_params.begin(); itr != this->_params.end(); itr++)
+		{
+			std::cout << "param(" << i << ")=" << *itr << std::endl;
+			i++;
+		}
+	}
+	else
+	{
+		std::cout << "There are no params" << std::endl;
 	}
 }
 

@@ -7,11 +7,17 @@
  * a list of information which 'matches' the <mask> parameter given by
  * the client.
  * Parameters: [ <mask> [ "o" ] ]
+ * Dans le cas de la commande WHO la reponse ne sera jamais transmise dans
+ * le channel mais sur la page du serveur.
  */
 
 void Commands::who(Client *client, Server *server)
 {
-  //Voir le nombre de parametre
+  /* Gestion des erreurs en fonction des parametres */
+  if (client->get_params_size() == 1)
+  {
+    
+  }
   //S il n y en a qu un alors appeler une fonction de classe (statique)
   //qui va pernettre d 'afficher tous les clients un par un
 

@@ -175,6 +175,12 @@ class Client
        void store_prefix(void);
        void store_command(void);
        void store_params(void);
+       
+       /*
+       ** Ajout utils params
+       */
+      //std::vector<std::string> get_params(void);
+      unsigned int get_params_size(void) const;
 
        void check_command(void);
        void exec_command(void);
