@@ -7,7 +7,7 @@
  * @param client 
  * @param server 
  */
-void		kick(Client *client, Server *server)
+void		Commands::kick(Client *client, Server *server)
 {
     //on verifie le nombres de parametre
     //si il est inferieur ou egal a deux on renvoie une erreur

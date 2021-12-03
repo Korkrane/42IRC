@@ -11,8 +11,10 @@
    from the list of active members for all given channels listed in the
    parameter string.
  */
-void part(Client *client, Server *server)
+void  Commands::part(Client *client, Server *server)
 {
+  (void)client;
+  (void)server;
   // Verifier le nombre d'argument, si il est egal a 1, renvoyer une erreur
 
   //On parse le deuxieme argument si ce n est pas deja fait ?

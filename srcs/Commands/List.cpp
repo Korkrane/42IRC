@@ -6,7 +6,7 @@
  * @param client 
  * @param server 
  */
-void		list(Client *client, Server *server)
+void		Commands::list(Client *client, Server *server)
 {
     //List channel and their topics
     //voir exemple and faisant des tests

@@ -31,9 +31,7 @@ SRCS	=	./srcs/main.cpp \
 			./srcs/Commands/User.cpp \
 			./srcs/Commands/Users.cpp \
 			./srcs/Commands/Version.cpp \
-			./srcs/Commands/Who.cpp \
-			./srcs/Commands/Whois.cpp \
-			./srcs/Commands/Whowas.cpp
+			./srcs/Commands/Who.cpp 
 
 OBJS		=	${SRCS:.cpp=.o}
 

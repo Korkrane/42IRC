@@ -15,8 +15,10 @@ class Commands;
  * See more on RFC 2812.
  */
 
-void Commands::kill(Client *client, Server *server, bool nick_collision)
+void Commands::kill(Client *client, Server *server)
 {
+    (void)client;
+    (void)server;
     //Si il y a moins de trois parameteres renvoyer une erreur correspondante
     //TODO: error need more param.
 

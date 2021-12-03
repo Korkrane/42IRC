@@ -6,7 +6,7 @@
  * @param client 
  * @param server 
  */
-void		topic(Client *client, Server *server)
+void		Commands::topic(Client *client, Server *server)
 {
     // verifier le nombre d argument (ne peut pas etre egal a 1)
         //retourner erreur ERR_NEEDMOREPARAMS

@@ -7,7 +7,7 @@
  * @param server 
  * TODO: voir la notion de "nickname visibles"
  */
-void		names(Client *client, Server *server)
+void		Commands::names(Client *client, Server *server)
 {
     //verifier le nombre d argument ?
     //
