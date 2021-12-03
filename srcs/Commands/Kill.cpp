@@ -3,11 +3,11 @@
 class Commands;
 
 /**
- * @brief 
- * 
- * @param command 
- * @param client 
- * @param server 
+ * @brief
+ *
+ * @param command
+ * @param client
+ * @param server
  * Parameters: <nickname> <comment>
  * ** Will close client / server connection (by the server)
  * Servers generate KILL messages on nickname collisions.
@@ -15,7 +15,7 @@ class Commands;
  * See more on RFC 2812.
  */
 
-void		Commands::kill(Commands *command, Client *client, Server *server, bool nick_collision)
+void Commands::kill(Client *client, Server *server, bool nick_collision)
 {
     //Si il y a moins de trois parameteres renvoyer une erreur correspondante
     //TODO: error need more param.

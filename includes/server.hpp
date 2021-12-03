@@ -4,45 +4,11 @@
 #define MAX_CLIENT 10
 #define PORT_SERVER 6667
 
-//struct t_cmd;
-//#include "channel.hpp"
-//#include "client.hpp"
-
-class Client;
-class Channel;
-
 #include "irc.hpp"
 
-/*
-void passCmd(t_cmd *cmd, Client *client, Server *serv);
-void nickCmd(t_cmd *cmd, Client *client, Server *serv);
-void userCmd(t_cmd *cmd, Client *client, Server *serv);
-void joinCmd(t_cmd *cmd, Client *client, Server *serv);
-void partCmd(t_cmd *cmd, Client *client, Server *serv);
-void modeCmd(t_cmd *cmd, Client *client, Server *serv);
-void topicCmd(t_cmd *cmd, Client *client, Server *serv);
-void namesCmd(t_cmd *cmd, Client *client, Server *serv);
-void listCmd(t_cmd *cmd, Client *client, Server *serv);
-void inviteCmd(t_cmd *cmd, Client *client, Server *serv);
-void kickCmd(t_cmd *cmd, Client *client, Server *serv);
-void privmsgCmd(t_cmd *cmd, Client *client, Server *serv);
-void noticeCmd(t_cmd *cmd, Client *client, Server *serv);
-void whoCmd(t_cmd *cmd, Client *client, Server *serv);
-void whoisCmd(t_cmd *cmd, Client *client, Server *serv);
-void whowasCmd(t_cmd *cmd, Client *client, Server *serv);
-void operCmd(t_cmd *cmd, Client *client, Server *serv);
-void quitCmd(t_cmd *cmd, Client *client, Server *serv);
-void infoCmd(t_cmd *cmd, Client *client, Server *serv);
-*/
-
-/*
-void timeCmd(t_cmd *cmd, Client *client, Server *serv);
-void versionCmd(t_cmd *cmd, Client *client, Server *serv);
-void awayCmd(t_cmd *cmd, Client *client, Server *serv);
-void usersCmd(t_cmd *cmd, Client *client, Server *serv);
-void adminCmd(t_cmd *cmd, Client *client, Server *serv);
-void unknownCmd(t_cmd *cmd, Client *client, Server *server);
-*/
+class Channel;
+class Commands;
+class Client;
 
 /**
  * @brief
@@ -52,13 +18,12 @@ void unknownCmd(t_cmd *cmd, Client *client, Server *server);
 class Server
 {
 private:
-    /*
-    ** Attributs membres
-    */
     int                 _socket;
     int                 _port;
     int                 _totChannels;
     int                 _totClients;
+    std::vector<Channel *> _channels;
+    //TODO std::vector<Client *> _clients;
     std::string         _name;
     std::string         _password;
     std::string         _version;
@@ -67,27 +32,22 @@ private:
     time_t              _init_time;     // FIXME time_t over std::string _date
     std::string         _date;          // FIXME one has to be deleted
 
-    //"Command book"
-    std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _cmds;
 
-    //A creuser
     struct addrinfo*    _serv_info;
-    struct addrinfo*    _hints; //needed to initialize server
-    //std::string       _domain;//?
+    struct addrinfo*    _hints;            //needed to initialize server
+    std::string         _domain;        //?
     std::string         _server_ip;
     std::string         _server_creation;
 
-    std::vector<Channel *> _channels;
-
 public:
-    /*
-    ** Fonctions membres (classe canonique)
-    */
     Server();
     Server(Server const &src);
     Server & operator=(Server const &src);
     Server(std::string port, std::string password);
     virtual ~Server();
+
+    //public ou privé ?
+    Commands *_commands;
 
     /*** SETTERS ***/
     void                set_name(std::string name);
@@ -105,11 +65,9 @@ public:
     struct addrinfo*    get_serv_info(void) const;
     std::string         get_ip(void) const;
     std::string         get_server_creation(void) const;
-    std::map<std::string, void (*)(t_cmd *, Client *, Server *)>    get_cmds(void) const;
+    std::vector<Channel *> get_channels(void) const;
 
-    /*** MEMBERS FUNCTIONS ***/
-    std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds();
-
+    /** FONCTIONS MEMBRES **/
     void add_channel(Channel *);
 
     /**
@@ -133,7 +91,7 @@ public:
     void    welcomeClient(Client *client);
 
     /* Display / Debug */ //TODO
-        void                    display_channels(void);
+    void                    display_channels(void);
 };
 
 #endif // !SERVER_HPP

@@ -5,12 +5,10 @@
 */
 Server::Server(void): _socket(0), _port(PORT_SERVER), _totChannels(0), _totClients(0), _name("null"), _password("null"), _version("null"), _userModes("null"), _channelModes("null"), _init_time(), _date("null"), _serv_info(NULL), _hints(NULL), _server_ip("null"), _server_creation("null")
 {
-	/*
-	this->_cmds = _initCmds();
 #if DEBUG
 	std::cout << "Server constructor called" << std::endl;
 #endif
-*/
+_commands = new Commands();
 }
 
 /**
@@ -23,7 +21,6 @@ Server::Server(void): _socket(0), _port(PORT_SERVER), _totChannels(0), _totClien
 Server::Server(std::string port, std::string password): _socket(0), _port(PORT_SERVER), _totChannels(0), _totClients(0), _name("null"), _password("null"), _version("null"), _userModes("null"), _channelModes("null"), _init_time(), _date("null"), _serv_info(NULL), _hints(NULL), _server_ip("null"), _server_creation("null")
 {
 	/*
-	this->_cmds = _initCmds();
 	//gerer les attributs membres relatifs au temps
 	//initialiser hints
 #if DEBUG
@@ -38,7 +35,10 @@ Server::Server(std::string port, std::string password): _socket(0), _port(PORT_S
  */
 Server::~Server()
 {
-	//A implementer
+	delete this->_commands;
+	#if DEBUG
+	std::cout << "DEBUG: " << "Server destructor called" << std::endl;
+	#endif
 	return;
 }
 
@@ -102,7 +102,7 @@ std::string			Server::get_name(void) const
 {
 	std::string name = this->_name;
 #if DEBUG
-	std::cout << "Server version is " << version << std::endl;
+	std::cout << "Server version is " << _version << std::endl;
 #endif
 	return (name);
 }
@@ -167,10 +167,10 @@ std::string			Server::get_server_creation(void) const
 	return (server_creation);
 }
 
-std::map<std::string, void (*)(t_cmd *, Client *, Server *)>		    Server::get_cmds(void) const
+std::vector<Channel *>	Server::get_channels(void) const
 {
-	std::map<std::string, void (*)(t_cmd *, Client *, Server *)> cmds= this->_cmds;
-	return (cmds);
+	std::vector<Channel *> channels = this->_channels;
+	return (channels);
 }
 
 /*
@@ -180,10 +180,11 @@ void S::add_channel(Channel *new_channel)
 }
 */
 
+/** 
+** TODO: a supprimer ? Il me semble qu il y a un pb de version
 std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds()
 {
     std::map<std::string, void (*)(t_cmd *, Client *, Server *)> cmds;
-    /*
     cmds["PASS"]    = passCmd;
     cmds["NICK"]    = nickCmd;
     cmds["USER"]    = userCmd;
@@ -201,16 +202,18 @@ std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds()
     cmds["WHOWAS"]  = whowasCmd;
     cmds["OPER"]    = operCmd;
     cmds["QUIT"]    = quitCmd;
-    */
     // cmds["INFO"]  = infoCmd;
-
-	/*
     cmds["VERSION"] = versionCmd;
     cmds["USERS"] = usersCmd;
     cmds["AWAY"] = awayCmd;
     cmds["TIME"] = timeCmd;
     cmds["ADMIN"] = adminCmd;
-	*/
-	cmds["ADMIN"] = NULL;
+	//cmds["ADMIN"] = NULL;
     return cmds;
+}
+*/
+
+void Server::add_channel(Channel *new_channel)
+{
+	this->_channels.push_back(new_channel);
 }

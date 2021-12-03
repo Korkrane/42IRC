@@ -1,21 +1,16 @@
-#ifndef CHANNEL_HPP
-# define CHANNEL_HPP
-
 #pragma once
 
 #include "client.hpp"
+#include "irc.hpp"
+
 class Client;
 
 class Channel
 {
-    /*
-    ** Attributs membres prives
-    */
     private:
         std::string             _name;
         std::string             _topic;
         std::string             _modes;
-        //Preferer vector a list
         std::vector<Client *>   _operators;
         std::vector<Client *>   _clients;
         std::vector<Client *>   _banned_clients;
@@ -34,15 +29,10 @@ class Channel
         Channel & operator=(Channel const &src);
 
     public:
-        /*
-        ** Fonctions membres publiques
-        */
         Channel(std::string name, Client *client);
         virtual ~Channel();
 
-        /*
-        ** Constructeur par defaut a mettre en prive ?
-        */
+        //Constructeur par defaut a mettre en prive ?
         Channel();
 
         /*** SETTERS ***/
@@ -92,5 +82,3 @@ class Channel
         void                    displayOperators(void);
         void                    displayBanned(void);
 };
-
-#endif

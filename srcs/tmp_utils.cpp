@@ -2,7 +2,7 @@
 
 void send_reply(std::string reply)
 {
-    std::cout << BLUE << reply << NC;
+    std::cout << BLUE << reply << NC << std::endl;
 }
 
 void split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c)

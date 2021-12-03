@@ -1,20 +1,20 @@
 #include "../../includes/irc.hpp"
 
 /**
- * @brief 
- * 
- * @param command 
- * @param client 
- * @param server 
+ * @brief
+ *
+ * @param command
+ * @param client
+ * @param server
  */
 
-void		Commands::join(Commands *command, Client *client, Server *server)
+void Commands::join(Client *client, Server *server)
 {
-    //S'il n'y a qu'un param, retourner 
+    //S'il n'y a qu'un param, retourner
     //erreur ERR_NEEDMOREPARAMS
 
     //les deux arguments a ce stade on deja ete parse ?
-    //On a une string channel_name 
+    //On a une string channel_name
     //et une string key
 
     //on verifie si le channel existe
@@ -28,7 +28,7 @@ void		Commands::join(Commands *command, Client *client, Server *server)
     //Si la valeur de la cle n est pas correcte, retourner "ERR_BADCHANNELKEY"
 
     //creer une channel si elle n existe pas deja
-    //voir si il faut potentiellement quitter toutes les autres channels 
+    //voir si il faut potentiellement quitter toutes les autres channels
 
     //verifier si la channel a un nom correct
 }
