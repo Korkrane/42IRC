@@ -1,5 +1,4 @@
 #include "../includes/irc.hpp"
-
 void client_cmd_parser(t_cmd *cmd, Client *client, Server *server)
 {
     /*
