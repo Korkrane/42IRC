@@ -13,17 +13,18 @@ int main(int ac, char **av)
 int main(int ac, char **av)
 {
 
-    Server *server = new Server();
-    server->set_name("testing.com");
+    std::string str = std::string(av[1]);
 
+    Server *server = new Server();
     Client *client = new Client();
+
+    /*** SET NOS VARAIBLES POUR LES TESTS ***/
+    server->set_name("testing.com");
     client->set_hostname(server->get_name());
     client->set_nickname("foo_nick");
 
-    std::string str = std::string(av[1]);
-
+    /***EXECUTION ***/
     client->set_unparsed_client_command(str);
-
     client->store_prefix();
     client->store_command();
     client->store_params();

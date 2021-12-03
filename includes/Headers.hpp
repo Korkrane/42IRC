@@ -12,6 +12,7 @@
 #include <string>
 #include <sstream>
 #include <exception>
+#include <utility>
 
 /*
 ** Server Workflow & C librairies

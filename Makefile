@@ -37,7 +37,7 @@ SRCS	=	./srcs/main.cpp \
 
 OBJS		=	${SRCS:.cpp=.o}
 
-CFLAGS		=	-g -DDEBUG#-DDEBUG#-Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
+CFLAGS		=	-g -DDEBUG #-fsanitize=address#-DDEBUG#-Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
 
 RM			=	rm -rf
 
