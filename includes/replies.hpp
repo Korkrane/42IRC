@@ -285,6 +285,6 @@
 #define RPL_ADMINLOC2(admin_info)  (":" + admin_info + "\r\n")                                                                                                                            // 258
 #define C_RPL_ADMINLOC2                                                      "258"
 #define RPL_ADMINEMAIL(admin_info) (":" + admin_info + "\r\n")                                                                                                                            // 259
-#define C_RPL_ADMINLOC2                                                      "259"
+#define C_RPL_ADMINEMAIL                                                     "259"
 
 #endif // !REPLIES_HPP

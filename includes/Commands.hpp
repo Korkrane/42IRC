@@ -1,6 +1,9 @@
 #pragma once
 #include "irc.hpp"
 
+class Client;
+class Channel;
+class Server;
 /*
 ** Classe Command(s)
 ** Les fonctions qui en font une classe canonique sont partagees

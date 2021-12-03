@@ -44,7 +44,7 @@ class Client
 
         /* Liste des channels auxquelles l'user est membre */
         std::vector<Channel *>      _channels;
-        Commands                    _commands;
+        //Commands                    _commands;
         //voir diff socket et fd
         int                         _socket;
         //vector contenant toutes les commandes faites par l'user

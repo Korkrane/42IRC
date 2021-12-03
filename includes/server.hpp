@@ -4,9 +4,14 @@
 #define MAX_CLIENT 10
 #define PORT_SERVER 6667
 
-struct t_cmd;
-#include "channel.hpp"
-#include "client.hpp"
+//struct t_cmd;
+//#include "channel.hpp"
+//#include "client.hpp"
+
+class Client;
+class Channel;
+
+#include "irc.hpp"
 
 /*
 void passCmd(t_cmd *cmd, Client *client, Server *serv);
