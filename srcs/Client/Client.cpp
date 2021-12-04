@@ -579,7 +579,9 @@ void Client::quit_all_channels(void)
 
 int Client::store_string_until_char(std::string *dest, std::string *src, char c, int len)
 {
-	for (std::string::iterator it = src->begin(); it != src->end(); ++it)
+	std::string::iterator ite;
+	std::string::iterator it;
+	for (it = src->begin(); it != src->end(); ++it)
 	{
 		if (*it == c)
 		{
@@ -589,24 +591,37 @@ int Client::store_string_until_char(std::string *dest, std::string *src, char c,
 		}
 		len++;
 	}
+	ite = it;
+	if (ite == src->end())
+	{
+		*dest = src->substr(0, len);
+	}
 	return (len);
 }
 
 void Client::store_prefix()
 {
+#if DEBUG
+	std::cout << "unparsed command entering in store_prefix:" << this->_unparsed_client_command << std::endl;
+#endif
 	if (this->_unparsed_client_command != "")
 	{
 		std::string::iterator it = this->_unparsed_client_command.begin();
 
 		int i = 0;
 		if (*it == ':')
+		{
 			i = store_string_until_char(&this->_prefix, &this->_unparsed_client_command, ' ', i);
-		this->_unparsed_client_command.replace(0, i, "");
+			this->_unparsed_client_command.replace(0, i, "");
+		}
 	}
 }
 
 void Client::store_command()
 {
+#if DEBUG
+	std::cout << "unparsed command entering in store_command:" << this->_unparsed_client_command << std::endl;
+#endif
 	if (this->_unparsed_client_command != "")
 	{
 		std::string::iterator it = this->_unparsed_client_command.begin();
