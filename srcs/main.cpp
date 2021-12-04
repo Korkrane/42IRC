@@ -25,9 +25,14 @@ int main(int ac, char **av)
 
     /***EXECUTION ***/
     client->set_unparsed_client_command(str);
+    //std::cout << "1. " << client->get_unparsed_client_command() << std::endl;
     client->store_prefix();
+    //std::cout << "2. " << client->get_prefix() << std::endl;
     client->store_command();
+    std::cout << "3. " << client->get_command_name() << std::endl;
     client->store_params();
+    //std::cout << "4. Printing params: " << std::endl;
+    client->display_params();
 
 #if DEBUG
     client->display_command();

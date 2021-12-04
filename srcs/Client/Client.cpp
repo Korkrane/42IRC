@@ -195,11 +195,25 @@ void Client::set_server(Server server)
 	this->_server = &server;
 }
 
+/**
+ * @brief 
+ * 
+ * @param client_command 
+ * TODO: Ajouter des verifications pour des char interdits ou des syntaxes ilogiques ?
+ */
 void Client::set_unparsed_client_command(std::string client_command)
 {
 	this->_unparsed_client_command = client_command;
 #if DEBUG
 	std::cout << "Client unparsed_client_command has been set to " << client_command << std::endl;
+#endif
+}
+
+void	Client::set_command(std::string command)
+{
+	this->_command_name = command;
+#if DEBUG
+	//std::cout << "Command name parsed !" << std::endl;
 #endif
 }
 
@@ -662,22 +676,52 @@ void Client::store_prefix()
  * @brief 
  * Question Mahaut : es-ce qu il faudrait retirer le prefix a l unparsed command ?
  * * Est-ce qu'on pourrait faire une fonction pour savoir a quelle index s'arrete la partie prefix ?
+ * **TODO: a revoir Baudoin/Mahaut
  */
 void Client::store_command()
 {
+	std::string command;
 	//if (this->_unparsed_client_command != "")
-	if (this->_unparsed_client_command.empty())
+	if (!this->_unparsed_client_command.empty())
 	{
-		/* Iterateur sur une string */
+		//Baudoin
+		/*
 		std::string::iterator it = this->_unparsed_client_command.begin();
 
 		int i = 0;
 		i = store_string_until_char(&this->_command_name, &this->_unparsed_client_command, ' ', i);
-		this->_unparsed_client_command.replace(0, i, "");
+		*/
 #if DEBUG
-		std::cout << "The resulting unparsed command is " << this->_unparsed_client_command << std::endl;
+		//std::cout << "The resulting unparsed command is " << this->_unparsed_client_command << std::endl;
 #endif
+		//Proposition Mahaut
+		if (this->check_if_prefix() == false)
+		{
+			//La commande doit etre le premier mot
+			//Attention si quelqu'un s'amusait a mettre des " ?
+			//Dans la command unparsed, ajouter un check de 
+			std::string::size_type pos = this->get_unparsed_client_command().find(' ');
+			if (pos != std::string::npos)
+			{
+				//je mets 1 pour me separer du / ?
+				//ou je devrais verifier qu'il s'agit bien d'un \ ?
+				command = this->get_unparsed_client_command().substr(0, pos);
+			}
+			else
+			{
+				command = this->get_unparsed_client_command();
+			}
+			//std::cout << "command is " << command << std::endl;
+			this->set_command(command);
+		}
 	}
+	/*
+	else
+	{
+		std::cout << "BOO YOU WHORE" << std::endl;
+	}
+	*/
+	return ;
 }
 
 void Client::split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c)
@@ -782,6 +826,23 @@ void Client::displayChannels(void)
 	std::cout << "------------------------" << std::endl;
 }
 
+
+void	Client::display_params(void) //const 
+{
+	int i = 0;
+	if (this->_params.size() >= 1)
+	{
+		for (std::vector<std::string>::iterator itr = this->_params.begin(); itr != this->_params.end(); itr++)
+		{
+			std::cout << "param(" << i << ") =" << *itr << std::endl;
+			i++;
+		}
+	}
+	else
+		std::cout << "There are no params" << std::endl;
+	return ;
+}
+
 /**
  * @brief 
  * Question Mahaut: je n ai pas bien compris la partie unparsed ?
@@ -803,19 +864,7 @@ void Client::display_command(void)
 		std::cout << "Command = " << this->_command_name << std::endl;
 	else
 		std::cout << "No command parsed" << std::endl;
-	int i = 0;
-	if (this->_params.size() >= 1)
-	{
-		for (std::vector<std::string>::iterator itr = this->_params.begin(); itr != this->_params.end(); itr++)
-		{
-			std::cout << "param(" << i << ")=" << *itr << std::endl;
-			i++;
-		}
-	}
-	else
-	{
-		std::cout << "There are no params" << std::endl;
-	}
+	this->display_params();
 }
 
 /**

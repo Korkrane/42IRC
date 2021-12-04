@@ -145,6 +145,8 @@ class Client
         void                        set_away_mssg(std::string message);
         void set_server(Server server);
         void set_unparsed_client_command(std::string client_command);
+        /*** AJOUTS PARSING ***/
+        void                        set_command(std::string command);
 
         /*
         ** Added
@@ -199,4 +201,5 @@ class Client
        void                         displayClientInfo(void);
        void                         displayChannels(void);
        void                         display_command(void);
+       void	                        display_params(void);
 };
