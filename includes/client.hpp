@@ -127,6 +127,13 @@ class Client
         std::string                 get_server_creation(void) const;
         Server                      *get_server(void);
 
+        /*
+        ** Utils pour le parsing
+        */
+        std::string                 get_unparsed_client_command(void) const;
+        //a verifier
+        bool                        check_if_prefix(void) const;
+
         /*** SETTERS ***/
         void                        set_nickname(std::string nickname);
         void                        set_username(std::string username);

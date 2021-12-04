@@ -1,4 +1,5 @@
 #include "../../includes/client.hpp"
+#include "../../includes/irc.hpp"
 
 /*
 ** Constructeur
@@ -376,6 +377,7 @@ std::string Client::get_prefix(void) const
 {
 	std::string prefix = this->_prefix;
 #if DEBUG
+	if (!prefix.empty())
 	std::cout << "This client cmd prefix is " << prefix << std::endl;
 #endif
 	return (prefix);
@@ -391,8 +393,44 @@ std::string Client::get_command_name(void) const
 }
 
 /*
+** Utils parsing 
+*/
+std::string	Client::get_unparsed_client_command(void) const
+{
+	std::string unparsed;
+
+	unparsed = this->_unparsed_client_command;
+#if DEBUG
+	//std::cout << "The unparsed command is : " << unparsed << std::endl;
+#endif
+	return (unparsed);
+}
+
+/*
 ** Utils
 */
+
+/**
+ * @brief 
+ * 
+ * @return true 
+ * @return false 
+ */
+bool	Client::check_if_prefix(void) const
+{
+	char colon = ':';
+	std::string check = this->get_unparsed_client_command();
+	//Je dois chercher s'il y a un :
+	//Si il n'y en a pas cela signifie qu'il n'y a pas de prefix ?
+	if (check.find(colon) != std::string::npos)
+	{
+		#if DEBUG
+			//std::cout << "Found a prefix in the command." << std::endl;
+		#endif
+		return (true);
+	}
+	return (false);
+}
 
 /*
 ** Voir quand est-ce qu'on va le set a true
@@ -620,16 +658,25 @@ void Client::store_prefix()
 		this->_unparsed_client_command.replace(0, i, "");
 	}
 }
-
+/**
+ * @brief 
+ * Question Mahaut : es-ce qu il faudrait retirer le prefix a l unparsed command ?
+ * * Est-ce qu'on pourrait faire une fonction pour savoir a quelle index s'arrete la partie prefix ?
+ */
 void Client::store_command()
 {
-	if (this->_unparsed_client_command != "")
+	//if (this->_unparsed_client_command != "")
+	if (this->_unparsed_client_command.empty())
 	{
+		/* Iterateur sur une string */
 		std::string::iterator it = this->_unparsed_client_command.begin();
 
 		int i = 0;
 		i = store_string_until_char(&this->_command_name, &this->_unparsed_client_command, ' ', i);
 		this->_unparsed_client_command.replace(0, i, "");
+#if DEBUG
+		std::cout << "The resulting unparsed command is " << this->_unparsed_client_command << std::endl;
+#endif
 	}
 }
 
@@ -747,7 +794,7 @@ void Client::display_command(void)
 		std::cout << "There is no unparsed part" << std::endl;
 	else
 		std::cout << "Unparsed = " << this->_unparsed_client_command << std::endl;
-	if (this->get_prefix().empty())
+	if (!this->get_prefix().empty())
 		std::cout << "Prefix = " << this->_prefix << std::endl;
 	else
 		std::cout << "There is no prefix" << std::endl;

@@ -19,7 +19,7 @@ void Commands::who(Client *client, Server *server)
   {
     //le serveur doit renvoyer deux lignes de reponses
     //ERR_NEEDMOREPARAMS
-    std::string help = this->whoHelpParameter();
+    std::string help = whoHelpParameter();
     //WHO :<server>|<nick>|<channel>|<realname>|<host>|0 [[Aafhilmnoprstux][%acdfhilnorstu] <server>|<nick>|<channel>|<realname>|<host>|0]
   }
   //S il n y en a qu un alors appeler une fonction de classe (statique)
