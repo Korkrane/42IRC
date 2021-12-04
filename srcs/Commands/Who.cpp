@@ -14,9 +14,13 @@
 void Commands::who(Client *client, Server *server)
 {
   /* Gestion des erreurs en fonction des parametres */
-  if (client->get_params_size() == 1)
+  /* Le serveur renvoie une erreur - pas dans le channel */
+  if (client->get_params_size() == 0)
   {
-    
+    //le serveur doit renvoyer deux lignes de reponses
+    //ERR_NEEDMOREPARAMS
+    std::string help = this->whoHelpParameter();
+    //WHO :<server>|<nick>|<channel>|<realname>|<host>|0 [[Aafhilmnoprstux][%acdfhilnorstu] <server>|<nick>|<channel>|<realname>|<host>|0]
   }
   //S il n y en a qu un alors appeler une fonction de classe (statique)
   //qui va pernettre d 'afficher tous les clients un par un
@@ -25,4 +29,13 @@ void Commands::who(Client *client, Server *server)
   //correspond bien a une channel existant (dans le serveur)
   //Meme si le client n en fait pas partie ?
   return;
+}
+
+/*
+** Utils pour la fonction
+*/
+std::string Commands::whoHelpParameter(void)
+{
+  std::string server_to_rep = "WHO :<server>|<nick>|<channel>|<realname>|<host>|0 [[Aafhilmnoprstux]\%acdfhilnorstu] <server>|<nick>|<channel>|<realname>|<host>|0]";
+  return (server_to_rep);
 }

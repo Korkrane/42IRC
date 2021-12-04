@@ -98,12 +98,15 @@ private:
 	static void 		who(Client *client, Server *server);
 	static void 		displayAllClients(Channel *channel);
 	//Appelera la sous fonction displayClientsFromChannel ?
+	//ajouter const ?
 	static void 		displayChannel(Channel *channel, Client *client);
 	//Affichage specifique si le client est operateur ?
+	//ajouter const ?
 	static void			displayClientsFromChannel(Channel *channel, Client *client);
 	//Va permettre de verifier si la channel passee en parametre existe bien
 	static void			paramsIsCorrectChannel(Commands *command, Server *server);
 	static void 		paramsIsCorrectOther(Commands *command, Server *server);
+	static std::string	whoHelpParameter(void);
 
 	/**
 	** Commande KILL
