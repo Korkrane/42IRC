@@ -1,5 +1,5 @@
 
-#include "../../includes/irc.hpp"
+#include <irc.hpp>
 
 /**
  * @brief 

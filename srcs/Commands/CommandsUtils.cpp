@@ -1,3 +1,3 @@
 #pragma once
 
-#include "irc.hpp"
+#include <irc.hpp>

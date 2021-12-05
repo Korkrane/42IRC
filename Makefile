@@ -6,31 +6,31 @@ NAMES		=	main.cpp \
 				Client/Client.cpp \
 				Channel/Channel.cpp \
 				Utils/tmp_utils.cpp \
-				Commands/ServerQueries\Admin.cpp \
+				Commands/ServerQueries/Admin.cpp \
 				Commands/OptionalFeatures/Away.cpp \
 				Commands/OptionalFeatures/Cap.cpp \
 				Commands/ServerQueries/Info.cpp \
-				Commands/ServerQueries/Invite.cpp \
-				Commands/ChannelOperation/Join.cpp \
-				Commands/Channel/Operation/Kick.cpp \
+				Commands/ChannelOperations/Invite.cpp \
+				Commands/ChannelOperations/Join.cpp \
+				Commands/ChannelOperations/Kick.cpp \
 				Commands/Miscellaneous/Kill.cpp \
-				Commands/ChannelOperation/List.cpp \
+				Commands/ChannelOperations/List.cpp \
 				Commands/ConnectionRegistration/Mode.cpp \
 				Commands/Other/Myhelp.cpp \
-				Commands/ChannelOperator/Names.cpp \
+				Commands/ChannelOperations/Names.cpp \
 				Commands/ConnectionRegistration/Nick.cpp \
 				Commands/SendingMessages/Notice.cpp \
 				Commands/ConnectionRegistration/Oper.cpp \
-				Commands/Channel/Operations/Part.cpp \
+				Commands/ChannelOperations/Part.cpp \
 				Commands/SendingMessages/Privmsg.cpp \
-				Commands/ChannelRegistration/Quit.cpp \
+				Commands/ConnectionRegistration/Quit.cpp \
 				Commands/ServerQueries/Time.cpp \
 				Commands/ChannelOperations/Topic.cpp \
 				Commands/Other/Unknown.cpp \
-				Commands/ConnectionRegistrastion/User.cpp \
+				Commands/ConnectionRegistration/User.cpp \
 				Commands/OptionalFeatures/Users.cpp \
 				Commands/ServerQueries/Version.cpp \
-				Commands/UserBasedQueriesWho.cpp \
+				Commands/UserBasedQueries/Who.cpp \
 
 #build_server.cpp 
 #build_replies.cpp 
