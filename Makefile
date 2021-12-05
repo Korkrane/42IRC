@@ -6,31 +6,31 @@ NAMES		=	main.cpp \
 				Client/Client.cpp \
 				Channel/Channel.cpp \
 				Utils/tmp_utils.cpp \
-				Commands/Admin.cpp \
-				Commands/Away.cpp \
-				Commands/Cap.cpp \
-				Commands/Info.cpp \
-				Commands/Invite.cpp \
-				Commands/Join.cpp \
-				Commands/Kick.cpp \
-				Commands/Kill.cpp \
-				Commands/List.cpp \
-				Commands/Mode.cpp \
-				Commands/Myhelp.cpp \
-				Commands/Names.cpp \
-				Commands/Nick.cpp \
-				Commands/Notice.cpp \
-				Commands/Oper.cpp \
-				Commands/Part.cpp \
-				Commands/Privmsg.cpp \
-				Commands/Quit.cpp \
-				Commands/Time.cpp \
-				Commands/Topic.cpp \
-				Commands/Unknown.cpp \
-				Commands/User.cpp \
-				Commands/Users.cpp \
-				Commands/Version.cpp \
-				Commands/Who.cpp \
+				Commands/ServerQueries\Admin.cpp \
+				Commands/OptionalFeatures/Away.cpp \
+				Commands/OptionalFeatures/Cap.cpp \
+				Commands/ServerQueries/Info.cpp \
+				Commands/ServerQueries/Invite.cpp \
+				Commands/ChannelOperation/Join.cpp \
+				Commands/Channel/Operation/Kick.cpp \
+				Commands/Miscellaneous/Kill.cpp \
+				Commands/ChannelOperation/List.cpp \
+				Commands/ConnectionRegistration/Mode.cpp \
+				Commands/Other/Myhelp.cpp \
+				Commands/ChannelOperator/Names.cpp \
+				Commands/ConnectionRegistration/Nick.cpp \
+				Commands/SendingMessages/Notice.cpp \
+				Commands/ConnectionRegistration/Oper.cpp \
+				Commands/Channel/Operations/Part.cpp \
+				Commands/SendingMessages/Privmsg.cpp \
+				Commands/ChannelRegistration/Quit.cpp \
+				Commands/ServerQueries/Time.cpp \
+				Commands/ChannelOperations/Topic.cpp \
+				Commands/Other/Unknown.cpp \
+				Commands/ConnectionRegistrastion/User.cpp \
+				Commands/OptionalFeatures/Users.cpp \
+				Commands/ServerQueries/Version.cpp \
+				Commands/UserBasedQueriesWho.cpp \
 
 #build_server.cpp 
 #build_replies.cpp 
