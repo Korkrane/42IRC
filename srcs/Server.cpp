@@ -20,7 +20,7 @@ void	Server::SetUp(IRC *irc)
 	_irc = irc;
 
 	// Create server socket
-	struct protoent		*prot = getprotobyname("tcp");
+	protoent	*prot = getprotobyname("tcp");
 	if ((_fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, prot->p_proto)) == -1)
 		SERVER_ERR("socket");
 
@@ -30,7 +30,7 @@ void	Server::SetUp(IRC *irc)
 		SERVER_ERR("setsockopt");
 
 	// Bind socket to port
-	struct sockaddr_in	sin;
+	sockaddr_in	sin;
 	sin.sin_family = AF_INET;
 	sin.sin_addr.s_addr = INADDR_ANY;
 	sin.sin_port = htons(_port);
@@ -50,8 +50,8 @@ void	Server::SetUp(IRC *irc)
 
 void	Server::acceptClient()
 {
-	struct sockaddr_in	sin;
-	socklen_t			sin_len = 0;
+	sockaddr_in	sin;
+	socklen_t	sin_len = 0;
 
 	int	clientFD = accept(_fd, (sockaddr *)&sin, &sin_len);
 	if (clientFD == -1)
