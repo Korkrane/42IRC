@@ -1,6 +1,5 @@
 #include "Server.hpp"
 
-
 // Global pointers (only accessible from this source file)
 Server	*gServer = NULL;
 IRC		*gIRC = NULL;
