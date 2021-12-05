@@ -75,6 +75,9 @@ $(NAME):	$(OBJS)
 
 all:		$(NAME)
 
+run:		$(NAME)
+			./ircserv 6667 pass
+
 clean:
 			@$(RM) $(OBJS)
 			@echo "Deleted all but executable"
