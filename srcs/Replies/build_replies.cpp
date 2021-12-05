@@ -1,10 +1,11 @@
-#include "../includes/irc.hpp"
+#include <irc.hpp>
 
 /**
  * @brief format the code into a valid string for the server reply (ex: int 1 --> str 001)
  *
  * @param code
  * @return std::string
+ * TODO: renommer avec User
  */
 std::string format_code_str(int code)
 {
@@ -20,14 +21,19 @@ std::string format_code_str(int code)
  * a command (valid/unvalid) is received by th server
  * @param code
  * @return std::string
+ * TODO: reprendre avec User
  */
 std::string build_reply(int code, Client *client, std::vector<std::string> params)
 {
+    (void)code;
+    (void)client;
+    (void)params;
     std::string code_str;
     std::string prefix;
     std::string date = "Mon Nov 22 2021";
 
     code_str         = format_code_str(code);
+    /*
     if (client->get_nickname().empty())
         prefix = ":" + client->get_hostname() + " " + code_str + " * ";
     else
@@ -42,6 +48,7 @@ std::string build_reply(int code, Client *client, std::vector<std::string> param
             return prefix + RPL_CREATED(date);
         case 4: // TODO remove hardcoded value
             return prefix + RPL_MYINFO(client->get_hostname(), "1.0", "|list of user mode avai|", "|list of user mode avai|");
+        
         case 305:
             return prefix + RPL_UNAWAY();
         case 306:
@@ -57,4 +64,5 @@ std::string build_reply(int code, Client *client, std::vector<std::string> param
         default:
             return std::string("");
     }
+    */
 }

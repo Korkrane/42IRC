@@ -8,17 +8,19 @@
  * @param server 
  * @param str 
  * @return int 
+ * TODO: a reprendre avce nouvelles versions servers, clients, users
  */
+/*
 int test_parsing(std::string port, std::string password, Server *server, std::string str)
 {
     Client *client = new Client();
 
-    /*** SET NOS VARAIBLES POUR LES TESTS ***/
+    //SET NOS VARAIBLES POUR LES TESTS
     server->set_name("testing.com");
     client->set_hostname(server->get_name());
     client->set_nickname("foo_nick");
 
-    /***EXECUTION ***/
+    //EXECUTION
     client->set_unparsed_client_command(str);
     //std::cout << "1. " << client->get_unparsed_client_command() << std::endl;
     client->store_prefix();
@@ -40,6 +42,7 @@ int test_parsing(std::string port, std::string password, Server *server, std::st
     delete client;
     return (0);
 }
+*/
 
 /**
  * @brief Get the port object

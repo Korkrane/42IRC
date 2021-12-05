@@ -5,7 +5,7 @@ NAMES		=	main.cpp \
 				Server/Server.cpp \
 				Client/Client.cpp \
 				Channel/Channel.cpp \
-				tmp_utils.cpp \
+				Utils/tmp_utils.cpp \
 				Commands/Admin.cpp \
 				Commands/Away.cpp \
 				Commands/Cap.cpp \
