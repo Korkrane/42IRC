@@ -2,8 +2,8 @@
 
 
 // Global pointers (only accessible from this source file)
-Server	*gServer = nullptr;
-IRC		*gIRC = nullptr;
+Server	*gServer = NULL;
+IRC		*gIRC = NULL;
 
 static void	exitProperly()
 {
@@ -15,8 +15,10 @@ static void	exitProperly()
 
 static void	handleSignal(int signum)
 {
-	if (signum == SIGINT || signum == SIGQUIT)
-		std::cout << "\b\bServer is stopped. Good bye!\n";
+	if (signum == SIGINT || signum == SIGQUIT || signum == SIGKILL)
+		std::cout	<< GREEN
+					<< "\b\bServer is stopped. Good bye!\n"
+					<< NC;
 	exit(0);
 }
 
@@ -40,8 +42,8 @@ static bool	checkArgs(int ac, char **av, int &port, std::string &password)
 		return false;
 	}
 
-	port = atoi(av[iPort]);
-	if (port <= 0 || port > UINT16_MAX)
+	port = std::atoi(av[iPort]);
+	if (port <= 0 || port > 0xffff)
 	{
 		std::cerr << "Invalid port number\n";
 		return false;
@@ -58,6 +60,7 @@ int	main(int ac, char **av)
 	// Register signals to end program
 	signal(SIGINT, handleSignal);
 	signal(SIGQUIT, handleSignal);
+	signal(SIGKILL, handleSignal);
 
 	// Check and obtain information from arguments
 	int			port;

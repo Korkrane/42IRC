@@ -4,14 +4,14 @@ Server::Server(int port, std::string const &password) :
 	_port(port),
 	_password(password),
 	_fd(-1),
-	_irc(nullptr)
+	_irc(NULL)
 {}
 
 Server::~Server()
 {
-	std::map<int, Client *>::iterator	fd_cl;
-	for (fd_cl = _clients.begin(); fd_cl != _clients.end(); ++fd_cl)
-		delete fd_cl->second;
+	std::map<int, Client *>::iterator	clientIter;
+	for (clientIter = _clients.begin(); clientIter != _clients.end(); ++clientIter)
+		delete clientIter->second;
 	close(_fd);
 }
 
@@ -24,6 +24,11 @@ void	Server::SetUp(IRC *irc)
 	if ((_fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, prot->p_proto)) == -1)
 		SERVER_ERR("socket");
 
+	// Set options for socket
+	int	opt = 1;
+	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int)) == -1)
+		SERVER_ERR("setsockopt");
+
 	// Bind socket to port
 	struct sockaddr_in	sin;
 	sin.sin_family = AF_INET;
@@ -35,12 +40,18 @@ void	Server::SetUp(IRC *irc)
 	// Listen for connections
 	if (listen(_fd, MAX_LISTEN) == -1)
 		SERVER_ERR("listen");
+
+	std::cout	<< GREEN
+				<< "IRC Server now active on "
+				<< inet_ntoa(sin.sin_addr)
+				<< ":" << _port
+				<< NC << '\n';
 }
 
 void	Server::acceptClient()
 {
 	struct sockaddr_in	sin;
-	socklen_t			sin_len;
+	socklen_t			sin_len = 0;
 
 	int	clientFD = accept(_fd, (sockaddr *)&sin, &sin_len);
 	if (clientFD == -1)
@@ -50,7 +61,8 @@ void	Server::acceptClient()
 	}
 	std::cout << "New client on socket #" << clientFD << '\n';
 	
-	_clients.emplace(clientFD, new Client(clientFD));
+	_clients.insert(std::make_pair(clientFD, new Client(clientFD)));
+	_irc->fds.push_back(clientFD);	// FOR TESTING
 }
 
 void	Server::removeClient(int fd)
@@ -60,6 +72,7 @@ void	Server::removeClient(int fd)
 		std::cout << "Client on socket #" << fd << " disconnected\n";
 		delete _clients[fd];
 		_clients.erase(fd);
+		_irc->fds.erase(std::find(_irc->fds.begin(), _irc->fds.end(), fd));	// FOR TESTING
 	}
 }
 
@@ -77,8 +90,8 @@ void	Server::Run()
 		recvProcessCommand(totalFD, responseQueue, disconnectList);
 
 		// Send server's response to clients
-		for (std::vector<t_clientCmd>::const_iterator it = responseQueue.cbegin();
-			it != responseQueue.cend(); ++it)
+		for (std::vector<t_clientCmd>::const_iterator it = responseQueue.begin();
+			it != responseQueue.end(); ++it)
 		{
 			int	clientFD = it->first;
 			if (_clients.find(clientFD) != _clients.end())
@@ -86,8 +99,8 @@ void	Server::Run()
 		}
 
 		// Disconnect FDs in list
-		for (std::vector<int>::const_iterator it = disconnectList.cbegin();
-			it != disconnectList.cend(); ++it)
+		for (std::vector<int>::const_iterator it = disconnectList.begin();
+			it != disconnectList.end(); ++it)
 				removeClient(*it);
 	}
 }
@@ -98,10 +111,10 @@ int	Server::setFDForReading()
 	FD_ZERO(&_fdReader);
 	FD_SET(_fd, &_fdReader);
 
-	std::map<int, Client *>::iterator	fd_cl;
-	for (fd_cl = _clients.begin(); fd_cl != _clients.end(); ++fd_cl)
+	std::map<int, Client *>::iterator	clientIter;
+	for (clientIter = _clients.begin(); clientIter != _clients.end(); ++clientIter)
 	{
-		int	clientFD = fd_cl->first;
+		int	clientFD = clientIter->first;
 		FD_SET(clientFD, &_fdReader);
 		if (clientFD > _maxFD)
 			_maxFD = clientFD;

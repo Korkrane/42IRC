@@ -1,67 +1,37 @@
-NAME	=	ircserv
+INC_DIR		= includes
+SRC_DIR		= srcs
 
-SRCS	=	./srcs/main.cpp \
-			./srcs/client_query_parser.cpp \
-			./srcs/build_replies.cpp \
-			./srcs/build_server.cpp \
-			./srcs/client_cmd_parser.cpp \
-			./srcs/tmp_utils.cpp \
-			./srcs/Commands/Away.cpp \
-			./srcs/Commands/Cap.cpp \
-			./srcs/Commands/Join.cpp \
-			./srcs/Commands/Kick.cpp \
-			./srcs/Commands/Kill.cpp \
-			./srcs/Commands/List.cpp \
-			./srcs/Commands/Mode.cpp \
-			./srcs/Commands/Myhelp.cpp \
-			./srcs/Commands/Names.cpp \
-			./srcs/Commands/Nick.cpp \
-			./srcs/Commands/Notice.cpp \
-			./srcs/Commands/Oper.cpp \
-			./srcs/Commands/Part.cpp \
-			./srcs/Commands/Primsg.cpp \
-			./srcs/Commands/Quit.cpp \
-			./srcs/Commands/Topic.cpp \
-			./srcs/Commands/User.cpp \
-			./srcs/Commands/Who.cpp
+NAMES		= main.cpp Client.cpp Server.cpp
+SRCS		= $(addprefix $(SRC_DIR)/, $(NAMES))
 
-OBJS		=	${SRCS:.cpp=.o}
+OBJS		= $(SRCS:.cpp=.o)
 
-FLAGS		=	-Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
+NAME		= ircserv
 
-RM			=	rm -rf
+CC			= clang++
+FLAGS		= -Wall -Wextra -Werror -std=c++98 -g
 
-# Verifier s'il faut clang++ ou c++
-CC			=	c++
+RM			= rm -f
 
-INCLUDES	=	./includes/channel.hpp \
-				./includes/client.hpp \
-				./includes/colors.hpp \
-				./includes/Commands.hpp \
-				./includes/exceptions.hpp \
-				./includes/Headers.hpp \
-				./includes/irc.hpp \
-				./includes/replies.hpp \
-				./includes/server.hpp
+.cpp.o:
+			@$(CC) $(FLAGS) -I$(INC_DIR) -c $< -o $(<:.cpp=.o)
 
-HEAD		=	./includes/
+$(NAME):	$(OBJS)
+			@echo "Object files compiled"
+			@$(CC) $(FLAGS) $(OBJS) -I$(INC_DIR) -o $(NAME)
+			@echo "Executable created"
+			@echo "Compilation finished"
 
-${NAME}	:	${OBJS}
-			${CC} -o $@ ${OBJS} ${FLAGS}
+all:		$(NAME)
 
-#echo "ircserv compiled !"
+clean:
+			@$(RM) $(OBJS)
+			@echo "Deleted all but executable"
 
-all:		${NAME}
+fclean:		clean
+			@$(RM) $(NAME)
+			@echo "Everything deleted"
 
-%.o: %.c
-			@${CC} ${CLAGS} -I${HEAD} -c $< -o $@
-
-clean	:
-			${RM} ${OBJS}
-
-fclean	:	clean
-			${RM} ${NAME}
-
-re		:	clean all
+re:			fclean all
 
 .PHONY:		all clean fclean re
