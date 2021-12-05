@@ -1,4 +1,5 @@
 #include "../includes/irc.hpp"
+#include <stdlib.h>
 
 /*
 int main(int ac, char **av)
@@ -61,8 +62,23 @@ int test_parsing(std::string port, std::string password, Server *server, std::st
  */
 std::string get_port(char *first_arg)
 {
+    //on convertie d'abord le char * en string
     (void)first_arg;
     std::string port;
+
+    port.assign(first_arg);
+#if DEBUG
+    std::cout << "Port string is " << port << std::endl;
+#endif
+    //The RFC 6m056 says that the range for ephemeral ports should be 1024–65535
+    //On check si ca correspond a un port
+    int port_number = std::stoi(port);
+#if DEBUG
+ //   std::cout << "Port number is " << port_number << std::endl;
+#endif
+    //On retourne une string vide si le port number est incorrect
+    if (port_number < 1024  || port_number > 65535)
+        return (std::string());
     return (port);
 }
 
@@ -71,12 +87,17 @@ std::string get_port(char *first_arg)
  * 
  * @param second_arg 
  * @return std::string 
- * TODO: checker dans la RFC les exigeances sur le password
+ * TODO: checker si exigeances sur le password
  */
 std::string get_password(char *second_arg)
 {
     (void)second_arg;
     std::string password;
+
+    password.assign(second_arg);
+#if DEBUG
+    std::cout << "Argument password is " << password << std::endl;
+#endif
     return (password);
 }
 
@@ -117,6 +138,13 @@ int main(int ac, char **av)
             exit (1);
         }
     }
+    //Construction du server 
+    //TODO: ajouter ce constructeur ?
+    //Server serv(port, password);
+
+   // Server *server;
+    //buildServer(server, av);
+    //delete server;
    //TESTS PARSING 
    // std::string str = std::string(av[1]);
    // Server *server = new Server();
