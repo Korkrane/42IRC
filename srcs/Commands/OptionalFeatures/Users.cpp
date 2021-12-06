@@ -8,11 +8,10 @@
  * @param server
  * TODO: a reprendre suite a la modif de client
  */
-void usersCmd(t_cmd *cmd, User *client, Server *server) // 446 reply
+void usersCmd(User *client, Server *server) // 446 reply
 {
     (void)client;
     (void)server;
-    (void)cmd;
     /*
     std::vector<std::string> reply_params;
     std::string reply;

@@ -1,24 +1,24 @@
 #pragma once
 
-/*
 #define MAX_CLIENT 10
 #define PORT_SERVER 6667
 
 #include "irc.hpp"
 
+typedef std::pair<int, std::string>	t_clientCmd;
 class Channel;
 class Commands;
 class User;
 
-class Server
+class IRC
 {
 private:
     int                 _socket;
     int                 _port;
     int                 _totChannels;
-    int                 _totClients;
+    int                 _totUsers;
     std::vector<Channel *> _channels;
-    //TODO std::vector<User *> _clients;
+    //TODO std::vector<User *> _users;
     std::string         _name;
     std::string         _password;
     std::string         _version;
@@ -34,15 +34,26 @@ private:
     std::string         _server_ip;
     std::string         _server_creation;
 
+    //damien added elements
+    std::string const	_svPassword;
+	std::string const	_discEvenFD;
+
 public:
-    Server();
-    Server(Server const &src);
-    Server & operator=(Server const &src);
-    Server(std::string port, std::string password);
-    virtual ~Server();
+
+    //damien added elements
+    std::vector<int>	fds;		// FOR TESTING
+
+    IRC();
+    IRC(IRC const &src);
+    IRC & operator=(IRC const &src);
+    IRC(std::string const &password);
+    //IRC(std::string port, std::string password);
+    virtual ~IRC();
 
     //public ou privé ?
     Commands *_commands;
+
+    void ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList) const;
 
     void                set_name(std::string name);
     void                set_version(std::string version);

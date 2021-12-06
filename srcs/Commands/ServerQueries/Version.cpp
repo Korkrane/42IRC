@@ -1,16 +1,15 @@
 #include <irc.hpp>
 
 /**
- * @brief 
- * 
- * @param cmd 
- * @param client 
- * @param server 
+ * @brief
+ *
+ * @param cmd
+ * @param client
+ * @param server
  * TODO: a reprendre suite a la modif de client
  */
-void versionCmd(t_cmd *cmd, User *client, Server *server) // 351 & 402 reply
+void versionCmd(User *client, Server *server) // 351 & 402 reply
 {
-    (void)cmd;
     (void)client;
     (void)server;
     std::vector<std::string> reply_params;

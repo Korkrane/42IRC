@@ -3,7 +3,7 @@
 
 #include "Headers.hpp"
 #include "Client.hpp"
-#include "IRCTest.hpp"
+#include "IRCServer.hpp"
 
 #define MAX_LISTEN	42		// Max concurrent connections in queue
 #define SERVER_ERR(err)	do { std::cerr << RED << err << ": " << NC << strerror(errno) << std::endl; exit(1); } while (0)	// Print error msg, exit
@@ -39,7 +39,7 @@ public:
 
 	// Set up server properly for listening and accepting clients
 	void	SetUp(IRC *irc);
-	
+
 	// Kick off server's infinite loop (until SIGINT, SIGQUIT or SIGKILL received)
 	void	Run();
 };
