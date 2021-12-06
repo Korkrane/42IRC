@@ -9,7 +9,7 @@
  * @return false 
  * TODO: a tester 
  */
-bool nickIsAvailable(std::string nickname, Server *server, User *user)
+bool Commands::nickIsAvailable(std::string nickname, Server *server, User *user)
 {
   (void)nickname;
   (void)server;
@@ -46,13 +46,13 @@ bool nickIsAvailable(std::string nickname, Server *server, User *user)
  * 
  * @param nickname 
  */
-bool checkNickGrammar(std::string nickname, Server *server, User *user)
+bool Commands::checkNickGrammar(std::string nickname, Server *server, User *user)
 {
   (void)nickname;
   (void)server;
   (void)user;
 
-  std::string::size_type i = 0;
+  int i = 0;
   int length = nickname.length();
 
   //Preparation du vector qu'on envoie en cas d'erreur
@@ -135,6 +135,7 @@ void  Commands::nick(User *user, Server *server)
   std::vector<std::string> param;
   (void)param;
   bool res1 = checkNickGrammar(nick_arg, server, user);
+  if (res1 == false)
   {
     //A tester
     return ;
@@ -143,7 +144,6 @@ void  Commands::nick(User *user, Server *server)
   bool res2 = nickIsAvailable(nick_arg, server, user);
   if (res2 == false)
   {
-
     param.push_back(user->get_params().front());
     //A tester
     error_handler("433", user, NULL, param);

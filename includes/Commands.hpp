@@ -138,6 +138,13 @@ private:
 	 */
 	static void 			cap(User *client, Server *server);
 
+
+	/*
+	** Autres fonctions necessaires a nick
+	*/
+	static bool				checkNickGrammar(std::string nick, Server *server, User *user);
+	static bool				nickIsAvailable(std::string nick, Server *server, User *user);
+
 	/**
 	 * @brief
 	 *
@@ -147,12 +154,6 @@ private:
 	 * Mahaut
 	 */
 	static void 			nick(User *client, Server *server);
-
-	/*
-	** Autres fonctions necessaires a nick
-	*/
-	static bool				checkNickGrammar(std::string nick, Server *server, User *user);
-	static bool				nickIsAvailable(std::string nick, Server *server, User *user);
 
 	/**
 	 * @brief
