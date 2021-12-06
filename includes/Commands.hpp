@@ -50,6 +50,7 @@ public:
 
 		cmds.insert(std::pair<std::string, void (*)(Client *, Server *)>("AWAY", away_cmd));
 		cmds.insert(std::pair<std::string, void (*)(Client *, Server *)>("TIME", time_cmd));
+		cmds.insert(std::pair<std::string, void (*)(Client *, Server *)>("MOTD", motd_cmd));
 		return cmds;
 	}
 
@@ -59,6 +60,7 @@ public:
 private:
 	static void time_cmd(Client *client, Server *server);
 	static void away_cmd(Client *client, Server *server);
+	static void motd_cmd(Client *client, Server *server);
 	//static void	join(Client *client, Server *server);
 
 protected:
