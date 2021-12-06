@@ -18,7 +18,7 @@ private:
     int                 _totChannels;
     int                 _totUsers;
     std::vector<Channel *> _channels;
-    //TODO std::vector<User *> _users;
+    std::vector<User *> _users;
     std::string         _name;
     std::string         _password;
     std::string         _version;
@@ -41,13 +41,12 @@ private:
 public:
 
     //damien added elements
-    std::vector<int>	fds;		// FOR TESTING
+    std::vector<int>	fds;
 
     IRC();
     IRC(IRC const &src);
     IRC & operator=(IRC const &src);
     IRC(std::string const &password);
-    //IRC(std::string port, std::string password);
     virtual ~IRC();
 
     //public ou privé ?

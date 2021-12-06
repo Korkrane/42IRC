@@ -33,6 +33,17 @@ User::User(std::string server_name, std::string server_ip, std::string server_cr
 	return;
 }
 
+User::User(int fd): _socket(fd)
+/*: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
+{
+#if DEBUG
+	std::cout << BLUE << "\t\tDEBUG: User default constructor called with fd parameter only" << NC << std::endl;
+	//displayClientInfo();
+#endif
+	return;
+}
+
+
 /*
 ** Destructeur
 */
@@ -82,9 +93,9 @@ void User::set_hostname(std::string hostname)
 }
 
 /**
- * @brief 
- * 
- * @param port 
+ * @brief
+ *
+ * @param port
  * TODO: ajouter des tests pour verifier que les valeurs soient corrects
  */
 void	User::set_port(std::string port)
@@ -226,9 +237,9 @@ void User::set_server(Server server)
 }
 
 /**
- * @brief 
- * 
- * @param client_command 
+ * @brief
+ *
+ * @param client_command
  * TODO: Ajouter des verifications pour des char interdits ou des syntaxes ilogiques ?
  */
 void User::set_unparsed_client_command(std::string client_command)
@@ -433,7 +444,7 @@ std::string User::get_command_name(void) const
 #endif
 		return ("");
 	}
-		
+
 #if DEBUG
 	std::cout << "This client cmd command_name is " << command_name << std::endl;
 #endif
@@ -441,7 +452,7 @@ std::string User::get_command_name(void) const
 }
 
 /*
-** Utils parsing 
+** Utils parsing
 */
 std::string	User::get_unparsed_client_command(void) const
 {
@@ -477,10 +488,10 @@ unsigned int User::get_params_size(void) const
 */
 
 /**
- * @brief 
- * 
- * @return true 
- * @return false 
+ * @brief
+ *
+ * @return true
+ * @return false
  */
 bool	User::check_if_prefix(void) const
 {
@@ -725,7 +736,7 @@ void User::store_prefix()
 	}
 }
 /**
- * @brief 
+ * @brief
  * Question Mahaut : es-ce qu il faudrait retirer le prefix a l unparsed command ?
  * * Est-ce qu'on pourrait faire une fonction pour savoir a quelle index s'arrete la partie prefix ?
  * **TODO: a revoir Baudoin/Mahaut
@@ -751,7 +762,7 @@ void User::store_command()
 		{
 			//La commande doit etre le premier mot
 			//Attention si quelqu'un s'amusait a mettre des " ?
-			//Dans la command unparsed, ajouter un check de 
+			//Dans la command unparsed, ajouter un check de
 			std::string::size_type pos = this->get_unparsed_client_command().find(' ');
 			if (pos != std::string::npos)
 			{
@@ -889,7 +900,7 @@ void User::displayChannels(void)
 }
 
 
-void	User::display_params(void) //const 
+void	User::display_params(void) //const
 {
 	int i = 0;
 	if (this->_params.size() >= 1)
@@ -906,7 +917,7 @@ void	User::display_params(void) //const
 }
 
 /**
- * @brief 
+ * @brief
  * Question Mahaut: je n ai pas bien compris la partie unparsed ?
  */
 void User::display_command(void)

@@ -19,7 +19,7 @@ public:
 	Commands(void) : _cmds(_initCmds())
 	{
 #if DEBUG
-		std::cout << "Commands constructor called" << std::endl;
+		std::cout << BLUE <<  "DEBUG: Commands constructor called" << NC << std::endl;
 #endif
 	};
 
@@ -29,8 +29,7 @@ public:
 	virtual ~Commands()
 	{
 #if DEBUG
-		std::cout << "DEBUG: "
-				  << "Command destructor called" << std::endl;
+		std::cout << BLUE << "DEBUG: Command destructor called" << NC << std::endl;
 #endif
 	};
 

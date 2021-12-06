@@ -1,6 +1,4 @@
 #include <Server.hpp>
-//#include <irc.hpp>
-//#include <sys/socket.h>
 
 Server::Server(int port, std::string const &password) :
 	_port(port),
@@ -62,7 +60,7 @@ void	Server::acceptClient()
 		return;
 	}
 	std::cout << "New client on socket #" << clientFD << '\n';
-	
+
 	_clients.insert(std::make_pair(clientFD, new Client(clientFD)));
 	_irc->fds.push_back(clientFD);	// FOR TESTING
 }
@@ -87,7 +85,7 @@ void	Server::Run()
 	{
 		responseQueue.clear();
 		disconnectList.clear();
-	
+
 		int	totalFD = setFDForReading();
 		recvProcessCommand(totalFD, responseQueue, disconnectList);
 
@@ -146,9 +144,12 @@ void	Server::recvProcessCommand
 				if (!_clients[s]->receiveCommand(cmd))
 					removeClient(s);
 				else if (!cmd.empty())
-					_irc->ProcessCommand(
-						std::make_pair(s, cmd), responseQueue, disconnectList
-					);
+				{
+					#if DEBUG
+						std::cout << BLUE << "DEBUG: Server has to process command" << NC << std::endl;
+					#endif
+					_irc->ProcessCommand(std::make_pair(s, cmd), responseQueue, disconnectList);
+				}
 			}
 			--totalFD;
 		}

@@ -55,7 +55,9 @@ class User
 
         //voir si constructeur par defaut a mettre en prive
         User(void);
+
         User(std::string server_name, std::string server_ip, std::string server_creation, std::string port);
+        User(int fd);
         virtual ~User();
 
         std::string                 get_nickname(void) const;

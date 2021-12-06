@@ -23,7 +23,7 @@ IRC::IRC(void):
 	_discEvenFD("delete even\r\n")
 {
 #if DEBUG
-	std::cout << "IRC constructor called" << std::endl;
+	std::cout << BLUE << "DEBUG: IRC default constructor called" << NC << std::endl;
 #endif
 	_commands = new Commands();
 }
@@ -54,13 +54,12 @@ IRC::IRC(std::string const &password):
 	_svPassword(password),
 	_discEvenFD("delete even\r\n")
 {
-	/*
 	//gerer les attributs membres relatifs au temps
 	//initialiser hints
 #if DEBUG
-	std::cout << "IRC constructor called" << std::endl;
+	std::cout << BLUE << "DEBUG: IRC constructor with pass parameter called" << NC << std::endl;
 #endif
-*/
+	_commands = new Commands();
 }
 
 /**
@@ -71,7 +70,7 @@ IRC::~IRC()
 {
 	delete this->_commands;
 	#if DEBUG
-	std::cout << "DEBUG: " << "IRC destructor called" << std::endl;
+	std::cout << BLUE << "DEBUG: IRC destructor called" << NC << std::endl;
 	#endif
 	return;
 }
@@ -209,18 +208,50 @@ std::vector<Channel *>	IRC::get_channels(void) const
 
 void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList) const
 {
+	#if DEBUG
+		std::cout << BLUE << "\tDEBUG: Enter in IRC::ProcessCommand" << NC << std::endl;
+		std::cout << BLUE << "\tDEBUG: with clientfd: " << command.first << NC << std::endl;
+		std::cout << BLUE << "\tDEBUG: with command: " << command.second << NC << std::endl;
+	#endif
 	int	clientFD = command.first;
 	std::string const	&cmd = command.second;
+
 
 	for (std::vector<int>::const_iterator it = fds.begin(); it != fds.end(); ++it)
 		if (*it != clientFD)
 			responseQueue.push_back(std::make_pair(*it, cmd));
+
 
 	// Add even fds to the disconnect list
 	if (cmd == _discEvenFD)
 		for (std::vector<int>::const_iterator it = fds.begin(); it != fds.end(); ++it)
 			if (*it % 2 == 0)
 				disconnectList.push_back(*it);
+
+	//TODO
+	//if new user --> do registration
+	//if user is a valid client --> parse the incoming command
+	  //process the command
+	  //build reply
+	  //put reply to responseQueue
+
+	User *current_user;
+
+	if (std::find(fds.begin(), fds.end(), clientFD) == fds.end())
+	{
+		#if DEBUG
+			std::cout << BLUE << "DEBUG: Client found in the user list" << NC << std::endl;
+		#endif
+		//FD FOUND, PROCESS COMMAND
+	}
+	else
+	{
+		#if DEBUG
+			std::cout << BLUE << "\tDEBUG: Client not found in the user list" << NC << std::endl;
+		#endif
+		//this->fds.push_back (clientFD);
+		current_user = new User(clientFD);
+	}
 }
 
 void IRC::add_channel(Channel *new_channel)
