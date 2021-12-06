@@ -24,6 +24,7 @@ NAMES		=	main.cpp \
 				Commands/ChannelOperations/Part.cpp \
 				Commands/SendingMessages/Privmsg.cpp \
 				Commands/ConnectionRegistration/Quit.cpp \
+				Commands/ConnectionRegistration/ConnectionRegistration.cpp \
 				Commands/ServerQueries/Time.cpp \
 				Commands/ChannelOperations/Topic.cpp \
 				Commands/Other/Unknown.cpp \

@@ -1,11 +1,7 @@
-/*
+/* */
 #pragma once
 
-#include "channel.hpp"
-#include "Commands.hpp"
-#include "server.hpp"
-#include <Colors.hpp>
-#include "irc.hpp"
+#include <irc.hpp>
 
 class Server;
 class Channel;

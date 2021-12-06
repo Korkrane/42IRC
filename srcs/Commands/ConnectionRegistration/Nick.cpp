@@ -26,15 +26,15 @@ static bool checkNickGrammar(std::string nickname)
  * @brief
  *
  * @param command
- * @param client
+ * @param user
  * @param server
  * Parameters: <nickname>
  * NICK command is used to give user a nickname or change the existing
    one.
  */
-void  Commands::nick(User *client, Server *server)
+void  Commands::nick(User *user, Server *server)
 {
-  (void)client;
+  (void)user;
   (void)server;
   //On verifie le nombre de param (doit etre egal a 2)
 
