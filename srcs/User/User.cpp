@@ -420,6 +420,17 @@ std::string	User::get_unparsed_client_command(void) const
 	return (unparsed);
 }
 
+unsigned int User::get_params_size(void) const
+{
+	unsigned int size;
+
+	size = this->get_params().size();
+#if DEBUG
+	std::cout << "The param size of the current command is " << std::endl;
+#endif
+	return (size);
+}
+
 /*
 ** Utils
 */
@@ -872,3 +883,9 @@ void User::display_command(void)
  * TODO: faire un overload << (juste nickname ?)
  * voir si autres overload peuvent etre interessants
  */
+
+std::ostream& operator<<(std::ostream &COUT, User *user)
+{
+	COUT << user->get_nickname();
+	return (COUT);
+}

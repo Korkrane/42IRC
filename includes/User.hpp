@@ -1,6 +1,7 @@
 #pragma once
 
 #include <irc.hpp>
+#include <iostream>
 
 class Server;
 class Channel;
@@ -29,10 +30,11 @@ class User
         std::string                 _server_ip;
         std::string                 _server_creation;
 
-        std::string _unparsed_client_command;
-	    std::string _prefix;
-	    std::string _command_name;
-	    std::vector<std::string> _params;
+        /* Correspond a la commande pre parsee */
+        std::string                 _unparsed_client_command;
+	    std::string                 _prefix;
+	    std::string                 _command_name;
+	    std::vector<std::string>    _params;
 
         //voir l'importance du registration status
         bool                        _registration_status;
@@ -70,9 +72,12 @@ class User
         int                         get_message_status(void) const;
         int                         get_socket(void) const;
         int                         get_channels_nb(void) const;
+
+        /* Getters preparsing */
         std::vector<std::string>    get_params(void) const;
         std::string                 get_command_name(void) const;
         std::string                 get_prefix(void) const;
+        unsigned int                get_params_size(void) const;
 
         bool                        user_is_registered(void) const;
         bool                        user_registered_password(void) const;
@@ -141,3 +146,6 @@ class User
        void                         display_command(void);
        void	                        display_params(void);
 };
+
+//Utils to display overloading <<
+std::ostream& operator<<(std::ostream &COUT, User *user);

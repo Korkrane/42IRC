@@ -1,18 +1,16 @@
-#include "../../includes/irc.hpp"
-
-#include <cstdlib>
+#include <irc.hpp>
 
 /**
  * @brief 
  * 
  * @param error_code 
- * @param client 
+ * @param user 
  * @param channel 
  * @param parameter 
  * TODO: a tester + voir si on peut faire un pointeur sur fonction
  * * pour que ce soit plus classe ?
  */
-void error_handler(std::string error_code, User *client, Channel *channel, std::string parameter)
+void error_handler(std::string error_code, User *user, Channel *channel, std::vector<std::string> parameter)
 {
     //Besoin de faire une "correspondance" entre le message d erreur et le code
     unsigned int code;
@@ -138,7 +136,7 @@ void error_handler(std::string error_code, User *client, Channel *channel, std::
             /*
             ** A revoir egalement, pas sure des parametres
             */
-            error_to_send = ERR_NICKCOLLISION(parameter, client->get_realname(), client->get_hostname());
+            error_to_send = ERR_NICKCOLLISION(parameter, user->get_realname(), user->get_hostname());
             break ;
         }
         case 437:
@@ -309,6 +307,6 @@ void error_handler(std::string error_code, User *client, Channel *channel, std::
         }
     }
     //fonction qui va permettre d envoyer le message au serveur
-    //send(client->get_socket(), error_to_send.c_str());
+    //send(user->get_socket(), error_to_send.c_str());
     return ;
 }

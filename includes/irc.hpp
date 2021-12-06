@@ -37,6 +37,7 @@
 #include <ParsingUtils.hpp>
 #include <ClientUtils.hpp>
 #include <User.hpp>
+#include <ErrorHandling.hpp>
 
 class Server;
 class Client;

@@ -48,6 +48,7 @@ INCLUDES	=	./includes/channel.hpp \
 				./includes/ClientUtils.hpp \
 				./includes/IRCTest.hpp \
 				./includes/User.hpp \
+				./includes/ErrorHandling.hpp \
 
 #./includes/client.hpp
 #./includes/server.hpp
