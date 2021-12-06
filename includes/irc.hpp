@@ -25,6 +25,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/select.h>
+#include <algorithm>
 
 #include "channel.hpp"
 #include <Client.hpp>
@@ -38,6 +39,11 @@
 #include <ClientUtils.hpp>
 #include <User.hpp>
 #include <ErrorHandling.hpp>
+
+#define NICK_VALID_CHARS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-^_[]{}\\|"
+#define CHANNEL_VALID_CHARS "#&!+"
+#define USER_VALID_MODES "aiwroOs"
+#define CHANNEL_VALID_MODES "OovaimnpsrtklbeI"
 
 class Server;
 class Client;

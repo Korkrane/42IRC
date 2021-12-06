@@ -1,4 +1,5 @@
 #include <irc.hpp>
+#include <algorithm>
 
 /**
  * @brief 
@@ -6,15 +7,37 @@
  * @param nickname 
  * @return true 
  * @return false 
+ * TODO: a tester 
  */
-bool nickIsAvailable(std::string nickname)
+bool nickIsAvailable(std::string nickname, Server *server, User *user)
 {
   (void)nickname;
-  //Capitalizer pour etre sensible a la casse g
-  //Faire le tour des user et voir si leur nickname correspond
-  //J'ai fait le test pour voir si c etait sensible a la casse et ca avat l'air
-  //de faire timeout freenode
+  (void)server;
+  (void)user;
 
+  //Capitalizer pour etre sensible a la casse
+  std::string str(nickname);
+  std::transform(str.begin(), str.end(),str.begin(), ::toupper);
+
+  //Faire le tour des user et voir si leur nickname correspond
+  //Users rajoute sur la partie de Damien ?
+  std::vector<User *>::iterator it = server->get_users().begin();
+  std::vector<User *>::iterator ite = server->get_users().end();
+  std::string cmp;
+  while (it != ite)
+  {
+    cmp = (*it)->get_nickname();
+    std::transform(cmp.begin(), cmp.end(), cmp.begin(), ::toupper);
+    if (cmp.compare(str) == 0)
+    {
+#if DEBUG
+      std::cout << "There must be a nickname collision." << std::endl;
+      std::cout << str << "is should be the same as " << cmp << std::endl;
+#endif
+      return (false);
+    }
+    it++;
+  }
   return (true);
 }
 
@@ -23,16 +46,50 @@ bool nickIsAvailable(std::string nickname)
  * 
  * @param nickname 
  */
-bool checkNickGrammar(std::string nickname)
+bool checkNickGrammar(std::string nickname, Server *server, User *user)
 {
   (void)nickname;
+  (void)server;
+  (void)user;
 
-  //Attention a certains caracteres speciaux
-  std::string special("[]\\_^{|}");
+  std::string::size_type i = 0;
+  int length = nickname.length();
 
-  //Le premier caractere doit etre un alpha
+  //Preparation du vector qu'on envoie en cas d'erreur
+  std::vector<std::string> param_error;
+  param_error.push_back(nickname);
 
-  //le premier caractere ne doit pas faire partie du charset special
+  //La taille du nick ne doit pas depasser 9 idealement
+  if (length > 9)
+  {
+ #if DEBUG
+    std::cout << "Nickname size is too big and should be avoided." << std::endl;
+ #endif
+    
+    error_handler("432", user, NULL, param_error);
+    return (false);
+  }
+  while (i < length)
+  {
+    if (!std::strchr(NICK_VALID_CHARS, nickname[i]))
+    {
+#if DEBUG
+      std::cout << "Found special char that should be avoided." << std::endl;
+#endif
+      error_handler("432", user, NULL, param_error);
+      return (false);
+    }
+    i++;
+  }
+  //Le premier caractere doit etre un alpha (a retester)
+  if (!isalpha(nickname[0]))
+  {
+#if DEBUG
+    std::cout << "The nickname does not start with an alpha and that should be avoided."
+#endif
+    error_handler("432", user, NULL, param_error);
+    return (false);
+  }
 
   return true;
 }
@@ -64,6 +121,7 @@ void  Commands::nick(User *user, Server *server)
 #if DEBUG
     std::cout << "Nick command called but param size is incorrect" << std::endl;
 #endif
+    //A rechecker
     std::vector<std::string> command;
     std::string cmd_str = user->get_command_name();
     command.push_back(cmd_str);
@@ -74,8 +132,23 @@ void  Commands::nick(User *user, Server *server)
 #if DEBUG
   std::cout << "param for nick command is " << nick_arg << std::endl;
 #endif
-  bool res = checkNickGrammar(nick_arg);
+  std::vector<std::string> param;
+  (void)param;
+  bool res1 = checkNickGrammar(nick_arg, server, user);
+  {
+    //A tester
+    return ;
+  }
   //Puis on verifie que le nickname n existe pas deja (-> sinon cas de collision)
+  bool res2 = nickIsAvailable(nick_arg, server, user);
+  if (res2 == false)
+  {
+
+    param.push_back(user->get_params().front());
+    //A tester
+    error_handler("433", user, NULL, param);
+    return ;
+  }
   //Preparer la reponse pour le serveur
   //Modifier les infos relatives au client pour enregistrer le nickname
   return;

@@ -1,18 +1,11 @@
 #pragma once
 
-//#include "Server.hpp"
-//#include "User.hpp"
-//#include "Channel.hpp"
 #include <irc.hpp>
 
 class Channel;
 class User;
 class Server;
-/*
-** Classe Command(s)
-** Les fonctions qui en font une classe canonique sont partagees
-** entre public et protected.
-*/
+
 class Commands
 {
 public:
@@ -154,11 +147,12 @@ private:
 	 * Mahaut
 	 */
 	static void 			nick(User *client, Server *server);
+
 	/*
 	** Autres fonctions necessaires a nick
 	*/
-	static bool				checkNickGrammar(std::string nick);
-	static bool				nickIsAvailable(std::string);
+	static bool				checkNickGrammar(std::string nick, Server *server, User *user);
+	static bool				nickIsAvailable(std::string nick, Server *server, User *user);
 
 	/**
 	 * @brief

@@ -153,3 +153,14 @@ void	Server::recvProcessCommand
 			--totalFD;
 		}
 }
+
+//Ajout Mahaut - faire une fonction d'affichage + overloads ?
+std::vector<User *>	Server::get_users(void) const
+{
+	std::vector<User *> users;
+	users = this->_users;
+#if DEBUG
+	std::cout << "get_users function called" << std::endl;
+#endif
+	return (users);
+}
