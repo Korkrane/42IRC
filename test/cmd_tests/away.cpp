@@ -17,7 +17,7 @@ void test_1()
     std::cout << "--- TEST1 AWAY CMD ---" << std::endl;
 
     Server  server;
-    Client *my_test_client = new Client();
+    User *my_test_client = new User();
     t_cmd   client_command;
 
     my_test_client->set_nickname("bahaas");
@@ -38,7 +38,7 @@ void test_2()
 {
     std::cout << "--- TEST2 AWAY CMD ---" << std::endl;
     Server  server;
-    Client *my_test_client = new Client();
+    User *my_test_client = new User();
     t_cmd   client_command;
 
     my_test_client->set_nickname("bahaas");
@@ -59,7 +59,7 @@ void test_3()
 {
     std::cout << "--- TEST3 AWAY CMD ---" << std::endl;
     Server  server;
-    Client *my_test_client = new Client();
+    User *my_test_client = new User();
     t_cmd   client_command;
 
     my_test_client->set_nickname("bahaas");
@@ -80,7 +80,7 @@ void test_4()
 {
     std::cout << "--- TEST4 AWAY CMD ---" << std::endl;
     Server  server;
-    Client *my_test_client = new Client();
+    User *my_test_client = new User();
     t_cmd   client_command;
 
     my_test_client->set_nickname("bahaas");

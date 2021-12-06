@@ -8,7 +8,7 @@
  * @param server
  * TODO: a reprendre suite a la modif de client
  */
-void usersCmd(t_cmd *cmd, Client *client, Server *server) // 446 reply
+void usersCmd(t_cmd *cmd, User *client, Server *server) // 446 reply
 {
     (void)client;
     (void)server;

@@ -9,7 +9,7 @@
  * Mahaut
  */
 
-void Commands::join(Client *client, Server *server)
+void Commands::join(User *client, Server *server)
 {
     (void)client;
     (void)server;

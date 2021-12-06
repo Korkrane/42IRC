@@ -7,7 +7,7 @@
  * @param server 
  * Mahaut
  */
-void		Commands::topic(Client *client, Server *server)
+void		Commands::topic(User *client, Server *server)
 {
     (void)client;
     (void)server;

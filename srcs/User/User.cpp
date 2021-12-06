@@ -5,7 +5,7 @@
 ** TODO: voir ce qu'il y a de mieux pour initialiser les valeurs
 ** Attention particuliere a porter sur le nickname et le password (?)
 */
-Client::Client(void) : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
+User::User(void) : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
 {
 #if DEBUG
 	std::cout << "Client default constructor called" << std::endl;
@@ -16,7 +16,7 @@ Client::Client(void) : _nickname("null"), _username("null"), _hostname("null"), 
 /*
 ** Faire des tests pour voir ce qui est important pour l'initialisation
 */
-Client::Client(std::string server_name, std::string server_ip, std::string server_creation, std::string port) : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
+User::Client(std::string server_name, std::string server_ip, std::string server_creation, std::string port) : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
 {
 #if DEBUG
 	std::cout << "Client default constructor called" << std::endl;
@@ -27,7 +27,7 @@ Client::Client(std::string server_name, std::string server_ip, std::string serve
 /*
 ** Destructeur
 */
-Client::~Client(void)
+User::~User(void)
 {
 #if DEBUG
 	std::cout << "Client destructor called" << std::endl;
@@ -39,7 +39,7 @@ Client::~Client(void)
 ** Setters
 */
 
-void Client::set_nickname(std::string nickname)
+void User::set_nickname(std::string nickname)
 {
 	this->_nickname = nickname;
 #if DEBUG
@@ -107,7 +107,7 @@ void Client::set_away_mssg(std::string message)
 /*
 ** Setters added
 */
-void Client::set_password_as_registered(bool is_set)
+void User::set_password_as_registered(bool is_set)
 {
 	this->_pass_registered = is_set;
 #if DEBUG
@@ -150,7 +150,7 @@ void Client::set_message_status(int status)
 /*
 ** revoir si on prefere utiliser select ou socket
 */
-void Client::set_init_socket(int socket)
+void User::set_init_socket(int socket)
 {
 	this->_socket = socket;
 	//this->fd = socket;
@@ -162,7 +162,7 @@ void Client::set_init_socket(int socket)
 /*
 ** Rechercher dans la documentation
 */
-void Client::set_server_name(std::string server_name)
+void User::set_server_name(std::string server_name)
 {
 	this->_server_name = server_name;
 #if DEBUG
@@ -173,7 +173,7 @@ void Client::set_server_name(std::string server_name)
 /*
 ** Verifier si il ne vaudrait pas mieux que ce soit const
 */
-void Client::set_server_ip(std::string server_ip)
+void User::set_server_ip(std::string server_ip)
 {
 	this->_server_ip = server_ip;
 #if DEBUG
@@ -200,7 +200,7 @@ void Client::set_server(Server server)
  * @param client_command 
  * TODO: Ajouter des verifications pour des char interdits ou des syntaxes ilogiques ?
  */
-void Client::set_unparsed_client_command(std::string client_command)
+void User::set_unparsed_client_command(std::string client_command)
 {
 	this->_unparsed_client_command = client_command;
 #if DEBUG
@@ -219,7 +219,7 @@ void	Client::set_command(std::string command)
 /*
 ** Getters
 */
-std::string Client::get_nickname(void) const
+std::string User::get_nickname(void) const
 {
 	std::string nick = this->_nickname;
 #if DEBUG
@@ -295,7 +295,7 @@ std::string Client::get_away_mssg(void) const
 /*
 ** Added
 */
-std::string Client::get_password(void) const
+std::string User::get_password(void) const
 {
 	std::string pass = this->_password;
 #if DEBUG
@@ -325,7 +325,7 @@ std::string Client::get_message(void) const
 /*
 ** voir message status
 */
-int Client::get_message_status(void) const
+int User::get_message_status(void) const
 {
 	int status = this->_message_status;
 #if DEBUG
@@ -337,7 +337,7 @@ int Client::get_message_status(void) const
 /*
 ** Voir quand la socket est necessaire
 */
-int Client::get_socket(void) const
+int User::get_socket(void) const
 {
 	int socket = this->_socket;
 #if DEBUG
@@ -350,7 +350,7 @@ int Client::get_socket(void) const
 ** Puisqu'il s'agit d'un vecteur il est aisé de retrouver sa taille
 ** A tester
 */
-int Client::get_channels_nb(void) const
+int User::get_channels_nb(void) const
 {
 	int size = this->_channels.size();
 #if DEBUG
@@ -372,7 +372,7 @@ std::vector<std::string> Client::get_params(void) const
  * @return unsigned int 
  * TODO: a tester
  */
-unsigned int			Client::get_params_size(void) const
+unsigned int			User::get_params_size(void) const
 {
 	unsigned int size = this->get_params().size();
 #if DEBUG
@@ -408,7 +408,7 @@ std::string Client::get_command_name(void) const
 /*
 ** Utils parsing 
 */
-std::string	Client::get_unparsed_client_command(void) const
+std::string	User::get_unparsed_client_command(void) const
 {
 	std::string unparsed;
 
@@ -429,7 +429,7 @@ std::string	Client::get_unparsed_client_command(void) const
  * @return true 
  * @return false 
  */
-bool	Client::check_if_prefix(void) const
+bool	User::check_if_prefix(void) const
 {
 	char colon = ':';
 	std::string check = this->get_unparsed_client_command();
@@ -448,7 +448,7 @@ bool	Client::check_if_prefix(void) const
 /*
 ** Voir quand est-ce qu'on va le set a true
 */
-bool Client::user_is_registered(void) const
+bool User::user_is_registered(void) const
 {
 	bool registered = this->_registration_status;
 #if DEBUG
@@ -460,7 +460,7 @@ bool Client::user_is_registered(void) const
 /*
 ** Voir si c est possible que ce ne soit pas le cas ?
 */
-bool Client::user_registered_password(void) const
+bool User::user_registered_password(void) const
 {
 	bool password = this->_pass_registered;
 #if DEBUG
@@ -499,7 +499,7 @@ bool Client::user_is_operator(void) const
 /*
 ** Info server
 */
-std::string Client::get_server_name(void) const
+std::string User::get_server_name(void) const
 {
 	std::string name = this->_server_name;
 #if DEBUG
@@ -534,7 +534,7 @@ std::string Client::get_server_creation(void) const
 ** Comme il s'agit d'un vecteur il est simple de tout effacer
 ** voir dans quel cas de figure on a besoin de clear (a part free de tout ?)
 */
-void Client::clear_client_message(void)
+void User::clear_client_message(void)
 {
 	this->_message.clear();
 #if DEBUG
@@ -556,7 +556,7 @@ void						Client::clear_client_command(void)
 ** recv (a voir)
 ** TODO: Damien
 */
-void Client::send_message_to_server(void)
+void User::send_message_to_server(void)
 {
 	//recv
 	//declarer un buffer
@@ -571,7 +571,7 @@ void Client::send_message_to_server(void)
 /**
 ** TODO: Damien
 */
-void Client::check_message(void)
+void User::check_message(void)
 {
 	//parsing du "end char"
 	//ajouter le message dans le vecteur des commandes si on a recu un end_char
@@ -582,7 +582,7 @@ void Client::check_message(void)
 ** A tester
 ** voir s'il faudrait faire un operateur de comparaison dans channel ?
 */
-void Client::join_channel(Channel *channel)
+void User::join_channel(Channel *channel)
 {
 	if (!channel)
 		return;
@@ -606,7 +606,7 @@ void Client::join_channel(Channel *channel)
 /**
 ** TODO: faire un overload pour operator<< sur channel
 */
-void Client::quit_channel(Channel *channel)
+void User::quit_channel(Channel *channel)
 {
 	if (!channel)
 		return;
@@ -633,7 +633,7 @@ void Client::quit_channel(Channel *channel)
 /**
 ** TODO: verifier que tout est ok niveau leaks etc
 */
-void Client::quit_all_channels(void)
+void User::quit_all_channels(void)
 {
 	//verifier si la liste n est pas deja vide ?
 	//ajouter des fonctions qui checkent si les vector sont vides ?
@@ -644,7 +644,7 @@ void Client::quit_all_channels(void)
 ** Parsing client message
 */
 
-int Client::store_string_until_char(std::string *dest, std::string *src, char c, int len)
+int User::store_string_until_char(std::string *dest, std::string *src, char c, int len)
 {
 	for (std::string::iterator it = src->begin(); it != src->end(); ++it)
 	{
@@ -659,7 +659,7 @@ int Client::store_string_until_char(std::string *dest, std::string *src, char c,
 	return (len);
 }
 
-void Client::store_prefix()
+void User::store_prefix()
 {
 	if (this->_unparsed_client_command != "")
 	{
@@ -677,7 +677,7 @@ void Client::store_prefix()
  * * Est-ce qu'on pourrait faire une fonction pour savoir a quelle index s'arrete la partie prefix ?
  * **TODO: a revoir Baudoin/Mahaut
  */
-void Client::store_command()
+void User::store_command()
 {
 	std::string command;
 	//if (this->_unparsed_client_command != "")
@@ -770,11 +770,11 @@ void Client::store_params()
 }
 
 //TODO
-void Client::check_command()
+void User::check_command()
 {
 }
 
-void Client::exec_command()
+void User::exec_command()
 {
 	std::map<std::string, void (*)(Client *, Server *)>::iterator it = this->_server->_commands->_cmds.begin();
 	int known_command = 0;
@@ -804,7 +804,7 @@ void Client::exec_command()
 /*
 ** Display / Debug
 */
-void Client::displayClientInfo(void)
+void User::displayClientInfo(void)
 {
 	std::cout << "----- Displaying Client Info -----" << std::endl;
 	std::cout << "Nickname : " << this->get_nickname() << std::endl;
@@ -812,7 +812,7 @@ void Client::displayClientInfo(void)
 	this->displayChannels();
 }
 
-void Client::displayChannels(void)
+void User::displayChannels(void)
 {
 	std::cout << "--- Listing Channels ---" << std::endl;
 	std::vector<Channel *>::iterator it = this->_channels.begin();
@@ -826,7 +826,7 @@ void Client::displayChannels(void)
 }
 
 
-void	Client::display_params(void) //const 
+void	User::display_params(void) //const 
 {
 	int i = 0;
 	if (this->_params.size() >= 1)
@@ -846,7 +846,7 @@ void	Client::display_params(void) //const
  * @brief 
  * Question Mahaut: je n ai pas bien compris la partie unparsed ?
  */
-void Client::display_command(void)
+void User::display_command(void)
 {
 	std::cout << "--- Displaying Last command parsed ---" << std::endl;
 	//TODO: faire un getter pour cette commande ?

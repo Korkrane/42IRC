@@ -17,7 +17,7 @@ void test_1()
     std::cout << "--- TEST1 ADMIN CMD ---" << std::endl;
 
     Server server;
-    Client my_test_client;
+    User my_test_client;
     t_cmd  client_command;
 
     my_test_client.set_nickname("bahaas");
@@ -40,7 +40,7 @@ void test_2()
     std::cout << "--- TEST2 VERSION CMD ---" << std::endl;
 
     Server server;
-    Client my_test_client;
+    User my_test_client;
     t_cmd  client_command;
 
     my_test_client.set_nickname("bahaas");
@@ -63,7 +63,7 @@ void test_3()
     std::cout << "--- TEST3 ADMIN CMD ---" << std::endl;
 
     Server server;
-    Client my_test_client;
+    User my_test_client;
     t_cmd  client_command;
 
     my_test_client.set_nickname("bahaas");

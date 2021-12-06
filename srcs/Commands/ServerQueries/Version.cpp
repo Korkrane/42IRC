@@ -8,7 +8,7 @@
  * @param server 
  * TODO: a reprendre suite a la modif de client
  */
-void versionCmd(t_cmd *cmd, Client *client, Server *server) // 351 & 402 reply
+void versionCmd(t_cmd *cmd, User *client, Server *server) // 351 & 402 reply
 {
     (void)cmd;
     (void)client;

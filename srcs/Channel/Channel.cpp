@@ -5,7 +5,7 @@
 ** Last editor: Mahaut
 ** TODO: voir comment initialiser la clients list
 */
-Channel::Channel(std::string name, Client *client) : _name(name), _topic("null"), _modes("null"), _operators(0), _clients(0), _banned_clients(0), _invited_clients(0), _voice_priv_clients(0), _channel_owner(0), _members_nb(0), _topic_set(false)
+Channel::Channel(std::string name, User *client) : _name(name), _topic("null"), _modes("null"), _operators(0), _clients(0), _banned_clients(0), _invited_clients(0), _voice_priv_clients(0), _channel_owner(0), _members_nb(0), _topic_set(false)
 {
 	(void)client;
 #if DEBUG
@@ -104,9 +104,9 @@ unsigned int		Channel::get_members_nb(void) const
 ** A tester
 ** Voir comment les membres sont ajoutes
 */
-std::vector<Client *>	Channel::get_member_list(void) const
+std::vector<User *>	Channel::get_member_list(void) const
 {
-	std::vector<Client *> member_list;
+	std::vector<User *> member_list;
 	member_list = this->_clients;
 #if DEBUG
 	std::cout << "get_member_list called, the list is : " << std::endl;
@@ -118,9 +118,9 @@ std::vector<Client *>	Channel::get_member_list(void) const
 /*
 ** Voir comment les operateurs sont ajoutes
 */
-std::vector<Client *>	Channel::get_operators(void) const
+std::vector<User *>	Channel::get_operators(void) const
 {
-	std::vector<Client *> operators = this->_operators;
+	std::vector<User *> operators = this->_operators;
 #if DEBUG
 	std::cout << "get_operator called, the list is : " << std::endl;
 	//TODO: faire fonction pour afficher les operateurs
@@ -277,7 +277,7 @@ bool				Channel::isNicknameUnique(Client *client)
 ** It is a vector so it's easy to add something
 * TODO: A tester (voir free membres client ?)
 */
-void				Channel::newMember(Client *client)
+void				Channel::newMember(User *client)
 {
 	(void)client;
 	/*
@@ -363,7 +363,7 @@ void				Channel::removeFromOperators(Client *client)
 */
 bool				Channel::channelHasOperator(void)
 {
-	std::vector<Client *>::iterator it = this->_operators.begin();
+	std::vector<User *>::iterator it = this->_operators.begin();
 	if (!(*it))
 		return (false);
 	return (true);
@@ -374,7 +374,7 @@ bool				Channel::channelHasOperator(void)
 */
 bool				Channel::channelHasBanned(void)
 {
-	std::vector<Client *>::iterator it = this->_banned_clients.begin();
+	std::vector<User *>::iterator it = this->_banned_clients.begin();
 	if (!(*it))
 		return (false);
 	return (true);
@@ -382,7 +382,7 @@ bool				Channel::channelHasBanned(void)
 
 bool				Channel::channelHasClients(void)
 {
-	std::vector<Client *>::iterator it = this->_clients.begin();
+	std::vector<User *>::iterator it = this->_clients.begin();
 	if (!(*it))
 		return (false);
 #if debug

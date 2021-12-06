@@ -182,9 +182,9 @@ void S::add_channel(Channel *new_channel)
 
 /** 
 ** TODO: a supprimer ? Il me semble qu il y a un pb de version
-std::map<std::string, void (*)(t_cmd *, Client *, Server *)> _initCmds()
+std::map<std::string, void (*)(t_cmd *, User *, Server *)> _initCmds()
 {
-    std::map<std::string, void (*)(t_cmd *, Client *, Server *)> cmds;
+    std::map<std::string, void (*)(t_cmd *, User *, Server *)> cmds;
     cmds["PASS"]    = passCmd;
     cmds["NICK"]    = nickCmd;
     cmds["USER"]    = userCmd;

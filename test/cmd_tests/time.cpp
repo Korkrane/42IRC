@@ -17,7 +17,7 @@ void test_1()
     std::cout << "--- TEST1 TIME CMD ---" << std::endl;
 
     Server server;
-    Client my_test_client;
+    User my_test_client;
     t_cmd  client_command;
 
     my_test_client.set_nickname("bahaas");

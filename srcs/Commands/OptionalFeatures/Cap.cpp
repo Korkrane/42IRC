@@ -8,7 +8,7 @@
  * @param server
  * * TODO: a tester
  */
-void Commands::cap(Client *client, Server *server)
+void Commands::cap(User *client, Server *server)
 {
     //retourne une erreur
     (void)client;

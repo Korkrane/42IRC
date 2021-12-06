@@ -7,7 +7,7 @@
  * @param server 
  * TODO: a reprendre suite a la modification de clientm
  */
-void Commands::unknown_cmd(Client *client, Server *server)
+void Commands::unknown_cmd(User *client, Server *server)
 {
     (void)client;
     (void)server;

@@ -8,7 +8,7 @@
 
 class Channel;
 class Commands;
-class Client;
+class User;
 
 class Server
 {
@@ -18,7 +18,7 @@ private:
     int                 _totChannels;
     int                 _totClients;
     std::vector<Channel *> _channels;
-    //TODO std::vector<Client *> _clients;
+    //TODO std::vector<User *> _clients;
     std::string         _name;
     std::string         _password;
     std::string         _version;
@@ -68,11 +68,11 @@ public:
     void    refuseClient(void);
     void    addClient(void);
     void    removeClient(int fd);
-    //Client* find_client_from_fd(int fd);
+    //User* find_client_from_fd(int fd);
 
-    void    receiveMessage(Client *client);
-    void    sendGreetings(Client *client);
-    void    welcomeClient(Client *client);
+    void    receiveMessage(User *client);
+    void    sendGreetings(User *client);
+    void    welcomeClient(User *client);
 
     void                    display_channels(void);
 };

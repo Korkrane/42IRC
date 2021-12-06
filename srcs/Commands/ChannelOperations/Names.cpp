@@ -8,7 +8,7 @@
  * TODO: voir la notion de "nickname visibles"
  * Mahaut
  */
-void		Commands::names(Client *client, Server *server)
+void		Commands::names(User *client, Server *server)
 {
     (void)client;
     (void)server;

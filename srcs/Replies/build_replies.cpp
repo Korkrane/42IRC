@@ -23,7 +23,7 @@ std::string format_code_str(int code)
  * @return std::string
  * TODO: reprendre avec User
  */
-std::string build_reply(int code, Client *client, std::vector<std::string> params)
+std::string build_reply(int code, User *client, std::vector<std::string> params)
 {
     (void)code;
     (void)client;

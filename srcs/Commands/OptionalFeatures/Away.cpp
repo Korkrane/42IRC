@@ -1,7 +1,7 @@
 #include <irc.hpp>
 
 //TODO: A remettre a jour avec la nouvelle version de client
-void Commands::away_cmd(Client *client, Server *server) // 305 & 306 reply
+void Commands::away_cmd(User *client, Server *server) // 305 & 306 reply
 {
     (void)client;
     (void)server;

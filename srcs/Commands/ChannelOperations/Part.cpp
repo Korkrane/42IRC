@@ -12,7 +12,7 @@
    parameter string.
  * Mahaut 
  */
-void  Commands::part(Client *client, Server *server)
+void  Commands::part(User *client, Server *server)
 {
   (void)client;
   (void)server;

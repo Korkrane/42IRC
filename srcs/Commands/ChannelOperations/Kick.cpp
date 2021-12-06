@@ -8,7 +8,7 @@
  * @param server 
  * Mahaut
  */
-void		Commands::kick(Client *client, Server *server)
+void		Commands::kick(User *client, Server *server)
 {
     (void)client;
     (void)server;

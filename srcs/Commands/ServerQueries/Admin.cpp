@@ -2,7 +2,7 @@
 
 // TODO: a reprendre avec la nouvelle version du serveur
 /*
-void adminCmd(t_cmd *cmd, Client *client, Server *server) // 256 to 259 & 402 reply
+void adminCmd(t_cmd *cmd, User *client, Server *server) // 256 to 259 & 402 reply
 {
     std::vector<std::string> reply_params;
     std::string              reply;

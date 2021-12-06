@@ -7,7 +7,7 @@
  * @param server 
  * Mahaut 
  */
-void		Commands::list(Client *client, Server *server)
+void		Commands::list(User *client, Server *server)
 {
     (void)client;
     (void)server;

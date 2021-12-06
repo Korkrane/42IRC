@@ -12,7 +12,7 @@
  * TODO: a tester + voir si on peut faire un pointeur sur fonction
  * * pour que ce soit plus classe ?
  */
-void error_handler(std::string error_code, Client *client, Channel *channel, std::string parameter)
+void error_handler(std::string error_code, User *client, Channel *channel, std::string parameter)
 {
     //Besoin de faire une "correspondance" entre le message d erreur et le code
     unsigned int code;

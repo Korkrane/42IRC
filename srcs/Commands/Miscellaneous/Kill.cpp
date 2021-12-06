@@ -15,7 +15,7 @@ class Commands;
  * See more on RFC 2812.
  */
 
-void Commands::kill(Client *client, Server *server)
+void Commands::kill(User *client, Server *server)
 {
     (void)client;
     (void)server;
