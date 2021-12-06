@@ -6,6 +6,7 @@
  * 
  * @param client 
  * @param server 
+ * Mahaut
  */
 void		Commands::kick(Client *client, Server *server)
 {

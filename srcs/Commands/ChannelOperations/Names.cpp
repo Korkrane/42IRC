@@ -6,6 +6,7 @@
  * @param client 
  * @param server 
  * TODO: voir la notion de "nickname visibles"
+ * Mahaut
  */
 void		Commands::names(Client *client, Server *server)
 {

@@ -5,6 +5,7 @@
  * 
  * @param client 
  * @param server 
+ * Mahaut
  */
 void		Commands::topic(Client *client, Server *server)
 {

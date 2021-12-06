@@ -6,7 +6,7 @@
  * @param nickname
  * @return true
  * @return false
- * TODO: faire des tests sur un server
+ * Mahaut
  */
 
 /*TODO: a reprendre

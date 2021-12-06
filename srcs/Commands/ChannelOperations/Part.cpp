@@ -10,6 +10,7 @@
  * The PART command causes the user sending the message to be removed
    from the list of active members for all given channels listed in the
    parameter string.
+ * Mahaut 
  */
 void  Commands::part(Client *client, Server *server)
 {

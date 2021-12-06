@@ -6,6 +6,7 @@
  * @param command
  * @param client
  * @param server
+ * Mahaut
  */
 
 void Commands::join(Client *client, Server *server)
