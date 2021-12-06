@@ -1,11 +1,6 @@
-/*
 #pragma once
 
-#include "channel.hpp"
-#include "Commands.hpp"
-#include "server.hpp"
-#include <Colors.hpp>
-#include "irc.hpp"
+#include <irc.hpp>
 
 class Server;
 class Channel;
@@ -146,4 +141,3 @@ class User
        void                         display_command(void);
        void	                        display_params(void);
 };
-*/

@@ -45,7 +45,8 @@ INCLUDES	=	./includes/channel.hpp \
 				./includes/Headers.hpp \
 				./includes/Colors.hpp \
 				./includes/ClientUtils.hpp \
-				./includes/IRCTest.hpp 
+				./includes/IRCTest.hpp \
+				./includes/User.hpp \
 
 #./includes/client.hpp
 #./includes/server.hpp

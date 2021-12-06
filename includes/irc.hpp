@@ -36,6 +36,7 @@
 #include <IRCTest.hpp>
 #include <ParsingUtils.hpp>
 #include <ClientUtils.hpp>
+#include <User.hpp>
 
 class Server;
 class Client;

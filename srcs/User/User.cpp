@@ -1,4 +1,5 @@
 #include <irc.hpp>
+#include <User.hpp>
 
 /*
 ** Constructeur
@@ -8,7 +9,7 @@
 User::User(void) : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
 {
 #if DEBUG
-	std::cout << "Client default constructor called" << std::endl;
+	std::cout << "User default constructor called" << std::endl;
 #endif
 	return;
 }
@@ -16,10 +17,10 @@ User::User(void) : _nickname("null"), _username("null"), _hostname("null"), _rea
 /*
 ** Faire des tests pour voir ce qui est important pour l'initialisation
 */
-User::Client(std::string server_name, std::string server_ip, std::string server_creation, std::string port) : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
+User::User(std::string server_name, std::string server_ip, std::string server_creation, std::string port) : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
 {
 #if DEBUG
-	std::cout << "Client default constructor called" << std::endl;
+	std::cout << "User default constructor called" << std::endl;
 #endif
 	return;
 }
@@ -30,7 +31,7 @@ User::Client(std::string server_name, std::string server_ip, std::string server_
 User::~User(void)
 {
 #if DEBUG
-	std::cout << "Client destructor called" << std::endl;
+	std::cout << "User destructor called" << std::endl;
 #endif
 	return;
 }
@@ -43,64 +44,64 @@ void User::set_nickname(std::string nickname)
 {
 	this->_nickname = nickname;
 #if DEBUG
-	std::cout << "Client's nickname has been set to " << nickname << std::endl;
+	std::cout << "User's nickname has been set to " << nickname << std::endl;
 #endif
 	return;
 }
 
-void Client::set_username(std::string username)
+void User::set_username(std::string username)
 {
 	this->_username = username;
 #if DEBUG
-	std::cout << "Client's username has been set to " << username << std::endl;
+	std::cout << "User's username has been set to " << username << std::endl;
 #endif
 }
 
-void Client::set_realname(std::string realname)
+void User::set_realname(std::string realname)
 {
 	this->_realname = realname;
 #if DEBUG
-	std::cout << "Client's realname has been set to " << realname << std::endl;
+	std::cout << "User's realname has been set to " << realname << std::endl;
 #endif
 }
 
-void Client::set_hostname(std::string hostname)
+void User::set_hostname(std::string hostname)
 {
 	this->_hostname = hostname;
 #if DEBUG
-	std::cout << "Client's hostname has been set to " << hostname << std::endl;
+	std::cout << "User's hostname has been set to " << hostname << std::endl;
 #endif
 }
 
-void Client::set_modes(std::string modes)
+void User::set_modes(std::string modes)
 {
 	this->_modes = modes;
 #if DEBUG
-	std::cout << "Client's modes has been set to " << modes << std::endl;
+	std::cout << "User's modes has been set to " << modes << std::endl;
 #endif
 }
 
-void Client::set_operator_status(bool value)
+void User::set_operator_status(bool value)
 {
 	this->_has_operator_status = value;
 #if DEBUG
-	std::cout << "Client's operator status has been set to " << value << std::endl;
+	std::cout << "User's operator status has been set to " << value << std::endl;
 #endif
 }
 
-void Client::set_is_away(bool value)
+void User::set_is_away(bool value)
 {
 	this->_is_away = value;
 #if DEBUG
-	std::cout << "Client's is away status has been set to " << value << std::endl;
+	std::cout << "User's is away status has been set to " << value << std::endl;
 #endif
 }
 
-void Client::set_away_mssg(std::string message)
+void User::set_away_mssg(std::string message)
 {
 	this->_away_mssg = message;
 #if DEBUG
-	std::cout << "Client's is away message has been set to " << message << std::endl;
+	std::cout << "User's is away message has been set to " << message << std::endl;
 #endif
 }
 
@@ -115,7 +116,7 @@ void User::set_password_as_registered(bool is_set)
 #endif
 }
 
-void Client::set_registered_nickname(bool is_set)
+void User::set_registered_nickname(bool is_set)
 {
 	this->_nick_registered = is_set;
 #if DEBUG
@@ -123,7 +124,7 @@ void Client::set_registered_nickname(bool is_set)
 #endif
 }
 
-void Client::set_registered_user(bool is_set)
+void User::set_registered_user(bool is_set)
 {
 	this->_user_is_registered = is_set;
 #if DEBUG
@@ -131,7 +132,7 @@ void Client::set_registered_user(bool is_set)
 #endif
 }
 
-void Client::set_operator(bool is_set)
+void User::set_operator(bool is_set)
 {
 	this->_has_operator_status = is_set;
 #if DEBUG
@@ -139,11 +140,11 @@ void Client::set_operator(bool is_set)
 #endif
 }
 
-void Client::set_message_status(int status)
+void User::set_message_status(int status)
 {
 	this->_message_status = status;
 #if DEBUG
-	std::cout << "Client Operator status " << status << std::endl;
+	std::cout << "User Operator status " << status << std::endl;
 #endif
 }
 
@@ -155,7 +156,7 @@ void User::set_init_socket(int socket)
 	this->_socket = socket;
 	//this->fd = socket;
 #if DEBUG
-	std::cout << "Client socket is " << socket << std::endl;
+	std::cout << "User socket is " << socket << std::endl;
 #endif
 }
 
@@ -181,7 +182,7 @@ void User::set_server_ip(std::string server_ip)
 #endif
 }
 
-void Client::set_server_creation(std::string creation)
+void User::set_server_creation(std::string creation)
 {
 	this->_server_creation = creation;
 #if DEBUG
@@ -189,7 +190,7 @@ void Client::set_server_creation(std::string creation)
 #endif
 }
 
-void Client::set_server(Server server)
+void User::set_server(Server server)
 {
 	this->_server = &server;
 }
@@ -204,11 +205,11 @@ void User::set_unparsed_client_command(std::string client_command)
 {
 	this->_unparsed_client_command = client_command;
 #if DEBUG
-	std::cout << "Client unparsed_client_command has been set to " << client_command << std::endl;
+	std::cout << "User unparsed_client_command has been set to " << client_command << std::endl;
 #endif
 }
 
-void	Client::set_command(std::string command)
+void	User::set_command(std::string command)
 {
 	this->_command_name = command;
 #if DEBUG
@@ -223,71 +224,71 @@ std::string User::get_nickname(void) const
 {
 	std::string nick = this->_nickname;
 #if DEBUG
-	std::cout << "Client's nickname is " << nick << std::endl;
+	std::cout << "User's nickname is " << nick << std::endl;
 #endif
 	return (nick);
 }
 
-std::string Client::get_username(void) const
+std::string User::get_username(void) const
 {
 	std::string user = this->_username;
 #if DEBUG
-	std::cout << "Client's username is " << user << std::endl;
+	std::cout << "User's username is " << user << std::endl;
 #endif
 	return (user);
 }
 
-std::string Client::get_realname(void) const
+std::string User::get_realname(void) const
 {
 	std::string real = this->_realname;
 #if DEBUG
-	std::cout << "Client's realname is " << real << std::endl;
+	std::cout << "User's realname is " << real << std::endl;
 #endif
 	return (real);
 }
 
-std::string Client::get_hostname(void) const
+std::string User::get_hostname(void) const
 {
 	std::string host = this->_hostname;
 #if DEBUG
-	std::cout << "Client's hostname is " << host << std::endl;
+	std::cout << "User's hostname is " << host << std::endl;
 #endif
 	return (host);
 }
 
-std::string Client::get_modes(void) const
+std::string User::get_modes(void) const
 {
 	std::string modes;
 	modes = this->_modes;
 #if DEBUG
-	std::cout << "Client's modes is " << modes << std::endl;
+	std::cout << "User's modes is " << modes << std::endl;
 #endif
 	return (modes);
 }
 
-bool Client::get_operator_status(void) const
+bool User::get_operator_status(void) const
 {
 	bool op = this->_has_operator_status;
 #if DEBUG
-	std::cout << "Client's operator status is " << op << std::endl;
+	std::cout << "User's operator status is " << op << std::endl;
 #endif
 	return (op);
 }
 
-bool Client::get_is_away(void) const
+bool User::get_is_away(void) const
 {
 	bool op = this->_is_away;
 #if DEBUG
-	std::cout << "Client's away status is " << op << std::endl;
+	std::cout << "User's away status is " << op << std::endl;
 #endif
 	return (op);
 }
 
-std::string Client::get_away_mssg(void) const
+std::string User::get_away_mssg(void) const
 {
 	std::string away = this->_away_mssg;
 #if DEBUG
-	std::cout << "Client's away message is " << away << std::endl;
+	std::cout << "User's away message is " << away << std::endl;
 #endif
 	return (away);
 }
@@ -299,25 +300,25 @@ std::string User::get_password(void) const
 {
 	std::string pass = this->_password;
 #if DEBUG
-	std::cout << "Client's password is " << pass << std::endl;
+	std::cout << "User's password is " << pass << std::endl;
 #endif
 	return (pass);
 }
 
-std::string Client::get_server_port(void) const
+std::string User::get_server_port(void) const
 {
 	std::string port = this->_port;
 #if DEBUG
-	std::cout << "Client's port is " << port << std::endl;
+	std::cout << "User's port is " << port << std::endl;
 #endif
 	return (port);
 }
 
-std::string Client::get_message(void) const
+std::string User::get_message(void) const
 {
 	std::string message = this->_message;
 #if DEBUG
-	std::cout << "Client's message is " << message << std::endl;
+	std::cout << "User's message is " << message << std::endl;
 #endif
 	return (message);
 }
@@ -329,7 +330,7 @@ int User::get_message_status(void) const
 {
 	int status = this->_message_status;
 #if DEBUG
-	std::cout << "Client's message_status is " << status << std::endl;
+	std::cout << "User's message_status is " << status << std::endl;
 #endif
 	return (status);
 }
@@ -341,7 +342,7 @@ int User::get_socket(void) const
 {
 	int socket = this->_socket;
 #if DEBUG
-	std::cout << "Client's socket is " << socket << std::endl;
+	std::cout << "User's socket is " << socket << std::endl;
 #endif
 	return (socket);
 }
@@ -359,7 +360,7 @@ int User::get_channels_nb(void) const
 	return (size);
 }
 
-std::vector<std::string> Client::get_params(void) const
+std::vector<std::string> User::get_params(void) const
 {
 	std::vector<std::string> params = this->_params;
 	return (params);
@@ -381,12 +382,12 @@ unsigned int			User::get_params_size(void) const
 	return (size);
 }
 
-Server *Client::get_server(void)
+Server *User::get_server(void)
 {
 	return this->_server;
 }
 
-std::string Client::get_prefix(void) const
+std::string User::get_prefix(void) const
 {
 	std::string prefix = this->_prefix;
 #if DEBUG
@@ -396,7 +397,7 @@ std::string Client::get_prefix(void) const
 	return (prefix);
 }
 
-std::string Client::get_command_name(void) const
+std::string User::get_command_name(void) const
 {
 	std::string command_name = this->_command_name;
 #if DEBUG
@@ -469,7 +470,7 @@ bool User::user_registered_password(void) const
 	return (password);
 }
 
-bool Client::user_registered_nickname(void) const
+bool User::user_registered_nickname(void) const
 {
 	bool nick = this->_nick_registered;
 #if DEBUG
@@ -478,7 +479,7 @@ bool Client::user_registered_nickname(void) const
 	return (nick);
 }
 
-bool Client::user_is_away(void) const
+bool User::user_is_away(void) const
 {
 	bool away = this->_user_is_away;
 #if DEBUG
@@ -487,7 +488,7 @@ bool Client::user_is_away(void) const
 	return (away);
 }
 
-bool Client::user_is_operator(void) const
+bool User::user_is_operator(void) const
 {
 	bool ope = this->_user_is_oper;
 #if DEBUG
@@ -508,7 +509,7 @@ std::string User::get_server_name(void) const
 	return (name);
 }
 
-std::string Client::get_server_ip(void) const
+std::string User::get_server_ip(void) const
 {
 	std::string ip = this->_server_ip;
 #if DEBUG
@@ -517,7 +518,7 @@ std::string Client::get_server_ip(void) const
 	return (ip);
 }
 
-std::string Client::get_server_creation(void) const
+std::string User::get_server_creation(void) const
 {
 	std::string creation = this->_server_creation;
 #if DEBUG
@@ -538,16 +539,16 @@ void User::clear_client_message(void)
 {
 	this->_message.clear();
 #if DEBUG
-	std::cout << "Client message vector has been cleared." << std::endl;
+	std::cout << "User message vector has been cleared." << std::endl;
 #endif
 }
 
 /*
-void						Client::clear_client_command(void)
+void						User::clear_client_command(void)
 {
 	this->_commands.clear();
 #if DEBUG
-	std::cout << "Client commands vector has been cleared." << std::endl;
+	std::cout << "User commands vector has been cleared." << std::endl;
 #endif
 }
 */
@@ -723,7 +724,7 @@ void User::store_command()
 	return ;
 }
 
-void Client::split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c)
+void User::split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c)
 {
 	size_t pos = str->find(c);
 	size_t initialPos = 0;
@@ -739,7 +740,7 @@ void Client::split_string_to_vector(std::vector<std::string> *vec, std::string *
 	vec->push_back(str->substr(initialPos, std::min(pos, str->size()) - initialPos + 1));
 }
 
-void Client::patch_params(std::vector<std::string> *params)
+void User::patch_params(std::vector<std::string> *params)
 {
 	int elem_to_erase = 0;
 	for (std::vector<std::string>::iterator it = params->begin(); it != params->end(); it++)
@@ -760,7 +761,7 @@ void Client::patch_params(std::vector<std::string> *params)
 		params->erase(ite);
 }
 
-void Client::store_params()
+void User::store_params()
 {
 	if (this->_unparsed_client_command != "")
 	{
@@ -776,7 +777,7 @@ void User::check_command()
 
 void User::exec_command()
 {
-	std::map<std::string, void (*)(Client *, Server *)>::iterator it = this->_server->_commands->_cmds.begin();
+	std::map<std::string, void (*)(User *, Server *)>::iterator it = this->_server->_commands->_cmds.begin();
 	int known_command = 0;
 
 	while (it != this->_server->_commands->_cmds.end())
@@ -806,7 +807,7 @@ void User::exec_command()
 */
 void User::displayClientInfo(void)
 {
-	std::cout << "----- Displaying Client Info -----" << std::endl;
+	std::cout << "----- Displaying User Info -----" << std::endl;
 	std::cout << "Nickname : " << this->get_nickname() << std::endl;
 	std::cout << "Username : " << this->get_username() << std::endl;
 	this->displayChannels();
