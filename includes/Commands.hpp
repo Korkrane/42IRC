@@ -227,6 +227,7 @@ private:
 	 * @param server 
 	 */
 	static void				invite(User *user, Server *server);
+	User 					*find_target_nick(std::string target_nick, User *user, Server *server);
 	/**
 	 * @brief
 	 *
