@@ -149,7 +149,13 @@ void  Commands::nick(User *user, Server *server)
     error_handler("433", user, NULL, param);
     return ;
   }
+  user->set_registered_nickname(true);
+  user->set_nickname(nick_arg);
   //Preparer la reponse pour le serveur
-  //Modifier les infos relatives au client pour enregistrer le nickname
-  return;
+  std::string reply;
+  //Attention, le username et hostname doivent etre set correctement dans le constructeur de User
+  reply = ":" + user->get_nickname() + "!" + user->get_username() + "@" + user->get_hostname() + " NICK " + nick_arg + "\r\n";
+  //envoie de la reponse au serveur, a tester
+  send(user->get_socket(), reply.c_str(), reply.size(), 0);
+  return ;
 }
