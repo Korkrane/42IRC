@@ -151,12 +151,14 @@ private:
 	 * @param command
 	 * @param client
 	 * @param server
+	 * Mahaut
 	 */
 	static void 			nick(User *client, Server *server);
 	/*
 	** Autres fonctions necessaires a nick
 	*/
 	static bool				checkNickGrammar(std::string nick);
+	static bool				nickIsAvailable(std::string);
 
 	/**
 	 * @brief
