@@ -12,9 +12,9 @@
    parameter string.
  * Mahaut 
  */
-void  Commands::part(User *client, Server *server)
+void  Commands::part(User *user, Server *server)
 {
-  (void)client;
+  (void)user;
   (void)server;
   // Verifier le nombre d'argument, si il est egal a 1, renvoyer une erreur
 
@@ -25,4 +25,5 @@ void  Commands::part(User *client, Server *server)
   //Ensuite on va boucler sur les channels et voir si le client en membre
   //si il n est pas membre on retourne une erreur
   //si il est membre on quitte le channel
+  return ;
 }

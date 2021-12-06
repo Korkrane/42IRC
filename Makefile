@@ -17,7 +17,6 @@ NAMES		=	main.cpp \
 				Commands/Miscellaneous/Kill.cpp \
 				Commands/ChannelOperations/List.cpp \
 				Commands/ConnectionRegistration/Mode.cpp \
-				Commands/Other/Myhelp.cpp \
 				Commands/ChannelOperations/Names.cpp \
 				Commands/ConnectionRegistration/Nick.cpp \
 				Commands/SendingMessages/Notice.cpp \

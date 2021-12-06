@@ -9,9 +9,9 @@
  * Mahaut
  */
 
-void Commands::join(User *client, Server *server)
+void Commands::join(User *user, Server *server)
 {
-    (void)client;
+    (void)user;
     (void)server;
     //S'il n'y a qu'un param, retourner
     //erreur ERR_NEEDMOREPARAMS
@@ -34,4 +34,5 @@ void Commands::join(User *client, Server *server)
     //voir si il faut potentiellement quitter toutes les autres channels
 
     //verifier si la channel a un nom correct
+    return ;
 }

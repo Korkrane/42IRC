@@ -7,9 +7,9 @@
  * @param server 
  * Mahaut
  */
-void		Commands::topic(User *client, Server *server)
+void		Commands::topic(User *user, Server *server)
 {
-    (void)client;
+    (void)user;
     (void)server;
     // verifier le nombre d argument (ne peut pas etre egal a 1)
         //retourner erreur ERR_NEEDMOREPARAMS
@@ -21,5 +21,5 @@ void		Commands::topic(User *client, Server *server)
     //verifier si il y a deja un topic ou pas
     //si oui, le modifier, et envoyer une reply au serveur
     //si non, la creer et envoyer une reply au serveur
-
+    return ;
 }

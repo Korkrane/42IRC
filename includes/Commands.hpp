@@ -101,14 +101,15 @@ private:
 	static void 		paramsIsCorrectOther(Commands *command, Server *server);
 	static std::string	whoHelpParameter(void);
 
+
+	static void			notice(User *user, Server *server);
+
+	static void			privmsg(User *user, Server *server);
 	/**
 	** Commande KILL
 	** TODO: Mahaut
-	** Voir comment le serveur doit reagir si il y a une nick collision
-	** Attention il va falloir trouver le moyen de savoir si il y a eu nick collision ou pas
-	** on a fait un design avec uniquement deux parametres
 	*/
-	static void			kill(User *client, Server *server);//bool nick collision
+	static void			kill(User *user, Server *server);//bool nick collision
 	//verifier les fonctions annexes relatives aux clients sont bien implementees
 	//nickname exists
 	//leave all channels
@@ -216,8 +217,16 @@ private:
      * that server which will generate the reply.
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
-	static void				list(User *client, Server *server);
+	static void				list(User *user, Server *server);
 
+
+	/**
+	 * @brief 
+	 * 
+	 * @param user 
+	 * @param server 
+	 */
+	static void				invite(User *user, Server *server);
 	/**
 	 * @brief
 	 *

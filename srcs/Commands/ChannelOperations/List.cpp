@@ -7,11 +7,12 @@
  * @param server 
  * Mahaut 
  */
-void		Commands::list(User *client, Server *server)
+void		Commands::list(User *user, Server *server)
 {
-    (void)client;
+    (void)user;
     (void)server;
     //List channel and their topics
     //voir exemple and faisant des tests
     //voir fonction "reply ?"
+    return ;
 }

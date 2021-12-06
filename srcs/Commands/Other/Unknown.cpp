@@ -20,4 +20,5 @@ void Commands::unknown_cmd(User *client, Server *server)
     reply = build_reply(421, client, reply_params);
     send_reply(reply);
     */
+   return ;
 }

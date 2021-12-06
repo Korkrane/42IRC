@@ -8,9 +8,9 @@
  * @param server 
  * Mahaut
  */
-void		Commands::kick(User *client, Server *server)
+void		Commands::kick(User *user, Server *server)
 {
-    (void)client;
+    (void)user;
     (void)server;
     //on verifie le nombres de parametre
     //si il est inferieur ou egal a deux on renvoie une erreur
@@ -24,4 +24,5 @@ void		Commands::kick(User *client, Server *server)
     //on check si les user sont membres de la channel passe en parametre
     //sinon renvoyer une erreur
     //on kick out du channel en incluant commentaire ou pas
+    return ;
 }
