@@ -103,15 +103,16 @@ class User
         void                        set_operator_status(bool value);
         void                        set_is_away(bool value);
         void                        set_away_mssg(std::string message);
-        void set_server(Server server);
-        void set_unparsed_client_command(std::string client_command);
-    
+        void                        set_server(Server server);
+        void                        set_port(std::string port);
+
+        void                        set_unparsed_client_command(std::string client_command);
         void                        set_command(std::string command);
         void                        set_password_as_registered(bool is_set);
         void                        set_registered_nickname(bool is_set);
         void                        set_registered_user(bool is_set);
         void                        set_operator(bool is_set);
-        void                         set_message_status(int status);
+        void                        set_message_status(int status);
        // void                        set_registration(bool is_set);
         void                        set_init_socket(int socket);
 
@@ -119,6 +120,7 @@ class User
         void                        set_server_ip(std::string server_ip);
         void                        set_server_creation(std::string server_creation);
 
+        /* Command Utils */
        void                         clear_client_message(void);
        void                         clear_client_command(void);
        void                         send_message_to_server(void);
@@ -127,20 +129,17 @@ class User
        void                         quit_channel(Channel *channel);
        void                         quit_all_channels(void);
 
-       int store_string_until_char(std::string *dest, std::string *src, char c, int len);
-       void patch_params(std::vector<std::string> *params);
-       void split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c);
-       void store_prefix(void);
-       void store_command(void);
-       void store_params(void);
-       
-      //std::vector<std::string> get_params(void);
-      unsigned int get_params_size(void) const;
+        /* Pre parsing */
+       int                          store_string_until_char(std::string *dest, std::string *src, char c, int len);
+       void                         patch_params(std::vector<std::string> *params);
+       void                         split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c);
+       void                         store_prefix(void);
+       void                         store_command(void);
+       void                         store_params(void);
+       void                         check_command(void);
+       void                         exec_command(void);
 
-       void check_command(void);
-       void exec_command(void);
-
-
+        /* Display */
        void                         displayClientInfo(void);
        void                         displayChannels(void);
        void                         display_command(void);

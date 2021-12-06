@@ -6,6 +6,7 @@ NAMES		=	main.cpp \
 				Client/Client.cpp \
 				Channel/Channel.cpp \
 				Utils/tmp_utils.cpp \
+				User/User.cpp \
 				Commands/ServerQueries/Admin.cpp \
 				Commands/OptionalFeatures/Away.cpp \
 				Commands/OptionalFeatures/Cap.cpp \
@@ -32,6 +33,7 @@ NAMES		=	main.cpp \
 				Commands/OptionalFeatures/Users.cpp \
 				Commands/ServerQueries/Version.cpp \
 				Commands/UserBasedQueries/Who.cpp \
+				Error_Handling/error_handler.cpp \
 
 #build_server.cpp 
 #build_replies.cpp 

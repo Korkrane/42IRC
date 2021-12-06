@@ -6,7 +6,9 @@
 ** TODO: voir ce qu'il y a de mieux pour initialiser les valeurs
 ** Attention particuliere a porter sur le nickname et le password (?)
 */
-User::User(void) : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
+User::User(void)
+/*
+: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
 {
 #if DEBUG
 	std::cout << "User default constructor called" << std::endl;
@@ -14,11 +16,17 @@ User::User(void) : _nickname("null"), _username("null"), _hostname("null"), _rea
 	return;
 }
 
-/*
+/**
 ** Faire des tests pour voir ce qui est important pour l'initialisation
+*TODO: revoir init list
 */
-User::User(std::string server_name, std::string server_ip, std::string server_creation, std::string port) : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0)
+User::User(std::string server_name, std::string server_ip, std::string server_creation, std::string port)
+/*: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
 {
+	this->set_server_name(server_name);
+	this->set_server_ip(server_ip);
+	this->set_server_creation(server_creation);
+	this->set_port(port);
 #if DEBUG
 	std::cout << "User default constructor called" << std::endl;
 #endif
@@ -71,6 +79,28 @@ void User::set_hostname(std::string hostname)
 #if DEBUG
 	std::cout << "User's hostname has been set to " << hostname << std::endl;
 #endif
+}
+
+/**
+ * @brief 
+ * 
+ * @param port 
+ * TODO: ajouter des tests pour verifier que les valeurs soient corrects
+ */
+void	User::set_port(std::string port)
+{
+	if (port.empty())
+	{
+#if DEBUG
+		std::cout << "Should return an error. The port is incorrect." << std::cout;
+#endif
+		this->_port = "";
+	}
+	this->_port = port;
+#if DEBUG
+	std::cout << "port has been set to " << port << std::cout;
+#endif
+	return ;
 }
 
 void User::set_modes(std::string modes)
@@ -366,13 +396,8 @@ std::vector<std::string> User::get_params(void) const
 	return (params);
 }
 
-/**
- * @brief : Va etre tres regulierement utilise dans les commandes
- * pour verifier dans un premier temps que le nombre d args est correct
- * 
- * @return unsigned int 
- * TODO: a tester
- */
+/*
+** doublon definition
 unsigned int			User::get_params_size(void) const
 {
 	unsigned int size = this->get_params().size();
@@ -381,6 +406,7 @@ unsigned int			User::get_params_size(void) const
 #endif
 	return (size);
 }
+*/
 
 Server *User::get_server(void)
 {
@@ -400,6 +426,14 @@ std::string User::get_prefix(void) const
 std::string User::get_command_name(void) const
 {
 	std::string command_name = this->_command_name;
+	if (command_name.empty())
+	{
+#if DEBUG
+		std::cout << "Command name is empty." << std::endl;
+#endif
+		return ("");
+	}
+		
 #if DEBUG
 	std::cout << "This client cmd command_name is " << command_name << std::endl;
 #endif
@@ -414,6 +448,13 @@ std::string	User::get_unparsed_client_command(void) const
 	std::string unparsed;
 
 	unparsed = this->_unparsed_client_command;
+	if (unparsed.empty())
+	{
+#if DEBUG
+		std::cout << "Unparsed command is empty." << std::endl;
+#endif
+		return ("");
+	}
 #if DEBUG
 	//std::cout << "The unparsed command is : " << unparsed << std::endl;
 #endif
@@ -782,12 +823,21 @@ void User::store_params()
 }
 
 //TODO
-void User::check_command()
+void User::check_command(void)
 {
+#if DEBUG
+	std::cout << "Check command was called but nothing was done yet." << std::endl;
+#endif
+	return ;
 }
 
-void User::exec_command()
+//TODO: A reprendre suite aux modifs server
+void User::exec_command(void)
 {
+#if DEBUG
+	std::cout << "user::exec_command function called." << std::endl;
+#endif
+	/*
 	std::map<std::string, void (*)(User *, Server *)>::iterator it = this->_server->_commands->_cmds.begin();
 	int known_command = 0;
 
@@ -811,6 +861,7 @@ void User::exec_command()
 #endif
 		this->_server->_commands->unknown_cmd(this, this->_server);
 	}
+	*/
 }
 
 /*
