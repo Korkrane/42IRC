@@ -4,6 +4,8 @@ Client::Client(int fd) : _fd(fd)
 {
 	// Make reading and writing to fd non-blocking
 	fcntl(fd, F_SETFL, O_NONBLOCK);
+	//Commentaires Mahaut
+	//Quand un client est construit, un User va l'etre egalement
 }
 
 Client::~Client()
