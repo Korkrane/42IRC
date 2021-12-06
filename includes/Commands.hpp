@@ -1,15 +1,12 @@
-#ifndef COMMANDS_HPP
-#define COMMANDS_HPP
-
 #pragma once
 
-#include "Headers.hpp"
-#include "server.hpp"
-#include "client.hpp"
-#include "channel.hpp"
+//#include "Server.hpp"
+//#include "User.hpp"
+//#include "Channel.hpp"
+#include <irc.hpp>
 
 class Channel;
-class Client;
+class User;
 class Server;
 /*
 ** Classe Command(s)
@@ -38,30 +35,44 @@ public:
 	};
 
 	/*** Fonctions membres ***/
-	std::map<std::string, void (*)(Client *, Server *)> get_cmds(void) const
+	std::map<std::string, void (*)(User *, Server *)> get_cmds(void) const
 	{
-		std::map<std::string, void (*)(Client *, Server *)> cmds = this->_cmds;
+		std::map<std::string, void (*)(User *, Server *)> cmds = this->_cmds;
 		return (cmds);
 	}
 
-	std::map<std::string, void (*)(Client *, Server *)> _initCmds()
+	std::map<std::string, void (*)(User *, Server *)> _initCmds()
 	{
-		std::map<std::string, void (*)(Client *, Server *)> cmds;
+		std::map<std::string, void (*)(User *, Server *)> cmds;
 
-		cmds.insert(std::pair<std::string, void (*)(Client *, Server *)>("AWAY", away_cmd));
-		cmds.insert(std::pair<std::string, void (*)(Client *, Server *)>("TIME", time_cmd));
-		cmds.insert(std::pair<std::string, void (*)(Client *, Server *)>("MOTD", motd_cmd));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("AWAY", away_cmd));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("TIME", time_cmd));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("WHO", who));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("KILL", kill));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("CAP", cap));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("NICK", nick));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("PART", part));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("KICK", kick));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("TOPIC", topic));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("JOIN", join));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("LIST", list));
+		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("NAMES", names));
+		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PRIVMSG", privmsg_cmd));
+		//cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("MODE", mode_mcd));
+		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("OPER", oper_cmd));
+		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PASS", pass_cmd));
+		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("NOTICE", notice_cmd));
+		//cmds.inser(std::pair<std::string, void (*) (User *, Server *)>("QUIT", quit_cmd));
 		return cmds;
 	}
 
-	std::map<std::string, void (*)(Client *, Server *)> _cmds;
-	static void unknown_cmd(Client *client, Server *server);
+	std::map<std::string, void (*)(User *, Server *)> _cmds;
+	static void unknown_cmd(User *client, Server *server);
 
 private:
-	static void time_cmd(Client *client, Server *server);
-	static void away_cmd(Client *client, Server *server);
-	static void motd_cmd(Client *client, Server *server);
-	//static void	join(Client *client, Server *server);
+	static void time_cmd(User *client, Server *server);
+	static void away_cmd(User *client, Server *server);
+	//static void	join(User *client, Server *server);
 
 protected:
 	Server *_server;
@@ -77,29 +88,34 @@ protected:
 	** appelee a la fin de chaque commande (pour envoyer code/info au serveur ?)
 	*/
 
-public:
+private:
 	/**
 	** Fonctions necessaires pour la commande who (notamment)
 	** Pas sure a 100% des protos
 	** Le param de who pour correspondre au une channel ou a autre chose
 	** TODO: mahaut WHO
 	*/
-	void who(Client *client, Server *server);
+	static void who(User *client, Server *server);
 	static void displayAllClients(Channel *channel);
 	//Appelera la sous fonction displayClientsFromChannel ?
-	static void displayChannel(Channel *channel, Client *client);
+	//ajouter const ?
+	static void displayChannel(Channel *channel, User *client);
 	//Affichage specifique si le client est operateur ?
-	static void displayClientsFromChannel(Channel *channel, Client *client);
+	//ajouter const ?
+	static void displayClientsFromChannel(Channel *channel, User *client);
 	//Va permettre de verifier si la channel passee en parametre existe bien
 	static void paramsIsCorrectChannel(Commands *command, Server *server);
 	static void paramsIsCorrectOther(Commands *command, Server *server);
+	static std::string whoHelpParameter(void);
 
 	/**
 	** Commande KILL
 	** TODO: Mahaut
 	** Voir comment le serveur doit reagir si il y a une nick collision
+	** Attention il va falloir trouver le moyen de savoir si il y a eu nick collision ou pas
+	** on a fait un design avec uniquement deux parametres
 	*/
-	void kill(Client *client, Server *server, bool nick_collision);
+	static void kill(User *client, Server *server); //bool nick collision
 	//verifier les fonctions annexes relatives aux clients sont bien implementees
 	//nickname exists
 	//leave all channels
@@ -118,8 +134,7 @@ public:
 	 ** JOIN, MODE, KICK, PART, QUIT and PRIVMSG/NOTICE.
 	 ** See details on RFC 2812.
 	 */
-	void join(Client *client, Server *server);
-
+	static void join(User *client, Server *server);
 	/**
 	 * @brief
 	 *
@@ -128,7 +143,7 @@ public:
 	 * @param server
 	 * TODO: par sure si cette commande est necessaire
 	 */
-	void cap(Client *client, Server *server);
+	static void cap(User *client, Server *server);
 
 	/**
 	 * @brief
@@ -137,7 +152,7 @@ public:
 	 * @param client
 	 * @param server
 	 */
-	void nick(Client *client, Server *server);
+	static void nick(User *client, Server *server);
 	/*
 	** Autres fonctions necessaires a nick
 	*/
@@ -156,7 +171,7 @@ public:
 	* granted by the server.
 	* Parameters: <channel> *( "," <channel> ) [ <Part Message> ]
 	 */
-	void part(Client *client, Server *server);
+	static void part(User *client, Server *server);
 	//verifier qu on a bien un leave channel dans client
 
 	/**
@@ -174,7 +189,7 @@ public:
 	 * Parameters: <channel> *( "," <channel> ) <user> *( "," <user> )
                [<comment>]
 	 */
-	void kick(Client *client, Server *server);
+	static void kick(User *client, Server *server);
 
 	/**
 	 * @brief
@@ -189,7 +204,7 @@ public:
      * requesting it.  If the <topic> parameter is an empty string, the
      * topic for that channel will be removed.
 	 */
-	void topic(Client *client, Server *server);
+	static void topic(User *client, Server *server);
 
 	/**
 	 * @brief
@@ -204,7 +219,7 @@ public:
      * that server which will generate the reply.
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
-	void list(Client *client, Server *server);
+	static void list(User *client, Server *server);
 
 	/**
 	 * @brief
@@ -223,7 +238,7 @@ public:
      * are listed as being on `channel' "*".
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
-	void names(Client *client, Server *server);
+	static void names(User *client, Server *server);
 };
 
 /*
@@ -234,5 +249,3 @@ public:
    a PART command (See Section 3.2.2) for each channel he is a member
    of.
 */
-
-#endif

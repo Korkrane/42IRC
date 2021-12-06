@@ -1,11 +1,13 @@
-#include "../../includes/channel.hpp"
+//#include "../../includes/irc.hpp"
+#include <irc.hpp>
 
 /*
 ** Last editor: Mahaut
-** TODO: voir comment initialiser la clients list
+** TODO: voir comment initialiser la Users s list
 */
-Channel::Channel(std::string name, Client *client) : _name(name), _topic("null"), _modes("null"), _operators(0), _clients(0), _banned_clients(0), _invited_clients(0), _voice_priv_clients(0), _channel_owner(0), _members_nb(0), _topic_set(false)
+Channel::Channel(std::string name, User *user) : _name(name), _topic("null"), _modes("null"), _operators(0), _users(0),  _channel_owner(0), _members_nb(0), _topic_set(false)
 {
+	(void)user;
 #if DEBUG
 	std::cout << "Channel constructor called" << std::endl;
 #endif
@@ -15,7 +17,7 @@ Channel::Channel(std::string name, Client *client) : _name(name), _topic("null")
 /*
 ** TODO: voir si il faut mieux le mettre en prive et ne pas l'utiliser
 */
-Channel::Channel(void) : _name("null"), _topic("null"), _modes("null"), _operators(0), _clients(0), _banned_clients(0), _invited_clients(0), _voice_priv_clients(0), _channel_owner(0), _members_nb(0), _topic_set(false)
+Channel::Channel(void) : _name("null"), _topic("null"), _modes("null"), _operators(0), _users(0), _channel_owner(0), _members_nb(0), _topic_set(false)
 {
 #if DEBUG
 	std::cout << "Channel default constructor called" << std::endl;
@@ -102,13 +104,13 @@ unsigned int		Channel::get_members_nb(void) const
 ** A tester
 ** Voir comment les membres sont ajoutes
 */
-std::vector<Client *>	Channel::get_member_list(void) const
+std::vector<User *>	Channel::get_member_list(void) const
 {
-	std::vector<Client *> member_list;
-	member_list = this->_clients;
+	std::vector<User *> member_list;
+	member_list = this->_users;
 #if DEBUG
 	std::cout << "get_member_list called, the list is : " << std::endl;
-	//TODO: faire fonction pour afficher tous les clients
+	//TODO: faire fonction pour afficher tous les Users s
 #endif
 	return (member_list);
 }
@@ -116,9 +118,9 @@ std::vector<Client *>	Channel::get_member_list(void) const
 /*
 ** Voir comment les operateurs sont ajoutes
 */
-std::vector<Client *>	Channel::get_operators(void) const
+std::vector<User *>	Channel::get_operators(void) const
 {
-	std::vector<Client *> operators = this->_operators;
+	std::vector<User *> operators = this->_operators;
 #if DEBUG
 	std::cout << "get_operator called, the list is : " << std::endl;
 	//TODO: faire fonction pour afficher les operateurs
@@ -127,28 +129,18 @@ std::vector<Client *>	Channel::get_operators(void) const
 }
 
 /*
-** Utils - clients
-*/
-
-
-//TODO: a tester
-//L'user doit etre identifiable par son nickname
-//fonction dediee
-bool				Channel::user_is_banned(Client *client)
+bool				Channel::user_is_banned(Users  *Users )
 {
-	if (!client)
+	if (!Users )
 		return (false);
 
-	/*
-	** On va chercher si le client fait partie du vecteur
-	*/
-	std::vector<Client *>::iterator it = this->_banned_clients.begin();
-	std::vector<Client *>::iterator ite = this->_banned_clients.end();
+	std::vector<Users  *>::iterator it = this->_banned_users.begin();
+	std::vector<Users  *>::iterator ite = this->_banned_users.end();
 	std::string nickName;
 	while (it != ite)
 	{
 		nickName = (*it)->get_nickname();
-		if (nickName == client->get_nickname())
+		if (nickName == Users ->get_nickname())
 		{
 #if DEBUG
 	std::cout << "user " << nickName << " is banned" << std::endl;
@@ -158,23 +150,31 @@ bool				Channel::user_is_banned(Client *client)
 	}
 	return (false);
 }
-
-/*
-** On identifie son client grace a son nickname (unique)
-** voir cas ou il n'y a qu un seul user (a tester)
 */
-bool				Channel::user_is_operator(Client *client)
+
+/**
+** On identifie son Users  grace a son nickname (unique)
+** voir cas ou il n'y a qu un seul user (a tester)
+TODO: a remettre a jour avec la version User
+*/
+
+bool				Channel::user_is_operator(User  *user)
 {
-	if (!client)
+	if (!user)
 		return (false);
 
-	std::vector<Client *>::iterator it = this->_operators.begin();
-	std::vector<Client *>::iterator ite = this->_operators.end();
+	std::vector<User *>::iterator it = this->_operators.begin();
+	std::vector<User *>::iterator ite = this->_operators.end();
 	std::string nickName;
+
+	(void)it;
+	(void)ite;
+	(void)nickName;
+	/*
 	while (it != ite)
 	{
 		nickName = (*it)->get_nickname();
-		if (nickName == client->get_nickname())
+		if (nickName == user->get_nickname())
 		{
 #if DEBUG
 	std::cout << "user " << nickName << " is operator" << std::endl;
@@ -182,23 +182,29 @@ bool				Channel::user_is_operator(Client *client)
 			return (true);
 		}
 	}
+	*/
+#if DEBUG
+	std::cout << "user_is_operator is returning false" << std::endl;
+#endif
 	return (false);
 }
 
-/*
-** A tester (voir s il n y a qu'un seul user)
-*/
-bool				Channel::user_is_member(Client *client)
+/* A reprendre*/
+bool				Channel::user_is_member(User *user)
 {
-	if (!client)
+	if (!user)
 		return (false);
-	std::vector<Client *>::iterator it = this->_clients.begin();
-	std::vector<Client *>::iterator ite = this->_clients.end();
+	std::vector<User *>::iterator it = this->_users.begin();
+	std::vector<User  *>::iterator ite = this->_users.end();
 	std::string nickName;
+	(void)it;
+	(void)ite;
+	(void)nickName;
+	/*
 	while (it != ite)
 	{
 		nickName = (*it)->get_nickname();
-		if (nickName == client->get_nickname())
+		if (nickName == user->get_nickname())
 		{
 #if DEBUG
 	std::cout << "user " << nickName << " is member of the channel" << std::endl;
@@ -206,61 +212,44 @@ bool				Channel::user_is_member(Client *client)
 			return (true);
 		}
 	}
-	return (false);
-}
-
-/*
-** A tester, voir si necessaire pour la partie mandatory
-*/
-bool				Channel::user_is_invited(Client *client)
-{
-	if (!client)
-		return (false);
-	std::vector<Client *>::iterator it = this->_invited_clients.begin();
-	std::vector<Client *>::iterator ite = this->_invited_clients.end();
-	std::string nickName;
-	while (it != ite)
-	{
-		nickName = (*it)->get_nickname();
-		if (nickName == client->get_nickname())
-		{
+	*/
 #if DEBUG
-	std::cout << "user " << nickName << " is invited to the channel" << std::endl;
+	std::cout << "user_is_member is returning false" << std::endl;
 #endif
-			return (true);
-		}
-	}
 	return (false);
 }
 
-/*
-** voir cas d'utilisation
-*/
-bool				Channel::user_is_owner(Client *client)
+
+/* A reprendre*/
+bool				Channel::user_is_owner(User *user)
 {
-	if (!client)
+	if (!user)
 		return (false);
-	if (client->get_nickname() == this->_channel_owner->get_nickname())
+	/*
+	if (user->get_nickname() == this->_channel_owner->get_nickname())
 	{
 #if DEBUG
-		std::cout << "The user " << client->get_nickname() << "is the owner of the channel" << std::endl;
+		std::cout << "The user " << Users ->get_nickname() << "is the owner of the channel" << std::endl;
 #endif
 		return (true);
 	}
+	*/
 	return (false);
 }
 
-/*
-** Utils pour ajouter un user sans doublon
-** A tester
-*/
-bool				Channel::isNicknameUnique(Client *client)
+/* */
+bool				Channel::isNicknameUnique(User *user)
 {
-	if (!client)
+	if (!user)
 		return (false);
-	std::vector<Client *>::iterator it = this->_clients.begin();
-	std::vector<Client *>::iterator ite = this->_clients.end();
+	std::vector<User *>::iterator it = this->_users.begin();
+	std::vector<User *>::iterator ite = this->_users.end();
 	std::string nickName;
+
+	(void)it;
+	(void)ite;
+	(void)nickName;
+	/*
 	while (it != ite)
 	{
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
@@ -271,81 +260,100 @@ bool				Channel::isNicknameUnique(Client *client)
 			return (false);
 		}
 	}
+	*/
+#if DEBUG
+	std::cout << "isNicknameUnique is returning true" << std::endl;
+#endif
 	return (true);
 }
 
-/*
-** Adds a member to the client's list
+/**
+** Adds a member to the Users 's list
 ** It is a vector so it's easy to add something
-** TODO: A tester (voir free membres client ?)
+* TODO: a faire
 */
-void				Channel::newMember(Client *client)
+void				Channel::newMember(User *user)
 {
-	if (!client)
+	(void)user;
+	/*
+	if (!Users )
 		return ;
-	if (this->isNicknameUnique(client) == true)
+	if (this->isNicknameUnique(Users ) == true)
 	{
-		this->_clients.push_back(client);
+		this->_users.push_back(Users );
 		this->_members_nb++;
 		return ;
 	}
 #if DEBUG
-	std::cout << "New member added, nickname is " << client->get_nickname() << std::endl;
+	std::cout << "New member added, nickname is " << Users ->get_nickname() << std::endl;
+#endif
+*/
+#if DEBUG
+	std::cout << "new member was not added succesfully" << std::endl;
 #endif
 	return ;
 }
 
-/*
-** Il faut le chercher dans la liste et si on le trouve on le supprime
-*/
-void 				Channel::deleteMember(Client *client)
+/* */
+void 				Channel::deleteMember(User *user)
 {
-	if (!client)
+	if (!user)
 		return ;
 
-	std::vector<Client *>::iterator it = this->_clients.begin();
-	std::vector<Client *>::iterator ite = this->_clients.end();
+	std::vector<User *>::iterator it = this->_users.begin();
+	std::vector<User *>::iterator ite = this->_users.end();
 
+	(void)it;
+	(void)ite;
+	/*
 	while (it != ite)
 	{
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
 		{
-			this->_clients.erase(it);
+			this->_users.erase(it);
 			this->_members_nb--;
 #if DEBUG
-		std::cout << "Member " << (*it)->get_nickname() << "has been succesfully removed from the clients vector." << std::endl;
+		std::cout << "Member " << (*it)->get_nickname() << "has been succesfully removed from the Users s vector." << std::endl;
 #endif
 			return ;
 		}
 	}
 #if DEBUG
-	std::cout << "Client was not found, enable to delete the client passed in argument" << std::endl;
+	std::cout << "Users  was not found, enable to delete the Users  passed in argument" << std::endl;
+#endif
+*/
+#if DEBUG
+	std::cout << "member was not succesfully deleted." << std::endl;
 #endif
 	return ;
 }
-void				Channel::printMemberInfo(Client *client)
+
+//A reprendre
+void				Channel::printMemberInfo(User *user)
 {
-	if (!client)
+	if (!user)
 		return ;
+#if DEBUG
+	std::cout << "printMemberInfo function called" << std::endl;
+#endif
 	return ;
 }
 
-/*
-** Va permettre d'enlever le client de la liste des operateurs
-** A priori celui-ci peut choisir de se retirer via une commande
-** a revoir
-*/
-void				Channel::removeFromOperators(Client *client)
+/* */
+void				Channel::removeFromOperators(User *user)
 {
-	//Chercher si le client est dans la liste
+	//Chercher si le Users  est dans la liste
 	//si oui, le retirer
 
-	if (!client)
+	if (!user)
 		return ;
 
-	std::vector<Client *>::iterator it = this->_operators.begin();
-	std::vector<Client *>::iterator ite = this->_operators.end();
+	std::vector<User *>::iterator it = this->_operators.begin();
+	std::vector<User *>::iterator ite = this->_operators.end();
 
+	(void)it;
+	(void)ite;
+	/*
 	while (it != ite)
 	{
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
@@ -357,6 +365,10 @@ void				Channel::removeFromOperators(Client *client)
 #endif
 		}
 	}
+	*/
+#if DEBUG
+	std::cout << "user wad not successfully removed from operators" << std::endl;
+#endif
 	return ;
 }
 
@@ -366,26 +378,25 @@ void				Channel::removeFromOperators(Client *client)
 */
 bool				Channel::channelHasOperator(void)
 {
-	std::vector<Client *>::iterator it = this->_operators.begin();
+	std::vector<User *>::iterator it = this->_operators.begin();
 	if (!(*it))
 		return (false);
 	return (true);
 }
 
 /*
-** A tester
-*/
 bool				Channel::channelHasBanned(void)
 {
-	std::vector<Client *>::iterator it = this->_banned_clients.begin();
+	std::vector<User *>::iterator it = this->_banned_users.begin();
 	if (!(*it))
 		return (false);
 	return (true);
 }
+*/
 
-bool				Channel::channelHasClients(void)
+bool				Channel::channelHasUsers(void)
 {
-	std::vector<Client *>::iterator it = this->_clients.begin();
+	std::vector<User *>::iterator it = this->_users.begin();
 	if (!(*it))
 		return (false);
 #if debug
@@ -394,8 +405,9 @@ bool				Channel::channelHasClients(void)
 	return (true);
 }
 
-/*
+/**
 ** Display / Debug
+*TODO: a reprendre
 */
 void				Channel::displayChannelInfo(void)
 {
@@ -403,27 +415,26 @@ void				Channel::displayChannelInfo(void)
 	this->displayTopic();
 	this->displayMembers();
 	this->displayOperators();
-	this->displayBanned();
+	//this->displayBanned();
 	return ;
 }
 
-/*
-** Voir si on veut afficher autre chose que nickname
-*/
+/* A reprendre */
 void				Channel::displayMembers(void)
 {
-	std::cout << "------- Listing Members / Clients -------" << std::endl;
-	std::vector<Client*>::iterator it = this->_clients.begin();
-	std::vector<Client*>::iterator ite = this->_clients.end();
-	unsigned int num = 0;
+	std::cout << "------- Listing Members / Users s -------" << std::endl;
+	std::vector<User *>::iterator it = this->_users.begin();
+	std::vector<User *>::iterator ite = this->_users.end();
+	//unsigned int num = 0;
 	while (it != ite)
 	{
-		std::cout << "client " << num << " - " << (*it)->get_nickname() << std::endl;
+		//std::cout << "Users  " << num << " - " << (*it)->get_nickname() << std::endl;
 		it++;
 	}
 	std::cout << "----------------------------------------" << std::endl;
 	return ;
 }
+
 
 void				Channel::displayTopic(void)
 {
@@ -436,17 +447,18 @@ void				Channel::displayTopic(void)
 	return ;
 }
 
+/* A reprendre */
 void				Channel::displayOperators(void)
 {
 	std::cout << "------- Listing Operators -------" << std::endl;
 	if (this->channelHasOperator() == true)
 	{
-		std::vector<Client*>::iterator it = this->_operators.begin();
-		std::vector<Client*>::iterator ite = this->_operators.end();
-		unsigned int num = 0;
+		std::vector<User *>::iterator it = this->_operators.begin();
+		std::vector<User *>::iterator ite = this->_operators.end();
+		//unsigned int num = 0;
 		while (it != ite)
 		{
-			std::cout << "operator " << num << " - " << (*it)->get_nickname() << std::endl;
+		//	std::cout << "operator " << num << " - " << (*it)->get_nickname() << std::endl;
 			it++;
 		}
 	}
@@ -455,24 +467,5 @@ void				Channel::displayOperators(void)
 		std::cout << "This channel has no operator" << std::endl;
 	}
 	std::cout << "----------------------------" << std::endl;
-	return ;
-}
-
-void				Channel::displayBanned(void)
-{
-	//faire un check pour savoir s'il y a des banned ?
-	std::cout << "------- Listing banned -------" << std::endl;
-	if (this->channelHasBanned() == true)
-	{
-		std::vector<Client*>::iterator it = this->_banned_clients.begin();
-		std::vector<Client*>::iterator ite = this->_banned_clients.end();
-		unsigned int num = 0;
-		while (it != ite)
-		{
-			std::cout << "Banned " << num << " - " << (*it)->get_nickname() << std::endl;
-			it++;
-		}
-	}
-	std::cout << "------------------------------" << std::endl;
 	return ;
 }

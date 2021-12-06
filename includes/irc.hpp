@@ -1,17 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   irc.hpp                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bahaas <bahaas@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 14:24:49 by bahaas            #+#    #+#             */
-/*   Updated: 2021/12/01 17:37:31 by bahaas           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#ifndef IRC_HPP
-#define IRC_HPP
+#pragma once
 
 #include <errno.h>
 #include <signal.h>
@@ -40,12 +27,17 @@
 #include <sys/select.h>
 
 #include "channel.hpp"
-#include "client.hpp"
-#include "colors.hpp"
+#include <Client.hpp>
+#include <Colors.hpp>
 #include "exceptions.hpp"
 #include "replies.hpp"
-#include "server.hpp"
+#include <Server.hpp>
 #include "Commands.hpp"
+#include <IRCTest.hpp>
+#include <ParsingUtils.hpp>
+#include <ClientUtils.hpp>
+#include <User.hpp>
+#include <ErrorHandling.hpp>
 
 class Server;
 class Client;
@@ -68,5 +60,3 @@ void send_reply(std::string reply);
 void client_cmd_parser(t_cmd *client_command, Client *my_test_client, Server *server);
 void printClientCommand(t_cmd *cmd);
 void split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c);
-
-#endif // !IRC_HPP

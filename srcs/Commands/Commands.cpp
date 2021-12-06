@@ -1,4 +1,4 @@
-#include "../../includes/irc.hpp"
+#include <irc.hpp>
 
 /**
  * @brief Construct a new Commands:: Commands object

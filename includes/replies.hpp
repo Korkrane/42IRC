@@ -1,6 +1,4 @@
-#ifndef REPLIES_HPP
-#define REPLIES_HPP
-
+#pragma once
 // ERROR REPLIES --> https://datatracker.ietf.org/doc/html/rfc2812#section-5.2
 
 #define ERR_NOSUCHNICK(nickname) (nickname + " :No such nick/channel\r\n") // 401
@@ -262,6 +260,33 @@
 #define RPL_STATSOLINE(hostmask, name) ("O " + hostmask + " * " + name + "\r\n") // 243
 #define C_RPL_STATSOLINE "243"
 //#define RPL_STATSHLINE      // 244
+/* 
+** Probleme doublon en mergeant donc je commente (Mahaut)
+#define RPL_UMODEIS                (user_mode_string)(user_mode_string + "\r\n")                                                                                                          // 221
+#define C_RPL_UMODEIS                                                       "221"
+#define RPL_SERVLIST               (name, server, mask, type, hopcount, info)(name + " " + server + " " + mask + " " + type + " " + hopcount + " " + info + "\r\n")                       // 234
+#define C_RPL_SERVLIST                                                      "234"
+#define RPL_SERVLISTEND            (mask, type)(mask + " " + type + " :End of service listing\r\n")                                                                                       // 235
+#define C_RPL_SERVLISTEND                                                   "235"
+#define RPL_LUSERCLIENT            (integer_c, intger_service, integer_serv)(":There are " + integer_c + " users and " + integer_service + " services on" + integer_serv + "servers\r\n") // 251
+#define C_RPL_LUSERCLIENT                                                   "251"
+#define RPL_LUSEROP                (integer)(integer + " :operator(s) online\r\n")                                                                                                        // 252
+#define C_RPL_LUSEROP                                                        "252"
+#define RPL_LUSERUNKNOWN           (integer)(integer + " :unknown connection(s)\r\n")                                                                                                     // 253
+#define C_RPL_LUSERUNKNOWN                                                   "253"
+#define RPL_LUSERCHANNELS          (integer)(integer + " :channels formed\r\n")                                                                                                           // 254
+#define C_RPL_LUSERCHANNELS                                                  "254"
+#define RPL_LUSERME                (integer_c, integer_s)(":I have " + integer_c + " clients and " + integer_s + "servers\r\n")                                                           // 255
+#define C_RPL_LUSERME                                                        "255"
+#define RPL_ADMINME                (server)(server + " :Administrative info\r\n")                                                                                                         // 256
+#define C_RPL_ADMINME                                                        "256"
+#define RPL_ADMINLOC1              (admin_info)(":" + admin_info + "\r\n")                                                                                                                // 257
+#define C_RPL_ADMINLOC1                                                      "257"
+#define RPL_ADMINLOC2(admin_info)  (":" + admin_info + "\r\n")                                                                                                                            // 258
+#define C_RPL_ADMINLOC2                                                      "258"
+#define RPL_ADMINEMAIL(admin_info) (":" + admin_info + "\r\n")                                                                                                                            // 259
+#define C_RPL_ADMINEMAIL                                                     "259"
+*/
 #define RPL_UMODEIS(user_mode_string) (user_mode_string + "\r\n") // 221
 #define C_RPL_UMODEIS "221"
 #define RPL_SERVLIST(name, server, mask, type, hopcount, info) (name + " " + server + " " + mask + " " + type + " " + hopcount + " " + info + "\r\n") // 234
@@ -286,5 +311,3 @@
 #define C_RPL_ADMINLOC2 "258"
 #define RPL_ADMINEMAIL(admin_info) (":" + admin_info + "\r\n") // 259
 #define C_RPL_ADMINMAIL "259"
-
-#endif // !REPLIES_HPP

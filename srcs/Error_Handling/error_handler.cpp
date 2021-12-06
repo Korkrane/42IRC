@@ -1,59 +1,58 @@
-#include "../../includes/irc.hpp"
-
-#include <cstdlib>
+#include <irc.hpp>
 
 /**
  * @brief 
  * 
  * @param error_code 
- * @param client 
+ * @param user 
  * @param channel 
  * @param parameter 
- * TODO: a tester + voir si on peut faire un pointeur sur fonction
+ * TODO: a revoir
  * * pour que ce soit plus classe ?
  */
-void error_handler(std::string error_code, Client *client, Channel *channel, std::string parameter)
+void error_handler(std::string error_code, User *user, Channel *channel, std::vector<std::string> parameter)
 {
     //Besoin de faire une "correspondance" entre le message d erreur et le code
     unsigned int code;
 
+    (void)channel;
     code = atoi(error_code.c_str());
     std::string error_to_send;
     switch (code)
     {
         case 401:
         {
-            error_to_send = ERR_NOSUCHNICK(parameter);
+            error_to_send = ERR_NOSUCHNICK(parameter.front());
             break ;
         }
         case 402:
         {
-            error_to_send = ERR_NOSUCHSERVER(parameter);
+            error_to_send = ERR_NOSUCHSERVER(parameter.front());
             break ;
         }
         case 403:
         {
-            error_to_send = ERR_NOSUCHCHANNEL(parameter);
+            error_to_send = ERR_NOSUCHCHANNEL(parameter.front());
             break ;
         }
         case 404:
         {
-            error_to_send = ERR_CANNOTSENDTOCHAN(parameter);
+            error_to_send = ERR_CANNOTSENDTOCHAN(parameter.front());
             break ;
         }
         case 405:
         {
-            error_to_send = ERR_TOOMANYCHANNELS(parameter);
+            error_to_send = ERR_TOOMANYCHANNELS(parameter.front());
             break ;
         }
         case 406:
         {
-            error_to_send = ERR_WASNOSUCHNICK(parameter);
+            error_to_send = ERR_WASNOSUCHNICK(parameter.front());
             break ;
         }
         case 407:
         {
-            error_to_send = ERR_TOOMANYTARGETS(parameter);
+            error_to_send = ERR_TOOMANYTARGETS(parameter.front());
             break ;
         }
         case 409:
@@ -63,7 +62,7 @@ void error_handler(std::string error_code, Client *client, Channel *channel, std
         }
         case 411:
         {
-            error_to_send = ERR_NORECIPIENT(parameter);
+            error_to_send = ERR_NORECIPIENT(parameter.front());
             break ;
         }
         case 412:
@@ -73,22 +72,22 @@ void error_handler(std::string error_code, Client *client, Channel *channel, std
         }
         case 413:
         {
-            error_to_send = ERR_NOTOPLEVEL(parameter);
+            error_to_send = ERR_NOTOPLEVEL(parameter.front());
             break ;
         }
         case 414:
         {
-            error_to_send = ERR_WILDTOPLEVEL(parameter);
+            error_to_send = ERR_WILDTOPLEVEL(parameter.front());
             break ;
         }
         case 415:
         {
-            error_to_send = ERR_BADMASK(parameter);
+            error_to_send = ERR_BADMASK(parameter.front());
             break ;
         }
         case 421:
         {
-            error_to_send = ERR_UNKNOWNCOMMAND(parameter);
+            error_to_send = ERR_UNKNOWNCOMMAND(parameter.front());
             break ;
         }
         case 422:
@@ -98,7 +97,7 @@ void error_handler(std::string error_code, Client *client, Channel *channel, std
         }
         case 423:
         {
-            error_to_send = ERR_NOADMININFO(parameter);
+            error_to_send = ERR_NOADMININFO(parameter.front());
             break ;
         }
         case 424:
@@ -109,7 +108,11 @@ void error_handler(std::string error_code, Client *client, Channel *channel, std
             ** ou alors il faut que la fonctions soient variadiques pour
             ** qu elle puisse avoir un ou plusieurs arguments
             */
-            error_to_send = ERR_FILEERROR(parameter, parameter);
+            std::vector<std::string>::iterator it = parameter.begin();
+            std::vector<std::string>::iterator it2 = it++;
+            std::string val1 = (*it);
+            std::string val2 = (*it2);
+            error_to_send = ERR_FILEERROR(val1, val2);
             break ;
         }
         case 431:
@@ -120,43 +123,48 @@ void error_handler(std::string error_code, Client *client, Channel *channel, std
             ** ou alors il faut que la fonctions soient variadiques pour
             ** qu elle puisse avoir un ou plusieurs arguments
             */
-            error_to_send = ERR_FILEERROR(parameter, parameter);
+            std::vector<std::string>::iterator it = parameter.begin();
+            std::vector<std::string>::iterator it2 = it++;
+            std::string val1 = (*it);
+            std::string val2 = (*it2);
+            error_to_send = ERR_FILEERROR(val1, val2);
             break ;
         }
         case 432:
         {
-            error_to_send = ERR_ERRONEUSNICKNAME(parameter);
+            error_to_send = ERR_ERRONEUSNICKNAME(parameter.front());
             break ;
         }
         case 433:
         {
-            error_to_send = ERR_NICKNAMEINUSE(parameter);
+            error_to_send = ERR_NICKNAMEINUSE(parameter.front());
             break ;
         }
         case 436:
         {
-            /*
-            ** A revoir egalement, pas sure des parametres
-            */
-            error_to_send = ERR_NICKCOLLISION(parameter, client->get_realname(), client->get_hostname());
+            error_to_send = ERR_NICKCOLLISION(parameter.front(), user->get_realname(), user->get_hostname());
             break ;
         }
         case 437:
         {
-            error_to_send = ERR_UNAVAILRESOURCE(parameter);
+            error_to_send = ERR_UNAVAILRESOURCE(parameter.front());
             break ;
         }
         case 441:
         {
             /*
             ** A revoir egalement
-            */ 
-            error_to_send = ERR_USERNOTINCHANNEL(parameter, parameter);
+            */
+            std::vector<std::string>::iterator it = parameter.begin();
+            std::vector<std::string>::iterator it2 = it++;
+            std::string val1 = (*it);
+            std::string val2 = (*it2);
+            error_to_send = ERR_USERNOTINCHANNEL(val1, val2);
             break ;
         }
         case 442:
         {
-            error_to_send = ERR_NOTONCHANNEL(parameter);
+            error_to_send = ERR_NOTONCHANNEL(parameter.front());
             break ;
         }
         case 443:
@@ -164,12 +172,16 @@ void error_handler(std::string error_code, Client *client, Channel *channel, std
             /*
             ** A revoir
             */
-            error_to_send = ERR_USERONCHANNEL(parameter, parameter);
+            std::vector<std::string>::iterator it = parameter.begin();
+            std::vector<std::string>::iterator it2 = it++;
+            std::string val1 = (*it);
+            std::string val2 = (*it2);
+            error_to_send = ERR_USERONCHANNEL(val1, val2);
             break ;
         }
         case 444:
         {
-            error_to_send = ERR_NOLOGIN(parameter);
+            error_to_send = ERR_NOLOGIN(parameter.front());
             break ;
         }
         case 445:
@@ -189,7 +201,7 @@ void error_handler(std::string error_code, Client *client, Channel *channel, std
         }
         case 461:
         {
-            error_to_send = ERR_NEEDMOREPARAMS(parameter);
+            error_to_send = ERR_NEEDMOREPARAMS(parameter.front());
             break ;
         }
         case 462:
@@ -220,51 +232,55 @@ void error_handler(std::string error_code, Client *client, Channel *channel, std
         }
         case 467:
         {
-            error_to_send = ERR_KEYSET(parameter);
+            error_to_send = ERR_KEYSET(parameter.front());
             break ;
         }
         case 471:
         {
-            error_to_send = ERR_CHANNELISFULL(parameter);
+            error_to_send = ERR_CHANNELISFULL(parameter.front());
             break ;
         }
         case 472:
         {
-            //A revoir
-            error_to_send = ERR_UNKNOWNMODE(parameter, parameter);
+            std::vector<std::string>::iterator it = parameter.begin();
+            std::vector<std::string>::iterator it2 = it++;
+            std::string val1 = (*it);
+            std::string val2 = (*it2);
+            error_to_send = ERR_UNKNOWNMODE(val1, val2);
             break ;
         }
         case 473:
         {
-            error_to_send = ERR_INVITEONLYCHAN(parameter);
+            error_to_send = ERR_INVITEONLYCHAN(parameter.front());
             break ;
         }
         case 474:
         {
-            error_to_send = ERR_BANNEDFROMCHAN(parameter);
+            error_to_send = ERR_BANNEDFROMCHAN(parameter.front());
             break ;
         }
         case 475:
         {
-            error_to_send = ERR_BADCHANNELKEY(parameter);
+            error_to_send = ERR_BADCHANNELKEY(parameter.front());
             break ;
         }
         case 476:
         {
-            error_to_send = ERR_BADCHANMASK(parameter);
+            error_to_send = ERR_BADCHANMASK(parameter.front());
             break ;
         }
         case 477:
         {
-            error_to_send = ERR_NOCHANMODES(parameter);
+            error_to_send = ERR_NOCHANMODES(parameter.front());
             break ;
         }
         case 478:
         {
-            /*
-            ** A revoir
-            */
-            error_to_send = ERR_BANLISTFULL(parameter, parameter);
+            std::vector<std::string>::iterator it = parameter.begin();
+            std::vector<std::string>::iterator it2 = it++;
+            std::string val1 = (*it);
+            std::string val2 = (*it2);
+            error_to_send = ERR_BANLISTFULL(val1, val2);
             break ;
         }
         case 481:
@@ -274,7 +290,7 @@ void error_handler(std::string error_code, Client *client, Channel *channel, std
         }
         case 482:
         {
-            error_to_send = ERR_CHANOPRIVSNEEDED(parameter);
+            error_to_send = ERR_CHANOPRIVSNEEDED(parameter.front());
             break ;
         }
         case 483:
@@ -309,6 +325,6 @@ void error_handler(std::string error_code, Client *client, Channel *channel, std
         }
     }
     //fonction qui va permettre d envoyer le message au serveur
-    //send(client->get_socket(), error_to_send.c_str());
+    //send(user->get_socket(), error_to_send.c_str());
     return ;
 }

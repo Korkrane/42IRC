@@ -1,74 +1,95 @@
-NAME	=	ircserv
+INC_DIR		=	includes
+SRC_DIR		=	srcs
+HEADER		=	./includes/
+NAMES		=	main.cpp \
+				Server/Server.cpp \
+				Client/Client.cpp \
+				Channel/Channel.cpp \
+				Utils/tmp_utils.cpp \
+				User/User.cpp \
+				Commands/ServerQueries/Admin.cpp \
+				Commands/OptionalFeatures/Away.cpp \
+				Commands/OptionalFeatures/Cap.cpp \
+				Commands/ServerQueries/Info.cpp \
+				Commands/ChannelOperations/Invite.cpp \
+				Commands/ChannelOperations/Join.cpp \
+				Commands/ChannelOperations/Kick.cpp \
+				Commands/Miscellaneous/Kill.cpp \
+				Commands/ChannelOperations/List.cpp \
+				Commands/ConnectionRegistration/Mode.cpp \
+				Commands/Other/Myhelp.cpp \
+				Commands/ChannelOperations/Names.cpp \
+				Commands/ConnectionRegistration/Nick.cpp \
+				Commands/SendingMessages/Notice.cpp \
+				Commands/ConnectionRegistration/Oper.cpp \
+				Commands/ChannelOperations/Part.cpp \
+				Commands/SendingMessages/Privmsg.cpp \
+				Commands/ConnectionRegistration/Quit.cpp \
+				Commands/ConnectionRegistration/ConnectionRegistration.cpp \
+				Commands/ServerQueries/Time.cpp \
+				Commands/ChannelOperations/Topic.cpp \
+				Commands/Other/Unknown.cpp \
+				Commands/ConnectionRegistration/User.cpp \
+				Commands/OptionalFeatures/Users.cpp \
+				Commands/ServerQueries/Version.cpp \
+				Commands/UserBasedQueries/Who.cpp \
+				Error_Handling/error_handler.cpp \
 
-SRCS	=	./srcs/main.cpp \
-			./srcs/Server/Server.cpp \
-			./srcs/Client/Client.cpp \
-			./srcs/Channel/Channel.cpp \
-			./srcs/tmp_utils.cpp \
-			./srcs/build_server.cpp \
-			./srcs/build_replies.cpp \
-			./srcs/Commands/Admin.cpp \
-			./srcs/Commands/Away.cpp \
-			./srcs/Commands/Cap.cpp \
-			./srcs/Commands/Info.cpp \
-			./srcs/Commands/Invite.cpp \
-			./srcs/Commands/Join.cpp \
-			./srcs/Commands/Kick.cpp \
-			./srcs/Commands/Kill.cpp \
-			./srcs/Commands/List.cpp \
-			./srcs/Commands/Mode.cpp \
-			./srcs/Commands/Myhelp.cpp \
-			./srcs/Commands/Names.cpp \
-			./srcs/Commands/Nick.cpp \
-			./srcs/Commands/Notice.cpp \
-			./srcs/Commands/Oper.cpp \
-			./srcs/Commands/Part.cpp \
-			./srcs/Commands/Privmsg.cpp \
-			./srcs/Commands/Quit.cpp \
-			./srcs/Commands/Time.cpp \
-			./srcs/Commands/Topic.cpp \
-			./srcs/Commands/Unknown.cpp \
-			./srcs/Commands/User.cpp \
-			./srcs/Commands/Users.cpp \
-			./srcs/Commands/Version.cpp \
-			./srcs/Commands/Who.cpp \
-			./srcs/Commands/Whois.cpp \
-			./srcs/Commands/Whowas.cpp \
-			./srcs/Commands/Motd.cpp
-
-OBJS		=	${SRCS:.cpp=.o}
-
-CFLAGS		=	-g -DDEBUG #-fsanitize=address#-DDEBUG#-Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
-
-RM			=	rm -rf
-
-CC			=	clang++
+#build_server.cpp
+#build_replies.cpp
 
 INCLUDES	=	./includes/channel.hpp \
-				./includes/client.hpp \
-				./includes/colors.hpp \
+				./includes/Client.hpp \
 				./includes/Commands.hpp \
 				./includes/exceptions.hpp \
 				./includes/irc.hpp \
 				./includes/replies.hpp \
-				./includes/server.hpp \
-				./includes/Headers.hpp
+				./includes/Server.hpp \
+				./includes/Headers.hpp \
+				./includes/Colors.hpp \
+				./includes/ClientUtils.hpp \
+				./includes/IRCTest.hpp \
+				./includes/User.hpp \
+				./includes/ErrorHandling.hpp \
 
-HEADER		=	./includes/
+#./includes/client.hpp
+#./includes/server.hpp
 
-${NAME}	:	${OBJS}
-			${CC} -o $@ ${OBJS} ${CFLAGS}
+SRCS		= $(addprefix $(SRC_DIR)/, $(NAMES))
 
-all:		${NAME}
+OBJS		= $(SRCS:.cpp=.o)
 
-%.o: %.cpp
-			${CC} ${CFLAGS} -I${HEADER} -c $< -o $@
+NAME		= ircserv
 
-clean	:
-			${RM} ${OBJS}
+CFLAGS		= -g -DDEBUG -g3 -fsanitize=address#-DDEBUG#-Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
 
-fclean	:	clean
-			${RM} ${NAME}
+CC			= clang++
+
+FLAGS		= -Wall -Wextra -Werror -std=c++98 #-g
+
+RM			= rm -f
+
+.cpp.o:
+			@$(CC) $(FLAGS) -I$(INC_DIR) -c $< -o $(<:.cpp=.o)
+
+$(NAME):	$(OBJS)
+			@echo "Object files compiled"
+			@$(CC) $(FLAGS) $(OBJS) -I$(INC_DIR) -o $(NAME)
+			@echo "Executable created"
+			@echo "Compilation finished"
+
+all:		$(NAME)
+
+run:		$(NAME)
+			./ircserv 6667 pass
+
+clean:
+			@$(RM) $(OBJS)
+			@echo "Deleted all but executable"
+
+fclean:		clean
+			@$(RM) $(NAME)
+			@echo "Everything deleted"
 
 re		:	clean all
 

@@ -31,7 +31,7 @@ class TooMuchParamsFromClient : public std::exception
 {
     virtual const char *what() const throw()
     {
-        return "ERROR: Client has more than 15 parameters in his command";
+        return "ERROR: User has more than 15 parameters in his command";
     };
 };
 
@@ -39,7 +39,7 @@ class TooLongCommandFromClient : public std::exception
 {
     virtual const char *what() const throw()
     {
-        return "ERROR: Client has sent a command longer than 512 characters";
+        return "ERROR: User has sent a command longer than 512 characters";
     };
 };
 #endif // !EXCEPTIONS_HPP

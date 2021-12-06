@@ -1,42 +1,76 @@
-#include "../includes/irc.hpp"
+#include "Server.hpp"
 
-/*
-int main(int ac, char **av)
+// Global pointers (only accessible from this source file)
+Server	*gServer = NULL;
+IRC		*gIRC = NULL;
+
+static void	exitProperly()
 {
-    Server *server;
-
-    buildServer(server, av);
-    return (0);
+	if (gServer)
+		delete gServer;
+	if (gIRC)
+		delete gIRC;
 }
-*/
 
-int main(int ac, char **av)
+static void	handleSignal(int signum)
 {
+	if (signum == SIGINT || signum == SIGQUIT || signum == SIGKILL)
+		std::cout	<< GREEN
+					<< "\b\bServer is stopped. Good bye!\n"
+					<< NC;
+	exit(0);
+}
 
-    std::string str = std::string(av[1]);
+static bool	checkArgs(int ac, char **av, int &port, std::string &password)
+{
+	int	iPort, iPassword;
 
-    Server *server = new Server();
-    Client *client = new Client();
+	switch (ac)
+	{
+	case 4:
+		std::cout << "Multi-server is not implemented, second argument is ignored.\n";
+		iPort = 2;
+		iPassword = 3;
+		break;
+	case 3:
+		iPort = 1;
+		iPassword = 2;
+		break;
+	default:
+		std::cerr << "Invalid number of arguments\n";
+		return false;
+	}
 
-    /*** SET NOS VARAIBLES POUR LES TESTS ***/
-    server->set_name("testing.com");
-    client->set_hostname(server->get_name());
-    client->set_nickname("foo_nick");
+	port = std::atoi(av[iPort]);
+	if (port <= 0 || port > 0xffff)
+	{
+		std::cerr << "Invalid port number\n";
+		return false;
+	}
+	password = std::string(av[iPassword]);
+	return true;
+}
 
-    /***EXECUTION ***/
-    client->set_unparsed_client_command(str);
-    client->store_prefix();
-    client->store_command();
-    client->store_params();
+int	main(int ac, char **av)
+{
+	// Register clean up function at exit
+	atexit(exitProperly);
 
-#if DEBUG
-    client->display_command();
-#endif
+	// Register signals to end program
+	signal(SIGINT, handleSignal);
+	signal(SIGQUIT, handleSignal);
+	signal(SIGKILL, handleSignal);
 
-    client->_server = server;
-    //TODO //client->check_command();
-    client->exec_command();
+	// Check and obtain information from arguments
+	int			port;
+	std::string	password;
+	if (!checkArgs(ac, av, port, password))
+		exit(1);
+	
+	// Create an instance of the server and program
+	gServer = new Server(port, password);
+	gIRC = new IRC(password);
 
-    delete client;
-    delete server;
+	gServer->SetUp(gIRC);
+	gServer->Run();
 }
