@@ -229,12 +229,7 @@ void IRC::exec_command(User *user)
 
 	while (it != this->_commands->_cmds.end())
 	{
-		std::cout << "map key elem name:" << it->first << std::endl;
- 		std::cout << "user cmd loop testing exe:" << user->get_command_name() << std::endl;
-		std::string key = it->first;
-		std::string user_cmd = "TIME";
-		//if (it->first == user->get_command_name())
-		if (key == user_cmd)
+		if (it->first == user->get_command_name())
 		{
 #if DEBUG
 			std::cout << GREEN << "DEBUG: " << it->first << " execute the command -->" << NC << std::endl;

@@ -133,6 +133,7 @@ class User
        int                          store_string_until_char(std::string *dest, std::string *src, char c, int len);
        void                         patch_params(std::vector<std::string> *params);
        void                         split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c);
+       bool                         hasEnding(std::string const &fullString, std::string const &ending);
        void                         store_prefix(void);
        void                         store_command(void);
        void                         store_params(void);

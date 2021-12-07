@@ -741,11 +741,18 @@ void User::store_prefix()
 		}
 	}
 }
+
+
+bool User::hasEnding(std::string const &fullString, std::string const &ending) {
+    if (fullString.length() >= ending.length()) {
+        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+    } else {
+        return false;
+    }
+}
+
 /**
  * @brief
- * Question Mahaut : es-ce qu il faudrait retirer le prefix a l unparsed command ?
- * Baudoin: Techniquement non
- * * Est-ce qu'on pourrait faire une fonction pour savoir a quelle index s'arrete la partie prefix ?
  * **TODO: a revoir Baudoin/Mahaut
  */
 void User::store_command()
@@ -759,6 +766,9 @@ void User::store_command()
 		int i = 0;
 		i = store_string_until_char(&this->_command_name, &this->_unparsed_client_command, ' ', i);
 		this->_unparsed_client_command.replace(0, i, "");
+		if(hasEnding(this->_command_name, "\r\n"))
+			this->_command_name.resize(this->_command_name.size() - 2);
+
 		/*
 		//Proposition Mahaut
 		if (this->check_if_prefix() == false)
