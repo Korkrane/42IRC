@@ -7,14 +7,21 @@
  * @param client
  * @param server
  * Mahaut
+ * 1ere fonction de la liste des Channel Operations dans la rfc
  */
 
 void Commands::join(User *user, Server *server)
 {
     (void)user;
     (void)server;
-    //S'il n'y a qu'un param, retourner
-    //erreur ERR_NEEDMOREPARAMS
+    std::vector<std::string> error;
+
+    //On verifie le nombre minimum de param
+    if (user->get_params_size() == 1)
+    {
+        error.push_back(user->get_command_name());
+        error_handler("461", user, NULL, error);
+    }
 
     //les deux arguments a ce stade on deja ete parse ?
     //On a une string channel_name

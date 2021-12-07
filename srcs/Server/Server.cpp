@@ -164,3 +164,50 @@ std::vector<User *>	Server::get_users(void) const
 #endif
 	return (users);
 }
+
+/**
+ * @brief
+ * 
+ * @return std::vector<Channel *> 
+ */
+std::vector<Channel *>	Server::get_channels(void) const
+{
+	std::vector<Channel *> chans;
+	chans = this->_channels;
+#if DEBUG
+	std::cout << BLUE << "DEBUG: " << "get_channels function called" << std::endl;
+#endif
+	return (chans);
+}
+
+/**
+ * @brief 
+ * TODO: a tester
+ */
+void					Server::displayServerChannels(void) const
+{
+	std::vector<Channel *>::iterator it = get_channels().begin();
+	std::vector<Channel *>::iterator ite = get_channels().end();
+
+	std::cout << "Displaying all current server channels" << std::endl;
+	while (it != ite)
+	{
+		std::cout << (*it)->get_name() << std::endl;
+		it++;
+	}
+	return ;
+}
+
+void					Server::displayServerUsers(void) const
+{
+	std::vector<User *>::iterator it = get_users().begin();
+	std::vector<User *>::iterator ite = get_users().end();
+
+	std::cout << "Displaying all current server channels" << std::endl;
+	while (it != ite)
+	{
+		std::cout << (*it)->get_nickname() << std::endl;
+		it++;
+	}
+	return ;
+}

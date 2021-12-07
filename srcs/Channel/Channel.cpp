@@ -469,3 +469,9 @@ void				Channel::displayOperators(void)
 	std::cout << "----------------------------" << std::endl;
 	return ;
 }
+
+std::ostream& operator<<(std::ostream &COUT, Channel *channel)
+{
+	COUT << channel->get_name();
+	return (COUT);
+}

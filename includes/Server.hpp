@@ -23,6 +23,7 @@ private:
 	fd_set					_fdReader;	// Structure to select client FD for reading
 
 	std::vector<User *>		_users;		//ajout Mahaut
+	std::vector<Channel *>	_channels;	//ajout Mahaut
 
 	// Accept new client connection
 	void	acceptClient();
@@ -48,9 +49,13 @@ public:
 	void	Run();
 
 	//Ajouts Mahaut (voir si mettre dans une autre classe)
-	std::vector<User *>	get_users(void) const;
+	std::vector<User *>		get_users(void) const;
+	std::vector<Channel *>	get_channels(void) const;
+	void					displayServerChannels(void) const;
+	void					displayServerUsers(void) const;
+
 	//voir quel design faire pour ajouter un user
-	void				add_user(Client *client);
+	//void				add_user(Client *client);
 };
 
 #endif

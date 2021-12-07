@@ -82,3 +82,6 @@ class Channel
         void                    displayOperators(void);
         void                    displayBanned(void);
 };
+
+//Utils to display - overloading 
+std::ostream& operator<<(std::ostream COUT, Channel *channel)
