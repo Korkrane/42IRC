@@ -3,6 +3,7 @@ SRC_DIR		=	srcs
 HEADER		=	./includes/
 NAMES		=	main.cpp \
 				Server/Server.cpp \
+				Server/IRCServer.cpp \
 				Client/Client.cpp \
 				Channel/Channel.cpp \
 				Utils/tmp_utils.cpp \
@@ -34,9 +35,6 @@ NAMES		=	main.cpp \
 				Commands/UserBasedQueries/Who.cpp \
 				Error_Handling/error_handler.cpp \
 
-#build_server.cpp 
-#build_replies.cpp 
-
 INCLUDES	=	./includes/channel.hpp \
 				./includes/Client.hpp \
 				./includes/Commands.hpp \
@@ -47,12 +45,9 @@ INCLUDES	=	./includes/channel.hpp \
 				./includes/Headers.hpp \
 				./includes/Colors.hpp \
 				./includes/ClientUtils.hpp \
-				./includes/IRCTest.hpp \
+				./includes/IRCServer.hpp \
 				./includes/User.hpp \
 				./includes/ErrorHandling.hpp \
-
-#./includes/client.hpp
-#./includes/server.hpp
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(NAMES))
 
@@ -60,11 +55,9 @@ OBJS		= $(SRCS:.cpp=.o)
 
 NAME		= ircserv
 
-CFLAGS		= -g -DDEBUG -g3 -fsanitize=address#-DDEBUG#-Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
-
 CC			= clang++
 
-FLAGS		= -Wall -Wextra -Werror -std=c++98 #-g
+FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 -g
 
 RM			= rm -f
 

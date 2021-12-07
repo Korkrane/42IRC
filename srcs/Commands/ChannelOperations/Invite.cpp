@@ -5,14 +5,14 @@
 */
 
 /**
- * @brief 
- * 
- * @param target_channel 
- * @param user 
- * @param server 
- * @return Channel* 
+ * @brief
+ *
+ * @param target_channel
+ * @param user
+ * @param server
+ * @return Channel*
  */
-Channel     *Commands::find_target_channel(std::string target_channel, User *user, Server *server)
+Channel     *Commands::find_target_channel(std::string target_channel, User *user, IRC *server)
 {
     (void)target_channel;
     (void)user;
@@ -20,14 +20,15 @@ Channel     *Commands::find_target_channel(std::string target_channel, User *use
 
     std::vector<Channel *>::iterator it;
     std::vector<Channel *>::iterator ite;
-    it = server->get_channels().begin();
-    ite = server->get_channels().end();
+    std::vector<Channel *> channels = server->get_channels();
+    it = channels.begin();
+    ite = channels.end();
     std::string check_target;
     while (it != ite)
     {
         check_target = (*it)->get_name();
         if (check_target.compare(target_channel) == 0)
-            return (*it);   
+            return (*it);
         it++;
     }
 #if DEBUG
@@ -37,14 +38,14 @@ Channel     *Commands::find_target_channel(std::string target_channel, User *use
 }
 
 /**
- * @brief 
- * 
- * @param target_nick 
- * @param user 
- * @param server 
- * @return User* 
+ * @brief
+ *
+ * @param target_nick
+ * @param user
+ * @param server
+ * @return User*
  */
-User    *Commands::find_target_nick(std::string target_nick, User *user, Server *server)
+User    *Commands::find_target_nick(std::string target_nick, User *user, IRC *server)
 {
     (void)target_nick;
     (void)user;
@@ -59,7 +60,7 @@ User    *Commands::find_target_nick(std::string target_nick, User *user, Server 
     {
         check_nick = (*it)->get_nickname();
         if (check_nick.compare(target_nick) == 0)
-            return (*it);   
+            return (*it);
         it++;
     }
 #if DEBUG
@@ -69,14 +70,14 @@ User    *Commands::find_target_nick(std::string target_nick, User *user, Server 
 }
 
 /**
- * @brief 
- * 
- * @param user 
- * @param server 
+ * @brief
+ *
+ * @param user
+ * @param server
  * Params: <nickname> <channel>
  * TODO: faire des tests pour voir l'ordre de priorite des erreurs
  */
-void    Commands::invite(User *user, Server *server)
+void    Commands::invite(User *user, IRC *server)
 {
     (void)user;
     (void)server;
@@ -109,10 +110,10 @@ void    Commands::invite(User *user, Server *server)
     if (!chan)
     {
         //Il n y a pas l'erreur "no such channel", donc il faudrait la creer ?
-        //faire des testsgit 
+        //faire des testsgit
     }
     //4. Verifier qu'on a les droits d'inviter ?
-    
+
     //5. Verifier que la channel n'est pas full ?
 
     //6. Verifier que celui qui invite est bien lui-meme sur la channel

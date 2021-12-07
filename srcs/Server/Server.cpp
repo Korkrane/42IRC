@@ -1,6 +1,4 @@
 #include <Server.hpp>
-//#include <irc.hpp>
-//#include <sys/socket.h>
 
 Server::Server(int port, std::string const &password) :
 	_port(port),
@@ -62,9 +60,9 @@ void	Server::acceptClient()
 		return;
 	}
 	std::cout << "New client on socket #" << clientFD << '\n';
-	
+
 	_clients.insert(std::make_pair(clientFD, new Client(clientFD)));
-	_irc->fds.push_back(clientFD);	// FOR TESTING
+	//_irc->fds.push_back(clientFD);	// FOR TESTING
 }
 
 void	Server::removeClient(int fd)
@@ -87,7 +85,7 @@ void	Server::Run()
 	{
 		responseQueue.clear();
 		disconnectList.clear();
-	
+
 		int	totalFD = setFDForReading();
 		recvProcessCommand(totalFD, responseQueue, disconnectList);
 
@@ -146,68 +144,13 @@ void	Server::recvProcessCommand
 				if (!_clients[s]->receiveCommand(cmd))
 					removeClient(s);
 				else if (!cmd.empty())
-					_irc->ProcessCommand(
-						std::make_pair(s, cmd), responseQueue, disconnectList
-					);
+				{
+					#if DEBUG
+						std::cout << BLUE << "DEBUG: Server has to process command" << NC << std::endl;
+					#endif
+					_irc->ProcessCommand(std::make_pair(s, cmd), responseQueue, disconnectList);
+				}
 			}
 			--totalFD;
 		}
-}
-
-//Ajout Mahaut - faire une fonction d'affichage + overloads ?
-std::vector<User *>	Server::get_users(void) const
-{
-	std::vector<User *> users;
-	users = this->_users;
-#if DEBUG
-	std::cout << "get_users function called" << std::endl;
-#endif
-	return (users);
-}
-
-/**
- * @brief
- * 
- * @return std::vector<Channel *> 
- */
-std::vector<Channel *>	Server::get_channels(void) const
-{
-	std::vector<Channel *> chans;
-	chans = this->_channels;
-#if DEBUG
-	std::cout << BLUE << "DEBUG: " << "get_channels function called" << std::endl;
-#endif
-	return (chans);
-}
-
-/**
- * @brief 
- * TODO: a tester
- */
-void					Server::displayServerChannels(void) const
-{
-	std::vector<Channel *>::iterator it = get_channels().begin();
-	std::vector<Channel *>::iterator ite = get_channels().end();
-
-	std::cout << "Displaying all current server channels" << std::endl;
-	while (it != ite)
-	{
-		std::cout << (*it)->get_name() << std::endl;
-		it++;
-	}
-	return ;
-}
-
-void					Server::displayServerUsers(void) const
-{
-	std::vector<User *>::iterator it = get_users().begin();
-	std::vector<User *>::iterator ite = get_users().end();
-
-	std::cout << "Displaying all current server channels" << std::endl;
-	while (it != ite)
-	{
-		std::cout << (*it)->get_nickname() << std::endl;
-		it++;
-	}
-	return ;
 }

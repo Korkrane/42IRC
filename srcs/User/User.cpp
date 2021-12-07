@@ -33,6 +33,17 @@ User::User(std::string server_name, std::string server_ip, std::string server_cr
 	return;
 }
 
+User::User(int fd): _socket(fd)
+/*: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
+{
+#if DEBUG
+	std::cout << BLUE << "\t\tDEBUG: User default constructor called with fd parameter only" << NC << std::endl;
+	//displayClientInfo();
+#endif
+	return;
+}
+
+
 /*
 ** Destructeur
 */
@@ -82,9 +93,9 @@ void User::set_hostname(std::string hostname)
 }
 
 /**
- * @brief 
- * 
- * @param port 
+ * @brief
+ *
+ * @param port
  * TODO: ajouter des tests pour verifier que les valeurs soient corrects
  */
 void	User::set_port(std::string port)
@@ -220,15 +231,15 @@ void User::set_server_creation(std::string creation)
 #endif
 }
 
-void User::set_server(Server server)
+void User::set_server(IRC server)
 {
-	this->_server = &server;
+	this->_IRCserver = &server;
 }
 
 /**
- * @brief 
- * 
- * @param client_command 
+ * @brief
+ *
+ * @param client_command
  * TODO: Ajouter des verifications pour des char interdits ou des syntaxes ilogiques ?
  */
 void User::set_unparsed_client_command(std::string client_command)
@@ -408,9 +419,9 @@ unsigned int			User::get_params_size(void) const
 }
 */
 
-Server *User::get_server(void)
+IRC *User::get_IRCserver(void)
 {
-	return this->_server;
+	return this->_IRCserver;
 }
 
 std::string User::get_prefix(void) const
@@ -433,15 +444,15 @@ std::string User::get_command_name(void) const
 #endif
 		return ("");
 	}
-		
+
 #if DEBUG
-	std::cout << "This client cmd command_name is " << command_name << std::endl;
+	//std::cout << "This client cmd command_name is " << command_name << std::endl;
 #endif
 	return (command_name);
 }
 
 /*
-** Utils parsing 
+** Utils parsing
 */
 std::string	User::get_unparsed_client_command(void) const
 {
@@ -477,10 +488,10 @@ unsigned int User::get_params_size(void) const
 */
 
 /**
- * @brief 
- * 
- * @return true 
- * @return false 
+ * @brief
+ *
+ * @return true
+ * @return false
  */
 bool	User::check_if_prefix(void) const
 {
@@ -699,7 +710,8 @@ void User::quit_all_channels(void)
 
 int User::store_string_until_char(std::string *dest, std::string *src, char c, int len)
 {
-	for (std::string::iterator it = src->begin(); it != src->end(); ++it)
+	std::string::iterator it = src->begin();
+	while (it != src->end())
 	{
 		if (*it == c)
 		{
@@ -707,8 +719,11 @@ int User::store_string_until_char(std::string *dest, std::string *src, char c, i
 			len++;
 			break;
 		}
+		it++;
 		len++;
 	}
+	if(it == src->end())
+		*dest = src->substr(0, len);
 	return (len);
 }
 
@@ -720,38 +735,47 @@ void User::store_prefix()
 
 		int i = 0;
 		if (*it == ':')
+		{
 			i = store_string_until_char(&this->_prefix, &this->_unparsed_client_command, ' ', i);
-		this->_unparsed_client_command.replace(0, i, "");
+			this->_unparsed_client_command.replace(0, i, "");
+		}
 	}
 }
+
+
+bool User::hasEnding(std::string const &fullString, std::string const &ending) {
+    if (fullString.length() >= ending.length()) {
+        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+    } else {
+        return false;
+    }
+}
+
 /**
- * @brief 
- * Question Mahaut : es-ce qu il faudrait retirer le prefix a l unparsed command ?
- * * Est-ce qu'on pourrait faire une fonction pour savoir a quelle index s'arrete la partie prefix ?
+ * @brief
  * **TODO: a revoir Baudoin/Mahaut
  */
 void User::store_command()
 {
 	std::string command;
-	//if (this->_unparsed_client_command != "")
 	if (!this->_unparsed_client_command.empty())
 	{
-		//Baudoin
-		/*
-		std::string::iterator it = this->_unparsed_client_command.begin();
-
+#if DEBUG
+		std::cout << BLUE << "DEBUG: The resulting unparsed command is: " << this->_unparsed_client_command << NC << std::endl;
+#endif
 		int i = 0;
 		i = store_string_until_char(&this->_command_name, &this->_unparsed_client_command, ' ', i);
-		*/
-#if DEBUG
-		//std::cout << "The resulting unparsed command is " << this->_unparsed_client_command << std::endl;
-#endif
+		this->_unparsed_client_command.replace(0, i, "");
+		if(hasEnding(this->_command_name, "\r\n"))
+			this->_command_name.resize(this->_command_name.size() - 2);
+
+		/*
 		//Proposition Mahaut
 		if (this->check_if_prefix() == false)
 		{
 			//La commande doit etre le premier mot
 			//Attention si quelqu'un s'amusait a mettre des " ?
-			//Dans la command unparsed, ajouter un check de 
+			//Dans la command unparsed, ajouter un check de
 			std::string::size_type pos = this->get_unparsed_client_command().find(' ');
 			if (pos != std::string::npos)
 			{
@@ -760,20 +784,11 @@ void User::store_command()
 				command = this->get_unparsed_client_command().substr(0, pos);
 			}
 			else
-			{
 				command = this->get_unparsed_client_command();
-			}
-			//std::cout << "command is " << command << std::endl;
 			this->set_command(command);
 		}
+		*/
 	}
-	/*
-	else
-	{
-		std::cout << "BOO YOU WHORE" << std::endl;
-	}
-	*/
-	return ;
 }
 
 void User::split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c)
@@ -817,6 +832,7 @@ void User::store_params()
 {
 	if (this->_unparsed_client_command != "")
 	{
+		std::cout << "Enter in store_params:" << this->_unparsed_client_command << std::endl;
 		split_string_to_vector(&this->_params, &this->_unparsed_client_command, ' ');
 		patch_params(&this->_params);
 	}
@@ -831,24 +847,25 @@ void User::check_command(void)
 	return ;
 }
 
-//TODO: A reprendre suite aux modifs server
 void User::exec_command(void)
 {
+	/*
 #if DEBUG
 	std::cout << "user::exec_command function called." << std::endl;
-#endif
-	/*
-	std::map<std::string, void (*)(User *, Server *)>::iterator it = this->_server->_commands->_cmds.begin();
+	std::cout << "user irc serv address: " << &this->_IRCserver << std::endl;
+	std::cout << "user irc serv port: " << this->_IRCserver->get_port() << std::endl;
+ #endif
+	std::map<std::string, void (*)(User *, IRC *)>::iterator it = this->_IRCserver->_commands->_cmds.begin();
 	int known_command = 0;
 
-	while (it != this->_server->_commands->_cmds.end())
+	while (it != this->_IRCserver->_commands->_cmds.end())
 	{
 		if (it->first == this->_command_name)
 		{
 #if DEBUG
 			std::cout << GREEN << "DEBUG: " << it->first << " execute the command -->" << NC << std::endl;
 #endif
-			(*it->second)(this, this->_server);
+			(*it->second)(this, this->_IRCserver);
 			known_command += 1;
 			break;
 		}
@@ -859,7 +876,7 @@ void User::exec_command(void)
 #if DEBUG
 		std::cout << RED << "DEBUG: " << this->_command_name << " return the error command -->" << NC << std::endl;
 #endif
-		this->_server->_commands->unknown_cmd(this, this->_server);
+		this->_IRCserver->_commands->unknown_cmd(this, this->_IRCserver);
 	}
 	*/
 }
@@ -889,7 +906,7 @@ void User::displayChannels(void)
 }
 
 
-void	User::display_params(void) //const 
+void	User::display_params(void) //const
 {
 	int i = 0;
 	if (this->_params.size() >= 1)
@@ -906,23 +923,18 @@ void	User::display_params(void) //const
 }
 
 /**
- * @brief 
+ * @brief
  * Question Mahaut: je n ai pas bien compris la partie unparsed ?
  */
 void User::display_command(void)
 {
 	std::cout << "--- Displaying Last command parsed ---" << std::endl;
-	//TODO: faire un getter pour cette commande ?
-	if (this->_unparsed_client_command.empty())
-		std::cout << "There is no unparsed part" << std::endl;
-	else
-		std::cout << "Unparsed = " << this->_unparsed_client_command << std::endl;
 	if (!this->get_prefix().empty())
 		std::cout << "Prefix = " << this->_prefix << std::endl;
 	else
 		std::cout << "There is no prefix" << std::endl;
 	//TODO: faire un getter ?
-	if (this->_command_name.empty())
+	if (!this->_command_name.empty())
 		std::cout << "Command = " << this->_command_name << std::endl;
 	else
 		std::cout << "No command parsed" << std::endl;

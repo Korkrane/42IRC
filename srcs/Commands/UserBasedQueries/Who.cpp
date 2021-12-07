@@ -11,7 +11,7 @@
  * le channel mais sur la page du serveur.
  */
 
-void Commands::who(User *client, Server *server)
+void Commands::who(User *client, IRC *server)
 {
   (void)client;
   (void)server;

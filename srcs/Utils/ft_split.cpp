@@ -1,17 +1,16 @@
-//#include <irc.hpp>
-//#include "../../includes/irc.hpp"
 
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <string>
+#include "../../includes/irc.hpp"
 
 /**
- * @brief 
- * 
- * @param str 
- * @param charset 
- * @return int 
+ * @brief
+ *
+ * @param str
+ * @param charset
+ * @return int
  */
 int                         ft_len(std::string str, std::string charset)
 {
@@ -23,9 +22,9 @@ int                         ft_len(std::string str, std::string charset)
 
 /**
  * @brief : version C++ de split
- * 
- * @param line 
- * @param charset 
+ *
+ * @param line
+ * @param charset
  * TODO: A tester
  */
 std::vector<std::string>    ft_split(std::string line, std::string charset)
@@ -70,7 +69,7 @@ std::vector<std::string>    ft_split(std::string line, std::string charset)
                 #if DEBUG
                     std::cout << BLUE << "DEBUG: " << "1. Splitting adding " << line.substr(pos) << std::endl;
                 #endif
-                splitted.push_back(line.substr(pos)); 
+                splitted.push_back(line.substr(pos));
                 splitted.back().resize(i - pos);
             }
         }

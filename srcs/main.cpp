@@ -1,4 +1,5 @@
 #include "Server.hpp"
+//#include "IRCServer.hpp"
 
 // Global pointers (only accessible from this source file)
 Server	*gServer = NULL;
@@ -66,7 +67,7 @@ int	main(int ac, char **av)
 	std::string	password;
 	if (!checkArgs(ac, av, port, password))
 		exit(1);
-	
+
 	// Create an instance of the server and program
 	gServer = new Server(port, password);
 	gIRC = new IRC(password);

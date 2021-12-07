@@ -3,7 +3,7 @@
 #include <irc.hpp>
 #include <iostream>
 
-class Server;
+class IRC;
 class Channel;
 
 class User
@@ -51,11 +51,11 @@ class User
         //std::vector<std::string>  _user;
 
     public:
-        Server                      *_server;
+        IRC                      *_IRCserver;
 
-        //voir si constructeur par defaut a mettre en prive
         User(void);
         User(std::string server_name, std::string server_ip, std::string server_creation, std::string port);
+        User(int fd);
         virtual ~User();
 
         std::string                 get_nickname(void) const;
@@ -89,7 +89,7 @@ class User
         std::string                 get_server_name(void) const;
         std::string                 get_server_ip(void) const;
         std::string                 get_server_creation(void) const;
-        Server                      *get_server(void);
+        IRC                         *get_IRCserver(void);
 
         std::string                 get_unparsed_client_command(void) const;
         //a verifier
@@ -103,7 +103,7 @@ class User
         void                        set_operator_status(bool value);
         void                        set_is_away(bool value);
         void                        set_away_mssg(std::string message);
-        void                        set_server(Server server);
+        void                        set_server(IRC IRCserver);
         void                        set_port(std::string port);
 
         void                        set_unparsed_client_command(std::string client_command);
@@ -133,6 +133,7 @@ class User
        int                          store_string_until_char(std::string *dest, std::string *src, char c, int len);
        void                         patch_params(std::vector<std::string> *params);
        void                         split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c);
+       bool                         hasEnding(std::string const &fullString, std::string const &ending);
        void                         store_prefix(void);
        void                         store_command(void);
        void                         store_params(void);

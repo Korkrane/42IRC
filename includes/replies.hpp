@@ -29,7 +29,7 @@
 #define C_ERR_BADMASK "415"
 #define ERR_UNKNOWNCOMMAND(command) (command + " :Unknown command\r\n") // 421
 #define C_ERR_UNKNOWNCOMMAND "421"
-#define ERR_NOMOTD() ("MOTD File is missing\r\n") // 422
+#define ERR_NOMOTD() (":MOTD File is missing\r\n") // 422
 #define C_ERR_NOMOTD "422"
 #define ERR_NOADMININFO(server) (server + " :No administrative info available\r\n") // 423
 #define C_ERR_NOADMININFO "423"

@@ -10,7 +10,7 @@
  * 1ere fonction de la liste des Channel Operations dans la rfc
  */
 
-void Commands::join(User *user, Server *server)
+void Commands::join(User *user, IRC *server)
 {
     (void)user;
     (void)server;

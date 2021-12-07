@@ -2,13 +2,17 @@
 
 #include <irc.hpp>
 
+class Channel;
+class User;
+class IRC;
+
 class Commands
 {
 public:
 	Commands(void) : _cmds(_initCmds())
 	{
 #if DEBUG
-		std::cout << "Commands constructor called" << std::endl;
+		std::cout << BLUE <<  "DEBUG: Commands constructor called" << NC << std::endl;
 #endif
 	};
 
@@ -18,52 +22,49 @@ public:
 	virtual ~Commands()
 	{
 #if DEBUG
-		std::cout << "DEBUG: "
-				  << "Command destructor called" << std::endl;
+		std::cout << BLUE << "DEBUG: Command destructor called" << NC << std::endl;
 #endif
 	};
 
 	/*** Fonctions membres ***/
-	std::map<std::string, void (*)(User *, Server *)> get_cmds(void) const
+	std::map<std::string, void (*)(User *, IRC *)> get_cmds(void) const
 	{
-		std::map<std::string, void (*)(User *, Server *)> cmds = this->_cmds;
+		std::map<std::string, void (*)(User *, IRC *)> cmds = this->_cmds;
 		return (cmds);
 	}
 
-	std::map<std::string, void (*)(User *, Server *)> _initCmds()
+	std::map<std::string, void (*)(User *, IRC *)> _initCmds()
 	{
-		std::map<std::string, void (*)(User *, Server *)> cmds;
+		std::map<std::string, void (*)(User *, IRC *)> cmds;
 
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("AWAY", away_cmd));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("TIME", time_cmd));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("WHO", who));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("KILL", kill));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("NICK", nick));
-		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PRIVMSG", privmsg_cmd));
-		//cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("MODE", mode_mcd));
-		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("OPER", oper_cmd));
-		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PASS", pass_cmd));
-		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("NOTICE", notice_cmd));
-		//cmds.inser(std::pair<std::string, void (*) (User *, Server *)>("QUIT", quit_cmd));
-
-		//Channel operations
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("JOIN", join));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PART", part));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("CHANNEL", channel));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("TOPIC", topic));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("NAMES", names));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("LIST", list));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("INVITE", invite));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("KICK", kick));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("AWAY", away_cmd));
+		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WHO", who));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KILL", kill));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("CAP", cap));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NICK", nick));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PART", part));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KICK", kick));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TOPIC", topic));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("JOIN", join));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("LIST", list));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NAMES", names));
+		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("PRIVMSG", privmsg_cmd));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MODE", mode_mcd));
+		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("OPER", oper_cmd));
+		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("PASS", pass_cmd));
+		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("NOTICE", notice_cmd));
+		//cmds.inser(std::pair<std::string, void (*) (User *, IRC *)>("QUIT", quit_cmd));
 		return cmds;
 	}
 
-	std::map<std::string, void (*)(User *, Server *)> _cmds;
-	static void unknown_cmd(User *client, Server *server);
+	std::map<std::string, void (*)(User *, IRC *)> _cmds;
+	static void unknown_cmd(User *client, IRC *server);
 
 private:
-	static void time_cmd(User *client, Server *server);
-	static void away_cmd(User *client, Server *server);
+	static void time_cmd(User *client, IRC *server);
+	static void away_cmd(User *client, IRC *server);
+	//static void	join(User *client, IRC *server);
 
 /*
 protected:
@@ -73,23 +74,23 @@ protected:
 */
 
 private:
-	static void 		who(User *client, Server *server);
+	static void 		who(User *client, IRC *server);
 	static void 		displayAllClients(Channel *channel);
 	static void 		displayChannel(Channel *channel, User *client);
 	static void			displayClientsFromChannel(Channel *channel, User *client);
-	static void			paramsIsCorrectChannel(Commands *command, Server *server);
-	static void 		paramsIsCorrectOther(Commands *command, Server *server);
+	static void			paramsIsCorrectChannel(Commands *command, IRC *server);
+	static void 		paramsIsCorrectOther(Commands *command, IRC *server);
 	static std::string	whoHelpParameter(void);
 
 
-	static void			notice(User *user, Server *server);
+	static void			notice(User *user, IRC *server);
 
-	static void			privmsg(User *user, Server *server);
+	static void			privmsg(User *user, IRC *server);
 	/**
 	** Commande KILL
 	** TODO: Mahaut
 	*/
-	static void			kill(User *user, Server *server);//bool nick collision
+	static void kill(User *user, IRC *server); //bool nick collision
 	//verifier les fonctions annexes relatives aux clients sont bien implementees
 	//nickname exists
 	//leave all channels
@@ -108,26 +109,17 @@ private:
 	 ** JOIN, MODE, KICK, PART, QUIT and PRIVMSG/NOTICE.
 	 ** See details on RFC 2812.
 	 */
-	static void 			join(User *client, Server *server);
+	static void 			join(User *user, IRC *server);
 
-	static void				channel(User *user, Server *server);
+	static void				channel(User *user, IRC *server);
 
 
+	static void 			nick(User *user, IRC *server);
 	/*
 	** Autres fonctions necessaires a nick
 	*/
-	static bool				checkNickGrammar(std::string nick, Server *server, User *user);
-	static bool				nickIsAvailable(std::string nick, Server *server, User *user);
-
-	/**
-	 * @brief
-	 *
-	 * @param command
-	 * @param client
-	 * @param server
-	 * Mahaut
-	 */
-	static void 			nick(User *client, Server *server);
+	static bool				checkNickGrammar(std::string nick, IRC *server, User *user);
+	static bool				nickIsAvailable(std::string nick, IRC *server, User *user);
 
 	/**
 	 * @brief
@@ -142,7 +134,7 @@ private:
 	* granted by the server.
 	* Parameters: <channel> *( "," <channel> ) [ <Part Message> ]
 	 */
-	static void				part(User *client, Server *server);
+	static void part(User *user,IRC *server);
 	//verifier qu on a bien un leave channel dans client
 
 	/**
@@ -160,7 +152,7 @@ private:
 	 * Parameters: <channel> *( "," <channel> ) <user> *( "," <user> )
                [<comment>]
 	 */
-	static void				kick(User *client, Server *server);
+	static void kick(User *client, IRC *server);
 
 	/**
 	 * @brief
@@ -175,7 +167,7 @@ private:
      * requesting it.  If the <topic> parameter is an empty string, the
      * topic for that channel will be removed.
 	 */
-	static void				topic(User *client, Server *server);
+	static void topic(User *client, IRC *server);
 
 	/**
 	 * @brief
@@ -190,18 +182,17 @@ private:
      * that server which will generate the reply.
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
-	static void				list(User *user, Server *server);
-
+	static void list(User *client, IRC *server);
 
 	/**
-	 * @brief 
-	 * 
-	 * @param user 
-	 * @param server 
+	 * @brief
+	 *
+	 * @param user
+	 * @param server
 	 */
-	static void				invite(User *user, Server *server);
-	static User 			*find_target_nick(std::string target_nick, User *user, Server *server);
-	static Channel			*find_target_channel(std::string target_channel, User *user, Server *server);
+	static void				invite(User *user, IRC *server);
+	static User 			*find_target_nick(std::string target_nick, User *user, IRC *server);
+	static Channel			*find_target_channel(std::string target_channel, User *user, IRC *server);
 	/**
 	 * @brief
 	 *
@@ -219,7 +210,7 @@ private:
      * are listed as being on `channel' "*".
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
-	static void				names(User *client, Server *server);
+	static void names(User *client, IRC *server);
 };
 
 /*
