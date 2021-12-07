@@ -7,8 +7,6 @@
  * @param user 
  * @param channel 
  * @param parameter 
- * TODO: a revoir
- * * pour que ce soit plus classe ?
  */
 void error_handler(std::string error_code, User *user, Channel *channel, std::vector<std::string> parameter)
 {
@@ -102,12 +100,6 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
         }
         case 424:
         {
-            /*
-            ** Attention revoir ce cas particulier, pas sur qu ait 
-            ** besoin de l implementer
-            ** ou alors il faut que la fonctions soient variadiques pour
-            ** qu elle puisse avoir un ou plusieurs arguments
-            */
             std::vector<std::string>::iterator it = parameter.begin();
             std::vector<std::string>::iterator it2 = it++;
             std::string val1 = (*it);
@@ -117,12 +109,6 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
         }
         case 431:
         {
-            /*
-            ** Attention revoir ce cas particulier, pas sur qu ait 
-            ** besoin de l implementer
-            ** ou alors il faut que la fonctions soient variadiques pour
-            ** qu elle puisse avoir un ou plusieurs arguments
-            */
             std::vector<std::string>::iterator it = parameter.begin();
             std::vector<std::string>::iterator it2 = it++;
             std::string val1 = (*it);
@@ -152,9 +138,6 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
         }
         case 441:
         {
-            /*
-            ** A revoir egalement
-            */
             std::vector<std::string>::iterator it = parameter.begin();
             std::vector<std::string>::iterator it2 = it++;
             std::string val1 = (*it);
@@ -169,9 +152,6 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
         }
         case 443:
         {
-            /*
-            ** A revoir
-            */
             std::vector<std::string>::iterator it = parameter.begin();
             std::vector<std::string>::iterator it2 = it++;
             std::string val1 = (*it);
@@ -226,7 +206,6 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
         }
         case 466:
         {
-            //attention revoir cas particulier
             //A tester pour voir quelle messsage associer
             break ;
         }

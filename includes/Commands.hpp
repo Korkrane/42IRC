@@ -2,10 +2,6 @@
 
 #include <irc.hpp>
 
-class Channel;
-class User;
-class Server;
-
 class Commands
 {
 public:
@@ -42,20 +38,23 @@ public:
 		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("TIME", time_cmd));
 		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("WHO", who));
 		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("KILL", kill));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("CAP", cap));
 		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("NICK", nick));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PART", part));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("KICK", kick));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("TOPIC", topic));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("JOIN", join));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("LIST", list));
-		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("NAMES", names));
 		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PRIVMSG", privmsg_cmd));
 		//cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("MODE", mode_mcd));
 		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("OPER", oper_cmd));
 		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PASS", pass_cmd));
 		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("NOTICE", notice_cmd));
 		//cmds.inser(std::pair<std::string, void (*) (User *, Server *)>("QUIT", quit_cmd));
+
+		//Channel operations
+		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("JOIN", join));
+		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PART", part));
+		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("CHANNEL", channel));
+		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("TOPIC", topic));
+		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("NAMES", names));
+		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("LIST", list));
+		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("INVITE", invite));
+		cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("KICK", kick));
 		return cmds;
 	}
 
@@ -65,38 +64,19 @@ public:
 private:
 	static void time_cmd(User *client, Server *server);
 	static void away_cmd(User *client, Server *server);
-	//static void	join(User *client, Server *server);
 
+/*
 protected:
 	Server *_server;
-
-	/*
-	** Voir la partie Oper ?
-	*/
-	std::string _operName;
-	std::string _operPass;
-
-	/**
-	** Important : il nous faudrait une fonction reply qui va etre
-	** appelee a la fin de chaque commande (pour envoyer code/info au serveur ?)
-	*/
+	std::string	_operName;
+	std::string	_operPass;
+*/
 
 private:
-	/**
-	** Fonctions necessaires pour la commande who (notamment)
-	** Pas sure a 100% des protos
-	** Le param de who pour correspondre au une channel ou a autre chose
-	** TODO: mahaut WHO
-	*/
 	static void 		who(User *client, Server *server);
 	static void 		displayAllClients(Channel *channel);
-	//Appelera la sous fonction displayClientsFromChannel ?
-	//ajouter const ?
 	static void 		displayChannel(Channel *channel, User *client);
-	//Affichage specifique si le client est operateur ?
-	//ajouter const ?
 	static void			displayClientsFromChannel(Channel *channel, User *client);
-	//Va permettre de verifier si la channel passee en parametre existe bien
 	static void			paramsIsCorrectChannel(Commands *command, Server *server);
 	static void 		paramsIsCorrectOther(Commands *command, Server *server);
 	static std::string	whoHelpParameter(void);
@@ -129,15 +109,8 @@ private:
 	 ** See details on RFC 2812.
 	 */
 	static void 			join(User *client, Server *server);
-	/**
-	 * @brief
-	 *
-	 * @param command
-	 * @param client
-	 * @param server
-	 * TODO: par sure si cette commande est necessaire
-	 */
-	static void 			cap(User *client, Server *server);
+
+	static void				channel(User *user, Server *server);
 
 
 	/*

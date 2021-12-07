@@ -46,8 +46,8 @@ class Channel
         std::string             get_topic(void) const;
         std::string             get_modes(void) const;
         unsigned int            get_members_nb(void) const;
-        std::vector<User *>   get_member_list(void) const;
-        std::vector<User *>   get_operators(void) const;
+        std::vector<User *>     get_member_list(void) const;
+        std::vector<User *>     get_operators(void) const;
 
         /*** UTILS ***/
         //modifier user pour user ?

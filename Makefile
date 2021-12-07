@@ -10,7 +10,6 @@ NAMES		=	main.cpp \
 				User/User.cpp \
 				Commands/ServerQueries/Admin.cpp \
 				Commands/OptionalFeatures/Away.cpp \
-				Commands/OptionalFeatures/Cap.cpp \
 				Commands/ServerQueries/Info.cpp \
 				Commands/ChannelOperations/Invite.cpp \
 				Commands/ChannelOperations/Join.cpp \

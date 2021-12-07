@@ -1,11 +1,6 @@
 #include <irc.hpp>
 
-
-/**
- * @brief Set the server time creation
- *
- * @param server
- */
+/*
 void setServerTime(Server *server)
 {
     time_t      now    = time(0);
@@ -14,11 +9,6 @@ void setServerTime(Server *server)
     server->set_creation(date, now);
 }
 
-/**
- * @brief Set the server socket, bind it to a port and set it to listen
- *
- * @param server
- */
 void setServerSocket(Server *server)
 {
 #ifdef DEBUG
@@ -78,3 +68,4 @@ void buildServer(Server *server, char **av)
         delete server;
     }
 }
+*/
