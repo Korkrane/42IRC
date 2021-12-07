@@ -18,7 +18,6 @@ private:
     int                 _totChannels;
     int                 _totUsers;
     std::vector<Channel *> _channels;
-    std::vector<User *> _users;
     std::string         _name;
     std::string         _password;
     std::string         _version;
@@ -39,20 +38,21 @@ private:
 	std::string const	_discEvenFD;
 
 public:
-
-    //damien added elements
-    std::vector<int>	fds;
-
     IRC();
     IRC(IRC const &src);
     IRC & operator=(IRC const &src);
     IRC(std::string const &password);
     virtual ~IRC();
 
+    std::vector<User *> _users;
+    //damien added elements
+    std::vector<int> fds;
+
     //public ou privé ?
     Commands *_commands;
 
-    void ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList) const;
+    void ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
+    void exec_command(User *);
 
     void                set_name(std::string name);
     void                set_version(std::string version);
@@ -69,6 +69,8 @@ public:
     std::string         get_ip(void) const;
     std::string         get_server_creation(void) const;
     std::vector<Channel *> get_channels(void) const;
+
+    User *get_user(int fd);
 
     void add_channel(Channel *);
 

@@ -8,7 +8,7 @@
  * @param server
  * TODO: a reprendre suite a la modif de client
  */
-void versionCmd(User *client, Server *server) // 351 & 402 reply
+void versionCmd(User *client, IRC *server) // 351 & 402 reply
 {
     (void)client;
     (void)server;

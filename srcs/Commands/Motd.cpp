@@ -7,7 +7,7 @@
  * @param client
  * @param server
  */
-void Commands::motd_cmd(Client *client, Server *server)
+void Commands::motd_cmd(User *user, IRCServ *server)
 {
     std::vector<std::string> reply_params;
     std::string reply;
@@ -22,14 +22,14 @@ void Commands::motd_cmd(Client *client, Server *server)
             buff.append(line);
         }
         reply_params.push_back(server->get_name());
-        reply = build_reply(375, client, reply_params);
+        reply = build_reply(375, user, reply_params);
         send_reply(reply);
         reply_params.clear();
         reply_params.push_back(buff);
-        reply = build_reply(372, client, reply_params);
+        reply = build_reply(372, user, reply_params);
         send_reply(reply);
         reply_params.clear();
-        reply = build_reply(376, client, reply_params);
+        reply = build_reply(376, user, reply_params);
         send_reply(reply);
     }
     else

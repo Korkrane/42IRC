@@ -62,7 +62,7 @@ void	Server::acceptClient()
 	std::cout << "New client on socket #" << clientFD << '\n';
 
 	_clients.insert(std::make_pair(clientFD, new Client(clientFD)));
-	_irc->fds.push_back(clientFD);	// FOR TESTING
+	//_irc->fds.push_back(clientFD);	// FOR TESTING
 }
 
 void	Server::removeClient(int fd)

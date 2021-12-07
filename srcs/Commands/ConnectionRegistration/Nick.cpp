@@ -35,7 +35,7 @@ static bool checkNickGrammar(std::string nickname)
  * a la guise du client ensuite.
  * TODO: voir si throw exceptions
  */
-void  Commands::nick(User *user, Server *server)
+void  Commands::nick(User *user, IRC *server)
 {
   (void)user;
   (void)server;

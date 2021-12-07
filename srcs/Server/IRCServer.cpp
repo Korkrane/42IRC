@@ -206,12 +206,60 @@ std::vector<Channel *>	IRC::get_channels(void) const
 	return (channels);
 }
 
-void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList) const
+User* IRC::get_user(int fd)
+{
+	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if((*it)->get_socket() == fd)
+			return *it;
+	}
+	#if DEBUG
+		std::cout << BLUE << "DEBUG: fail to get user in list " << NC << std::endl;
+	#endif
+	return NULL;
+}
+
+void IRC::exec_command(User *user)
+{
+#if DEBUG
+	std::cout << "IRC::exec_command function called." << std::endl;
+ #endif
+	std::map<std::string, void (*)(User *, IRC *)>::iterator it = this->_commands->_cmds.begin();
+	int known_command = 0;
+
+	while (it != this->_commands->_cmds.end())
+	{
+		std::cout << "map key elem name:" << it->first << std::endl;
+ 		std::cout << "user cmd loop testing exe:" << user->get_command_name() << std::endl;
+		std::string key = it->first;
+		std::string user_cmd = "TIME";
+		//if (it->first == user->get_command_name())
+		if (key == user_cmd)
+		{
+#if DEBUG
+			std::cout << GREEN << "DEBUG: " << it->first << " execute the command -->" << NC << std::endl;
+#endif
+			(*it->second)(user, this);
+			known_command += 1;
+			break;
+		}
+		it++;
+	}
+	if (known_command == 0)
+	{
+#if DEBUG
+		std::cout << RED << "DEBUG: " << user->get_command_name() << " return the error command -->" << NC << std::endl;
+#endif
+		this->_commands->unknown_cmd(user, this);
+	}
+}
+
+void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
 {
 	#if DEBUG
 		std::cout << BLUE << "\tDEBUG: Enter in IRC::ProcessCommand" << NC << std::endl;
 		std::cout << BLUE << "\tDEBUG: with clientfd: " << command.first << NC << std::endl;
-		std::cout << BLUE << "\tDEBUG: with command: " << command.second << NC << std::endl;
+		std::cout << BLUE << "\tDEBUG: with command: " << command.second << NC;
 	#endif
 	int	clientFD = command.first;
 	std::string const	&cmd = command.second;
@@ -235,22 +283,36 @@ void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &r
 	  //build reply
 	  //put reply to responseQueue
 
+
+	//Check if the Client has already been created. If yes parse and execute his command
+	//otherwise, create a new client //TODO execute command too
 	User *current_user;
 
-	if (std::find(fds.begin(), fds.end(), clientFD) == fds.end())
+	if (!(std::find(fds.begin(), fds.end(), clientFD) == fds.end()))
 	{
 		#if DEBUG
 			std::cout << BLUE << "DEBUG: Client found in the user list" << NC << std::endl;
 		#endif
-		//FD FOUND, PROCESS COMMAND
+		current_user = this->get_user(clientFD);
+		current_user->set_unparsed_client_command(cmd);
+		current_user->store_prefix();
+		current_user->store_command();
+		current_user->store_params();
+		#if DEBUG
+			current_user->display_command();
+		#endif
+		this->exec_command(current_user);
 	}
 	else
 	{
 		#if DEBUG
 			std::cout << BLUE << "\tDEBUG: Client not found in the user list" << NC << std::endl;
 		#endif
-		//this->fds.push_back (clientFD);
+		this->fds.push_back(clientFD);
 		current_user = new User(clientFD);
+		current_user->set_nickname("test");
+		this->_users.push_back(current_user);
+		//parse command
 	}
 }
 

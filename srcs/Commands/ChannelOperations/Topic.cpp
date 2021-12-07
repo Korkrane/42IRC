@@ -1,19 +1,19 @@
 #include <irc.hpp>
 
 /**
- * @brief 
- * 
- * @param client 
- * @param server 
+ * @brief
+ *
+ * @param client
+ * @param server
  * Mahaut
  */
-void		Commands::topic(User *client, Server *server)
+void		Commands::topic(User *client, IRC *server)
 {
     (void)client;
     (void)server;
     // verifier le nombre d argument (ne peut pas etre egal a 1)
         //retourner erreur ERR_NEEDMOREPARAMS
-    
+
     //verifier que la channel passe en parametre existe
     //et que le client y est registered
     //sinon retourner erreur

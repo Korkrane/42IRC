@@ -2,13 +2,13 @@
 #include <irc.hpp>
 
 /**
- * @brief 
- * 
- * @param client 
- * @param server 
+ * @brief
+ *
+ * @param client
+ * @param server
  * Mahaut
  */
-void		Commands::kick(User *client, Server *server)
+void		Commands::kick(User *client, IRC *server)
 {
     (void)client;
     (void)server;
@@ -17,7 +17,7 @@ void		Commands::kick(User *client, Server *server)
 
     //on checke/parse les arguments restants ?
 
-    //on prepare la string comment si il y en a 
+    //on prepare la string comment si il y en a
 
     //on check si le channel passe en argument existe bien
     //on check si les differents user en argument existent bien

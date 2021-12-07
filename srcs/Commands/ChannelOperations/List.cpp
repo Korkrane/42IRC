@@ -1,13 +1,13 @@
 #include <irc.hpp>
 
 /**
- * @brief 
- * 
- * @param client 
- * @param server 
- * Mahaut 
+ * @brief
+ *
+ * @param client
+ * @param server
+ * Mahaut
  */
-void		Commands::list(User *client, Server *server)
+void		Commands::list(User *client, IRC *server)
 {
     (void)client;
     (void)server;

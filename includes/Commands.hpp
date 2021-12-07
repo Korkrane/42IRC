@@ -7,7 +7,7 @@
 
 class Channel;
 class User;
-class Server;
+class IRC;
 /*
 ** Classe Command(s)
 ** Les fonctions qui en font une classe canonique sont partagees
@@ -34,47 +34,47 @@ public:
 	};
 
 	/*** Fonctions membres ***/
-	std::map<std::string, void (*)(User *, Server *)> get_cmds(void) const
+	std::map<std::string, void (*)(User *, IRC *)> get_cmds(void) const
 	{
-		std::map<std::string, void (*)(User *, Server *)> cmds = this->_cmds;
+		std::map<std::string, void (*)(User *, IRC *)> cmds = this->_cmds;
 		return (cmds);
 	}
 
-	std::map<std::string, void (*)(User *, Server *)> _initCmds()
+	std::map<std::string, void (*)(User *, IRC *)> _initCmds()
 	{
-		std::map<std::string, void (*)(User *, Server *)> cmds;
+		std::map<std::string, void (*)(User *, IRC *)> cmds;
 
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("AWAY", away_cmd));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("TIME", time_cmd));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("WHO", who));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("KILL", kill));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("CAP", cap));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("NICK", nick));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("PART", part));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("KICK", kick));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("TOPIC", topic));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("JOIN", join));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("LIST", list));
-		cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("NAMES", names));
-		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PRIVMSG", privmsg_cmd));
-		//cmds.insert(std::pair<std::string, void (*)(User *, Server *)>("MODE", mode_mcd));
-		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("OPER", oper_cmd));
-		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("PASS", pass_cmd));
-		//cmds.insert(std::pair<std::string, void (*) (User *, Server *)>("NOTICE", notice_cmd));
-		//cmds.inser(std::pair<std::string, void (*) (User *, Server *)>("QUIT", quit_cmd));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("AWAY", away_cmd));
+		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WHO", who));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KILL", kill));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("CAP", cap));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NICK", nick));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PART", part));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KICK", kick));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TOPIC", topic));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("JOIN", join));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("LIST", list));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NAMES", names));
+		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("PRIVMSG", privmsg_cmd));
+		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MODE", mode_mcd));
+		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("OPER", oper_cmd));
+		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("PASS", pass_cmd));
+		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("NOTICE", notice_cmd));
+		//cmds.inser(std::pair<std::string, void (*) (User *, IRC *)>("QUIT", quit_cmd));
 		return cmds;
 	}
 
-	std::map<std::string, void (*)(User *, Server *)> _cmds;
-	static void unknown_cmd(User *client, Server *server);
+	std::map<std::string, void (*)(User *, IRC *)> _cmds;
+	static void unknown_cmd(User *client, IRC *server);
 
 private:
-	static void time_cmd(User *client, Server *server);
-	static void away_cmd(User *client, Server *server);
-	//static void	join(User *client, Server *server);
+	static void time_cmd(User *client, IRC *server);
+	static void away_cmd(User *client, IRC *server);
+	//static void	join(User *client, IRC *server);
 
 protected:
-	Server *_server;
+	IRC *_server;
 
 	/*
 	** Voir la partie Oper ?
@@ -94,7 +94,7 @@ private:
 	** Le param de who pour correspondre au une channel ou a autre chose
 	** TODO: mahaut WHO
 	*/
-	static void who(User *client, Server *server);
+	static void who(User *client, IRC *server);
 	static void displayAllClients(Channel *channel);
 	//Appelera la sous fonction displayClientsFromChannel ?
 	//ajouter const ?
@@ -103,8 +103,8 @@ private:
 	//ajouter const ?
 	static void displayClientsFromChannel(Channel *channel, User *client);
 	//Va permettre de verifier si la channel passee en parametre existe bien
-	static void paramsIsCorrectChannel(Commands *command, Server *server);
-	static void paramsIsCorrectOther(Commands *command, Server *server);
+	static void paramsIsCorrectChannel(Commands *command, IRC *server);
+	static void paramsIsCorrectOther(Commands *command, IRC *server);
 	static std::string whoHelpParameter(void);
 
 	/**
@@ -114,7 +114,7 @@ private:
 	** Attention il va falloir trouver le moyen de savoir si il y a eu nick collision ou pas
 	** on a fait un design avec uniquement deux parametres
 	*/
-	static void kill(User *client, Server *server); //bool nick collision
+	static void kill(User *client, IRC *server); //bool nick collision
 	//verifier les fonctions annexes relatives aux clients sont bien implementees
 	//nickname exists
 	//leave all channels
@@ -133,7 +133,7 @@ private:
 	 ** JOIN, MODE, KICK, PART, QUIT and PRIVMSG/NOTICE.
 	 ** See details on RFC 2812.
 	 */
-	static void join(User *client, Server *server);
+	static void join(User *client, IRC *server);
 	/**
 	 * @brief
 	 *
@@ -142,7 +142,7 @@ private:
 	 * @param server
 	 * TODO: par sure si cette commande est necessaire
 	 */
-	static void cap(User *client, Server *server);
+	static void cap(User *client, IRC *server);
 
 	/**
 	 * @brief
@@ -151,7 +151,7 @@ private:
 	 * @param client
 	 * @param server
 	 */
-	static void nick(User *client, Server *server);
+	static void nick(User *client, IRC *server);
 	/*
 	** Autres fonctions necessaires a nick
 	*/
@@ -170,7 +170,7 @@ private:
 	* granted by the server.
 	* Parameters: <channel> *( "," <channel> ) [ <Part Message> ]
 	 */
-	static void part(User *client, Server *server);
+	static void part(User *client,IRC *server);
 	//verifier qu on a bien un leave channel dans client
 
 	/**
@@ -188,7 +188,7 @@ private:
 	 * Parameters: <channel> *( "," <channel> ) <user> *( "," <user> )
                [<comment>]
 	 */
-	static void kick(User *client, Server *server);
+	static void kick(User *client, IRC *server);
 
 	/**
 	 * @brief
@@ -203,7 +203,7 @@ private:
      * requesting it.  If the <topic> parameter is an empty string, the
      * topic for that channel will be removed.
 	 */
-	static void topic(User *client, Server *server);
+	static void topic(User *client, IRC *server);
 
 	/**
 	 * @brief
@@ -218,7 +218,7 @@ private:
      * that server which will generate the reply.
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
-	static void list(User *client, Server *server);
+	static void list(User *client, IRC *server);
 
 	/**
 	 * @brief
@@ -237,7 +237,7 @@ private:
      * are listed as being on `channel' "*".
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
-	static void names(User *client, Server *server);
+	static void names(User *client, IRC *server);
 };
 
 /*

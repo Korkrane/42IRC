@@ -58,7 +58,7 @@ NAME		= ircserv
 
 CC			= clang++
 
-FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 #-g
+FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 -g
 
 RM			= rm -f
 
