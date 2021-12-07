@@ -13,8 +13,6 @@ IRC::IRC(void):
 	_version("null"),
 	_userModes("null"),
 	_channelModes("null"),
-	_init_time(),
-	_date("null"),
 	_serv_info(NULL),
 	_hints(NULL),
 	_server_ip("null"),
@@ -45,8 +43,6 @@ IRC::IRC(std::string const &password):
 	_version("null"),
 	_userModes("null"),
 	_channelModes("null"),
-	_init_time(),
-	_date("null"),
 	_serv_info(NULL),
 	_hints(NULL),
 	_server_ip("null"),
@@ -60,6 +56,10 @@ IRC::IRC(std::string const &password):
 	std::cout << BLUE << "DEBUG: IRC constructor with pass parameter called" << NC << std::endl;
 #endif
 	_commands = new Commands();
+
+	time_t      now    = time(0);
+    std::string date   = ctime(&now);
+	set_server_creation(date);
 }
 
 /**
@@ -100,10 +100,10 @@ void				IRC::set_version(std::string version)
 	return ;
 }
 
-void				IRC::set_creation(std::string date, time_t time)
+void				IRC::set_server_creation(std::string date)
 {
-	this->_date = date;
-    this->_init_time = time;
+	date.erase(date.size() - 1); //time command put a \n at the end of the date so i delete it here
+	this->_server_creation = date;
 #if DEBUG
 	std::cout << "Creation date has been set successfully to " << date << std::endl;
 #endif
@@ -195,7 +195,7 @@ std::string			IRC::get_server_creation(void) const
 {
 	std::string server_creation = this->_server_creation;
 #if DEBUG
-	std::cout << "IRC creation is " << server_creation << std::endl;
+	std::cout << BLUE << "IRC_DEBUG: IRC creation is " << server_creation << NC << std::endl;
 #endif
 	return (server_creation);
 }
@@ -207,17 +207,11 @@ User* IRC::get_user(int fd)
 		if((*it)->get_socket() == fd)
 			return *it;
 	}
-	#if DEBUG
-		std::cout << BLUE << "DEBUG: fail to get user in list " << NC << std::endl;
-	#endif
 	return NULL;
 }
 
 void IRC::exec_command(User *user)
 {
-#if DEBUG
-	std::cout << "IRC::exec_command function called." << std::endl;
- #endif
 	std::map<std::string, void (*)(User *, IRC *)>::iterator it = this->_commands->_cmds.begin();
 	int known_command = 0;
 
@@ -226,7 +220,7 @@ void IRC::exec_command(User *user)
 		if (it->first == user->get_command_name())
 		{
 #if DEBUG
-			std::cout << GREEN << "DEBUG: " << it->first << " execute the command -->" << NC << std::endl;
+			std::cout << GREEN << "DEBUG: " << it->first << " command is available in our IRC" << NC << std::endl;
 #endif
 			(*it->second)(user, this);
 			known_command += 1;
@@ -237,7 +231,7 @@ void IRC::exec_command(User *user)
 	if (known_command == 0)
 	{
 #if DEBUG
-		std::cout << RED << "DEBUG: " << user->get_command_name() << " return the error command -->" << NC << std::endl;
+		std::cout << RED << "DEBUG: " << user->get_command_name() << " command isn't available in our IRC" << NC << std::endl;
 #endif
 		this->_commands->unknown_cmd(user, this);
 	}
@@ -245,6 +239,10 @@ void IRC::exec_command(User *user)
 
 void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
 {
+
+	(void)responseQueue;
+	(void)disconnectList;
+
 	#if DEBUG
 		std::cout << BLUE << "\tDEBUG: Enter in IRC::ProcessCommand" << NC << std::endl;
 		std::cout << BLUE << "\tDEBUG: with clientfd: " << command.first << NC << std::endl;
@@ -253,44 +251,51 @@ void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &r
 	int	clientFD = command.first;
 	std::string const	&cmd = command.second;
 
-
-	for (std::vector<int>::const_iterator it = fds.begin(); it != fds.end(); ++it)
-		if (*it != clientFD)
-			responseQueue.push_back(std::make_pair(*it, cmd));
-
-
+	/*
 	// Add even fds to the disconnect list
 	if (cmd == _discEvenFD)
 		for (std::vector<int>::const_iterator it = fds.begin(); it != fds.end(); ++it)
 			if (*it % 2 == 0)
 				disconnectList.push_back(*it);
+	*/
 
-	//TODO
-	//if new user --> do registration
-	//if user is a valid client --> parse the incoming command
-	  //process the command
-	  //build reply
-	  //put reply to responseQueue
-
-
-	//Check if the Client has already been created. If yes parse and execute his command
-	//otherwise, create a new client //TODO execute command too
 	User *current_user;
 
 	if (!(std::find(fds.begin(), fds.end(), clientFD) == fds.end()))
 	{
+		current_user = this->get_user(clientFD);
 		#if DEBUG
 			std::cout << BLUE << "DEBUG: Client found in the user list" << NC << std::endl;
+			std::cout << BLUE << "DEBUG: Client is registered ? " << current_user->user_is_registered() << NC << std::endl;
 		#endif
-		current_user = this->get_user(clientFD);
 		current_user->set_unparsed_client_command(cmd);
 		current_user->store_prefix();
 		current_user->store_command();
 		current_user->store_params();
-		#if DEBUG
+		#if USERDEBUG
 			current_user->display_command();
 		#endif
-		this->exec_command(current_user);
+		if(current_user->user_is_registered() == true)
+		{
+			this->exec_command(current_user);
+			responseQueue = this->responseQueue;
+			this->responseQueue.clear();
+		}
+		else
+		{
+			//TODO do check for pass and nick and realname existence to set it to a registered user.
+			//if(!current_user->user_registered_password())
+
+			//if(current_user->user_registered_password() && current_user->user_registered_nickname())
+			current_user->set_registered_user(true);
+			if(current_user->user_is_registered() == true)
+			{
+				current_user->set_command("WELCOME");
+				this->exec_command(current_user);
+				responseQueue = this->responseQueue;
+				this->responseQueue.clear();
+			}
+		}
 	}
 	else
 	{
@@ -299,7 +304,9 @@ void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &r
 		#endif
 		this->fds.push_back(clientFD);
 		current_user = new User(clientFD);
-		current_user->set_nickname("test");
+		current_user->set_nickname("user_nickname");
+		current_user->set_nickname("user_realname");
+		current_user->set_hostname("ft_irc.com");
 		this->_users.push_back(current_user);
 		//parse command
 	}

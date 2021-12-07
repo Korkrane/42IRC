@@ -11,19 +11,18 @@ class Commands
 public:
 	Commands(void) : _cmds(_initCmds())
 	{
-#if DEBUG
-		std::cout << BLUE <<  "DEBUG: Commands constructor called" << NC << std::endl;
-#endif
+		#if DEBUG
+			std::cout << BLUE <<  "DEBUG: Commands constructor called" << NC << std::endl;
+		#endif
 	};
-
 	Commands(Commands const &src);
 	Commands &operator=(Commands const &src);
 	Commands(std::string const &serverPass, std::string serverName, std::string serverIP, std::string serverCreationDate);
 	virtual ~Commands()
 	{
-#if DEBUG
-		std::cout << BLUE << "DEBUG: Command destructor called" << NC << std::endl;
-#endif
+		#if DEBUG
+			std::cout << BLUE << "DEBUG: Command destructor called" << NC << std::endl;
+		#endif
 	};
 
 	/*** Fonctions membres ***/
@@ -39,6 +38,8 @@ public:
 
 		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("AWAY", away_cmd));
 		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
+		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WELCOME", welcome_cmd));
+		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MOTD", motd_cmd));
 		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WHO", who));
 		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KILL", kill));
 		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("CAP", cap));
@@ -54,27 +55,20 @@ public:
 		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("OPER", oper_cmd));
 		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("PASS", pass_cmd));
 		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("NOTICE", notice_cmd));
-		//cmds.inser(std::pair<std::string, void (*) (User *, IRC *)>("QUIT", quit_cmd));
+		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("QUIT", quit_cmd));
 		return cmds;
 	}
 
 	std::map<std::string, void (*)(User *, IRC *)> _cmds;
-	static void unknown_cmd(User *client, IRC *server);
+	static void unknown_cmd(User *user, IRC *server);
+	static void motd_cmd(User *user, IRC *server);
 
 private:
-	static void time_cmd(User *client, IRC *server);
-	static void away_cmd(User *client, IRC *server);
-	//static void	join(User *client, IRC *server);
+	static void time_cmd(User *user, IRC *server);
+	static void away_cmd(User *user, IRC *server);
+	static void welcome_cmd(User *user, IRC *server);
 
-/*
-protected:
-	Server *_server;
-	std::string	_operName;
-	std::string	_operPass;
-*/
-
-private:
-	static void 		who(User *client, IRC *server);
+	static void 		who(User *user, IRC *server);
 	static void 		displayAllClients(Channel *channel);
 	static void 		displayChannel(Channel *channel, User *client);
 	static void			displayClientsFromChannel(Channel *channel, User *client);
@@ -84,13 +78,9 @@ private:
 
 
 	static void			notice(User *user, IRC *server);
-
 	static void			privmsg(User *user, IRC *server);
-	/**
-	** Commande KILL
-	** TODO: Mahaut
-	*/
-	static void kill(User *user, IRC *server); //bool nick collision
+	static void 		kill(User *user, IRC *server);
+	//bool nick collision
 	//verifier les fonctions annexes relatives aux clients sont bien implementees
 	//nickname exists
 	//leave all channels

@@ -1,4 +1,17 @@
 #include <irc.hpp>
+#include <string>
+
+
+#include <string>
+#include <sstream>
+
+template <typename T>
+std::string ToString(T val)
+{
+    std::stringstream stream;
+    stream << val;
+    return stream.str();
+}
 
 /**
  * @brief format the code into a valid string for the server reply (ex: int 1 --> str 001)
@@ -10,10 +23,10 @@
 std::string format_code_str(int code)
 {
     if (code < 10)
-        return "00" + std::to_string(code);
+        return "00" + ToString(code);
     else if (code < 100)
-        return "0" + std::to_string(code);
-    return std::to_string(code);
+        return "0" + ToString(code);
+    return ToString(code);
 }
 
 /**
@@ -27,13 +40,10 @@ std::string build_reply(int code, User *user, std::vector<std::string> params)
 {
     (void)code;
     (void)user;
-    (void)params;
     std::string code_str;
     std::string prefix;
-    std::string date = "Mon Nov 22 2021";
 
     code_str = format_code_str(code);
-    /* */
     if (user->get_nickname().empty())
         prefix = ":" + user->get_hostname() + " " + code_str + " * ";
     else
@@ -41,13 +51,13 @@ std::string build_reply(int code, User *user, std::vector<std::string> params)
     switch (code)
     {
     case 1:
-        return prefix + RPL_WELCOME(user->get_nickname(), user->get_username(), user->get_hostname());
-    case 2: // TODO servername not user->hostname for 2 & 4
-        return prefix + RPL_YOURHOST(user->get_hostname(), "1.0");
-    case 3: // TODO remove hardcoded date
-        return prefix + RPL_CREATED(date);
-    case 4: // TODO remove hardcoded value
-        return prefix + RPL_MYINFO(user->get_hostname(), "1.0", "|list of user mode avai|", "|list of user mode avai|");
+        return prefix + RPL_WELCOME(params[0], params[1], params[2]);
+    case 2:
+        return prefix + RPL_YOURHOST(params[0], "1.0");
+    case 3:
+        return prefix + RPL_CREATED(params[0]);
+    case 4: // TODO remove hardcoded version value
+        return prefix + RPL_MYINFO(params[0], "1.0", USER_VALID_MODES, CHANNEL_VALID_MODES);
     case 305:
         return prefix + RPL_UNAWAY();
     case 306:
@@ -71,5 +81,5 @@ std::string build_reply(int code, User *user, std::vector<std::string> params)
     default:
         return std::string("");
     }
-    return;
+    return std::string("");
 }

@@ -33,7 +33,9 @@ NAMES		=	main.cpp \
 				Commands/OptionalFeatures/Users.cpp \
 				Commands/ServerQueries/Version.cpp \
 				Commands/UserBasedQueries/Who.cpp \
+				Commands/Motd.cpp \
 				Error_Handling/error_handler.cpp \
+				Replies/build_replies.cpp
 
 INCLUDES	=	./includes/channel.hpp \
 				./includes/Client.hpp \

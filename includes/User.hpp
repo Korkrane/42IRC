@@ -37,7 +37,6 @@ class User
 	    std::vector<std::string>    _params;
 
         //voir l'importance du registration status
-        bool                        _registration_status;
         bool                        _pass_registered;
         bool                        _nick_registered;
         std::string                 _port;
@@ -90,6 +89,8 @@ class User
         std::string                 get_server_ip(void) const;
         std::string                 get_server_creation(void) const;
         IRC                         *get_IRCserver(void);
+
+        bool                        get_registered_user(void) const;
 
         std::string                 get_unparsed_client_command(void) const;
         //a verifier

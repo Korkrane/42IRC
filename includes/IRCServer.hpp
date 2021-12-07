@@ -23,8 +23,7 @@ private:
     std::string         _version;
     std::string         _userModes;
     std::string         _channelModes;
-    time_t              _init_time;     // FIXME time_t over std::string _date
-    std::string         _date;          // FIXME one has to be deleted
+    std::string         _date;
 
 
     struct addrinfo*    _serv_info;
@@ -45,18 +44,16 @@ public:
     virtual ~IRC();
 
     std::vector<User *> _users;
-    //damien added elements
     std::vector<int> fds;
-
-    //public ou privé ?
     Commands *_commands;
+    std::vector<t_clientCmd> responseQueue;
 
     void ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
     void exec_command(User *);
 
     void                set_name(std::string name);
     void                set_version(std::string version);
-    void                set_creation(std::string date, time_t time);
+    void                set_server_creation(std::string date);
     void                set_port(int port);
     void                set_password(std::string password);
 

@@ -7,8 +7,13 @@
  * @param client
  * @param server
  */
-void Commands::motd_cmd(User *user, IRCServ *server)
+void Commands::motd_cmd(User *user, IRC *server)
 {
+    (void)user;
+    (void)server;
+    #if DEBUG
+        std::cout << "DEBUG: enter motd_cmd" << std::endl;
+    #endif
     std::vector<std::string> reply_params;
     std::string reply;
 
@@ -21,20 +26,27 @@ void Commands::motd_cmd(User *user, IRCServ *server)
             line = "- " + line + "\r\n";
             buff.append(line);
         }
-        reply_params.push_back(server->get_name());
+
+        reply_params.push_back(user->get_hostname());
         reply = build_reply(375, user, reply_params);
-        send_reply(reply);
+        server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
         reply_params.clear();
+
+
         reply_params.push_back(buff);
         reply = build_reply(372, user, reply_params);
-        send_reply(reply);
+        server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
         reply_params.clear();
+
+
         reply = build_reply(376, user, reply_params);
-        send_reply(reply);
+        server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
+        reply_params.clear();
     }
     else
     {
-        reply = build_reply(422, client, reply_params);
-        send_reply(reply);
+        reply = build_reply(422, user, reply_params);
+        server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
+        reply_params.clear();
     }
 }

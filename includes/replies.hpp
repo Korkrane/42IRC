@@ -117,7 +117,7 @@
 #define C_RPL_YOURHOST "002"
 #define RPL_CREATED(date) (":This server was created " + date + "\r\n") // 003
 #define C_RPL_CREATED "003"
-#define RPL_MYINFO(servername, version, av_user_modes, av_channel_modes) (servername + " " + version + " " + av_user_modes + " " + av_channel_modes + "\r\n") // 004
+#define RPL_MYINFO(servername, version, av_user_modes, av_channel_modes) (":" + servername + " " + version + " " + av_user_modes + " " + av_channel_modes + "\r\n") // 004
 #define C_RPL_MYINFO "004"
 #define RPL_BOUNCE(servername, portnumber) ("Try server" + servername + ", port" + portnumber "\r\n") // 005
 #define C_RPL_BOUNCE "005"
@@ -260,7 +260,7 @@
 #define RPL_STATSOLINE(hostmask, name) ("O " + hostmask + " * " + name + "\r\n") // 243
 #define C_RPL_STATSOLINE "243"
 //#define RPL_STATSHLINE      // 244
-/* 
+/*
 ** Probleme doublon en mergeant donc je commente (Mahaut)
 #define RPL_UMODEIS                (user_mode_string)(user_mode_string + "\r\n")                                                                                                          // 221
 #define C_RPL_UMODEIS                                                       "221"
