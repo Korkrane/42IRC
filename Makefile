@@ -6,6 +6,7 @@ NAMES		=	main.cpp \
 				Client/Client.cpp \
 				Channel/Channel.cpp \
 				Utils/tmp_utils.cpp \
+				Utils/ft_split.cpp \
 				User/User.cpp \
 				Commands/ServerQueries/Admin.cpp \
 				Commands/OptionalFeatures/Away.cpp \

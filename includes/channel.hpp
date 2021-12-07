@@ -84,4 +84,4 @@ class Channel
 };
 
 //Utils to display - overloading 
-std::ostream& operator<<(std::ostream COUT, Channel *channel)
+std::ostream& operator<<(std::ostream COUT, Channel *channel);

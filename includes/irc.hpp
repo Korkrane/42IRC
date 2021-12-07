@@ -28,17 +28,16 @@
 #include <algorithm>
 
 #include "channel.hpp"
-#include <Client.hpp>
-#include <Colors.hpp>
+#include "Client.hpp"
+#include "Colors.hpp"
 #include "exceptions.hpp"
 #include "replies.hpp"
-#include <Server.hpp>
+#include "Server.hpp"
 #include "Commands.hpp"
-#include <IRCTest.hpp>
-#include <ParsingUtils.hpp>
-#include <ClientUtils.hpp>
-#include <User.hpp>
-#include <ErrorHandling.hpp>
+#include "IRCTest.hpp"
+#include "ParsingUtils.hpp"
+#include "User.hpp"
+#include "ErrorHandling.hpp"
 
 #define NICK_VALID_CHARS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-^_[]{}\\|"
 #define CHANNEL_VALID_CHARS "#&!+"

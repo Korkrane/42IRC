@@ -22,10 +22,10 @@ void Commands::join(User *user, Server *server)
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error);
     }
-
     //les deux arguments a ce stade on deja ete parse ?
-    //On a une string channel_name
-    //et une string key
+    //On a une string channel_name - On va verifier que le channel name est correct
+    
+    //et une string key ?
 
     //on verifie si le channel existe
     //Plusieurs cas de figure en fonction de l existence du channel ou pas
