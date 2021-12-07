@@ -1,8 +1,7 @@
 #include <irc.hpp>
 
 /**
-* Last editor: Mahaut
-* TODO: voir comment initialiser la Users s list
+* TODO: checker
 */
 Channel::Channel(std::string name, User *user) : _topic(""), _has_topic(false), _modes(""), _operators(0), _users(0),  _channel_owner(0), _key(""), _has_key(false), _members_nb(0)
 {
@@ -11,16 +10,27 @@ Channel::Channel(std::string name, User *user) : _topic(""), _has_topic(false), 
 #if DEBUG
 	std::cout << "Channel constructor called" << std::endl;
 #endif
+
 	//Ajouter le user passe en parametre a la liste des users
-	//Ajouter une fonction qui verifie le nom du channel avant d'initaliser la variable
+	this->newMember(user, true);
+
+	//Ajouter la channel a la liste contenue dans le serveur
+	user->_IRCserver->add_channel(this);
 	return ;
 }
 
+/**
+ * @brief Destroy the Channel:: Channel object
+ * TODO: a continuer
+ */
 Channel::~Channel(void)
 {
 #if DEBUG
 	std::cout << "Channel desconstructor called" << std::endl;
 #endif
+	//Supprimer de la liste des channels du IRCServer
+	//Supprimer vider le vecteur de user
+	//vider le vecteur d'operateurs
 	return ;
 }
 
@@ -250,28 +260,32 @@ bool				Channel::isNicknameUnique(User *user)
 }
 
 /**
-* TODO: a reprendre
-*/
-void				Channel::newMember(User *user)
+ * @brief 
+ * Un user qui cree le channel devient automatiquement un operateur
+ * 
+ * @param user 
+ * @param operator 
+ */
+void				Channel::newMember(User *user, bool user_operator)
 {
 	(void)user;
-	/*
-	if (!Users )
+	if (!user)
 		return ;
-	if (this->isNicknameUnique(Users ) == true)
-	{
-		this->_users.push_back(Users );
-		this->_members_nb++;
-		return ;
-	}
-#if DEBUG
-	std::cout << "New member added, nickname is " << Users ->get_nickname() << std::endl;
-#endif
-*/
-#if DEBUG
-	std::cout << "new member was not added succesfully" << std::endl;
-#endif
+	this->_users.push_back(user);
+	this->_members_nb++;
+	if (user_operator == true)
+		newOperator(user);
 	return ;
+}
+
+void				Channel::newOperator(User *user)
+{
+	if (!user)
+		return;
+	this->_operators.push_back(user);
+	this->_operators_nb++;
+	return ;
+
 }
 
 /**
@@ -458,7 +472,7 @@ void				Channel::displayOperators(void)
 	return ;
 }
 
-bool				Channel::is_correct_channel_name(std::string target_name)
+bool				is_correct_channel_name(std::string target_name)
 {
 	std::string valid(CHANNEL_VALID_CHARS);
 	//Le premier char doit faire partie des CHANNEL_VALID_CHARS (channel prefix)
@@ -506,6 +520,14 @@ bool				Channel::has_key_mode_on(void)
 	return (false);
 }
 
+/**
+ * @brief 
+ * 
+ * @param target_key 
+ * @return true 
+ * @return false 
+ * TODO:  tester, je n'ai pas trouve d'exigences dans la rfc concernant les key
+ */
 bool				Channel::is_correct_channel_key(std::string target_key)
 {
 	(void)target_key;
@@ -516,13 +538,11 @@ bool				Channel::is_correct_channel_key(std::string target_key)
 		return (true);
 	//Est-ce que la commande gere le mode key ?
 	if (!this->has_key_mode_on())
-		return (true)
+		return (true);
 	//Ensuite on doit verifier qu elle respecte bien les regles grammaticales
 	int len = target_key.length();
 	if (len <= 0)
-	{
 		return (false);
-	}
 	return (true);
 }
 
@@ -615,4 +635,17 @@ void			Channel::set_channel_modes(std::string target_modes)
 		set_channel_modes("");
 	}
 	return ;
+}
+
+bool			Channel::is_full_channel(void) const
+{
+	unsigned int member = this->get_members_nb();
+	if (member >= CHAN_MAXCAPACITY)
+	{
+#if DEBUG
+	std::cout << BLUE << "DEBUG: " << "CHANNEL: The channel is full" << std::endl;
+#endif
+		return (true);
+	}
+	return (false);
 }

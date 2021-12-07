@@ -1,11 +1,6 @@
 #include <irc.hpp>
 #include <User.hpp>
 
-/*
-** Constructeur
-** TODO: voir ce qu'il y a de mieux pour initialiser les valeurs
-** Attention particuliere a porter sur le nickname et le password (?)
-*/
 User::User(void)
 /*
 : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
@@ -16,10 +11,6 @@ User::User(void)
 	return;
 }
 
-/**
-** Faire des tests pour voir ce qui est important pour l'initialisation
-*TODO: revoir init list
-*/
 User::User(std::string server_name, std::string server_ip, std::string server_creation, std::string port)
 /*: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
 {
@@ -941,11 +932,14 @@ void User::display_command(void)
 	this->display_params();
 }
 
-/**
- * @brief
- * TODO: faire un overload << (juste nickname ?)
- * voir si autres overload peuvent etre interessants
- */
+Channel		*User::creates_channel(std::string channel_name)
+{
+	//Le channel name a deja ete verifie au prealable
+
+	Channel *chan = new Channel(channel_name, this);
+	//Le constructeur de channel doit faire le reste;
+	return (chan);
+}
 
 std::ostream& operator<<(std::ostream &COUT, User *user)
 {

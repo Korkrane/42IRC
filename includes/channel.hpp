@@ -20,6 +20,7 @@ class Channel
         std::string             _key;
         bool                    _has_key;
         unsigned int            _members_nb;
+        unsigned int            _operators_nb;
 
         /*
         ** Fonctions membres privees (classe canonique)
@@ -47,8 +48,6 @@ class Channel
         std::vector<User *>     get_operators(void) const;
 
         /*** UTILS ***/
-        //modifier user pour user ?
-        bool                    user_is_banned(User *user);
         bool                    user_is_operator(User *user);
         bool                    user_is_member(User *user);
         bool                    user_is_invited(User *user);
@@ -56,7 +55,8 @@ class Channel
 
         void                    removeFromOperators(User *user);
 
-        void                    newMember(User *user);
+        void                    newMember(User *user, bool user_operator);
+        void                    newOperator(User *user);
         void                    deleteMember(User *user);
         void                    printMemberInfo(User *user);
         bool                    isNicknameUnique(User *user);
@@ -74,13 +74,10 @@ class Channel
         void                    displayOperators(void);
         void                    displayBanned(void);
         
-        /* Check pour construction/initialisation */
-        bool                    is_correct_channel_name(std::string target_name);
-        bool                    is_correct_channel_key(std::string target_key);
+        
 
-        //Ajouter une fonction qui permet d'ajouter un mode ?
-        //Ajouter une fonction qui permet d'enlever un mode ?
-        //Verifier que si une key est presente il y a bien le mode qui correspond ?
+        //Ajouter une fonction qui permet d'ajouter un mode
+        //Ajouter une fonction qui permet d'enlever un mode 
 
         void                    set_handle_modes(void);
         void                    set_channel_prefix(void);
@@ -94,7 +91,10 @@ class Channel
 
         bool                    has_key_mode_on(void);
         bool                    has_mode(char mode);
+        bool                    is_correct_channel_key(std::string target_key);
+        bool                    is_full_channel(void) const;
 };
 
 //Utils to display - overloading 
 std::ostream& operator<<(std::ostream COUT, Channel *channel);
+bool          is_correct_channel_name(std::string target_name);

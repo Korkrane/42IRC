@@ -36,7 +36,6 @@ class User
 	    std::string                 _command_name;
 	    std::vector<std::string>    _params;
 
-        //voir l'importance du registration status
         bool                        _registration_status;
         bool                        _pass_registered;
         bool                        _nick_registered;
@@ -45,7 +44,7 @@ class User
         bool                        _user_is_away;
         bool                        _user_has_registered_pass;
         bool                        _user_has_registered_nick;
-        bool                        _user_is_registered;    //?
+        bool                        _user_is_registered;
         //std::vector<std::string>  _cap;
         //std::vector<std::string>  _nick;
         //std::vector<std::string>  _user;
@@ -92,7 +91,6 @@ class User
         IRC                         *get_IRCserver(void);
 
         std::string                 get_unparsed_client_command(void) const;
-        //a verifier
         bool                        check_if_prefix(void) const;
 
         void                        set_nickname(std::string nickname);
@@ -113,7 +111,7 @@ class User
         void                        set_registered_user(bool is_set);
         void                        set_operator(bool is_set);
         void                        set_message_status(int status);
-       // void                        set_registration(bool is_set);
+        //void                      set_registration(bool is_set);
         void                        set_init_socket(int socket);
 
         void                        set_server_name(std::string server_name);
@@ -145,6 +143,10 @@ class User
        void                         displayChannels(void);
        void                         display_command(void);
        void	                        display_params(void);
+
+       /* Channel */
+
+       Channel                      *creates_channel(std::string channel_name);
 };
 
 //Utils to display overloading <<
