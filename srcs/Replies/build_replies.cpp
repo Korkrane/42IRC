@@ -1,12 +1,5 @@
 #include <irc.hpp>
-
-/**
- * @brief format the code into a valid string for the server reply (ex: int 1 --> str 001)
- *
- * @param code
- * @return std::string
- * TODO: renommer avec User
- */
+//
 std::string format_code_str(int code)
 {
     if (code < 10)
@@ -16,13 +9,6 @@ std::string format_code_str(int code)
     return std::to_string(code);
 }
 
-/**
- * @brief build the reply string that the server has to send to the user when
- * a command (valid/unvalid) is received by th server
- * @param code
- * @return std::string
- * TODO: reprendre avec User
- */
 std::string build_reply(int code, User *user, std::vector<std::string> params)
 {
     (void)code;
@@ -33,7 +19,6 @@ std::string build_reply(int code, User *user, std::vector<std::string> params)
     std::string date = "Mon Nov 22 2021";
 
     code_str = format_code_str(code);
-    /* */
     if (user->get_nickname().empty())
         prefix = ":" + user->get_hostname() + " " + code_str + " * ";
     else
@@ -73,3 +58,4 @@ std::string build_reply(int code, User *user, std::vector<std::string> params)
     }
     return;
 }
+*/

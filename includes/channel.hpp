@@ -90,8 +90,10 @@ class Channel
         bool                    get_handle_modes(void);
 
         bool                    check_channel_modes(std::string target_modes);
-        
+        void                    set_channel_modes(std::string target_modes);
 
+        bool                    has_key_mode_on(void);
+        bool                    has_mode(char mode);
 };
 
 //Utils to display - overloading 

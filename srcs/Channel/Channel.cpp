@@ -488,12 +488,41 @@ bool				Channel::get_handle_modes(void)
 	return (res);
 }
 
+bool				Channel::has_mode(char mode)
+{
+	(void)mode;
+	std::string modes = this->get_modes();
+	if (modes.find(mode) != std::string::npos)
+		return (true);
+	return (false);
+}
+
+bool				Channel::has_key_mode_on(void)
+{
+	char k = 'k';
+	std::string modes = this->get_modes();
+	if (modes.find(k) != std::string::npos)
+		return (true);
+	return (false);
+}
+
 bool				Channel::is_correct_channel_key(std::string target_key)
 {
 	(void)target_key;
-	//Si le channel n a pas de key, pas besoin de verifier si elle est correcte 
+	//Si le channel n a pas de key, pas besoin de verifier si elle est correcte (on l'ignorera)
+
+	//Est-ce que la commande gere les modes ?
 	if (!this->get_handle_modes())
 		return (true);
+	//Est-ce que la commande gere le mode key ?
+	if (!this->has_key_mode_on())
+		return (true)
+	//Ensuite on doit verifier qu elle respecte bien les regles grammaticales
+	int len = target_key.length();
+	if (len <= 0)
+	{
+		return (false);
+	}
 	return (true);
 }
 
@@ -550,5 +579,40 @@ std::ostream& operator<<(std::ostream &COUT, Channel *channel)
 bool			Channel::check_channel_modes(std::string target_modes)
 {
 	(void)target_modes;
+	//On doit verifier que les char qui constituent la string
+	int i = 0;
+	std::string	allowed(CHANNEL_VALID_MODES);
+	int len = target_modes.length();
+
+	while (i < len)
+	{
+		if (allowed.find(target_modes[i]) == std::string::npos)
+		{
+			#if DEBUG
+				std::cout << BLUE << "DEBUG: " << "CHANNEL: " << "Find invalid char when checking modes string: " << target_modes[i] << std::endl;
+			#endif
+			return (false);
+		}
+		i++;
+	}
 	return (true);
+}
+
+/**
+ * @brief 
+ * 
+ * @param target_modes 
+ * TODO: a tester
+ */
+void			Channel::set_channel_modes(std::string target_modes)
+{
+	bool ok = check_channel_modes(target_modes);
+	if (ok)
+		this->_modes = target_modes;
+	if (!ok)
+	{
+		//TODO: voir les modes par defaut (pour l'initialisation?)
+		set_channel_modes("");
+	}
+	return ;
 }
