@@ -10,9 +10,9 @@
  * The PART command causes the user sending the message to be removed
    from the list of active members for all given channels listed in the
    parameter string.
- * Mahaut 
+ * Mahaut
  */
-void  Commands::part(User *user, Server *server)
+void  Commands::part(User *user, IRC *server)
 {
   (void)user;
   (void)server;

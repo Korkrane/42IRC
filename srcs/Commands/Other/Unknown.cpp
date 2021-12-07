@@ -1,13 +1,13 @@
 #include <irc.hpp>
 
 /**
- * @brief 
- * 
- * @param client 
- * @param server 
+ * @brief
+ *
+ * @param client
+ * @param server
  * TODO: a reprendre suite a la modification de clientm
  */
-void Commands::unknown_cmd(User *client, Server *server)
+void Commands::unknown_cmd(User *client, IRC *server)
 {
     (void)client;
     (void)server;

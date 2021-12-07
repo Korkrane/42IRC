@@ -3,12 +3,12 @@
 
 #include "Headers.hpp"
 #include "Client.hpp"
-#include "IRCTest.hpp"
+#include "IRCServer.hpp"
 
 #include <irc.hpp>
 
-#define MAX_LISTEN	42		// Max concurrent connections in queue
-#define SERVER_ERR(err)	do { std::cerr << RED << err << ": " << NC << strerror(errno) << std::endl; exit(1); } while (0)	// Print error msg, exit
+#define MAX_LISTEN	42
+#define SERVER_ERR(err)	do { std::cerr << RED << err << ": " << NC << strerror(errno) << std::endl; exit(1); } while (0)
 
 class	Server
 {
@@ -17,18 +17,11 @@ private:
 	std::string	const		_password;	// Server's password
 	int						_fd;		// Server's socket fd
 	IRC						*_irc;		// IRC program
-
 	std::map<int, Client *>	_clients;	// List of clients, fd as key, Client object as value
 	int						_maxFD;		// Current highest client FD
 	fd_set					_fdReader;	// Structure to select client FD for reading
 
-	std::vector<User *>		_users;		//ajout Mahaut
-	std::vector<Channel *>	_channels;	//ajout Mahaut
-
-	// Accept new client connection
 	void	acceptClient();
-
-	// Remove existing client
 	void	removeClient(int fd);
 
 	// Make all open socket ready to be read then select them. Return the number of FDs
@@ -42,20 +35,11 @@ public:
 	Server(int port, std::string const &password);
 	~Server();
 
-	// Set up server properly for listening and accepting clients
+
 	void	SetUp(IRC *irc);
-	
+
 	// Kick off server's infinite loop (until SIGINT, SIGQUIT or SIGKILL received)
 	void	Run();
-
-	//Ajouts Mahaut (voir si mettre dans une autre classe)
-	std::vector<User *>		get_users(void) const;
-	std::vector<Channel *>	get_channels(void) const;
-	void					displayServerChannels(void) const;
-	void					displayServerUsers(void) const;
-
-	//voir quel design faire pour ajouter un user
-	//void				add_user(Client *client);
 };
 
 #endif

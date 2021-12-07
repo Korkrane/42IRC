@@ -1,13 +1,13 @@
 #include <irc.hpp>
 
 /**
- * @brief 
- * 
- * @param user 
- * @param server 
+ * @brief
+ *
+ * @param user
+ * @param server
  * Baudoin
  */
-void    Commands::notice(User *user, Server *server)
+void    Commands::notice(User *user, IRC *server)
 {
     (void)user;
     (void)server;

@@ -14,9 +14,9 @@ Client::~Client()
 	close(_fd);
 }
 
-bool	Client::receiveCommand(std::string &cmd)
+bool Client::receiveCommand(std::string &cmd)
 {
-	ssize_t	r = recv(_fd, _buffer, BUFFER_SIZE, 0);
+	ssize_t r = recv(_fd, _buffer, BUFFER_SIZE, 0);
 	if (r <= 0)
 		return false;
 
@@ -36,7 +36,7 @@ bool	Client::receiveCommand(std::string &cmd)
 	return true;
 }
 
-void	Client::sendResponse(std::string const &resp)
+void Client::sendResponse(std::string const &resp)
 {
 	send(_fd, resp.c_str(), resp.size(), 0);
 }

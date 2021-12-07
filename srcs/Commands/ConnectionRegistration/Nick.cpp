@@ -2,14 +2,14 @@
 #include <algorithm>
 
 /**
- * @brief 
- * 
- * @param nickname 
- * @return true 
- * @return false 
- * TODO: a tester 
+ * @brief
+ *
+ * @param nickname
+ * @return true
+ * @return false
+ * TODO: a tester
  */
-bool Commands::nickIsAvailable(std::string nickname, Server *server, User *user)
+bool Commands::nickIsAvailable(std::string nickname, IRC *server, User *user)
 {
   (void)nickname;
   (void)server;
@@ -20,9 +20,9 @@ bool Commands::nickIsAvailable(std::string nickname, Server *server, User *user)
   std::transform(str.begin(), str.end(),str.begin(), ::toupper);
 
   //Faire le tour des user et voir si leur nickname correspond
-  //Users rajoute sur la partie de Damien ?
-  std::vector<User *>::iterator it = server->get_users().begin();
-  std::vector<User *>::iterator ite = server->get_users().end();
+  std::vector <User *> users = server->get_users();
+  std::vector<User *>::iterator it = users.begin();
+  std::vector<User *>::iterator ite = users.end();
   std::string cmp;
   while (it != ite)
   {
@@ -42,11 +42,11 @@ bool Commands::nickIsAvailable(std::string nickname, Server *server, User *user)
 }
 
 /**
- * @brief 
- * 
- * @param nickname 
+ * @brief
+ *
+ * @param nickname
  */
-bool Commands::checkNickGrammar(std::string nickname, Server *server, User *user)
+bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
 {
   (void)nickname;
   (void)server;
@@ -65,7 +65,7 @@ bool Commands::checkNickGrammar(std::string nickname, Server *server, User *user
  #if DEBUG
     std::cout << "Nickname size is too big and should be avoided." << std::endl;
  #endif
-    
+
     error_handler("432", user, NULL, param_error);
     return (false);
   }
@@ -85,7 +85,7 @@ bool Commands::checkNickGrammar(std::string nickname, Server *server, User *user
   if (!isalpha(nickname[0]))
   {
 #if DEBUG
-    std::cout << "The nickname does not start with an alpha and that should be avoided."
+    std::cout << "The nickname does not start with an alpha and that should be avoided." << std::endl;
 #endif
     error_handler("432", user, NULL, param_error);
     return (false);
@@ -107,7 +107,7 @@ bool Commands::checkNickGrammar(std::string nickname, Server *server, User *user
  * a la guise du client ensuite.
  * TODO: voir si throw exceptions
  */
-void  Commands::nick(User *user, Server *server)
+void  Commands::nick(User *user, IRC *server)
 {
   (void)user;
   (void)server;
