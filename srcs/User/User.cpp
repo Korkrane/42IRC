@@ -941,6 +941,61 @@ Channel		*User::creates_channel(std::string channel_name)
 	return (chan);
 }
 
+bool		User::is_channel_user(Channel *channel)
+{
+	if (!channel)
+		return (false);
+	std::vector<User *> users = channel->get_members();
+	std::vector<User *>::iterator it = users.begin();
+	std::vector<User *>::iterator ite = users.end();
+	std::string check_nick;
+	std::string user_nick = this->get_nickname();
+	while (it != ite)
+	{
+		check_nick = (*it)->get_nickname();
+		if (user_nick.compare(check_nick) == 0)
+		{
+			#if DEBUG
+				std::cout << BLUE << "DEBUG: " << "USER: " << "The user is indeed a member of the given channel." << std::endl;
+			#endif
+			return (true);
+		}
+	}
+	return (false);
+}
+
+/**
+ * @brief Va permettre de savoir si on a atteint le quota max de chan
+ * 
+ * @return true 
+ * @return false 
+ */
+bool		User::can_join(void)
+{
+	//Faire le tour de tous les channels du serveur
+	std::vector<Channel *> chans = this->_IRCserver->get_channels();
+	std::vector<Channel *>::iterator it = chans.begin();
+	std::vector<Channel *>::iterator ite = chans.end();
+
+	unsigned int is_user = 0;
+	while (it != ite)
+	{
+		if (is_user >= USER_MAXCHAN)
+		{
+			#if DEBUG
+				std::cout << BLUE << "DEBUG: " << "USER :" << "Can not join new channel" << std::endl;
+			#endif
+			return (false);
+		}
+		if (this->is_channel_user(*it) == true)
+		{
+			is_user++;
+		}
+		it++;
+	}
+	return (true);
+}
+
 std::ostream& operator<<(std::ostream &COUT, User *user)
 {
 	COUT << user->get_nickname();

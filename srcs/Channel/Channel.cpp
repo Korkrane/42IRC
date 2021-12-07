@@ -98,11 +98,12 @@ unsigned int		Channel::get_members_nb(void) const
 	return (nb);
 }
 
-/*
-** A tester
-** Voir comment les membres sont ajoutes
-*/
-std::vector<User *>	Channel::get_member_list(void) const
+/**
+ * @brief 
+ * TODO: a tester 
+ * @return std::vector<User *> 
+ */
+std::vector<User *>	Channel::get_members(void) const
 {
 	std::vector<User *> member_list;
 	member_list = this->_users;

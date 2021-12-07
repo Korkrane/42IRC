@@ -48,6 +48,7 @@ class User
         //std::vector<std::string>  _cap;
         //std::vector<std::string>  _nick;
         //std::vector<std::string>  _user;
+       // unsigned int                _channels_nb;
 
     public:
         IRC                      *_IRCserver;
@@ -147,6 +148,8 @@ class User
        /* Channel */
 
        Channel                      *creates_channel(std::string channel_name);
+       bool                         is_channel_user(Channel *channel);
+       bool                         can_join(void);
 };
 
 //Utils to display overloading <<

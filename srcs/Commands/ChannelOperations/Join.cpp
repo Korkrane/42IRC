@@ -44,13 +44,18 @@ void Commands::join(User *user, IRC *server)
         {
             //Si la channel n'existe pas il faut pouvoir la creer
             chan = user->creates_channel(channel);
-           
         }
         else
         {
             //Fonction qui permet de recuperer le pointeur de la channel correspondante
-            //chan = 
+            chan = server->find_channel(channel);
             //On verifie si la channel n est pas full
+            if (chan->is_full_channel() == true)
+            {
+                error.push_back(channel);
+                error_handler("471", user, chan, error);
+                return ;
+            }
         }
         if (chan->is_correct_channel_key(opt_key) == false)
         {
@@ -58,7 +63,11 @@ void Commands::join(User *user, IRC *server)
             error_handler("475", user, NULL, error);
             return ;
         }
-        //on verifie si le user ne fait pas deja partie du channel
+        //on verifie si le user n'a pas atteint son quota max de channel
+        if (user->can_join() == true)
+        {
+            
+        }
         //On verifie si le user ne listen pas deja sur trop de channels
         //On verifie si le channel n'a pas deja trop de user (voir la definition des macros)
 
