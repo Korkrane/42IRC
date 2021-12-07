@@ -43,6 +43,7 @@
 #define CHANNEL_VALID_CHARS "#&!+"
 #define USER_VALID_MODES "aiwroOs"
 #define CHANNEL_VALID_MODES "OovaimnpsrtklbeI"
+#define CHANNEL_FORBIDDEN_CHARS " ,:"
 
 class Server;
 class Client;
