@@ -55,7 +55,6 @@ class User
         std::string                 get_password(void) const;
         std::string                 get_message(void) const;
         int                         get_message_status(void) const;
-        int                         get_socket(void) const;
         int                         get_channels_nb(void) const;
         IRC                         *get_server(void) const;
         int                         get_socket(void) const;
@@ -113,6 +112,10 @@ class User
        bool                         is_channel_user(Channel *channel);
        bool                         can_join(void);
        void                         be_added_to_channel(Channel *chan);
+       void                         decrease_channel_nb();
+       void                         increase_channel_nb();
+       void                         add_channel_to_list(Channel *channel);
+       void                         remove_channel_from_list(Channel *channel);
 };
 
 //Utils to display overloading <<

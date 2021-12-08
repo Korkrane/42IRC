@@ -67,7 +67,7 @@ void Commands::join(User *user, IRC *server)
         if (user->can_join() == true)
         {
             //On verifie si le user ne listen pas deja sur trop de channels
-            if (chan->get_members_nb >= CHAN_MAXCAPACITY)
+            if (chan->get_members_nb() >= CHAN_MAXCAPACITY)
             {
                 error.push_back(channel);
                 error_handler("471", user, NULL, error);
@@ -75,7 +75,10 @@ void Commands::join(User *user, IRC *server)
             }
             //si oui, rajouter au channel 
             //TODO: a tester
-            user->_be_added_to_channel(chan);
+            user->be_added_to_channel(chan);
+            //On l'ajoute a sa liste
+            //TODO: envoyer un message a serveur qui indique l'action?
+            user->add_channel_to_list(chan);
         }
         //Erreur to many channels car l user fait partie de trop de channels
         else

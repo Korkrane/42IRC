@@ -63,7 +63,6 @@ class Channel
         bool                    isNicknameUnique(User *user);
 
         /* Info sur le channel */
-        //devrait generer une erreur si aucun user n'est dans la liste ?
         bool                    channelHasUsers(void);
         bool                    channelHasOperator(void);
         //bool                    channelHasBanned(void);

@@ -35,7 +35,6 @@
 #include "Commands.hpp"
 #include "IRCServer.hpp"
 #include "User.hpp"
-#include "ErrorHandling.hpp"
 
 #define NICK_VALID_CHARS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-^_[]{}\\|"
 #define CHANNEL_VALID_CHARS "#&!+"

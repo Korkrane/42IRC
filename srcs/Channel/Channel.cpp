@@ -584,19 +584,19 @@ bool			Channel::is_full_channel(void) const
 	return (false);
 }
 
-std::vector<int>	Channel::get_members_fd(void) const;
+std::vector<int>	Channel::get_members_fd(void) const
 {
 	//Creer un vecteur
 	std::vector<int> sockets;
 	//Faire le tour de chaque User en pushant back sur le vecteur
-	std::vector<User *> users = channel->get_members();
+	std::vector<User *> users = this->get_members();
 	std::vector<User *>::iterator it = users.begin();
 	std::vector<User *>::iterator ite = users.end();
 	int tmp_sock;
 	while (it != ite)
 	{
-		tmp = (*it)->get_socket(void);
-		socket.push_back(tmp);
+		tmp_sock = (*it)->get_socket();
+		sockets.push_back(tmp_sock);
 		it++;
 	}
 	//retourner le vecteur

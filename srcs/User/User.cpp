@@ -666,29 +666,84 @@ void			User::be_added_to_channel(Channel *channel)
 	//Si oui on va etre ajoute simplement
 	if (member >= 1)
 	{
-		chanel->newMember(this, false);
+		channel->newMember(this, false);
 	}
 	else
 	{
 		//Si non on va devenir operateur
-		channel->newMember(this, true)
+		channel->newMember(this, true);
 	}
 	return ;
-}
-
-int			User::get_socket(void) const
-{
-	int socket = this->_socket;
-	#if DEBUG
-		std::cout << "DEBUG : USER: The socket is " << socket << std::endl;
-	#endif
-	return (scoket);
 }
 
 void		User::set_socket(int socket)
 {
 	this->_socket = socket;
 	return ;
+}
+
+void		User::increase_channel_nb(void)
+{
+	if (this->_channels_nb > 0)
+		this->_channels_nb++;
+	else
+	{
+		#if DEBUG
+			std::cout << BLUE << "DEBUG: " << "USER: Error with nb of channels (++)." << std::endl;
+		#endif
+	}
+	return ;
+}
+
+void		User::decrease_channel_nb(void)
+{
+	if (this->_channels_nb == USER_MAXCHAN)
+	{
+		#if DEBUG
+			std::cout << BLUE << "DEBUG: " << "USER: Error with nb of channels (--)." << std::endl;
+		#endif
+	}
+	this->_channels_nb--;
+}
+
+/**
+ * @brief Les verifications en termes de USER_MACHAN doivent etre faites au prealable
+ * 
+ * @param channel 
+ */
+void		User::add_channel_to_list(Channel *channel)
+{
+	(void)channel;
+	if (channel)
+		this->_channels.push_back(channel);
+	user-increase_channel_nb();
+	return;
+}
+
+/**
+ * @brief On doit avoir verifie au prealable que le user etait bien membre
+ * 
+ * @param channel 
+ */
+void		User::remove_channel_from_list(Channel *channel)
+{
+	//Il faut trouver la channel dans la liste
+	std::vector<Channel *> chans = this->_channels;
+	std::vector<Channel *>::iterator it = chans.begin();
+	std::vector<Channel *>::iterator ite = chans.end();
+	std::string channel_name = channel->get_name();
+	std::string check_name;
+	while (it != ite)
+	{
+		check_name = (*it)->get_name();
+		if (channel_name.compare(check_name) == 0)
+		{
+			chans.erase(it);
+			this->decrease_channel_nb();
+		}
+		it++;
+	}
+	return;
 }
 
 std::ostream& operator<<(std::ostream &COUT, User *user)
