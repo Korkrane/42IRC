@@ -14,7 +14,7 @@ void    Commands::send_join_message(Channel *channel, User *user, std::vector<st
         send_rpl("332", user, channel, "");
     }
     send_rpl("353", user, channel, "");
-    send_reply("366", user, channel, "");
+    send_rpl("366", user, channel, "");
     return ;
 }
 
