@@ -58,6 +58,7 @@ class User
         int                         get_socket(void) const;
         int                         get_channels_nb(void) const;
         IRC                         *get_server(void) const;
+        int                         get_socket(void) const;
 
         /* Getters preparsing */
         std::string                 get_unparsed_client_command(void) const;
@@ -88,8 +89,9 @@ class User
         void                        set_registered_nickname(bool is_set);
         void                        set_registered_user(bool is_set);
         void                        set_operator(bool is_set);
-        void                        set_message_status(int status);;
+        void                        set_message_status(int status);
         void                        set_init_socket(int socket);
+        void                        set_socket(int socket);
 
         /* Pre parsing */
        int                          store_string_until_char(std::string *dest, std::string *src, char c, int len);
@@ -110,6 +112,7 @@ class User
        Channel                      *creates_channel(std::string channel_name);
        bool                         is_channel_user(Channel *channel);
        bool                         can_join(void);
+       void                         be_added_to_channel(Channel *chan);
 };
 
 //Utils to display overloading <<

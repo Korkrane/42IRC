@@ -46,6 +46,7 @@ class Channel
         unsigned int            get_members_nb(void) const;
         std::vector<User *>     get_members(void) const;
         std::vector<User *>     get_operators(void) const;
+        std::vector<int>        get_members_fd(void) const;
 
         /*** UTILS ***/
         bool                    user_is_operator(User *user);

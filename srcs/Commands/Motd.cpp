@@ -1,4 +1,5 @@
 //#include "../../includes/irc.hpp"
+//TODO: a deplacer au bon endroit
 #include <fstream>
 #include <irc.hpp>
 /**

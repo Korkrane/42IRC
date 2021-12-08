@@ -657,6 +657,40 @@ bool		User::can_join(void)
 	return (true);
 }
 
+void			User::be_added_to_channel(Channel *channel)
+{
+	if (!channel)
+		return ;
+	//Verifier si il y a deja des membres ? Normalement c'est deja fait
+	unsigned int member = channel->get_members_nb();
+	//Si oui on va etre ajoute simplement
+	if (member >= 1)
+	{
+		chanel->newMember(this, false);
+	}
+	else
+	{
+		//Si non on va devenir operateur
+		channel->newMember(this, true)
+	}
+	return ;
+}
+
+int			User::get_socket(void) const
+{
+	int socket = this->_socket;
+	#if DEBUG
+		std::cout << "DEBUG : USER: The socket is " << socket << std::endl;
+	#endif
+	return (scoket);
+}
+
+void		User::set_socket(int socket)
+{
+	this->_socket = socket;
+	return ;
+}
+
 std::ostream& operator<<(std::ostream &COUT, User *user)
 {
 	COUT << user->get_nickname();

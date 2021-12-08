@@ -42,6 +42,9 @@
 #define USER_VALID_MODES "aiwroOs"
 #define CHANNEL_VALID_MODES "OovaimnpsrtklbeI"
 #define CHANNEL_FORBIDDEN_CHARS " ,:"
+//Il n'est pas demande expressement de gerer les modes donc on va par defaut mettre ceux qui peuvent servir dans 
+//les commandes que nous avons implemente
+#define CHANNEL_MODES "k"
 
 #define MAX_CHAR 4096
 #define CHAN_MAXCAPACITY 5

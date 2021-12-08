@@ -304,6 +304,7 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
         }
     }
     //fonction qui va permettre d envoyer le message au serveur
+    //TODO: reprendre la fonction de Baudoin pour envoyer les rpl
     //send(user->get_socket(), error_to_send.c_str());
     return ;
 }

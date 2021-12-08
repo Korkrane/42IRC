@@ -1,6 +1,6 @@
 #include <irc.hpp>
 
-Channel::Channel(std::string name, User *user, IRC *server): _topic(""), _has_topic(false), _modes(""), _operators(0), _users(0),  _channel_owner(0), _key(""), _has_key(false), _members_nb(0), _serv(server)
+Channel::Channel(std::string name, User *user, IRC *server): _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _operators(0), _users(0),  _channel_owner(user), _key(""), _has_key(false), _members_nb(0), _serv(server)
 {
 	(void)user;
 	(void)name;
@@ -26,8 +26,6 @@ Channel::~Channel(void)
 #endif
 	//Supprimer de la liste des channels du IRCServer
 	this->delete_channel_from_server();
-	//Supprimer vider le vecteur de user
-	//vider le vecteur d'operateurs
 	return ;
 }
 
@@ -584,4 +582,23 @@ bool			Channel::is_full_channel(void) const
 		return (true);
 	}
 	return (false);
+}
+
+std::vector<int>	Channel::get_members_fd(void) const;
+{
+	//Creer un vecteur
+	std::vector<int> sockets;
+	//Faire le tour de chaque User en pushant back sur le vecteur
+	std::vector<User *> users = channel->get_members();
+	std::vector<User *>::iterator it = users.begin();
+	std::vector<User *>::iterator ite = users.end();
+	int tmp_sock;
+	while (it != ite)
+	{
+		tmp = (*it)->get_socket(void);
+		socket.push_back(tmp);
+		it++;
+	}
+	//retourner le vecteur
+	return (sockets);
 }
