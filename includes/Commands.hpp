@@ -40,6 +40,7 @@ private:
 
 	static std::string								init_rpl(User *user);
 	static void										send_rpl_to_all_members(Channel *channel, std::string rpl);
+	static void										send_rpl(std::string rpl, User *user, Channel *channel, std::string arg);
 
 	/**
 	 * @brief
@@ -55,6 +56,7 @@ private:
 	 ** See details on RFC 2812.
 	 */
 	static void 			join(User *user, IRC *server);
+	static void				send_join_message(Channel *channel, User *user, std::vector<std::string> message);
 
 	static void				channel(User *user, IRC *server);
 

@@ -1,5 +1,23 @@
 #include <irc.hpp>
 
+void    Commands::send_join_message(Channel *channel, User *user, std::vector<std::string> message)
+{
+    (void)message;
+    std::string rpl = init_rpl(user);
+    rpl += " JOIN " + channel->get_name();
+    rpl += "\r\n";
+    //Envoyer le message a tout le channel
+    send_rpl_to_all_members(channel, rpl);
+    //Envoyer le message concernant le topic
+    if (channel->get_has_topic() == true)
+    {
+        send_rpl("332", user, channel, "");
+    }
+    send_rpl("353", user, channel, "");
+    send_reply("366", user, channel, "");
+    return ;
+}
+
 /**
  * @brief
  *
@@ -11,7 +29,7 @@
  * TODO: a tester
  */
 
-void Commands::join(User *user, IRC *server)
+void        Commands::join(User *user, IRC *server)
 {
     (void)user;
     (void)server;

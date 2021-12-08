@@ -747,6 +747,16 @@ void		User::remove_channel_from_list(Channel *channel)
 	return;
 }
 
+std::string		User::get_server_name(void) const
+{
+	std::string server_name = this->get_server()->get_name();
+	#if DEBUG
+		std::cout << BLUE << "DEBUG: " << "USER: server_name is " << server_name << std::endl;
+	#endif
+	return (server_name);
+
+}
+
 std::ostream& operator<<(std::ostream &COUT, User *user)
 {
 	COUT << user->get_nickname();
