@@ -14,6 +14,7 @@ User::User(void)
 User::User(int fd): _socket(fd)
 /*: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
 {
+	_user_is_registered = false;
 #if USERDEBUG
 	std::cout << BLUE << "\t\tDEBUG: User default constructor called with fd parameter only" << NC << std::endl;
 	//displayClientInfo();
@@ -609,8 +610,8 @@ bool		User::is_channel_user(Channel *channel)
 		check_nick = (*it)->get_nickname();
 		if (user_nick.compare(check_nick) == 0)
 		{
-			#if DEBUG
-				std::cout << BLUE << "DEBUG: " << "USER: " << "The user is indeed a member of the given channel." << std::endl;
+			#if USERDEBUG
+				std::cout << BLUE << "USERDEBUG: " << "USER: " << "The user is indeed a member of the given channel." << std::endl;
 			#endif
 			return (true);
 		}
@@ -636,8 +637,8 @@ bool		User::can_join(void)
 	{
 		if (is_user >= USER_MAXCHAN)
 		{
-			#if DEBUG
-				std::cout << BLUE << "DEBUG: " << "USER :" << "Can not join new channel" << std::endl;
+			#if USERDEBUG
+				std::cout << BLUE << "USERDEBUG: " << "USER :" << "Can not join new channel" << std::endl;
 			#endif
 			return (false);
 		}

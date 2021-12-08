@@ -27,5 +27,6 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
 		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WELCOME", welcome_cmd));
 		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MOTD", motd_cmd));
+		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("VERSION", version_cmd));
 		return cmds;
 	}

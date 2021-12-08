@@ -26,6 +26,7 @@ private:
 	static void 		time_cmd(User *user, IRC *server);
 	static void 		away_cmd(User *user, IRC *server);
 	static void 		welcome_cmd(User *user, IRC *server);
+	static void 		version_cmd(User *user, IRC *server);
 	static void			notice(User *user, IRC *server);
 	static void			privmsg(User *user, IRC *server);
 	static void 		kill(User *user, IRC *server);

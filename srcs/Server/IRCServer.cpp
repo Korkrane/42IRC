@@ -162,6 +162,9 @@ User* IRC::get_user(int fd)
 
 void IRC::exec_command(User *user)
 {
+	#if DEBUG
+	std::cout << "DEBUG: " << "enter in exec_command with command:" << user->get_command_name() << std::endl;
+	#endif
 	std::map<std::string, void (*)(User *, IRC *)>::iterator it = this->_commands->_cmds.begin();
 	int known_command = 0;
 
@@ -222,7 +225,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		current_user->store_prefix();
 		current_user->store_command();
 		current_user->store_params();
-		#if USERDEBUG
+		#if DEBUG
 			current_user->display_command();
 		#endif
 		if(current_user->user_is_registered() == true)
@@ -235,7 +238,6 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		{
 			//TODO do check for pass and nick and realname existence to set it to a registered user.
 			//if(!current_user->user_registered_password())
-
 			//if(current_user->user_registered_password() && current_user->user_registered_nickname())
 			current_user->set_registered_user(true);
 			if(current_user->user_is_registered() == true)
@@ -255,10 +257,9 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		this->fds.push_back(clientFD);
 		current_user = new User(clientFD);
 		current_user->set_nickname("user_nickname");
-		current_user->set_nickname("user_realname");
+		current_user->set_realname("user_realname");
 		current_user->set_hostname("ft_irc.com");
 		this->_users.push_back(current_user);
-		//parse command
 	}
 }
 

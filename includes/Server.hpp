@@ -8,6 +8,8 @@
 #define MAX_LISTEN	42
 #define SERVER_ERR(err)	do { std::cerr << RED << err << ": " << NC << strerror(errno) << std::endl; exit(1); } while (0)
 
+class Client;
+
 class	Server
 {
 private:

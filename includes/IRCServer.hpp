@@ -12,7 +12,7 @@ private:
     int                     _socket;
     int                     _totChannels;
     int                     _totUsers;
-    std::vector<Channel *> _channels;
+    std::vector<Channel *>  _channels;
     std::string             _name;
     std::string             _password;
     std::string             _version;
