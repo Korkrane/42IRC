@@ -105,7 +105,6 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
    one.
  * La commande nick va etre appelee pendant la client registration puis "manuellement"
  * a la guise du client ensuite.
- * TODO: voir si throw exceptions
  */
 void  Commands::nick(User *user, IRC *server)
 {
@@ -155,7 +154,7 @@ void  Commands::nick(User *user, IRC *server)
   std::string reply;
   //Attention, le username et hostname doivent etre set correctement dans le constructeur de User
   reply = ":" + user->get_nickname() + "!" + user->get_username() + "@" + user->get_hostname() + " NICK " + nick_arg + "\r\n";
-  //envoie de la reponse au serveur, a tester
+  //envoie de la reponse au serveur, a revoir
   send(user->get_socket(), reply.c_str(), reply.size(), 0);
   return ;
 }

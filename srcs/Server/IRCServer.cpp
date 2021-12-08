@@ -375,3 +375,43 @@ void					IRC::displayServerUsers(void) const
 		it++;
 	}
 }
+
+bool				IRC::has_channel(std::string channel_name) const
+{
+	std::vector<Channel *> chans = this->get_channels();
+	std::vector<Channel *>::iterator it = chans.begin();
+	std::vector<Channel *>::iterator ite = chans.end();
+	std::string check_name;
+	while (it != ite)
+	{
+		check_name = (*it)->get_name();
+		if (check_name.compare(channel_name) == 0)
+		{
+			return (true);
+		}
+		it++;
+	}
+	return (false);
+}
+
+Channel			*IRC::find_channel(std::string channel_name) const 
+{
+	(void)channel_name;
+	std::vector<Channel *> chans = this->get_channels();
+	std::vector<Channel *>::iterator it = chans.begin();
+	std::vector<Channel *>::iterator ite = chans.end();
+	std::string check_name;
+	while (it != ite)
+	{
+		check_name = (*it)->get_name();
+		if (check_name.compare(channel_name) == 0)
+		{
+		#if DEBUG
+			std::cout << BLUE << "DEBUG: " << "IRCServ: found channel, returning ptr" << std::endl;
+		#endif
+			return (*it);
+		}
+		it++;
+	}
+	return (NULL);
+}

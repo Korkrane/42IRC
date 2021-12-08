@@ -42,6 +42,11 @@
 #define CHANNEL_VALID_CHARS "#&!+"
 #define USER_VALID_MODES "aiwroOs"
 #define CHANNEL_VALID_MODES "OovaimnpsrtklbeI"
+#define CHANNEL_FORBIDDEN_CHARS " ,:"
+
+#define MAX_CHAR 4096
+#define CHAN_MAXCAPACITY 5
+#define USER_MAXCHAN 5
 
 class User;
 

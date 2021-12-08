@@ -29,13 +29,6 @@ std::string format_code_str(int code)
     return ToString(code);
 }
 
-/**
- * @brief build the reply string that the server has to send to the user when
- * a command (valid/unvalid) is received by th server
- * @param code
- * @return std::string
- * TODO: reprendre avec User
- */
 std::string build_reply(int code, User *user, std::vector<std::string> params)
 {
     (void)code;

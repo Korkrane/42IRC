@@ -1,6 +1,6 @@
-#include "../../includes/irc.hpp"
+//#include "../../includes/irc.hpp"
 #include <fstream>
-
+#include <irc.hpp>
 /**
  * @brief send the content of motd file located in cmd_files. send first RPL_MOTDSTARD RPL_MOTD
  * then end with RPL_ENDOFMOTD. If no file located then ERR_NOMOTD

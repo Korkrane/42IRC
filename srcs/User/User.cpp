@@ -1,11 +1,6 @@
 #include <irc.hpp>
 #include <User.hpp>
 
-/*
-** Constructeur
-** TODO: voir ce qu'il y a de mieux pour initialiser les valeurs
-** Attention particuliere a porter sur le nickname et le password (?)
-*/
 User::User(void)
 /*
 : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
@@ -16,10 +11,6 @@ User::User(void)
 	return;
 }
 
-/**
-** Faire des tests pour voir ce qui est important pour l'initialisation
-*TODO: revoir init list
-*/
 User::User(std::string server_name, std::string server_ip, std::string server_creation, std::string port)
 /*: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
 {
@@ -941,11 +932,69 @@ void User::display_command(void)
 	this->display_params();
 }
 
+Channel		*User::creates_channel(std::string channel_name)
+{
+	//Le channel name a deja ete verifie au prealable
+
+	Channel *chan = new Channel(channel_name, this);
+	//Le constructeur de channel doit faire le reste;
+	return (chan);
+}
+
+bool		User::is_channel_user(Channel *channel)
+{
+	if (!channel)
+		return (false);
+	std::vector<User *> users = channel->get_members();
+	std::vector<User *>::iterator it = users.begin();
+	std::vector<User *>::iterator ite = users.end();
+	std::string check_nick;
+	std::string user_nick = this->get_nickname();
+	while (it != ite)
+	{
+		check_nick = (*it)->get_nickname();
+		if (user_nick.compare(check_nick) == 0)
+		{
+			#if DEBUG
+				std::cout << BLUE << "DEBUG: " << "USER: " << "The user is indeed a member of the given channel." << std::endl;
+			#endif
+			return (true);
+		}
+	}
+	return (false);
+}
+
 /**
- * @brief
- * TODO: faire un overload << (juste nickname ?)
- * voir si autres overload peuvent etre interessants
+ * @brief Va permettre de savoir si on a atteint le quota max de chan
+ * 
+ * @return true 
+ * @return false 
  */
+bool		User::can_join(void)
+{
+	//Faire le tour de tous les channels du serveur
+	std::vector<Channel *> chans = this->_IRCserver->get_channels();
+	std::vector<Channel *>::iterator it = chans.begin();
+	std::vector<Channel *>::iterator ite = chans.end();
+
+	unsigned int is_user = 0;
+	while (it != ite)
+	{
+		if (is_user >= USER_MAXCHAN)
+		{
+			#if DEBUG
+				std::cout << BLUE << "DEBUG: " << "USER :" << "Can not join new channel" << std::endl;
+			#endif
+			return (false);
+		}
+		if (this->is_channel_user(*it) == true)
+		{
+			is_user++;
+		}
+		it++;
+	}
+	return (true);
+}
 
 std::ostream& operator<<(std::ostream &COUT, User *user)
 {
