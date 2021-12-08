@@ -33,6 +33,7 @@ NAMES		=	main.cpp \
 				Commands/OptionalFeatures/Users.cpp \
 				Commands/ServerQueries/Version.cpp \
 				Commands/UserBasedQueries/Who.cpp \
+				Commands/Ping.cpp \
 				Commands/Motd.cpp \
 				Commands/Commands.cpp \
 				Error_Handling/error_handler.cpp \
