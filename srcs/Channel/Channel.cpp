@@ -670,3 +670,19 @@ void				Channel::drop_key(void)
 	this->_key = "";
 	return ;
 }
+
+void				Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
+{
+	this->set_has_topic();
+	(void)user;
+	(void)server;
+	(void)topic;
+
+	return ;
+}
+
+void				Channel::set_has_topic()
+{
+	this->_has_topic = true;
+	return ;
+}

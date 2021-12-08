@@ -148,6 +148,7 @@ void            Commands::handle_key(Channel *channel, User *user, std::string m
  * @param user 
  * @param modes 
  * @param server 
+ * TODO: a tester
  */
 void            Commands::edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server)
 {
@@ -185,5 +186,4 @@ void            Commands::edit_modes(Channel *channel, User *user, std::string m
         i++;
     }
     //si je trouve un k je fais le necessaire pour l ajouter ou l enlever
-
 }

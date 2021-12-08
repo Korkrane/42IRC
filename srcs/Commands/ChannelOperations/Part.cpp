@@ -92,7 +92,6 @@ void  Commands::part(User *user, IRC *server)
     error.push_back(channel);
     error_handler("442", user, chan, error);
     return ;
-
   }
   //TODO: Attention ici je fais un peu les choses en deux facons, faire des tests pour verifier que ce n est pas source d'erreur
   //si il est membre on quitte le channel

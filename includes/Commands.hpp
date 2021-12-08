@@ -118,7 +118,7 @@ private:
      * topic for that channel will be removed.
 	 */
 	static void									topic(User *client, IRC *server);
-
+	static void									check_topic(Channel *channel, User *user, IRC *server);
 	/**
 	 * @brief
 	 *
@@ -132,7 +132,7 @@ private:
      * that server which will generate the reply.
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
-	static void list(User *client, IRC *server);
+	static void									list(User *client, IRC *server);
 
 	/**
 	 * @brief
