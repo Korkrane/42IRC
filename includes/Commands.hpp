@@ -162,4 +162,5 @@ private:
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
 	static void 								names(User *client, IRC *server);
+	static void									send_names_message(Channel *channel, User *user, IRC *server);
 };
