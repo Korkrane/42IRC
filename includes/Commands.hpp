@@ -9,82 +9,34 @@ class IRC;
 class Commands
 {
 public:
-	Commands(void) : _cmds(_initCmds())
-	{
-		#if DEBUG
-			std::cout << BLUE <<  "DEBUG: Commands constructor called" << NC << std::endl;
-		#endif
-	};
+	Commands();
 	Commands(Commands const &src);
 	Commands &operator=(Commands const &src);
-	Commands(std::string const &serverPass, std::string serverName, std::string serverIP, std::string serverCreationDate);
-	virtual ~Commands()
-	{
-		#if DEBUG
-			std::cout << BLUE << "DEBUG: Command destructor called" << NC << std::endl;
-		#endif
-	};
-
-	/*** Fonctions membres ***/
-	std::map<std::string, void (*)(User *, IRC *)> get_cmds(void) const
-	{
-		std::map<std::string, void (*)(User *, IRC *)> cmds = this->_cmds;
-		return (cmds);
-	}
-
-	std::map<std::string, void (*)(User *, IRC *)> _initCmds()
-	{
-		std::map<std::string, void (*)(User *, IRC *)> cmds;
-
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("AWAY", away_cmd));
-		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
-		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WELCOME", welcome_cmd));
-		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MOTD", motd_cmd));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WHO", who));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KILL", kill));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("CAP", cap));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NICK", nick));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PART", part));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KICK", kick));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TOPIC", topic));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("JOIN", join));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("LIST", list));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NAMES", names));
-		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("PRIVMSG", privmsg_cmd));
-		//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MODE", mode_mcd));
-		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("OPER", oper_cmd));
-		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("PASS", pass_cmd));
-		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("NOTICE", notice_cmd));
-		//cmds.insert(std::pair<std::string, void (*) (User *, IRC *)>("QUIT", quit_cmd));
-		return cmds;
-	}
-
+	virtual ~Commands();
 	std::map<std::string, void (*)(User *, IRC *)> _cmds;
+
+	/*** METHODS ***/
+	std::map<std::string, void (*)(User *, IRC *)> get_cmds(void) const;
+	std::map<std::string, void (*)(User *, IRC *)> _initCmds();
+
 	static void unknown_cmd(User *user, IRC *server);
 	static void motd_cmd(User *user, IRC *server);
 
 private:
-	static void time_cmd(User *user, IRC *server);
-	static void away_cmd(User *user, IRC *server);
-	static void welcome_cmd(User *user, IRC *server);
-
+	static void 		time_cmd(User *user, IRC *server);
+	static void 		away_cmd(User *user, IRC *server);
+	static void 		welcome_cmd(User *user, IRC *server);
+	static void			notice(User *user, IRC *server);
+	static void			privmsg(User *user, IRC *server);
+	static void 		kill(User *user, IRC *server);
 	static void 		who(User *user, IRC *server);
+
 	static void 		displayAllClients(Channel *channel);
 	static void 		displayChannel(Channel *channel, User *client);
 	static void			displayClientsFromChannel(Channel *channel, User *client);
 	static void			paramsIsCorrectChannel(Commands *command, IRC *server);
 	static void 		paramsIsCorrectOther(Commands *command, IRC *server);
 	static std::string	whoHelpParameter(void);
-
-
-	static void			notice(User *user, IRC *server);
-	static void			privmsg(User *user, IRC *server);
-	static void 		kill(User *user, IRC *server);
-	//bool nick collision
-	//verifier les fonctions annexes relatives aux clients sont bien implementees
-	//nickname exists
-	//leave all channels
-	//set message status
 
 	/**
 	 * @brief
@@ -105,9 +57,6 @@ private:
 
 
 	static void 			nick(User *user, IRC *server);
-	/*
-	** Autres fonctions necessaires a nick
-	*/
 	static bool				checkNickGrammar(std::string nick, IRC *server, User *user);
 	static bool				nickIsAvailable(std::string nick, IRC *server, User *user);
 
@@ -125,7 +74,6 @@ private:
 	* Parameters: <channel> *( "," <channel> ) [ <Part Message> ]
 	 */
 	static void part(User *user,IRC *server);
-	//verifier qu on a bien un leave channel dans client
 
 	/**
 	 * @brief

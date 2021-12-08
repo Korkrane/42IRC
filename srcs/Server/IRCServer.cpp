@@ -1,24 +1,17 @@
-#include <irc.hpp>
+#include "irc.hpp"
 
 /*
 ** Constructeurs
 */
 IRC::IRC(void):
 	_socket(0),
-	_port(PORT_SERVER),
 	_totChannels(0),
 	_totUsers(0),
 	_name("null"),
 	_password("null"),
 	_version("null"),
-	_userModes("null"),
-	_channelModes("null"),
-	_serv_info(NULL),
-	_hints(NULL),
-	_server_ip("null"),
 	_server_creation("null"),
-	_svPassword("null"),
-	_discEvenFD("delete even\r\n")
+	_svPassword("null")
 {
 #if DEBUG
 	std::cout << BLUE << "DEBUG: IRC default constructor called" << NC << std::endl;
@@ -31,27 +24,17 @@ IRC::IRC(void):
  *
  * @param port
  * @param password
- * TODO: implementer proprement
  */
 IRC::IRC(std::string const &password):
 	_socket(0),
-	_port(PORT_SERVER),
 	_totChannels(0),
 	_totUsers(0),
 	_name("null"),
 	_password("null"),
 	_version("null"),
-	_userModes("null"),
-	_channelModes("null"),
-	_serv_info(NULL),
-	_hints(NULL),
-	_server_ip("null"),
 	_server_creation("null"),
-	_svPassword(password),
-	_discEvenFD("delete even\r\n")
+	_svPassword(password)
 {
-	//gerer les attributs membres relatifs au temps
-	//initialiser hints
 #if DEBUG
 	std::cout << BLUE << "DEBUG: IRC constructor with pass parameter called" << NC << std::endl;
 #endif
@@ -110,15 +93,6 @@ void				IRC::set_server_creation(std::string date)
 	return ;
 }
 
-void				IRC::set_port(int port)
-{
-	this->_port = port;
-#if DEBUG
-	std::cout << "port has been set successfully to " << port << std::endl;
-#endif
-	return ;
-}
-
 void				IRC::set_password(std::string password)
 {
 	this->_password = password;
@@ -149,15 +123,6 @@ std::string			IRC::get_version(void) const
 	return (version);
 }
 
-int			IRC::get_port(void) const
-{
-	int port = this->_port;
-#if DEBUG
-	std::cout << "IRC port is " << port << std::endl;
-#endif
-	return (port);
-}
-
 std::string			IRC::get_password(void) const
 {
 	std::string password = this->_password;
@@ -174,21 +139,6 @@ int			IRC::get_socket(void) const
 	std::cout << "IRC socket is " << socket << std::endl;
 #endif
 	return (socket);
-}
-
-struct addrinfo*			IRC::get_serv_info(void) const
-{
-    struct addrinfo* serv_info = this->_serv_info;
-	return (serv_info);
-}
-
-std::string			IRC::get_ip(void) const
-{
-	std::string ip = this->_server_ip;
-#if DEBUG
-	std::cout << "IRC ip is " << ip << std::endl;
-#endif
-	return (ip);
 }
 
 std::string			IRC::get_server_creation(void) const
@@ -237,7 +187,7 @@ void IRC::exec_command(User *user)
 	}
 }
 
-void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
+void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
 {
 
 	(void)responseQueue;
@@ -278,8 +228,8 @@ void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &r
 		if(current_user->user_is_registered() == true)
 		{
 			this->exec_command(current_user);
-			responseQueue = this->responseQueue;
-			this->responseQueue.clear();
+			responseQueue = this->_response_queue;
+			this->_response_queue.clear();
 		}
 		else
 		{
@@ -292,8 +242,8 @@ void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &r
 			{
 				current_user->set_command("WELCOME");
 				this->exec_command(current_user);
-				responseQueue = this->responseQueue;
-				this->responseQueue.clear();
+				responseQueue = this->_response_queue;
+				this->_response_queue.clear();
 			}
 		}
 	}
@@ -394,7 +344,7 @@ bool				IRC::has_channel(std::string channel_name) const
 	return (false);
 }
 
-Channel			*IRC::find_channel(std::string channel_name) const 
+Channel			*IRC::find_channel(std::string channel_name) const
 {
 	(void)channel_name;
 	std::vector<Channel *> chans = this->get_channels();

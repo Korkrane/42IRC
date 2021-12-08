@@ -29,24 +29,23 @@ void Commands::motd_cmd(User *user, IRC *server)
 
         reply_params.push_back(user->get_hostname());
         reply = build_reply(375, user, reply_params);
-        server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
+        server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
         reply_params.clear();
-
 
         reply_params.push_back(buff);
         reply = build_reply(372, user, reply_params);
-        server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
+        server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
         reply_params.clear();
 
 
         reply = build_reply(376, user, reply_params);
-        server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
+        server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
         reply_params.clear();
     }
     else
     {
         reply = build_reply(422, user, reply_params);
-        server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
+        server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
         reply_params.clear();
     }
 }

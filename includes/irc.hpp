@@ -34,7 +34,6 @@
 #include "Server.hpp"
 #include "Commands.hpp"
 #include "IRCServer.hpp"
-#include "ParsingUtils.hpp"
 #include "User.hpp"
 #include "ErrorHandling.hpp"
 
@@ -51,4 +50,5 @@
 class User;
 
 std::string build_reply(int code, User *server, std::vector<std::string> params);
+void error_handler(std::string error_code, User *user, Channel *channel, std::vector<std::string> parameter);
 void send_reply(std::string reply);

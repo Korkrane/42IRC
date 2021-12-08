@@ -11,19 +11,6 @@ User::User(void)
 	return;
 }
 
-User::User(std::string server_name, std::string server_ip, std::string server_creation, std::string port)
-/*: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
-{
-	this->set_server_name(server_name);
-	this->set_server_ip(server_ip);
-	this->set_server_creation(server_creation);
-	this->set_port(port);
-#if USERDEBUG
-	std::cout << "User default constructor called" << std::endl;
-#endif
-	return;
-}
-
 User::User(int fd): _socket(fd)
 /*: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
 {
@@ -83,28 +70,6 @@ void User::set_hostname(std::string hostname)
 #endif
 }
 
-/**
- * @brief
- *
- * @param port
- * TODO: ajouter des tests pour verifier que les valeurs soient corrects
- */
-void	User::set_port(std::string port)
-{
-	if (port.empty())
-	{
-#if USERDEBUG
-		std::cout << "Should return an error. The port is incorrect." << std::cout;
-#endif
-		this->_port = "";
-	}
-	this->_port = port;
-#if USERDEBUG
-	std::cout << "port has been set to " << port << std::cout;
-#endif
-	return ;
-}
-
 void User::set_modes(std::string modes)
 {
 	this->_modes = modes;
@@ -137,24 +102,6 @@ void User::set_away_mssg(std::string message)
 #endif
 }
 
-/*
-** Setters added
-*/
-void User::set_password_as_registered(bool is_set)
-{
-	this->_pass_registered = is_set;
-#if USERDEBUG
-	std::cout << "password registered is " << is_set << std::endl;
-#endif
-}
-
-void User::set_registered_nickname(bool is_set)
-{
-	this->_nick_registered = is_set;
-#if USERDEBUG
-	std::cout << "nickname registered is " << is_set << std::endl;
-#endif
-}
 
 void User::set_registered_user(bool is_set)
 {
@@ -190,41 +137,6 @@ void User::set_init_socket(int socket)
 #if USERDEBUG
 	std::cout << "User socket is " << socket << std::endl;
 #endif
-}
-
-/*
-** Rechercher dans la documentation
-*/
-void User::set_server_name(std::string server_name)
-{
-	this->_server_name = server_name;
-#if USERDEBUG
-	std::cout << "Server name has been set to " << server_name << std::endl;
-#endif
-}
-
-/*
-** Verifier si il ne vaudrait pas mieux que ce soit const
-*/
-void User::set_server_ip(std::string server_ip)
-{
-	this->_server_ip = server_ip;
-#if USERDEBUG
-	std::cout << "Server ip has been set to " << server_ip << std::endl;
-#endif
-}
-
-void User::set_server_creation(std::string creation)
-{
-	this->_server_creation = creation;
-#if USERDEBUG
-	std::cout << "Server creation has been set to " << creation << std::endl;
-#endif
-}
-
-void User::set_server(IRC server)
-{
-	this->_IRCserver = &server;
 }
 
 /**
@@ -337,15 +249,6 @@ std::string User::get_password(void) const
 	return (pass);
 }
 
-std::string User::get_server_port(void) const
-{
-	std::string port = this->_port;
-#if USERDEBUG
-	std::cout << "User's port is " << port << std::endl;
-#endif
-	return (port);
-}
-
 std::string User::get_message(void) const
 {
 	std::string message = this->_message;
@@ -396,23 +299,6 @@ std::vector<std::string> User::get_params(void) const
 {
 	std::vector<std::string> params = this->_params;
 	return (params);
-}
-
-/*
-** doublon definition
-unsigned int			User::get_params_size(void) const
-{
-	unsigned int size = this->get_params().size();
-#if USERDEBUG
-	std::cout << "The param size is " << size << std::endl;
-#endif
-	return (size);
-}
-*/
-
-IRC *User::get_IRCserver(void)
-{
-	return this->_IRCserver;
 }
 
 std::string User::get_prefix(void) const
@@ -478,31 +364,15 @@ unsigned int User::get_params_size(void) const
 ** Utils
 */
 
-/**
- * @brief
- *
- * @return true
- * @return false
- */
 bool	User::check_if_prefix(void) const
 {
 	char colon = ':';
 	std::string check = this->get_unparsed_client_command();
-	//Je dois chercher s'il y a un :
-	//Si il n'y en a pas cela signifie qu'il n'y a pas de prefix ?
 	if (check.find(colon) != std::string::npos)
-	{
-		#if USERDEBUG
-			//std::cout << "Found a prefix in the command." << std::endl;
-		#endif
 		return (true);
-	}
 	return (false);
 }
 
-/*
-** Voir quand est-ce qu'on va le set a true
-*/
 bool User::user_is_registered(void) const
 {
 	bool registered = this->_user_is_registered;
@@ -510,27 +380,6 @@ bool User::user_is_registered(void) const
 	std::cout << "The client is registered ? " << registered << std::endl;
 #endif
 	return (registered);
-}
-
-/*
-** Voir si c est possible que ce ne soit pas le cas ?
-*/
-bool User::user_registered_password(void) const
-{
-	bool password = this->_pass_registered;
-#if USERDEBUG
-	std::cout << "The client password is registered ? " << password << std::endl;
-#endif
-	return (password);
-}
-
-bool User::user_registered_nickname(void) const
-{
-	bool nick = this->_nick_registered;
-#if USERDEBUG
-	std::cout << "The client nick is registered ? " << nick << std::endl;
-#endif
-	return (nick);
 }
 
 bool User::user_is_away(void) const
@@ -549,150 +398,6 @@ bool User::user_is_operator(void) const
 	std::cout << "The client is operator ? " << ope << std::endl;
 #endif
 	return (ope);
-}
-
-/*
-** Info server
-*/
-std::string User::get_server_name(void) const
-{
-	std::string name = this->_server_name;
-#if USERDEBUG
-	std::cout << "The server name is " << name << std::endl;
-#endif
-	return (name);
-}
-
-std::string User::get_server_ip(void) const
-{
-	std::string ip = this->_server_ip;
-#if USERDEBUG
-	std::cout << "The server ip is " << ip << std::endl;
-#endif
-	return (ip);
-}
-
-std::string User::get_server_creation(void) const
-{
-	std::string creation = this->_server_creation;
-#if USERDEBUG
-	std::cout << "The server creation date is " << creation << std::endl;
-#endif
-	return (creation);
-}
-
-/*
-** Other utils
-*/
-
-/*
-** Comme il s'agit d'un vecteur il est simple de tout effacer
-** voir dans quel cas de figure on a besoin de clear (a part free de tout ?)
-*/
-void User::clear_client_message(void)
-{
-	this->_message.clear();
-#if USERDEBUG
-	std::cout << "User message vector has been cleared." << std::endl;
-#endif
-}
-
-/*
-void						User::clear_client_command(void)
-{
-	this->_commands.clear();
-#if USERDEBUG
-	std::cout << "User commands vector has been cleared." << std::endl;
-#endif
-}
-*/
-
-/**
-** recv (a voir)
-** TODO: Damien
-*/
-void User::send_message_to_server(void)
-{
-	//recv
-	//declarer un buffer
-	//faire un memset sur le buffer
-	//verifier le status du message (must be complete)
-	//executer recv
-	//afficher une erreur si le recv retourne une erreur
-	//se deconnecter si le retour est 0
-	//gerer le message s'il est incomplet
-}
-
-/**
-** TODO: Damien
-*/
-void User::check_message(void)
-{
-	//parsing du "end char"
-	//ajouter le message dans le vecteur des commandes si on a recu un end_char
-}
-
-/*
-** Va permettre d'ajouter une channel au vector
-** A tester
-** voir s'il faudrait faire un operateur de comparaison dans channel ?
-*/
-void User::join_channel(Channel *channel)
-{
-	if (!channel)
-		return;
-	std::vector<Channel *>::iterator it = this->_channels.begin();
-	std::vector<Channel *>::iterator ite = this->_channels.end();
-
-	//On verifie que la channel n'existe pas deja
-	while (it != ite)
-	{
-		if ((*it) == channel)
-			return;
-		it++;
-	}
-	this->_channels.push_back(channel);
-#if USERDEBUG
-	std::cout << "Channel was successfully added." << std::endl;
-#endif
-	return;
-}
-
-/**
-** TODO: faire un overload pour operator<< sur channel
-*/
-void User::quit_channel(Channel *channel)
-{
-	if (!channel)
-		return;
-	//on verifie si on trouve la channel
-	std::vector<Channel *>::iterator it = _channels.begin();
-	std::vector<Channel *>::iterator ite = _channels.end();
-	while (it != ite)
-	{
-		if ((*it) == channel)
-		{
-			this->_channels.erase(it);
-#if USERDEBUG
-			std::cout << "channel was successfully deleted" << std::endl;
-#endif
-			return;
-		}
-		it++;
-	}
-#if USERDEBUG
-	std::cout << "Channel could not be erased because it was not found" << std::endl;
-#endif
-}
-
-/**
-** TODO: verifier que tout est ok niveau leaks etc
-*/
-void User::quit_all_channels(void)
-{
-	//verifier si la liste n est pas deja vide ?
-	//ajouter des fonctions qui checkent si les vector sont vides ?
-	this->_channels.clear();
 }
 
 /*
@@ -744,7 +449,7 @@ bool User::hasEnding(std::string const &fullString, std::string const &ending) {
 
 /**
  * @brief
- * **TODO: a revoir Baudoin/Mahaut
+ * TODO: a revoir Baudoin/Mahaut
  */
 void User::store_command()
 {
@@ -787,14 +492,12 @@ void User::split_string_to_vector(std::vector<std::string> *vec, std::string *st
 	size_t pos = str->find(c);
 	size_t initialPos = 0;
 
-	// Decompose each element
 	while (pos != std::string::npos)
 	{
 		vec->push_back(str->substr(initialPos, pos - initialPos));
 		initialPos = pos + 1;
 		pos = str->find(c, initialPos);
 	}
-	// Add the last element
 	vec->push_back(str->substr(initialPos, std::min(pos, str->size()) - initialPos + 1));
 }
 
@@ -829,49 +532,6 @@ void User::store_params()
 	}
 }
 
-//TODO
-void User::check_command(void)
-{
-#if USERDEBUG
-	std::cout << "Check command was called but nothing was done yet." << std::endl;
-#endif
-	return ;
-}
-
-void User::exec_command(void)
-{
-	/*
-#if USERDEBUG
-	std::cout << "user::exec_command function called." << std::endl;
-	std::cout << "user irc serv address: " << &this->_IRCserver << std::endl;
-	std::cout << "user irc serv port: " << this->_IRCserver->get_port() << std::endl;
- #endif
-	std::map<std::string, void (*)(User *, IRC *)>::iterator it = this->_IRCserver->_commands->_cmds.begin();
-	int known_command = 0;
-
-	while (it != this->_IRCserver->_commands->_cmds.end())
-	{
-		if (it->first == this->_command_name)
-		{
-#if USERDEBUG
-			std::cout << GREEN << "USERDEBUG: " << it->first << " execute the command -->" << NC << std::endl;
-#endif
-			(*it->second)(this, this->_IRCserver);
-			known_command += 1;
-			break;
-		}
-		it++;
-	}
-	if (known_command == 0)
-	{
-#if USERDEBUG
-		std::cout << RED << "USERDEBUG: " << this->_command_name << " return the error command -->" << NC << std::endl;
-#endif
-		this->_IRCserver->_commands->unknown_cmd(this, this->_IRCserver);
-	}
-	*/
-}
-
 /*
 ** Display / Debug
 */
@@ -896,7 +556,6 @@ void User::displayChannels(void)
 	std::cout << "------------------------" << std::endl;
 }
 
-
 void	User::display_params(void) //const
 {
 	int i = 0;
@@ -913,10 +572,6 @@ void	User::display_params(void) //const
 	return ;
 }
 
-/**
- * @brief
- * Question Mahaut: je n ai pas bien compris la partie unparsed ?
- */
 void User::display_command(void)
 {
 	std::cout << "--- Displaying Last command parsed ---" << std::endl;
@@ -924,7 +579,6 @@ void User::display_command(void)
 		std::cout << "Prefix = " << this->_prefix << std::endl;
 	else
 		std::cout << "There is no prefix" << std::endl;
-	//TODO: faire un getter ?
 	if (!this->_command_name.empty())
 		std::cout << "Command = " << this->_command_name << std::endl;
 	else
@@ -966,9 +620,9 @@ bool		User::is_channel_user(Channel *channel)
 
 /**
  * @brief Va permettre de savoir si on a atteint le quota max de chan
- * 
- * @return true 
- * @return false 
+ *
+ * @return true
+ * @return false
  */
 bool		User::can_join(void)
 {

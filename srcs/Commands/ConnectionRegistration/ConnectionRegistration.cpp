@@ -15,25 +15,25 @@ void Commands::welcome_cmd(User *user, IRC *server)
     reply_params.push_back(user->get_username());
     reply_params.push_back(user->get_hostname());
     reply = build_reply(1, user, reply_params);
-    server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
+    server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
     reply_params.clear();
 
     //reply 2
     reply_params.push_back(user->get_hostname());
     reply = build_reply(2, user, reply_params);
-    server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
+    server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
     reply_params.clear();
 
     //reply 3
     reply_params.push_back(server->get_server_creation());
     reply = build_reply(3, user, reply_params);
-    server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
+    server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
     reply_params.clear();
 
     //reply 4
     reply_params.push_back(user->get_hostname());
     reply = build_reply(4, user, reply_params);
-    server->responseQueue.push_back(std::make_pair(user->get_socket(), reply));
+    server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
     reply_params.clear();
 
    server->_commands->motd_cmd(user, server);
