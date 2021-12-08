@@ -3,8 +3,7 @@
 //TODO: faire une sous fonction d'initialisation du debut de rpl qui reservira a chaque fois
 void  Commands::send_part_message(Channel *channel, User *user, std::vector<std::string> message)
 {
-  std::string rpl;
-  rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "0";
+  std::string rpl = init_rpl(user);
   rpl += " PART " + channel->get_name();
 
   //Faire le tour de message
@@ -21,8 +20,8 @@ void  Commands::send_part_message(Channel *channel, User *user, std::vector<std:
 #if DEBUG
   std::cout << BLUE << "DEBUG: " << "COMMAND PART: the repply is" << rpl << std::endl;
 #endif
-  //Maintenant que j ai la reply, je dois l'envoyer a tout le monde 
-  
+  //Maintenant que j ai la reply, je dois l'envoyer a tout le monde
+  send_rpl_to_all_members(channel, rpl);
 }
 
 /**
