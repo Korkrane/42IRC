@@ -62,8 +62,9 @@ void            Commands::mode(User *user, IRC *server)
             error.push_back(channel);
             error_handler("472", user, chan, error);
         }
+        std::string key = params[3];
         //et surtout qui va gerer ce qu il faut faire
-        edit_modes(chan, user, modes, server);
+        edit_modes(chan, user, modes, key, server);
     }
     return ;
 }
@@ -90,6 +91,56 @@ bool            Commands::should_remove_mode(std::string modes)
     return (res);
 }
 
+void            Commands::handle_key(Channel *channel, User *user, std::string modes, std::string key, bool add)
+{
+    (void)channel;
+    (void)user;
+    (void)modes;
+    (void)add;
+    if (add == true)
+    {
+       if (channel->get_has_key() == true)
+       {
+           //TODO: faire des tests pour voir s il faut quand meme renvoyer un message
+            #if DEBUG
+               std::cout << BLUE << "DEBUG: " << "MODE: key is already set." << std::endl;
+           #endif
+           return ;
+       }
+       if (!key.empty())
+       {
+           channel->set_has_key();
+           channel->set_key(key);
+       }
+       else
+       {
+           #if DEBUG
+               std::cout << BLUE << "DEBUG: " << "MODE: key argument is empty" << std::endl;
+           #endif
+           //TODO: faire des tests et voir comment gerer ce cas
+           return ;
+       }
+        
+    }
+    else
+    {
+        if (channel->get_has_key() == false)
+        {
+            #if DEBUG
+                std::cout << BLUE << "DEBUG: " << "MPDE: key is already unset." << std::endl;
+            #endif
+            return ;
+        }
+        else
+        {
+            channel->unset_has_key();
+            channel->drop_key();
+        }
+        
+    } 
+    return ;
+}
+
 /**
  * @brief Il y a beaucoup de modes donc on va seulement implementer ceux utilises dans les commandes obligatoires
  * 
@@ -98,7 +149,7 @@ bool            Commands::should_remove_mode(std::string modes)
  * @param modes 
  * @param server 
  */
-void            Commands::edit_modes(Channel *channel, User *user, std::string modes, IRC *server)
+void            Commands::edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server)
 {
     //faire une fonction qui permet de savoir si c est des plus ou des moins   
     bool add = should_add_mode(modes);
@@ -124,6 +175,15 @@ void            Commands::edit_modes(Channel *channel, User *user, std::string m
     (void)modes;
     (void)server;
     //Pour l'instant on ne gere que le mode k
+    int i = 0;
+    if (i < len)
+    {
+        if (modes[i] == 'k')
+        {
+            handle_key(channel, user, modes, key, add);
+        }
+        i++;
+    }
     //si je trouve un k je fais le necessaire pour l ajouter ou l enlever
 
 }

@@ -38,6 +38,11 @@ class Channel
         void                    set_topic(std::string topic);
         void                    set_modes(std::string modes);
         void                    unset_topic(void);
+        //TODO! Verifier si il faut etre operateur pour set une key
+        void                    set_has_key(void);
+        void                    set_key(std::string key);
+        void                    unset_has_key();
+        void                    drop_key();
 
         /*** GETTERS ***/
         std::string             get_name(void) const;
@@ -48,6 +53,7 @@ class Channel
         std::vector<User *>     get_members(void) const;
         std::vector<User *>     get_operators(void) const;
         std::vector<int>        get_members_fd(void) const;
+        bool                    get_has_key(void) const;
 
         /*** UTILS ***/
         bool                    user_is_operator(User *user);
@@ -74,8 +80,6 @@ class Channel
         void                    displayTopic(void);
         void                    displayOperators(void);
         void                    displayBanned(void);
-
-
 
         //Ajouter une fonction qui permet d'ajouter un mode
         //Ajouter une fonction qui permet d'enlever un mode

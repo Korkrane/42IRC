@@ -634,3 +634,39 @@ bool				Channel::get_has_topic(void) const
 	#endif
 	return (res);
 }
+
+bool            	Channel::get_has_key(void) const
+{
+    bool res = this->_has_key;
+    return (res);
+}
+
+void				Channel::set_has_key(void)
+{
+	this->_has_key = true;
+	return ;
+}
+
+void				Channel::unset_has_key(void)
+{
+	this->_has_key = false;
+	return ;
+}
+
+//TODO!
+//Le check si la cle est correcte devrait etre fait au prealable 
+void				Channel::set_key(std::string key)
+{
+	(void)key;
+	this->_key = key;
+	#if DEBUG
+		std::cout << BLUE << "DEBUG: " << "key has been set to " << key << std::endl;
+	#endif
+	return ;
+}
+
+void				Channel::drop_key(void)
+{
+	this->_key = "";
+	return ;
+}
