@@ -38,6 +38,8 @@ private:
 	static void 		paramsIsCorrectOther(Commands *command, IRC *server);
 	static std::string	whoHelpParameter(void);
 
+	static std::string	init_rpl(void) const;g		
+
 	/**
 	 * @brief
 	 *
@@ -74,6 +76,7 @@ private:
 	* Parameters: <channel> *( "," <channel> ) [ <Part Message> ]
 	 */
 	static void part(User *user,IRC *server);
+	static void send_part_message(Channel *channel, User *user, std::vector<std::string> message);
 
 	/**
 	 * @brief

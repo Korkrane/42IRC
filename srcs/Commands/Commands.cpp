@@ -21,11 +21,18 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::get_cmds(void) const
 }
 
 std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
-	{
-		std::map<std::string, void (*)(User *, IRC *)> cmds;
+{
+	std::map<std::string, void (*)(User *, IRC *)> cmds;
 
-		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
-		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WELCOME", welcome_cmd));
-		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MOTD", motd_cmd));
-		return cmds;
-	}
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WELCOME", welcome_cmd));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MOTD", motd_cmd));
+	return cmds;
+}
+
+//Ajout Mahaut pour reutilisation dans les commandes 
+
+std::string									Commands::init_rpl()
+{
+	
+}

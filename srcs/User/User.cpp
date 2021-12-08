@@ -716,7 +716,7 @@ void		User::add_channel_to_list(Channel *channel)
 	(void)channel;
 	if (channel)
 		this->_channels.push_back(channel);
-	user-increase_channel_nb();
+	this->increase_channel_nb();
 	return;
 }
 
@@ -738,6 +738,7 @@ void		User::remove_channel_from_list(Channel *channel)
 		check_name = (*it)->get_name();
 		if (channel_name.compare(check_name) == 0)
 		{
+			//TODO: voir s'il faut faire un delete ?
 			chans.erase(it);
 			this->decrease_channel_nb();
 		}
