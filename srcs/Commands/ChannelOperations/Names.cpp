@@ -30,7 +30,7 @@ void		Commands::names(User *user, IRC *server)
 {
     (void)user;
     (void)server;
-    int size = user->get_params_size();
+    
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
     //Apres test via hexchat, ne pas prendre en compte des args sup a 1
