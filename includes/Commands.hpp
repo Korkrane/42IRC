@@ -21,12 +21,15 @@ public:
 
 	static void unknown_cmd(User *user, IRC *server);
 	static void motd_cmd(User *user, IRC *server);
+	static void 		welcome_cmd(User *user, IRC *server);
 
 private:
 	static void 		time_cmd(User *user, IRC *server);
+	static void 		cap_cmd(User *user, IRC *server);
+	static void 		user_cmd(User *user, IRC *server);
 	static void 		away_cmd(User *user, IRC *server);
-	static void 		welcome_cmd(User *user, IRC *server);
 	static void 		version_cmd(User *user, IRC *server);
+	static void 		ping_cmd(User *user, IRC *server);
 	static void			notice(User *user, IRC *server);
 	static void			privmsg(User *user, IRC *server);
 	static void 		kill(User *user, IRC *server);
@@ -57,7 +60,7 @@ private:
 	static void				channel(User *user, IRC *server);
 
 
-	static void 			nick(User *user, IRC *server);
+	static void 			nick_cmd(User *user, IRC *server);
 	static bool				checkNickGrammar(std::string nick, IRC *server, User *user);
 	static bool				nickIsAvailable(std::string nick, IRC *server, User *user);
 

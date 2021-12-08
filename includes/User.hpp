@@ -5,6 +5,14 @@
 class IRC;
 class Channel;
 
+struct t_cmd
+{
+    std::string _unparsed;
+    std::string _prefix;
+    std::string _command_name;
+    std::vector<std::string> _params;
+};
+
 class User
 {
     private:
@@ -33,11 +41,19 @@ class User
         bool                        _user_is_registered;
 
         /* Correspond a la commande pre parsee */
+
         std::string                 _unparsed_client_command;
 	    std::string                 _prefix;
 	    std::string                 _command_name;
 	    std::vector<std::string>    _params;
     public:
+
+        std::vector<t_cmd>               _commands;
+        void split_if_multiple_command();
+
+        void set_params(std::vector<std::string>);
+        void set_prefix(std::string);
+        void set_command(std::string);
 
         IRC *_IRCserver;
         User(void);
@@ -82,7 +98,6 @@ class User
         void                        set_is_away(bool value);
         void                        set_away_mssg(std::string message);
         void                        set_unparsed_client_command(std::string client_command);
-        void                        set_command(std::string command);
         void                        set_password_as_registered(bool is_set);
         void                        set_registered_nickname(bool is_set);
         void                        set_registered_user(bool is_set);
@@ -98,6 +113,10 @@ class User
        void                         store_prefix(void);
        void                         store_command(void);
        void                         store_params(void);
+
+       void                         store_prefix(std::vector<t_cmd>::iterator it);
+       void                         store_command(std::vector<t_cmd>::iterator it);
+       void                         store_params(std::vector<t_cmd>::iterator it);
 
         /* Display */
        void                         displayClientInfo(void);

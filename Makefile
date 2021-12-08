@@ -35,6 +35,7 @@ NAMES		=	main.cpp \
 				Commands/UserBasedQueries/Who.cpp \
 				Commands/Ping.cpp \
 				Commands/Motd.cpp \
+				Commands/ConnectionRegistration/Cap.cpp \
 				Commands/Commands.cpp \
 				Error_Handling/error_handler.cpp \
 				Replies/build_replies.cpp
