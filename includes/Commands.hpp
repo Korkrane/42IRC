@@ -119,6 +119,7 @@ private:
 	 */
 	static void									topic(User *client, IRC *server);
 	static void									check_topic(Channel *channel, User *user, IRC *server);
+	static void									send_topic_message(Channel *channel, User *user, std::vector<std::string> message);
 	/**
 	 * @brief
 	 *

@@ -36,8 +36,9 @@ class Channel
         /*** SETTERS ***/
         void                    set_name(std::string name);
         void                    set_topic(std::string topic);
-        void                    set_topic(User *user, IRC *smerver, std::vector<std::string> topic);
+        void                    set_topic(User *user, IRC *server, std::vector<std::string> topic);
         void                    set_has_topic(void);
+        void                    clear_topic(User *user, IRC *server, std::vector<std::string> topic);
         void                    set_modes(std::string modes);
         void                    unset_topic(void);
         //TODO! Verifier si il faut etre operateur pour set une key

@@ -1,5 +1,33 @@
 #include <irc.hpp>
 
+void      Commands::send_topic_message(Channel *channel, User *user, std::vector<std::string> message)
+{
+    (void)channel;
+    (void)user;
+    (void)topic;
+    std::string rpl = init_rpl(user);
+    rpl += " TOPIC ";
+    rpl += channel->get_name();
+    rpl += " :";
+    //Ajouter toutes les string params
+    std::vector<std::string>::iterator it = message.begin();
+    std::vector<std::string>::iterator ite = message.end();
+    while (it != ite)
+    {
+        rpl += (*it);
+        //Pour ne pas ajouter un espace au dernier mot
+        if (it + 1 == ite)
+            break;
+        rpl += " ";
+        it++;
+    }
+    rpl += "\r\n";
+    //On doit envoyer le message a toute la channel
+    send_rpl_to_all_members(channel, rpl);
+    return ;
+}
+
+
 /**
  * @brief
  *
@@ -55,13 +83,17 @@ void		Commands::topic(User *user, IRC *server)
     {
         check_topic(chan, user, server);
     }
+    //Si la chaine est une chaine vide (comprendre contient uniquement :), ca unset les topic (clear)
+    //Si il n y a pas de chaine, alors fait permet de checker quel est le topic
+    else if (params[1].compare(":") == false)
+    {
+        chan->clear_topic(user, server, topic);
+    }
     else
     {
         chan->set_topic(user, server, topic);
     }
-    
-    //Si la chaine est une chaine vide (comprendre contient uniquement :), ca unset les topic (clear)
-    //Si il n y a pas de chaine, alors fait permet de checker quel est le topic
+    send_topic_message(chan, user, topic);
     return ;
 }
 

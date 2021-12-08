@@ -677,8 +677,33 @@ void				Channel::set_topic(User *user, IRC *server, std::vector<std::string> top
 	(void)user;
 	(void)server;
 	(void)topic;
+	std::string str_topic;
+	std::vector<std::string>::iterator it = topic.begin();
+	std::vector<std::string>::iterator ite = topic.end();
 
+	while (it != ite)
+	{
+		str_topic += (*it);
+		str_topic += " ";
+		it++;
+	}
+	this->_topic = str_topic;
+#if DEBUG
+	std::cout << BLUE << "DEBUG: " << "TOPIC: topic has been set to " << str_topic << std::endl;
+#endif
+	//send message?
 	return ;
+}
+
+void				Channel::clear_topic(User *user, IRC *server, std::vector<std::string> topic)
+{
+	(void)user;
+	(void)server;
+	(void)topic;
+	this->_topic = "";
+	this->_has_topic = false;
+	//TODO: voir si envoyer message au serveur ? A priori non
+	return;
 }
 
 void				Channel::set_has_topic()
