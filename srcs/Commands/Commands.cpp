@@ -55,7 +55,7 @@ void											Commands::send_rpl_to_all_members(Channel *channel, std::string r
 }
 
 
-//similaire au error_handler
+//TODO: similaire au error_handler ? A mettre en commmun?
 void											Commands::send_rpl(std::string error_code, User *user, Channel *channel, std::string arg)
 {
 	unsigned int code;
@@ -145,6 +145,15 @@ void											Commands::send_rpl(std::string error_code, User *user, Channel *c
 		case 332: //RPL_TOPIC 
 		{			
 			rpl +=(channel->get_name() + " :" + channel->get_topic() + "\r\n");
+			break;
+		}
+		//TODO: a tester
+		case 341:
+		{
+			rpl = init_rpl(user);
+			rpl += channel->get_name();
+			rpl += " " + user->get_nickname();
+			rpl += "\r\n";
 			break;
 		}
 		case 352: //RPL_WHO

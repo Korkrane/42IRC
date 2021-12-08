@@ -1,11 +1,5 @@
 #include <irc.hpp>
 
-//set_user_mode
-//set_output_mode
-//switch_mode
-//check_channel_errors?
-//sortmodearg
-
 void            Commands::mode(User *user, IRC *server)
 {
     (void)user;
@@ -152,6 +146,7 @@ void            Commands::handle_key(Channel *channel, User *user, std::string m
  */
 void            Commands::edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server)
 {
+    (void)server;
     //faire une fonction qui permet de savoir si c est des plus ou des moins   
     bool add = should_add_mode(modes);
     bool remove = should_remove_mode(modes);
@@ -171,10 +166,6 @@ void            Commands::edit_modes(Channel *channel, User *user, std::string m
         #endif
         return ;
     }
-    (void)channel;
-    (void)user;
-    (void)modes;
-    (void)server;
     //Pour l'instant on ne gere que le mode k
     int i = 0;
     if (i < len)
@@ -186,4 +177,5 @@ void            Commands::edit_modes(Channel *channel, User *user, std::string m
         i++;
     }
     //si je trouve un k je fais le necessaire pour l ajouter ou l enlever
+    //TODO: verifier/faire la creation du message
 }

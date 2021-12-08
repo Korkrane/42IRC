@@ -51,11 +51,14 @@ public:
     std::vector<Channel *>              get_channels(void) const;
     std::vector<User *>		            get_users(void) const;
     User                                *get_user(int fd);
+    User                                *get_user_ptr(std::string name);
 
     /*** METHODS ****/
     void                                add_channel(Channel *to_add);
     void                                drop_channel(Channel *to_drop);
     bool                                find_channel(Channel *to_find);
+    bool                                find_user(std::string nickname);
+
     std::vector<Channel *>::iterator    get_channel_it(Channel *to_find);
 
     bool				                has_channel(std::string channel_name) const;

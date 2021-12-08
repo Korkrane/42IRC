@@ -103,6 +103,7 @@ private:
                [<comment>]
 	 */
 	static void 								kick(User *client, IRC *server);
+	static void        							send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment);
 
 	/**
 	 * @brief

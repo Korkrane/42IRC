@@ -132,7 +132,7 @@ std::string			IRC::get_password(void) const
 	return (password);
 }
 
-int			IRC::get_socket(void) const
+int					IRC::get_socket(void) const
 {
 	int socket = this->_socket;
 #if DEBUG
@@ -268,14 +268,14 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
  * @param new_channel 
  * TODO: verifier que la channel ne fait pas deja partie de la liste
  */
-void IRC::add_channel(Channel *new_channel)
+void 					IRC::add_channel(Channel *new_channel)
 {
 	this->_channels.push_back(new_channel);
 }
 
 
 //Ajout Mahaut - faire une fonction d'affichage + overloads ?
-std::vector<User *>	IRC::get_users(void) const
+std::vector<User *>		IRC::get_users(void) const
 {
 	std::vector<User *> users;
 	users = this->_users;
@@ -304,7 +304,7 @@ std::vector<Channel *>	IRC::get_channels(void) const
  * @brief
  * TODO: a tester
  */
-void					IRC::displayServerChannels(void) const
+void						IRC::displayServerChannels(void) const
 {
 	std::vector<Channel *>channels = get_channels();
 	std::vector<Channel *>::iterator it = channels.begin();
@@ -318,7 +318,7 @@ void					IRC::displayServerChannels(void) const
 	}
 }
 
-void					IRC::displayServerUsers(void) const
+void						IRC::displayServerUsers(void) const
 {
 	std::vector<User *> users = get_users();
 	std::vector<User *>::iterator it = users.begin();
@@ -332,7 +332,7 @@ void					IRC::displayServerUsers(void) const
 	}
 }
 
-bool				IRC::has_channel(std::string channel_name) const
+bool						IRC::has_channel(std::string channel_name) const
 {
 	std::vector<Channel *> chans = this->get_channels();
 	std::vector<Channel *>::iterator it = chans.begin();
@@ -350,7 +350,7 @@ bool				IRC::has_channel(std::string channel_name) const
 	return (false);
 }
 
-Channel			*IRC::find_channel(std::string channel_name) const
+Channel						*IRC::find_channel(std::string channel_name) const
 {
 	(void)channel_name;
 	std::vector<Channel *> chans = this->get_channels();
@@ -378,7 +378,7 @@ Channel			*IRC::find_channel(std::string channel_name) const
  * @param to_drop 
  * TODO: a tester
  */
-void			IRC::drop_channel(Channel *to_drop)
+void							IRC::drop_channel(Channel *to_drop)
 {
 	(void)to_drop;
 	if (!to_drop)
@@ -396,7 +396,7 @@ void			IRC::drop_channel(Channel *to_drop)
 	return ;
 }
 
-bool			IRC::find_channel(Channel *to_find)
+bool							IRC::find_channel(Channel *to_find)
 {
 	std::vector<Channel *> chan = this->get_channels();
 	std::vector<Channel *>::iterator it = chan.begin();
@@ -434,4 +434,38 @@ std::vector<Channel *>::iterator	IRC::get_channel_it(Channel *to_find)
 	//Sera superieur a end si il n est pas trouve ?
 	it++;
 	return (it);
+}
+
+bool								IRC::find_user(std::string nickname)
+{
+	bool res = false;
+	std::vector<User *> users;
+	users = this->get_users();
+	std::vector<User *>::iterator it = users.begin();
+	std::vector<User *>::iterator ite = users.end();
+	std::string tmp;
+	while (it != ite)
+	{
+		tmp = (*it)->get_nickname();
+		if (nickname.compare(tmp) == false)
+		{
+			res = true;
+			break;
+		}
+		it++;
+	}
+	return (res);
+}
+
+//TODO: A tester
+User								*IRC::get_user_ptr(std::string nick)
+{
+	(void)nick;
+	
+	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if((*it)->get_nickname() == nick)
+			return *it;
+	}
+	return (NULL);
 }
