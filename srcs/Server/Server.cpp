@@ -148,7 +148,7 @@ void	Server::recvProcessCommand
 					#if DEBUG
 						std::cout << BLUE << "DEBUG: Server has to process command" << NC << std::endl;
 					#endif
-					_irc->ProcessCommand(std::make_pair(s, cmd), responseQueue, disconnectList);
+					_irc->process_command(std::make_pair(s, cmd), responseQueue, disconnectList);
 				}
 			}
 			--totalFD;

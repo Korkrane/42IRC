@@ -148,7 +148,8 @@ void  Commands::nick(User *user, IRC *server)
     error_handler("433", user, NULL, param);
     return ;
   }
-  user->set_registered_nickname(true);
+  //TODO modif set suite a suppresion
+  //user->set_registered_nickname(true);
   user->set_nickname(nick_arg);
   //Preparer la reponse pour le serveur
   std::string reply;

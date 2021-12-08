@@ -128,12 +128,6 @@ std::vector<User *>	Channel::get_operators(void) const
 	return (operators);
 }
 
-/** 
-* On identifie son Users  grace a son nickname (unique)
-* voir cas ou il n'y a qu un seul user (a tester)
-* TODO: a remettre a jour avec la version User
-*/
-
 bool				Channel::user_is_operator(User  *user)
 {
 	if (!user)
@@ -146,7 +140,6 @@ bool				Channel::user_is_operator(User  *user)
 	(void)it;
 	(void)ite;
 	(void)nickName;
-	/*
 	while (it != ite)
 	{
 		nickName = (*it)->get_nickname();
@@ -158,20 +151,12 @@ bool				Channel::user_is_operator(User  *user)
 			return (true);
 		}
 	}
-	*/
 #if DEBUG
 	std::cout << "user_is_operator is returning false" << std::endl;
 #endif
 	return (false);
 }
 
-/**
- * @brief 
- * 
- * @param user 
- * @return * A 
- * TODO: reprendre
- */
 bool				Channel::user_is_member(User *user)
 {
 	if (!user)
@@ -182,7 +167,7 @@ bool				Channel::user_is_member(User *user)
 	(void)it;
 	(void)ite;
 	(void)nickName;
-	/*
+	/* */
 	while (it != ite)
 	{
 		nickName = (*it)->get_nickname();
@@ -194,46 +179,27 @@ bool				Channel::user_is_member(User *user)
 			return (true);
 		}
 	}
-	*/
 #if DEBUG
 	std::cout << "user_is_member is returning false" << std::endl;
 #endif
 	return (false);
 }
 
-
-/**
- * @brief 
- * 
- * @param user 
- * @return true 
- * @return false 
- * TODO: revoir
- */
 bool				Channel::user_is_owner(User *user)
 {
 	if (!user)
 		return (false);
-	/*
+	/* */
 	if (user->get_nickname() == this->_channel_owner->get_nickname())
 	{
 #if DEBUG
-		std::cout << "The user " << Users ->get_nickname() << "is the owner of the channel" << std::endl;
+		std::cout << "The user " << user->get_nickname() << "is the owner of the channel" << std::endl;
 #endif
 		return (true);
 	}
-	*/
 	return (false);
 }
 
-/**
- * @brief 
- * 
- * @param user 
- * @return true 
- * @return false 
- * TODO: a reprendre
- */
 bool				Channel::isNicknameUnique(User *user)
 {
 	if (!user)
@@ -245,7 +211,7 @@ bool				Channel::isNicknameUnique(User *user)
 	(void)it;
 	(void)ite;
 	(void)nickName;
-	/*
+	/* */
 	while (it != ite)
 	{
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
@@ -256,20 +222,12 @@ bool				Channel::isNicknameUnique(User *user)
 			return (false);
 		}
 	}
-	*/
 #if DEBUG
 	std::cout << "isNicknameUnique is returning true" << std::endl;
 #endif
 	return (true);
 }
 
-/**
- * @brief 
- * Un user qui cree le channel devient automatiquement un operateur
- * 
- * @param user 
- * @param operator 
- */
 void				Channel::newMember(User *user, bool user_operator)
 {
 	(void)user;
@@ -292,12 +250,6 @@ void				Channel::newOperator(User *user)
 
 }
 
-/**
- * @brief 
- * 
- * @param user 
- * TODO: a reprendre
- */
 void 				Channel::deleteMember(User *user)
 {
 	if (!user)
@@ -308,7 +260,7 @@ void 				Channel::deleteMember(User *user)
 
 	(void)it;
 	(void)ite;
-	/*
+	/* */
 	while (it != ite)
 	{
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
@@ -324,19 +276,12 @@ void 				Channel::deleteMember(User *user)
 #if DEBUG
 	std::cout << "Users  was not found, enable to delete the Users  passed in argument" << std::endl;
 #endif
-*/
 #if DEBUG
 	std::cout << "member was not succesfully deleted." << std::endl;
 #endif
 	return ;
 }
 
-/**
- * @brief 
- * 
- * @param user 
- * TODO: a reprendre
- */
 void				Channel::printMemberInfo(User *user)
 {
 	if (!user)
@@ -347,12 +292,6 @@ void				Channel::printMemberInfo(User *user)
 	return ;
 }
 
-/**
- * @brief 
- * 
- * @param user
- * TODO: a reprendre 
- */
 void				Channel::removeFromOperators(User *user)
 {
 	//Chercher si le Users  est dans la liste
@@ -365,7 +304,7 @@ void				Channel::removeFromOperators(User *user)
 
 	(void)it;
 	(void)ite;
-	/*
+	/* */
 	while (it != ite)
 	{
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
@@ -377,7 +316,6 @@ void				Channel::removeFromOperators(User *user)
 #endif
 		}
 	}
-	*/
 #if DEBUG
 	std::cout << "user wad not successfully removed from operators" << std::endl;
 #endif
@@ -421,20 +359,17 @@ void				Channel::displayChannelInfo(void)
 	return ;
 }
 
-/**
- * @brief 
- * TODO: a reprendre
- */
 void				Channel::displayMembers(void)
 {
 	std::cout << "------- Listing Members / Users s -------" << std::endl;
 	std::vector<User *>::iterator it = this->_users.begin();
 	std::vector<User *>::iterator ite = this->_users.end();
-	//unsigned int num = 0;
+	unsigned int num = 0;
 	while (it != ite)
 	{
-		//std::cout << "Users  " << num << " - " << (*it)->get_nickname() << std::endl;
+		std::cout << "Users  " << num << " - " << (*it)->get_nickname() << std::endl;
 		it++;
+		num++;
 	}
 	std::cout << "----------------------------------------" << std::endl;
 	return ;
@@ -452,10 +387,6 @@ void				Channel::displayTopic(void)
 	return ;
 }
 
-/**
- * @brief 
- * TODO: a reprendre
- */
 void				Channel::displayOperators(void)
 {
 	std::cout << "------- Listing Operators -------" << std::endl;
@@ -463,11 +394,12 @@ void				Channel::displayOperators(void)
 	{
 		std::vector<User *>::iterator it = this->_operators.begin();
 		std::vector<User *>::iterator ite = this->_operators.end();
-		//unsigned int num = 0;
+		unsigned int num = 0;
 		while (it != ite)
 		{
-		//	std::cout << "operator " << num << " - " << (*it)->get_nickname() << std::endl;
+			std::cout << "operator " << num << " - " << (*it)->get_nickname() << std::endl;
 			it++;
+			num++;
 		}
 	}
 	else

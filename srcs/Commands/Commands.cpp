@@ -1,20 +1,31 @@
 #include <irc.hpp>
 
-/**
- * @brief Construct a new Commands:: Commands object
- * 
- * @param password 
- * @param server_name 
- * @param server_ipaddress 
- * @param server_creation_date 
- * *TODO: a continuer
- */
-Commands::Commands(std::string const & password, std::string server_name, std::string server_ipaddress, std::string server_creation_date)
+Commands::Commands() : _cmds(_initCmds())
 {
-	return;
-}
+	#if DEBUG
+		std::cout << BLUE <<  "DEBUG: Commands constructor called" << NC << std::endl;
+	#endif
+};
 
 Commands::~Commands()
 {
-	return;
+		#if DEBUG
+			std::cout << BLUE << "DEBUG: Command destructor called" << NC << std::endl;
+		#endif
 }
+
+std::map<std::string, void (*)(User *, IRC *)> Commands::get_cmds(void) const
+{
+	std::map<std::string, void (*)(User *, IRC *)> cmds = this->_cmds;
+	return (cmds);
+}
+
+std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
+	{
+		std::map<std::string, void (*)(User *, IRC *)> cmds;
+
+		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
+		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WELCOME", welcome_cmd));
+		cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MOTD", motd_cmd));
+		return cmds;
+	}

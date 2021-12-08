@@ -1,14 +1,14 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "Headers.hpp"
+#include "irc.hpp"
 #include "Client.hpp"
 #include "IRCServer.hpp"
 
-#include <irc.hpp>
-
 #define MAX_LISTEN	42
 #define SERVER_ERR(err)	do { std::cerr << RED << err << ": " << NC << strerror(errno) << std::endl; exit(1); } while (0)
+
+class Client;
 
 class	Server
 {

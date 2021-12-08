@@ -1,26 +1,17 @@
-#include <irc.hpp>
+#include "irc.hpp"
 
 /*
 ** Constructeurs
 */
 IRC::IRC(void):
 	_socket(0),
-	_port(PORT_SERVER),
 	_totChannels(0),
 	_totUsers(0),
 	_name("null"),
 	_password("null"),
 	_version("null"),
-	_userModes("null"),
-	_channelModes("null"),
-	_init_time(),
-	_date("null"),
-	_serv_info(NULL),
-	_hints(NULL),
-	_server_ip("null"),
 	_server_creation("null"),
-	_svPassword("null"),
-	_discEvenFD("delete even\r\n")
+	_svPassword("null")
 {
 #if DEBUG
 	std::cout << BLUE << "DEBUG: IRC default constructor called" << NC << std::endl;
@@ -33,33 +24,26 @@ IRC::IRC(void):
  *
  * @param port
  * @param password
- * TODO: implementer proprement
  */
 IRC::IRC(std::string const &password):
 	_socket(0),
-	_port(PORT_SERVER),
 	_totChannels(0),
 	_totUsers(0),
 	_name("null"),
 	_password("null"),
 	_version("null"),
-	_userModes("null"),
-	_channelModes("null"),
-	_init_time(),
-	_date("null"),
-	_serv_info(NULL),
-	_hints(NULL),
-	_server_ip("null"),
 	_server_creation("null"),
-	_svPassword(password),
-	_discEvenFD("delete even\r\n")
+	_svPassword(password)
 {
-	//gerer les attributs membres relatifs au temps
-	//initialiser hints
 #if DEBUG
 	std::cout << BLUE << "DEBUG: IRC constructor with pass parameter called" << NC << std::endl;
 #endif
 	_commands = new Commands();
+
+	time_t      now    = time(0);
+    std::string date   = ctime(&now);
+	//TODO: a reprendre ? Pb de compil Mahaut merge
+	set_creation(date, now);
 }
 
 /**
@@ -100,21 +84,14 @@ void				IRC::set_version(std::string version)
 	return ;
 }
 
+//TODO: A reprendre ? Pb compil merge Mahaut
 void				IRC::set_creation(std::string date, time_t time)
 {
-	this->_date = date;
-    this->_init_time = time;
+	(void)time;
+	date.erase(date.size() - 1); //time command put a \n at the end of the date so i delete it here
+	this->_server_creation = date;
 #if DEBUG
 	std::cout << "Creation date has been set successfully to " << date << std::endl;
-#endif
-	return ;
-}
-
-void				IRC::set_port(int port)
-{
-	this->_port = port;
-#if DEBUG
-	std::cout << "port has been set successfully to " << port << std::endl;
 #endif
 	return ;
 }
@@ -149,15 +126,6 @@ std::string			IRC::get_version(void) const
 	return (version);
 }
 
-int			IRC::get_port(void) const
-{
-	int port = this->_port;
-#if DEBUG
-	std::cout << "IRC port is " << port << std::endl;
-#endif
-	return (port);
-}
-
 std::string			IRC::get_password(void) const
 {
 	std::string password = this->_password;
@@ -176,26 +144,11 @@ int			IRC::get_socket(void) const
 	return (socket);
 }
 
-struct addrinfo*			IRC::get_serv_info(void) const
-{
-    struct addrinfo* serv_info = this->_serv_info;
-	return (serv_info);
-}
-
-std::string			IRC::get_ip(void) const
-{
-	std::string ip = this->_server_ip;
-#if DEBUG
-	std::cout << "IRC ip is " << ip << std::endl;
-#endif
-	return (ip);
-}
-
 std::string			IRC::get_server_creation(void) const
 {
 	std::string server_creation = this->_server_creation;
 #if DEBUG
-	std::cout << "IRC creation is " << server_creation << std::endl;
+	std::cout << BLUE << "IRC_DEBUG: IRC creation is " << server_creation << NC << std::endl;
 #endif
 	return (server_creation);
 }
@@ -207,17 +160,11 @@ User* IRC::get_user(int fd)
 		if((*it)->get_socket() == fd)
 			return *it;
 	}
-	#if DEBUG
-		std::cout << BLUE << "DEBUG: fail to get user in list " << NC << std::endl;
-	#endif
 	return NULL;
 }
 
 void IRC::exec_command(User *user)
 {
-#if DEBUG
-	std::cout << "IRC::exec_command function called." << std::endl;
- #endif
 	std::map<std::string, void (*)(User *, IRC *)>::iterator it = this->_commands->_cmds.begin();
 	int known_command = 0;
 
@@ -226,7 +173,7 @@ void IRC::exec_command(User *user)
 		if (it->first == user->get_command_name())
 		{
 #if DEBUG
-			std::cout << GREEN << "DEBUG: " << it->first << " execute the command -->" << NC << std::endl;
+			std::cout << GREEN << "DEBUG: " << it->first << " command is available in our IRC" << NC << std::endl;
 #endif
 			(*it->second)(user, this);
 			known_command += 1;
@@ -237,14 +184,18 @@ void IRC::exec_command(User *user)
 	if (known_command == 0)
 	{
 #if DEBUG
-		std::cout << RED << "DEBUG: " << user->get_command_name() << " return the error command -->" << NC << std::endl;
+		std::cout << RED << "DEBUG: " << user->get_command_name() << " command isn't available in our IRC" << NC << std::endl;
 #endif
 		this->_commands->unknown_cmd(user, this);
 	}
 }
 
-void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
+void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
 {
+
+	(void)responseQueue;
+	(void)disconnectList;
+
 	#if DEBUG
 		std::cout << BLUE << "\tDEBUG: Enter in IRC::ProcessCommand" << NC << std::endl;
 		std::cout << BLUE << "\tDEBUG: with clientfd: " << command.first << NC << std::endl;
@@ -253,44 +204,51 @@ void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &r
 	int	clientFD = command.first;
 	std::string const	&cmd = command.second;
 
-
-	for (std::vector<int>::const_iterator it = fds.begin(); it != fds.end(); ++it)
-		if (*it != clientFD)
-			responseQueue.push_back(std::make_pair(*it, cmd));
-
-
+	/*
 	// Add even fds to the disconnect list
 	if (cmd == _discEvenFD)
 		for (std::vector<int>::const_iterator it = fds.begin(); it != fds.end(); ++it)
 			if (*it % 2 == 0)
 				disconnectList.push_back(*it);
+	*/
 
-	//TODO
-	//if new user --> do registration
-	//if user is a valid client --> parse the incoming command
-	  //process the command
-	  //build reply
-	  //put reply to responseQueue
-
-
-	//Check if the Client has already been created. If yes parse and execute his command
-	//otherwise, create a new client //TODO execute command too
 	User *current_user;
 
 	if (!(std::find(fds.begin(), fds.end(), clientFD) == fds.end()))
 	{
+		current_user = this->get_user(clientFD);
 		#if DEBUG
 			std::cout << BLUE << "DEBUG: Client found in the user list" << NC << std::endl;
+			std::cout << BLUE << "DEBUG: Client is registered ? " << current_user->user_is_registered() << NC << std::endl;
 		#endif
-		current_user = this->get_user(clientFD);
 		current_user->set_unparsed_client_command(cmd);
 		current_user->store_prefix();
 		current_user->store_command();
 		current_user->store_params();
-		#if DEBUG
+		#if USERDEBUG
 			current_user->display_command();
 		#endif
-		this->exec_command(current_user);
+		if(current_user->user_is_registered() == true)
+		{
+			this->exec_command(current_user);
+			responseQueue = this->_response_queue;
+			this->_response_queue.clear();
+		}
+		else
+		{
+			//TODO do check for pass and nick and realname existence to set it to a registered user.
+			//if(!current_user->user_registered_password())
+
+			//if(current_user->user_registered_password() && current_user->user_registered_nickname())
+			current_user->set_registered_user(true);
+			if(current_user->user_is_registered() == true)
+			{
+				current_user->set_command("WELCOME");
+				this->exec_command(current_user);
+				responseQueue = this->_response_queue;
+				this->_response_queue.clear();
+			}
+		}
 	}
 	else
 	{
@@ -299,12 +257,20 @@ void IRC::ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &r
 		#endif
 		this->fds.push_back(clientFD);
 		current_user = new User(clientFD);
-		current_user->set_nickname("test");
+		current_user->set_nickname("user_nickname");
+		current_user->set_nickname("user_realname");
+		current_user->set_hostname("ft_irc.com");
 		this->_users.push_back(current_user);
 		//parse command
 	}
 }
 
+/**
+ * @brief 
+ * 
+ * @param new_channel 
+ * TODO: verifier que la channel ne fait pas deja partie de la liste
+ */
 void IRC::add_channel(Channel *new_channel)
 {
 	this->_channels.push_back(new_channel);
@@ -387,7 +353,7 @@ bool				IRC::has_channel(std::string channel_name) const
 	return (false);
 }
 
-Channel			*IRC::find_channel(std::string channel_name) const 
+Channel			*IRC::find_channel(std::string channel_name) const
 {
 	(void)channel_name;
 	std::vector<Channel *> chans = this->get_channels();
@@ -407,4 +373,68 @@ Channel			*IRC::find_channel(std::string channel_name) const
 		it++;
 	}
 	return (NULL);
+}
+
+/**
+ * @brief 
+ * 
+ * @param to_drop 
+ * TODO: a tester
+ */
+void			IRC::drop_channel(Channel *to_drop)
+{
+	(void)to_drop;
+	if (!to_drop)
+		return ;
+	//On cherche si le channel fait partie du vecteur
+	std::vector<Channel *> chan = this->get_channels();
+
+	bool res = find_channel(to_drop);
+	//Si on le trouve, on l enleve du vecteur
+	if (res == true)
+	{
+		std::vector<Channel *>::iterator it = this->get_channel_it(to_drop);
+		chan.erase(it);
+	}
+	return ;
+}
+
+bool			IRC::find_channel(Channel *to_find)
+{
+	std::vector<Channel *> chan = this->get_channels();
+	std::vector<Channel *>::iterator it = chan.begin();
+	std::vector<Channel *>::iterator ite = chan.end();
+	std::string check_name;
+	std::string	to_find_name = to_find->get_name();
+	while (it != ite)
+	{
+		check_name = (*it)->get_name();
+		if (to_find_name.compare(check_name) == 0)
+		{
+			return (true);		
+		}
+		it++;
+	}
+	return (false);
+}
+
+std::vector<Channel *>::iterator	IRC::get_channel_it(Channel *to_find)
+{
+	std::vector<Channel *> chan = this->get_channels();
+	std::vector<Channel *>::iterator it = chan.begin();
+	std::vector<Channel *>::iterator ite = chan.end();
+	std::string check_name;
+	std::string	to_find_name = to_find->get_name();
+	while (it != ite)
+	{
+		check_name = (*it)->get_name();
+		if (to_find_name.compare(check_name) == 0)
+		{
+			return (it);		
+		}
+		it++;
+	}
+	//Sera superieur a end si il n est pas trouve ?
+	it++;
+	return (it);
 }

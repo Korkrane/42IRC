@@ -3,6 +3,7 @@
 #include <irc.hpp>
 
 class User;
+class IRC;
 
 class Channel
 {
@@ -72,11 +73,11 @@ class Channel
         void                    displayTopic(void);
         void                    displayOperators(void);
         void                    displayBanned(void);
-        
-        
+
+
 
         //Ajouter une fonction qui permet d'ajouter un mode
-        //Ajouter une fonction qui permet d'enlever un mode 
+        //Ajouter une fonction qui permet d'enlever un mode
 
         void                    set_handle_modes(void);
         void                    set_channel_prefix(void);
@@ -96,6 +97,6 @@ class Channel
         void                    delete_channel_from_server(void);
 };
 
-//Utils to display - overloading 
+//Utils to display - overloading
 std::ostream& operator<<(std::ostream COUT, Channel *channel);
 bool          is_correct_channel_name(std::string target_name);

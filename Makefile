@@ -33,21 +33,21 @@ NAMES		=	main.cpp \
 				Commands/OptionalFeatures/Users.cpp \
 				Commands/ServerQueries/Version.cpp \
 				Commands/UserBasedQueries/Who.cpp \
+				Commands/Motd.cpp \
+				Commands/Commands.cpp \
 				Error_Handling/error_handler.cpp \
+				Replies/build_replies.cpp
 
 INCLUDES	=	./includes/channel.hpp \
 				./includes/Client.hpp \
 				./includes/Commands.hpp \
-				./includes/exceptions.hpp \
 				./includes/irc.hpp \
 				./includes/replies.hpp \
 				./includes/Server.hpp \
-				./includes/Headers.hpp \
 				./includes/Colors.hpp \
 				./includes/ClientUtils.hpp \
 				./includes/IRCServer.hpp \
 				./includes/User.hpp \
-				./includes/ErrorHandling.hpp \
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(NAMES))
 
