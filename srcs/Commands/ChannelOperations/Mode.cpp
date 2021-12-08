@@ -62,6 +62,68 @@ void            Commands::mode(User *user, IRC *server)
             error.push_back(channel);
             error_handler("472", user, chan, error);
         }
+        //et surtout qui va gerer ce qu il faut faire
+        edit_modes(chan, user, modes, server);
     }
     return ;
+}
+
+//TODO: voir comment gerer le cas ou il n y aurait ni + ni -
+bool            Commands::should_add_mode(std::string modes)
+{
+    //si on trouve un +, oui
+    bool res = false;
+    if (modes[0] == '+')
+    {
+        res = true;
+    }
+    return (res);   
+}
+
+bool            Commands::should_remove_mode(std::string modes)
+{
+    bool res = false;
+    if (modes[0] == '-')
+    {
+        res = true;
+    }
+    return (res);
+}
+
+/**
+ * @brief Il y a beaucoup de modes donc on va seulement implementer ceux utilises dans les commandes obligatoires
+ * 
+ * @param channel 
+ * @param user 
+ * @param modes 
+ * @param server 
+ */
+void            Commands::edit_modes(Channel *channel, User *user, std::string modes, IRC *server)
+{
+    //faire une fonction qui permet de savoir si c est des plus ou des moins   
+    bool add = should_add_mode(modes);
+    bool remove = should_remove_mode(modes);
+    if ((add && remove) || (!add && !remove))
+    {
+        #if DEBUG
+            std::cout << BLUE << "DEBUG: " << "MODE: bad sign in command params." << std::endl;
+        #endif
+        return ;
+    }
+    //On verifie que modes ne fait pas plus de 4 char
+    int len = modes.length();
+    if (len > 4)
+    {
+        #if DEBUG
+            std::cout << BLUE << "DEBUG: " << "MODE: too many chars in param." << std::endl;
+        #endif
+        return ;
+    }
+    (void)channel;
+    (void)user;
+    (void)modes;
+    (void)server;
+    //Pour l'instant on ne gere que le mode k
+    //si je trouve un k je fais le necessaire pour l ajouter ou l enlever
+
 }

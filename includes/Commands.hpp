@@ -83,7 +83,10 @@ private:
 
 
 	static void	mode(User *user, IRC *server);
-	
+	static void	edit_modes(Channel *channel, User *user, std::string modes, IRC *server);
+	static bool	should_add_mode(std::string modes);
+	static bool	should_remove_mode(std::string modes);
+
 	/**
 	 * @brief
 	 *
