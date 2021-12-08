@@ -552,6 +552,29 @@ bool			Channel::check_channel_modes(std::string target_modes)
 	return (true);
 }
 
+//TODO: a tester
+std::string		Channel::get_unknown_mode(std::string target_modes)
+{
+	(void)target_modes;
+	int i = 0;
+	std::string	allowed(CHANNEL_VALID_MODES);
+	int len = target_modes.length();
+	std::string error;
+	while (i < len)
+	{
+		if (allowed.find(target_modes[i]) == std::string::npos)
+		{
+			#if DEBUG
+				std::cout << BLUE << "DEBUG: " << "CHANNEL: " << "Invalid char mode: " << target_modes[i] << std::endl;
+			#endif
+			error = target_modes[i];
+			return (error);
+		}
+		i++;
+	}
+	return (" ");
+}
+
 /**
  * @brief 
  * 

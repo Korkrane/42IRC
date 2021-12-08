@@ -96,6 +96,7 @@ class Channel
         bool                    is_full_channel(void) const;
 
         void                    delete_channel_from_server(void);
+        std::string             get_unknown_mode(std::string target_modes);
 };
 
 //Utils to display - overloading

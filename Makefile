@@ -19,6 +19,7 @@ NAMES		=	main.cpp \
 				Commands/ChannelOperations/List.cpp \
 				Commands/ConnectionRegistration/Mode.cpp \
 				Commands/ChannelOperations/Names.cpp \
+				Commands/ChannelOperations/Mode.cpp \
 				Commands/ConnectionRegistration/Nick.cpp \
 				Commands/SendingMessages/Notice.cpp \
 				Commands/ConnectionRegistration/Oper.cpp \
