@@ -1,6 +1,9 @@
 #include "Client.hpp"
 
-Client::Client(int fd) : _fd(fd)
+Client::Client(int fd) :
+	_fd(fd),
+	_isGhost(true),
+	_connTime(std::time(NULL))
 {
 	// Make reading and writing to fd non-blocking
 	fcntl(fd, F_SETFL, O_NONBLOCK);
@@ -10,6 +13,7 @@ Client::~Client()
 {
 	// Close fd before deconstructing object
 	close(_fd);
+	std::cout << "Client on socket #" << _fd << " disconnected\n";
 }
 
 bool	Client::receiveCommand(std::string &cmd)
@@ -31,6 +35,10 @@ bool	Client::receiveCommand(std::string &cmd)
 		cmd = _cmdBuilder;
 		_cmdBuilder.clear();
 	}
+
+	// If client is still a ghost, make it a user
+	_isGhost = false;
+	
 	return true;
 }
 

@@ -7,6 +7,7 @@
 
 #define MAX_LISTEN	42		// Max concurrent connections in queue
 #define SERVER_ERR(err)	do { std::cerr << RED << err << ": " << NC << strerror(errno) << std::endl; exit(1); } while (0)	// Print error msg, exit
+#define CLIENT_TIMEOUT	10	// Seconds before timing out inactive client
 
 class	Server
 {
@@ -20,6 +21,10 @@ private:
 	int						_maxFD;		// Current highest client FD
 	fd_set					_fdReader;	// Structure to select client FD for reading
 
+	pthread_t			_ghostBuster;
+	pthread_mutex_t		_mutex;
+	bool				_running;
+
 	// Accept new client connection
 	void	acceptClient();
 
@@ -32,6 +37,9 @@ private:
 
 	// Read from fd to get client commands then forward it to the IRC program
 	void	recvProcessCommand(int totalFD, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
+
+	// Static function serving as the task for ghostbuster thread
+	static void	*timeoutGhostClients(void *server);
 
 public:
 	Server(int port, std::string const &password);

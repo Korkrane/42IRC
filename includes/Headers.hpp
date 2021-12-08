@@ -29,6 +29,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <unistd.h>
+#include <pthread.h>
 
 #include "Colors.hpp"
 

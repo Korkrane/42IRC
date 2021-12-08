@@ -5,7 +5,7 @@
 Server	*gServer = NULL;
 IRC		*gIRC = NULL;
 
-static void	exitProperly()
+static void	cleanupBeforeExit()
 {
 	if (gServer)
 		delete gServer;
@@ -15,7 +15,7 @@ static void	exitProperly()
 
 static void	handleSignal(int signum)
 {
-	if (signum == SIGINT || signum == SIGQUIT || signum == SIGKILL)
+	if (signum == SIGINT || signum == SIGQUIT)
 		std::cout	<< GREEN
 					<< "\b\bServer is stopped. Good bye!\n"
 					<< NC;
@@ -26,18 +26,15 @@ static bool	checkArgs(int ac, char **av, int &port, std::string &password)
 {
 	int	iPort, iPassword;
 
-	switch (ac)
+	if (ac == 3)
+		iPort = 1, iPassword = 2;
+	else if (ac == 4)
 	{
-	case 4:
 		std::cout << "Multi-server is not implemented, second argument is ignored.\n";
-		iPort = 2;
-		iPassword = 3;
-		break;
-	case 3:
-		iPort = 1;
-		iPassword = 2;
-		break;
-	default:
+		iPort = 2, iPassword = 3;
+	}
+	else
+	{
 		std::cerr << "Invalid number of arguments\n";
 		return false;
 	}
@@ -55,12 +52,12 @@ static bool	checkArgs(int ac, char **av, int &port, std::string &password)
 int	main(int ac, char **av)
 {
 	// Register clean up function at exit
-	atexit(exitProperly);
+	atexit(cleanupBeforeExit);
 
 	// Register signals to end program
 	signal(SIGINT, handleSignal);
 	signal(SIGQUIT, handleSignal);
-	signal(SIGKILL, handleSignal);
+	signal(SIGALRM, handleSignal);
 
 	// Check and obtain information from arguments
 	int			port;
