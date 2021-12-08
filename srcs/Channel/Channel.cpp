@@ -1,9 +1,6 @@
 #include <irc.hpp>
 
-/**
-* TODO: checker
-*/
-Channel::Channel(std::string name, User *user) : _topic(""), _has_topic(false), _modes(""), _operators(0), _users(0),  _channel_owner(0), _key(""), _has_key(false), _members_nb(0)
+Channel::Channel(std::string name, User *user, IRC *server): _topic(""), _has_topic(false), _modes(""), _operators(0), _users(0),  _channel_owner(0), _key(""), _has_key(false), _members_nb(0), _serv(server)
 {
 	(void)user;
 	(void)name;
@@ -21,7 +18,6 @@ Channel::Channel(std::string name, User *user) : _topic(""), _has_topic(false), 
 
 /**
  * @brief Destroy the Channel:: Channel object
- * TODO: a continuer
  */
 Channel::~Channel(void)
 {
@@ -29,8 +25,15 @@ Channel::~Channel(void)
 	std::cout << "Channel desconstructor called" << std::endl;
 #endif
 	//Supprimer de la liste des channels du IRCServer
+	this->delete_channel_from_server();
 	//Supprimer vider le vecteur de user
 	//vider le vecteur d'operateurs
+	return ;
+}
+
+void		Channel::delete_channel_from_server(void)
+{
+	this->_serv->drop_channel(this);
 	return ;
 }
 

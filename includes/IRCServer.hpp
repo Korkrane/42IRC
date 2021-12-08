@@ -21,7 +21,7 @@ private:
     int                     _port;
     int                     _totChannels;
     int                     _totUsers;
-    std::vector<Channel *> _channels;
+    std::vector<Channel *>  _channels;
     std::string             _name;
     std::string             _password;
     std::string             _version;
@@ -54,14 +54,14 @@ public:
 
     Commands *              _commands;
 
-    void                ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
-    void                exec_command(User *);
+    void                    ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
+    void                    exec_command(User *);
 
-    void                set_name(std::string name);
-    void                set_version(std::string version);
-    void                set_creation(std::string date, time_t time);
-    void                set_port(int port);
-    void                set_password(std::string password);
+    void                    set_name(std::string name);
+    void                    set_version(std::string version);
+    void                    set_creation(std::string date, time_t time);
+    void                    set_port(int port);
+    void                    set_password(std::string password);
 
     std::string             get_name(void) const ;
     std::string             get_version(void) const;

@@ -1,6 +1,5 @@
 #pragma once
 
-//#include <User.hpp>
 #include <irc.hpp>
 
 class User;
@@ -21,7 +20,7 @@ class Channel
         bool                    _has_key;
         unsigned int            _members_nb;
         unsigned int            _operators_nb;
-
+        IRC                     *_serv;
         /*
         ** Fonctions membres privees (classe canonique)
         */
@@ -30,7 +29,7 @@ class Channel
         Channel();
 
     public:
-        Channel(std::string name, User *user);
+        Channel(std::string name, User *user, IRC *server);
         virtual ~Channel();
 
         /*** SETTERS ***/
@@ -93,6 +92,8 @@ class Channel
         bool                    has_mode(char mode);
         bool                    is_correct_channel_key(std::string target_key);
         bool                    is_full_channel(void) const;
+
+        void                    delete_channel_from_server(void);
 };
 
 //Utils to display - overloading 
