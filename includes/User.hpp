@@ -57,6 +57,7 @@ class User
         int                         get_message_status(void) const;
         int                         get_channels_nb(void) const;
         IRC                         *get_server(void) const;
+        std::string                 get_server_name(void) const;
         int                         get_socket(void) const;
 
         /* Getters preparsing */

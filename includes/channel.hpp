@@ -42,6 +42,7 @@ class Channel
         /*** GETTERS ***/
         std::string             get_name(void) const;
         std::string             get_topic(void) const;
+        bool                    get_has_topic(void) const;
         std::string             get_modes(void) const;
         unsigned int            get_members_nb(void) const;
         std::vector<User *>     get_members(void) const;

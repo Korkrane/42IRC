@@ -1,5 +1,29 @@
 #include <irc.hpp>
 
+//TODO: faire une sous fonction d'initialisation du debut de rpl qui reservira a chaque fois
+void  Commands::send_part_message(Channel *channel, User *user, std::vector<std::string> message)
+{
+  std::string rpl = init_rpl(user);
+  rpl += " PART " + channel->get_name();
+
+  //Faire le tour de message
+  std::vector<std::string>::iterator it = message.begin();
+  std::vector<std::string>::iterator ite = message.end();
+  while (it != ite)
+  {
+    rpl += (*it);
+    rpl += " ";
+    it++;
+  }
+  //On termine 
+  rpl += "\r\n";
+#if DEBUG
+  std::cout << BLUE << "DEBUG: " << "COMMAND PART: the repply is" << rpl << std::endl;
+#endif
+  //Maintenant que j ai la reply, je dois l'envoyer a tout le monde
+  send_rpl_to_all_members(channel, rpl);
+}
+
 /**
  * @brief
  *

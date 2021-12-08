@@ -602,3 +602,12 @@ std::vector<int>	Channel::get_members_fd(void) const
 	//retourner le vecteur
 	return (sockets);
 }
+
+bool				Channel::get_has_topic(void) const
+{
+	bool res = this->_has_topic;
+	#if DEBUG
+		std::cout << BLUE << "DEBUG: " << "CHANNEL: Channel has topic ? " << res << std::endl;
+	#endif
+	return (res);
+}

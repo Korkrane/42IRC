@@ -16,27 +16,31 @@ public:
 	std::map<std::string, void (*)(User *, IRC *)> _cmds;
 
 	/*** METHODS ***/
-	std::map<std::string, void (*)(User *, IRC *)> get_cmds(void) const;
-	std::map<std::string, void (*)(User *, IRC *)> _initCmds();
+	std::map<std::string, void (*)(User *, IRC *)>	get_cmds(void) const;
+	std::map<std::string, void (*)(User *, IRC *)>	_initCmds();
 
-	static void unknown_cmd(User *user, IRC *server);
-	static void motd_cmd(User *user, IRC *server);
+	static void 									unknown_cmd(User *user, IRC *server);
+	static void										motd_cmd(User *user, IRC *server);
 
 private:
-	static void 		time_cmd(User *user, IRC *server);
-	static void 		away_cmd(User *user, IRC *server);
-	static void 		welcome_cmd(User *user, IRC *server);
-	static void			notice(User *user, IRC *server);
-	static void			privmsg(User *user, IRC *server);
-	static void 		kill(User *user, IRC *server);
-	static void 		who(User *user, IRC *server);
+	static void 									time_cmd(User *user, IRC *server);
+	static void 									away_cmd(User *user, IRC *server);
+	static void 									welcome_cmd(User *user, IRC *server);
+	static void										notice(User *user, IRC *server);
+	static void										privmsg(User *user, IRC *server);
+	static void 									kill(User *user, IRC *server);
+	static void 									who(User *user, IRC *server);
 
-	static void 		displayAllClients(Channel *channel);
-	static void 		displayChannel(Channel *channel, User *client);
-	static void			displayClientsFromChannel(Channel *channel, User *client);
-	static void			paramsIsCorrectChannel(Commands *command, IRC *server);
-	static void 		paramsIsCorrectOther(Commands *command, IRC *server);
-	static std::string	whoHelpParameter(void);
+	static void 									displayAllClients(Channel *channel);
+	static void 									displayChannel(Channel *channel, User *client);
+	static void										displayClientsFromChannel(Channel *channel, User *client);
+	static void										paramsIsCorrectChannel(Commands *command, IRC *server);
+	static void 									paramsIsCorrectOther(Commands *command, IRC *server);
+	static std::string								whoHelpParameter(void);
+
+	static std::string								init_rpl(User *user);
+	static void										send_rpl_to_all_members(Channel *channel, std::string rpl);
+	static void										send_rpl(std::string rpl, User *user, Channel *channel, std::string arg);
 
 	/**
 	 * @brief
@@ -52,6 +56,7 @@ private:
 	 ** See details on RFC 2812.
 	 */
 	static void 			join(User *user, IRC *server);
+	static void				send_join_message(Channel *channel, User *user, std::vector<std::string> message);
 
 	static void				channel(User *user, IRC *server);
 
@@ -74,6 +79,7 @@ private:
 	* Parameters: <channel> *( "," <channel> ) [ <Part Message> ]
 	 */
 	static void part(User *user,IRC *server);
+	static void send_part_message(Channel *channel, User *user, std::vector<std::string> message);
 
 	/**
 	 * @brief

@@ -1,8 +1,5 @@
 #include "irc.hpp"
 
-/*
-** Constructeurs
-*/
 IRC::IRC(void):
 	_socket(0),
 	_totChannels(0),
