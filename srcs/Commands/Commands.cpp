@@ -37,10 +37,11 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("INVITE", invite));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KICK", kick));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("LIST", list));
-	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MODE", names));
-	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NAMES", list));
-	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PART", list));
-	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TOPIC", list));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MODE", mode));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NAMES", names));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PART", part));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TOPIC", topic));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PASS", pass));
 	return cmds;
 }
 

@@ -30,6 +30,7 @@ private:
 	static void 		away_cmd(User *user, IRC *server);
 	static void 		version_cmd(User *user, IRC *server);
 	static void 		ping_cmd(User *user, IRC *server);
+	static void 		pass(User *user, IRC *server);
 
 	static void			notice(User *user, IRC *server);
 	static void         send_full_notice(User *target, User *user, IRC *server, std::vector<std::string> message);

@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
 //TODO: faire une sous fonction d'initialisation du debut de rpl qui reservira a chaque fois
 void  Commands::send_part_message(Channel *channel, User *user, std::vector<std::string> message)

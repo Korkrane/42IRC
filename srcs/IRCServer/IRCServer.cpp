@@ -221,6 +221,8 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		#endif
 		current_user->set_unparsed_client_command(cmd);
 		current_user->split_if_multiple_command();
+		//test
+		current_user->set_registered_user(true);
 		if(current_user->user_is_registered() == true)
 		{
 			this->exec_command(current_user);
@@ -229,7 +231,9 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		}
 		else
 		{
-				;
+			this->exec_command(current_user);
+			responseQueue = this->_response_queue;
+			this->_response_queue.clear();
 		}
 	}
 	else

@@ -8,6 +8,7 @@ NAMES		=	main.cpp \
 				Commands/ChannelOperations/Join.cpp \
 				Commands/ChannelOperations/Kick.cpp \
 				Commands/ChannelOperations/List.cpp \
+				Commands/ChannelOperations/Part.cpp \
 				Commands/ChannelOperations/Mode.cpp \
 				Commands/ChannelOperations/Names.cpp \
 				Commands/ChannelOperations/Topic.cpp \
@@ -16,6 +17,7 @@ NAMES		=	main.cpp \
 				Commands/ConnectionRegistration/Nick.cpp \
 				Commands/ConnectionRegistration/Oper.cpp \
 				Commands/ConnectionRegistration/User.cpp \
+				Commands/ConnectionRegistration/Pass.cpp \
 				Commands/SendingMessages/Notice.cpp \
 				Commands/SendingMessages/Privmsg.cpp \
 				Commands/ServerQueries/Motd.cpp \
