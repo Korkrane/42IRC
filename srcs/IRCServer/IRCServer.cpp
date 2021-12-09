@@ -221,22 +221,23 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		#endif
 		current_user->set_unparsed_client_command(cmd);
 		current_user->split_if_multiple_command();
-		//test
-		current_user->set_registered_user(true);
-		if(current_user->user_is_registered() == true)
+		//SI CLIENT CONNECTE MAIS PAS ENCORE REGISTER CONTINUE FONCTION DE REGISTRATION
+		if((current_user->_commands[0]._command_name == "NICK" || current_user->_commands[0]._command_name == "PASS" || current_user->_commands[0]._command_name == "USER") && !current_user->user_is_registered())
 		{
 			this->exec_command(current_user);
+			if(current_user->user_is_registered() == true)
+				this->_commands->welcome_cmd(current_user, this);
 			responseQueue = this->_response_queue;
 			this->_response_queue.clear();
-		}
-		else
+		}//SI DEJA CO ET REGISTER ALORS EXEC LA COMMANDE
+		else if(current_user->user_is_registered() == true)
 		{
 			this->exec_command(current_user);
 			responseQueue = this->_response_queue;
 			this->_response_queue.clear();
 		}
 	}
-	else
+	else //SI PREMIERE FOIS QU'IL SE CONNECTE
 	{
 		#if DEBUG
 			std::cout << BLUE << "\tDEBUG: Client not found in the user list" << NC << std::endl;

@@ -165,7 +165,6 @@ while ((pos = s.find(delimiter)) != std::string::npos) {
 	this->_commands.push_back(new_command);
 	s.erase(0, pos + delimiter.length());
 }
-
 int i = 0;
 for(std::vector<t_cmd>::iterator it = _commands.begin(); it != _commands.end(); it++)
 {
@@ -505,7 +504,9 @@ void User::store_command(std::vector<t_cmd>::iterator it)
 		i = store_string_until_char(&(*it)._command_name, &(*it)._unparsed, ' ', i);
 		(*it)._unparsed.replace(0, i, "");
 		if(hasEnding((*it)._command_name, "\r\n"))
-			(*it)._command_name.resize(this->_command_name.size() - 2);
+		{
+			(*it)._command_name.resize((*it)._command_name.size() - 2);
+		}
 	}
 }
 
