@@ -27,6 +27,8 @@ private:
 	static void 									away_cmd(User *user, IRC *server);
 	static void 									welcome_cmd(User *user, IRC *server);
 
+	static void										oper(User *user, IRC *server);
+	
 	static void										notice(User *user, IRC *server);
 	static void                						send_full_notice(User *target, User *user, IRC *server, std::vector<std::string> message);
 
