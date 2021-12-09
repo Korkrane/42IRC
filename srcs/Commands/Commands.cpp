@@ -27,6 +27,20 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WELCOME", welcome_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MOTD", motd_cmd));
+
+	//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("CAP", cap));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NICK", nick));
+	//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("OPER", oper));
+	//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("USER", user));
+
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("JOIN", join));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("INVITE", invite));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KICK", kick));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("LIST", list));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MODE", names));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NAMES", list));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PART", list));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TOPIC", list));
 	return cmds;
 }
 
@@ -240,4 +254,25 @@ void											Commands::send_rpl(std::string error_code, User *user, Channel *c
 	//Envoie du message a la queue du serveur
 	user->get_server()->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
 	return ;
+}
+
+std::vector<std::string>			Commands::store_second_param_message(std::vector<std::string> params)
+{
+    std::vector<std::string> message;
+    std::vector<std::string>::iterator it = params.begin();
+    it++;
+    std::vector<std::string>::iterator ite = params.end();
+    while (it != ite)
+    {
+        message.push_back(*it);
+        it++;
+    }
+	return (message);
+}
+
+bool								Commands::prefixed_by_colon(std::string str)
+{
+	if (str[0] == ':')
+		return (true);
+	return (false);
 }
