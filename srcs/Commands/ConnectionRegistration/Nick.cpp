@@ -1,18 +1,8 @@
 #include <IRC.hpp>
 #include <algorithm>
 
-/**
- * @brief
- *
- * @param nickname
- * @return true
- * @return false
- * TODO: a tester
- */
 bool Commands::nickIsAvailable(std::string nickname, IRC *server, User *user)
 {
-  (void)nickname;
-  (void)server;
   (void)user;
 
   //Capitalizer pour etre sensible a la casse
@@ -41,16 +31,9 @@ bool Commands::nickIsAvailable(std::string nickname, IRC *server, User *user)
   return (true);
 }
 
-/**
- * @brief
- *
- * @param nickname
- */
 bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
 {
-  (void)nickname;
   (void)server;
-  (void)user;
 
   int i = 0;
   int length = nickname.length();
@@ -106,15 +89,13 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
  * La commande nick va etre appelee pendant la client registration puis "manuellement"
  * a la guise du client ensuite.
  */
-void  Commands::nick(User *user, IRC *server)
+void  Commands::nick_cmd(User *user, IRC *server)
 {
-  (void)user;
   (void)server;
-/*
-#if DEBUG
-  user->display_command();
-#endif
-*/
+
+ #if DEBUG
+   std::cout << RED << "ENTER NICK CMD " << NC << std::endl;
+ #endif
   if (user->get_params_size() != 1)
   {
 #if DEBUG
@@ -126,36 +107,39 @@ void  Commands::nick(User *user, IRC *server)
     command.push_back(cmd_str);
     error_handler("461", user, NULL, command);
   }
+
+
   //Puis on verifie si le nickname est correct grammaticallement (fonction de grammar)
   std::string nick_arg = user->get_params().front();
-#if DEBUG
-  std::cout << "param for nick command is " << nick_arg << std::endl;
-#endif
+  #if DEBUG
+    std::cout << "param for nick command is " << nick_arg << std::endl;
+  #endif
   std::vector<std::string> param;
-  (void)param;
-  bool res1 = checkNickGrammar(nick_arg, server, user);
-  if (res1 == false)
+  if (checkNickGrammar(nick_arg, server, user) == false)
   {
-    //A tester
+    #if DEBUG
+      std::cout << RED << "DEBUG: NICK GRAMMAR CHECK RETURN FALSE" << NC << std::endl;
+    #endif
     return ;
   }
+
   //Puis on verifie que le nickname n existe pas deja (-> sinon cas de collision)
-  bool res2 = nickIsAvailable(nick_arg, server, user);
-  if (res2 == false)
+  if (nickIsAvailable(nick_arg, server, user) == false)
   {
     param.push_back(user->get_params().front());
     //A tester
     error_handler("433", user, NULL, param);
     return ;
   }
-  //TODO modif set suite a suppresion
-  //user->set_registered_nickname(true);
+
   user->set_nickname(nick_arg);
+
+ #if DEBUG
+   std::cout << RED << "EXIT NICK CMD " << NC << std::endl;
+ #endif
+
   //Preparer la reponse pour le serveur
-  std::string reply;
+  //std::string reply;
   //Attention, le username et hostname doivent etre set correctement dans le constructeur de User
-  reply = ":" + user->get_nickname() + "!" + user->get_username() + "@" + user->get_hostname() + " NICK " + nick_arg + "\r\n";
-  //envoie de la reponse au serveur, a revoir
-  send(user->get_socket(), reply.c_str(), reply.size(), 0);
-  return ;
+  //reply = ":" + user->get_nickname() + "!" + user->get_username() + "@" + user->get_hostname() + " NICK " + nick_arg + "\r\n";
 }

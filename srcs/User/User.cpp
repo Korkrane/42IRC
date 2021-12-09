@@ -14,6 +14,7 @@ User::User(void)
 User::User(int fd): _socket(fd)
 /*: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
 {
+	_user_is_registered = false;
 #if USERDEBUG
 	std::cout << BLUE << "\t\tDEBUG: User default constructor called with fd parameter only" << NC << std::endl;
 	//displayClientInfo();
@@ -139,26 +140,55 @@ void User::set_init_socket(int socket)
 #endif
 }
 
-/**
- * @brief
- *
- * @param client_command
- * TODO: Ajouter des verifications pour des char interdits ou des syntaxes ilogiques ?
- */
 void User::set_unparsed_client_command(std::string client_command)
 {
 	this->_unparsed_client_command = client_command;
-#if USERDEBUG
-	std::cout << "User unparsed_client_command has been set to " << client_command << std::endl;
-#endif
 }
 
-void	User::set_command(std::string command)
+#include <fstream>
+#include <string>
+
+void User::split_if_multiple_command()
 {
-	this->_command_name = command;
-#if USERDEBUG
-	//std::cout << "Command name parsed !" << std::endl;
-#endif
+
+std::cout << RED << "ENTER SPLIT_MULTI_COMMD" << NC << std::endl;
+t_cmd new_command;
+std::string s = this->_unparsed_client_command;
+std::string delimiter = "\r\n";
+
+size_t pos = 0;
+std::string token;
+while ((pos = s.find(delimiter)) != std::string::npos) {
+    token = s.substr(0, pos);
+    std::cout << "splitted command on parsing the _unparsed:" << token << std::endl;
+	new_command._unparsed = s;
+	this->_commands.push_back(new_command);
+	s.erase(0, pos + delimiter.length());
+}
+
+int i = 0;
+for(std::vector<t_cmd>::iterator it = _commands.begin(); it != _commands.end(); it++)
+{
+	std::cout << std::endl << "--COMMAND N° " << i++ << std::endl;
+
+	this->store_prefix(it);
+	this->store_command(it);
+	this->store_params(it);
+		#if DEBUG
+			std::cout << "prefix=" << (*it)._prefix << std::endl;
+			std::cout << "command=" << (*it)._command_name << std::endl;
+
+			int i = 0;
+			for (std::vector<std::string>::iterator itr = (*it)._params.begin(); itr != (*it)._params.end(); itr++)
+			{
+				std::cout << "param(" << i << ")= " << *itr << std::endl;
+				i++;
+			}
+
+		#endif
+
+}
+std::cout << RED << "EXIT SPLIT_MULTI_COMMD" << NC << std::endl;
 }
 
 /*
@@ -297,8 +327,7 @@ int User::get_channels_nb(void) const
 
 std::vector<std::string> User::get_params(void) const
 {
-	std::vector<std::string> params = this->_params;
-	return (params);
+	return (this->_params);
 }
 
 std::string User::get_prefix(void) const
@@ -423,6 +452,26 @@ int User::store_string_until_char(std::string *dest, std::string *src, char c, i
 	return (len);
 }
 
+void User::store_prefix(std::vector<t_cmd>::iterator it)
+{
+	if ((*it)._unparsed != "")
+	{
+		/*
+		#if DEBUG
+			std::cout << YELLOW << "DEBUG: STORE PREFIX WITH:" << (*it)._unparsed << NC << std::endl;
+		#endif
+		*/
+		std::string::iterator it2 = (*it)._unparsed.begin();
+
+		int i = 0;
+		if (*it2 == ':')
+		{
+			i = store_string_until_char(&(*it)._prefix, &(*it)._unparsed, ' ', i);
+			(*it)._unparsed.replace(0, i, "");
+		}
+	}
+}
+
 void User::store_prefix()
 {
 	if (this->_unparsed_client_command != "")
@@ -447,10 +496,19 @@ bool User::hasEnding(std::string const &fullString, std::string const &ending) {
     }
 }
 
-/**
- * @brief
- * TODO: a revoir Baudoin/Mahaut
- */
+void User::store_command(std::vector<t_cmd>::iterator it)
+{
+	std::string command;
+	if (!(*it)._unparsed.empty())
+	{
+		int i = 0;
+		i = store_string_until_char(&(*it)._command_name, &(*it)._unparsed, ' ', i);
+		(*it)._unparsed.replace(0, i, "");
+		if(hasEnding((*it)._command_name, "\r\n"))
+			(*it)._command_name.resize(this->_command_name.size() - 2);
+	}
+}
+
 void User::store_command()
 {
 	std::string command;
@@ -522,6 +580,17 @@ void User::patch_params(std::vector<std::string> *params)
 		params->erase(ite);
 }
 
+void User::store_params(std::vector<t_cmd>::iterator it)
+{
+	if ((*it)._unparsed != "")
+	{
+		size_t rn = (*it)._unparsed.find("\r\n");
+		(*it)._unparsed = (*it)._unparsed.substr(0, rn);
+		split_string_to_vector(&(*it)._params, &(*it)._unparsed, ' ');
+		patch_params(&(*it)._params);
+	}
+}
+
 void User::store_params()
 {
 	if (this->_unparsed_client_command != "")
@@ -530,6 +599,19 @@ void User::store_params()
 		split_string_to_vector(&this->_params, &this->_unparsed_client_command, ' ');
 		patch_params(&this->_params);
 	}
+}
+
+void User::set_params(std::vector<std::string> value)
+{
+	this->_params = value;
+}
+void User::set_prefix(std::string value)
+{
+	this->_prefix = value;
+}
+void User::set_command(std::string value)
+{
+	this->_command_name = value;
 }
 
 /*
@@ -615,8 +697,8 @@ bool		User::is_channel_user(Channel *channel)
 		check_nick = (*it)->get_nickname();
 		if (user_nick.compare(check_nick) == 0)
 		{
-			#if DEBUG
-				std::cout << BLUE << "DEBUG: " << "USER: " << "The user is indeed a member of the given channel." << std::endl;
+			#if USERDEBUG
+				std::cout << BLUE << "USERDEBUG: " << "USER: " << "The user is indeed a member of the given channel." << std::endl;
 			#endif
 			return (true);
 		}
@@ -643,8 +725,8 @@ bool		User::can_join(void)
 	{
 		if (is_user >= USER_MAXCHAN)
 		{
-			#if DEBUG
-				std::cout << BLUE << "DEBUG: " << "USER :" << "Can not join new channel" << std::endl;
+			#if USERDEBUG
+				std::cout << BLUE << "USERDEBUG: " << "USER :" << "Can not join new channel" << std::endl;
 			#endif
 			return (false);
 		}
@@ -708,8 +790,8 @@ void		User::decrease_channel_nb(void)
 
 /**
  * @brief Les verifications en termes de USER_MACHAN doivent etre faites au prealable
- * 
- * @param channel 
+ *
+ * @param channel
  */
 void		User::add_channel_to_list(Channel *channel)
 {
@@ -722,8 +804,8 @@ void		User::add_channel_to_list(Channel *channel)
 
 /**
  * @brief On doit avoir verifie au prealable que le user etait bien membre
- * 
- * @param channel 
+ *
+ * @param channel
  */
 void		User::remove_channel_from_list(Channel *channel)
 {

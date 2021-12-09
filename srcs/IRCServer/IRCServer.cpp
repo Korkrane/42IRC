@@ -162,30 +162,38 @@ User* IRC::get_user(int fd)
 
 void IRC::exec_command(User *user)
 {
-	std::map<std::string, void (*)(User *, IRC *)>::iterator it = this->_commands->_cmds.begin();
-	int known_command = 0;
+	#if DEBUG
+	std::cout  << RED << "ENTER IRC::exec_command" << NC << std::endl;
+	#endif
+	std::map<std::string, void (*)(User *, IRC *)>::iterator itc = this->_commands->_cmds.begin();
 
-	while (it != this->_commands->_cmds.end())
+	for(std::vector<t_cmd>::iterator it = user->_commands.begin(); it != user->_commands.end(); it++)
 	{
-		if (it->first == user->get_command_name())
+		int known_command = 0;
+		user->set_command((*it)._command_name);
+		user->set_params((*it)._params);
+		user->set_prefix((*it)._prefix);
+		while (itc != this->_commands->_cmds.end())
 		{
-#if DEBUG
-			std::cout << GREEN << "DEBUG: " << it->first << " command is available in our IRC" << NC << std::endl;
-#endif
-			(*it->second)(user, this);
-			known_command += 1;
-			break;
+			if (itc->first == (*it)._command_name)
+			{
+				(*itc->second)(user, this);
+				known_command += 1;
+				break;
+			}
+		itc++;
 		}
-		it++;
+		if (known_command == 0)
+			this->_commands->unknown_cmd(user, this);
+		user->get_params().clear();
 	}
-	if (known_command == 0)
-	{
-#if DEBUG
-		std::cout << RED << "DEBUG: " << user->get_command_name() << " command isn't available in our IRC" << NC << std::endl;
-#endif
-//TODO: a reprendre?
-//		this->_commands->unknown_cmd(user, this);
-	}
+	user->_commands.clear();
+	user->set_command("");
+	user->set_prefix("");
+	user->_params.clear();
+	#if DEBUG
+		std::cout  << RED << "EXIT IRC::exec_command" << NC << std::endl;
+	#endif
 }
 
 void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
@@ -199,18 +207,10 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		std::cout << BLUE << "\tDEBUG: with clientfd: " << command.first << NC << std::endl;
 		std::cout << BLUE << "\tDEBUG: with command: " << command.second << NC;
 	#endif
-	int	clientFD = command.first;
+
+	int					clientFD = command.first;
 	std::string const	&cmd = command.second;
-
-	/*
-	// Add even fds to the disconnect list
-	if (cmd == _discEvenFD)
-		for (std::vector<int>::const_iterator it = fds.begin(); it != fds.end(); ++it)
-			if (*it % 2 == 0)
-				disconnectList.push_back(*it);
-	*/
-
-	User *current_user;
+	User 				*current_user;
 
 	if (!(std::find(fds.begin(), fds.end(), clientFD) == fds.end()))
 	{
@@ -220,12 +220,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 			std::cout << BLUE << "DEBUG: Client is registered ? " << current_user->user_is_registered() << NC << std::endl;
 		#endif
 		current_user->set_unparsed_client_command(cmd);
-		current_user->store_prefix();
-		current_user->store_command();
-		current_user->store_params();
-		#if USERDEBUG
-			current_user->display_command();
-		#endif
+		current_user->split_if_multiple_command();
 		if(current_user->user_is_registered() == true)
 		{
 			this->exec_command(current_user);
@@ -234,18 +229,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		}
 		else
 		{
-			//TODO do check for pass and nick and realname existence to set it to a registered user.
-			//if(!current_user->user_registered_password())
-
-			//if(current_user->user_registered_password() && current_user->user_registered_nickname())
-			current_user->set_registered_user(true);
-			if(current_user->user_is_registered() == true)
-			{
-				current_user->set_command("WELCOME");
-				this->exec_command(current_user);
-				responseQueue = this->_response_queue;
-				this->_response_queue.clear();
-			}
+				;
 		}
 	}
 	else
@@ -255,18 +239,28 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		#endif
 		this->fds.push_back(clientFD);
 		current_user = new User(clientFD);
-		current_user->set_nickname("user_nickname");
-		current_user->set_nickname("user_realname");
-		current_user->set_hostname("ft_irc.com");
+
+		current_user->set_unparsed_client_command(cmd);
+		current_user->split_if_multiple_command();
+		#if DEBUG
+			std::cout << BLUE << "DEBUG: Client is registered before exec ?" << current_user->user_is_registered() << NC << std::endl;
+		#endif
+		this->exec_command(current_user);
+		#if DEBUG
+			std::cout << BLUE << "DEBUG: Client is registered after exec?" << current_user->user_is_registered() << NC << std::endl;
+		#endif
+		if(current_user->user_is_registered() == true)
+			this->_commands->welcome_cmd(current_user, this);
+		responseQueue = this->_response_queue;
+		this->_response_queue.clear();
 		this->_users.push_back(current_user);
-		//parse command
 	}
 }
 
 /**
- * @brief 
- * 
- * @param new_channel 
+ * @brief
+ *
+ * @param new_channel
  * TODO: verifier que la channel ne fait pas deja partie de la liste
  */
 void 					IRC::add_channel(Channel *new_channel)
@@ -374,9 +368,9 @@ Channel						*IRC::find_channel(std::string channel_name) const
 }
 
 /**
- * @brief 
- * 
- * @param to_drop 
+ * @brief
+ *
+ * @param to_drop
  * TODO: a tester
  */
 void							IRC::drop_channel(Channel *to_drop)
@@ -409,7 +403,7 @@ bool							IRC::find_channel(Channel *to_find)
 		check_name = (*it)->get_name();
 		if (to_find_name.compare(check_name) == 0)
 		{
-			return (true);		
+			return (true);
 		}
 		it++;
 	}
@@ -428,7 +422,7 @@ std::vector<Channel *>::iterator	IRC::get_channel_it(Channel *to_find)
 		check_name = (*it)->get_name();
 		if (to_find_name.compare(check_name) == 0)
 		{
-			return (it);		
+			return (it);
 		}
 		it++;
 	}
@@ -462,7 +456,7 @@ bool								IRC::find_user(std::string nickname)
 User								*IRC::get_user_ptr(std::string nick)
 {
 	(void)nick;
-	
+
 	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
 	{
 		if((*it)->get_nickname() == nick)

@@ -2,8 +2,14 @@
 
 void            Commands::mode(User *user, IRC *server)
 {
-    (void)user;
+    #if DEBUG
+        std::cout << RED << "ENTER MODE COMMAND" << NC << std::endl;
+    #endif
+
+        (void)user;
     (void)server;
+
+    /*
     //Check du nombre d'arguments
     std::string modes;
     std::string channel;
@@ -60,7 +66,10 @@ void            Commands::mode(User *user, IRC *server)
         //et surtout qui va gerer ce qu il faut faire
         edit_modes(chan, user, modes, key, server);
     }
-    return ;
+    */
+    #if DEBUG
+        std::cout << RED << "EXIT MODE COMMAND" << NC << std::endl;
+    #endif
 }
 
 //TODO: voir comment gerer le cas ou il n y aurait ni + ni -
@@ -72,7 +81,7 @@ bool            Commands::should_add_mode(std::string modes)
     {
         res = true;
     }
-    return (res);   
+    return (res);
 }
 
 bool            Commands::should_remove_mode(std::string modes)
@@ -114,7 +123,7 @@ void            Commands::handle_key(Channel *channel, User *user, std::string m
            //TODO: faire des tests et voir comment gerer ce cas
            return ;
        }
-        
+
     }
     else
     {
@@ -130,24 +139,24 @@ void            Commands::handle_key(Channel *channel, User *user, std::string m
             channel->unset_has_key();
             channel->drop_key();
         }
-        
-    } 
+
+    }
     return ;
 }
 
 /**
  * @brief Il y a beaucoup de modes donc on va seulement implementer ceux utilises dans les commandes obligatoires
- * 
- * @param channel 
- * @param user 
- * @param modes 
- * @param server 
+ *
+ * @param channel
+ * @param user
+ * @param modes
+ * @param server
  * TODO: a tester
  */
 void            Commands::edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server)
 {
     (void)server;
-    //faire une fonction qui permet de savoir si c est des plus ou des moins   
+    //faire une fonction qui permet de savoir si c est des plus ou des moins
     bool add = should_add_mode(modes);
     bool remove = should_remove_mode(modes);
     if ((add && remove) || (!add && !remove))

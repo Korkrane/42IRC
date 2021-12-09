@@ -8,9 +8,8 @@
  * @param server
  * TODO: a reprendre suite a la modification du client
  */
-void Commands::time_cmd(User *client, IRC *server)
+void Commands::time_cmd(User *user, IRC *server)
 {
-    (void)client;
     (void)server;
 
     std::vector<std::string> reply_params;
@@ -19,8 +18,9 @@ void Commands::time_cmd(User *client, IRC *server)
     time_t      now  = std::time(0);
     std::string date = ctime(&now);
 
-    reply_params.push_back(client->get_params()[0]);
+    reply_params.push_back(user->get_hostname());
     reply_params.push_back(date);
-    reply = build_reply(391, client, reply_params);
-    send_reply(reply);
+    reply = build_reply(391, user, reply_params);
+    server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
+    reply_params.clear();
 }

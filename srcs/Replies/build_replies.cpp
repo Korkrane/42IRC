@@ -19,7 +19,7 @@ std::string ToString(T val)
  * @param code
  * @return std::string
  * TODO: Attention - Mahaut : voir si on peut rassembler avec ce que j ai fait (error + send_rpl)
- * TODO: j ai mis error dans utils mais send_rpl dans commande 
+ * TODO: j ai mis error dans utils mais send_rpl dans commande
  */
 std::string format_code_str(int code)
 {
@@ -72,6 +72,8 @@ std::string build_reply(int code, User *user, std::vector<std::string> params)
         return prefix + ERR_UNKNOWNCOMMAND(params[0]);
     case 422:
         return prefix + ERR_NOMOTD();
+    case 999:
+        return (":" + user->get_hostname() + " " + "PONG" + " " + user->get_hostname() + " :" + user->get_hostname());
     default:
         return std::string("");
     }

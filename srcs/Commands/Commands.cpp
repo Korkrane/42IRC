@@ -27,12 +27,12 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WELCOME", welcome_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MOTD", motd_cmd));
-
-	//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("CAP", cap));
-	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NICK", nick));
-	//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("OPER", oper));
-	//cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("USER", user));
-
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("VERSION", version_cmd));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PING", ping_cmd));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("CAP", cap_cmd));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NICK", nick_cmd));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("USER", user_cmd));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MODE", mode));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("JOIN", join));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("INVITE", invite));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KICK", kick));
@@ -68,7 +68,6 @@ void											Commands::send_rpl_to_all_members(Channel *channel, std::string r
 	return ;
 }
 
-
 //TODO: similaire au error_handler ? A mettre en commmun?
 void											Commands::send_rpl(std::string error_code, User *user, Channel *channel, std::string arg)
 {
@@ -80,7 +79,7 @@ void											Commands::send_rpl(std::string error_code, User *user, Channel *c
 	switch (code)
 	{
 		case 1:
-		{			
+		{
 			rpl += "Welcome to the Internet Relay Network " + user->get_nickname() + "\r\n";
 			break;
 		}
@@ -103,11 +102,11 @@ void											Commands::send_rpl(std::string error_code, User *user, Channel *c
 		{
 			rpl +="Sorry IRC's capacity is full. Please retry connection later\r\n";
 			break;
-		}	
+		}
 		case 221: //RPL_UMODEIS
 		{
 			if (user->user_is_operator() == false || user->user_is_away())
-				rpl += user->get_nickname() + " :no mode set"; 
+				rpl += user->get_nickname() + " :no mode set";
 			else
 				rpl += user->get_nickname() + " :active mode +";
 			if (user->user_is_away() == true)
@@ -121,7 +120,7 @@ void											Commands::send_rpl(std::string error_code, User *user, Channel *c
 		{
 			rpl += (arg + "\r\n");
 			break;
-		}	
+		}
 		case 305: //RPL_UNAWAY
 		{
 			rpl += "You are no longer marked as being away\r\n";
@@ -156,8 +155,8 @@ void											Commands::send_rpl(std::string error_code, User *user, Channel *c
 			rpl += (channel->get_name() + " :No topic is set\r\n");
 			break;
 		}
-		case 332: //RPL_TOPIC 
-		{			
+		case 332: //RPL_TOPIC
+		{
 			rpl +=(channel->get_name() + " :" + channel->get_topic() + "\r\n");
 			break;
 		}
@@ -192,17 +191,17 @@ void											Commands::send_rpl(std::string error_code, User *user, Channel *c
 			}
 			rpl +=  "\r\n";
 			//std::cout << "rpl: |" << rpl << "|" << std::endl;
-			break;	
+			break;
 		}
 		case 366: // ENDOFNAMES
 		{
 			rpl = ":127.0.0.1 " + error_code + " " +  user->get_nickname() + " ";
 			if (channel)
 				rpl += channel->get_name();
-			else 
+			else
 				rpl += arg;
 			rpl += " :End of NAMES list\r\n";
-			break;	
+			break;
 		}
 		case 375:
 		{
@@ -217,7 +216,7 @@ void											Commands::send_rpl(std::string error_code, User *user, Channel *c
 		case 381: // YOUREOPER
 		{
 			rpl += "You are now an IRC operator\r\n";
-			break;	
+			break;
 		}
 		case 4242:
 		{
