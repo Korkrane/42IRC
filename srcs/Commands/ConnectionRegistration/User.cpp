@@ -1,5 +1,5 @@
 #include <IRC.hpp>
 
 /*
-** Mahaut
+** Baudoin + Mahaut ?
 */

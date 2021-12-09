@@ -26,7 +26,10 @@ private:
 	static void 									time_cmd(User *user, IRC *server);
 	static void 									away_cmd(User *user, IRC *server);
 	static void 									welcome_cmd(User *user, IRC *server);
+
 	static void										notice(User *user, IRC *server);
+	static void                						send_full_notice(User *target, User *user, IRC *server, std::vector<std::string> message);
+
 	static void 									kill(User *user, IRC *server);
 	static void 									who(User *user, IRC *server);
 
@@ -76,6 +79,6 @@ private:
 	static std::vector<std::string>					store_second_param_message(std::vector<std::string> params);
 	static bool										prefixed_by_colon(std::string str);
 	static void                						send_full_privmsg(User *target, User *user, IRC *server, std::vector<std::string>message);
-	static void                						send_one_word_privmsg(User *target, User *user, IRC *server, std::vector<std::string>message);
+	static void                						send_one_word_privmsg(User *target, User *user, IRC *server, std::string message);
 
 };

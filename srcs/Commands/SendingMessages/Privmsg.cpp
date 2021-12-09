@@ -49,7 +49,7 @@ void    Commands::privmsg(User *user, IRC *server)
     }
     else
     {
-        send_one_word_privmsg(target, user, server, message);
+        send_one_word_privmsg(target, user, server, message.front());
     }
     //Si il ne l'est pas
         //seul le premier mot est transmis et le reste est ignore
@@ -57,20 +57,43 @@ void    Commands::privmsg(User *user, IRC *server)
     return ;
 }
 
+//TODO: a tester - Attention si on veut implementer away il y a des choses a ajouter
 void                Commands::send_full_privmsg(User *target, User *user, IRC *server, std::vector<std::string>message)
 {
     (void)target;
     (void)user;
     (void)server;
     (void)message;
+    std::string rpl = init_rpl(user);
+    rpl += " PRIVMSG " + target->get_nickname();
+    std::vector<std::string>::iterator it = message.begin();
+    std::vector<std::string>::iterator ite = message.end();
+
+    while (it != ite)
+    {
+        rpl += (*it);
+        if (it + 1 == ite)
+            break;
+        rpl += " ";
+        it++;
+    }
+    rpl += "\r\n";
+    //TODO: a revoir, il y a des fois on fait cette fonction et d autres ou on fait un send_rpl, verifier que tout est ok
+    server->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
     return ;
 }
 
-void                Commands::send_one_word_privmsg(User *target, User *user, IRC *server, std::vector<std::string>message)
+//TODO: a tester
+void                Commands::send_one_word_privmsg(User *target, User *user, IRC *server, std::string message)
 {
     (void)target;
     (void)user;
     (void)server;
     (void)message;
+
+    std::string rpl = init_rpl(user);
+    rpl +=" PRIVMSG " + target->get_nickname();
+    rpl += message;
+    rpl += "\r\n";
     return ;
 }
