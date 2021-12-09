@@ -73,7 +73,9 @@ std::string build_reply(int code, User *user, std::vector<std::string> params)
     case 422:
         return prefix + ERR_NOMOTD();
     case 999:
-        return (":" + user->get_hostname() + " " + "PONG" + " " + user->get_hostname() + " :" + user->get_hostname());
+        //return (":127.0.0.1 PONG 127.0.0.1 :127.0.0.1\r\n"); À CHOISIR SI ON VEUT AVOIR LE MSSG PONG VISIBLE OU NON
+        return (":127.0.0.1 PONG\r\n");
+
     default:
         return std::string("");
     }
