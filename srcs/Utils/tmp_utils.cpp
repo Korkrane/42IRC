@@ -1,4 +1,4 @@
-#include "../includes/irc.hpp"
+#include <IRC.hpp>
 
 void send_reply(std::string reply)
 {

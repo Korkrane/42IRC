@@ -1,7 +1,7 @@
 #pragma once
 
 #define PORT_SERVER 6667
-#include "irc.hpp"
+#include "IRC.hpp"
 
 typedef std::pair<int, std::string>	t_clientCmd;
 class Commands;

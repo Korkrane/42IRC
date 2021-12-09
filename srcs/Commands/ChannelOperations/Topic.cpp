@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
 void      Commands::send_topic_message(Channel *channel, User *user, std::vector<std::string> message)
 {

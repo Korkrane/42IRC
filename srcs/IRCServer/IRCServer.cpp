@@ -1,4 +1,4 @@
-#include "irc.hpp"
+#include <IRC.hpp>
 
 IRC::IRC(void):
 	_socket(0),
@@ -183,7 +183,8 @@ void IRC::exec_command(User *user)
 #if DEBUG
 		std::cout << RED << "DEBUG: " << user->get_command_name() << " command isn't available in our IRC" << NC << std::endl;
 #endif
-		this->_commands->unknown_cmd(user, this);
+//TODO: a reprendre?
+//		this->_commands->unknown_cmd(user, this);
 	}
 }
 

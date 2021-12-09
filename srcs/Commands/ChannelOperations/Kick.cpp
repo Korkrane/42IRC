@@ -1,5 +1,5 @@
 
-#include <irc.hpp>
+#include <IRC.hpp>
 
 //TODO: a tester
 void        Commands::send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment)

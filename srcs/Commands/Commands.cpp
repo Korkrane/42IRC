@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
 Commands::Commands() : _cmds(_initCmds())
 {

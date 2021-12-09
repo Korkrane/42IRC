@@ -1,6 +1,6 @@
 #pragma once
 
-#include <irc.hpp>
+#include <IRC.hpp>
 
 class User;
 class IRC;

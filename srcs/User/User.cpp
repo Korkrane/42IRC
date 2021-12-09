@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 #include <User.hpp>
 
 User::User(void)

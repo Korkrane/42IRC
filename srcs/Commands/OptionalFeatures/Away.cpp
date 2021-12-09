@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
 //TODO: A remettre a jour avec la nouvelle version de client
 void Commands::away_cmd(User *client, IRC *server) // 305 & 306 reply

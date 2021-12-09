@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
 void            Commands::mode(User *user, IRC *server)
 {

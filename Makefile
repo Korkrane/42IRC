@@ -2,53 +2,53 @@ INC_DIR		=	includes
 SRC_DIR		=	srcs
 HEADER		=	./includes/
 NAMES		=	main.cpp \
-				Server/Server.cpp \
-				Server/IRCServer.cpp \
-				Client/Client.cpp \
 				Channel/Channel.cpp \
-				Utils/tmp_utils.cpp \
-				Utils/ft_split.cpp \
-				User/User.cpp \
-				Commands/ServerQueries/Admin.cpp \
-				Commands/OptionalFeatures/Away.cpp \
-				Commands/ServerQueries/Info.cpp \
+				Client/Client.cpp \
 				Commands/ChannelOperations/Invite.cpp \
 				Commands/ChannelOperations/Join.cpp \
 				Commands/ChannelOperations/Kick.cpp \
-				Commands/Miscellaneous/Kill.cpp \
 				Commands/ChannelOperations/List.cpp \
-				Commands/ConnectionRegistration/Mode.cpp \
-				Commands/ChannelOperations/Names.cpp \
 				Commands/ChannelOperations/Mode.cpp \
-				Commands/ConnectionRegistration/Nick.cpp \
-				Commands/SendingMessages/Notice.cpp \
-				Commands/ConnectionRegistration/Oper.cpp \
-				Commands/ChannelOperations/Part.cpp \
-				Commands/SendingMessages/Privmsg.cpp \
-				Commands/ConnectionRegistration/Quit.cpp \
-				Commands/ConnectionRegistration/ConnectionRegistration.cpp \
-				Commands/ServerQueries/Time.cpp \
+				Commands/ChannelOperations/Names.cpp \
 				Commands/ChannelOperations/Topic.cpp \
-				Commands/Other/Unknown.cpp \
+				Commands/ConnectionRegistration/Cap.cpp \
+				Commands/ConnectionRegistration/ConnectionRegistration.cpp \
+				Commands/ConnectionRegistration/Nick.cpp \
+				Commands/ConnectionRegistration/Oper.cpp \
+				Commands/ConnectionRegistration/Quit.cpp \
 				Commands/ConnectionRegistration/User.cpp \
-				Commands/OptionalFeatures/Users.cpp \
-				Commands/ServerQueries/Version.cpp \
-				Commands/UserBasedQueries/Who.cpp \
-				Commands/Motd.cpp \
+				Commands/SendingMessages/Notice.cpp \
+				Commands/SendingMessages/Privmsg.cpp \
+				Commands/ServerQueries/Motd.cpp \
+				Commands/ServerQueries/Time.cpp \
 				Commands/Commands.cpp \
-				Error_Handling/error_handler.cpp \
-				Replies/build_replies.cpp
+				IRCServer/IRCServer.cpp \
+				Replies/build_replies.cpp \
+				Server/Server.cpp \
+				User/User.cpp \
+				Utils/ft_split.cpp \
+				Utils/tmp_utils.cpp \
+				Utils/error_handler.cpp \
 
-INCLUDES	=	./includes/channel.hpp \
+
+INCLUDES	=	./includes/Channel.hpp \
 				./includes/Client.hpp \
 				./includes/Commands.hpp \
-				./includes/irc.hpp \
-				./includes/replies.hpp \
+				./includes/IRC.hpp \
+				./includes/Replies.hpp \
 				./includes/Server.hpp \
 				./includes/Colors.hpp \
 				./includes/ClientUtils.hpp \
 				./includes/IRCServer.hpp \
 				./includes/User.hpp \
+
+TEST_SRCS	=	./test/cmd_tests/admin.cpp \
+				./test/cmd_tests/away.cpp \
+				./test/cmd_tests/time.cpp \
+				./test/cmd_tests/unknown.cpp \
+				./test/cmd_tests/users.cpp \
+				./test/cmd_tests/version.cpp \
+				./test/main_test.cpp \
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(NAMES))
 

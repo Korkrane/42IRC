@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
 /**
  * @brief va permettre de lister tous les channels du serveur (et eventuellement leurs topics)

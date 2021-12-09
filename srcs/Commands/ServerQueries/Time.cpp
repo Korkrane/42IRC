@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 #include <ctime>
 
 /**
@@ -19,8 +19,8 @@ void Commands::time_cmd(User *client, IRC *server)
     time_t      now  = std::time(0);
     std::string date = ctime(&now);
 
-    //reply_params.push_back(client->get_params()[0]);
-    //reply_params.push_back(date);
-    //reply = build_reply(391, client, reply_params);
+    reply_params.push_back(client->get_params()[0]);
+    reply_params.push_back(date);
+    reply = build_reply(391, client, reply_params);
     send_reply(reply);
 }

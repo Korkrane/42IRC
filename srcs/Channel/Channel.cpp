@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
 Channel::Channel(std::string name, User *user, IRC *server): _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _operators(0), _users(0),  _channel_owner(user), _key(""), _has_key(false), _members_nb(0), _serv(server)
 {

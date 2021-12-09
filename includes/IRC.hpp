@@ -27,10 +27,10 @@
 #include <sys/select.h>
 #include <algorithm>
 #include <vector>
-#include "channel.hpp"
+#include "Channel.hpp"
 #include "Client.hpp"
 #include "Colors.hpp"
-#include "replies.hpp"
+#include "Replies.hpp"
 #include "Server.hpp"
 #include "Commands.hpp"
 #include "IRCServer.hpp"
