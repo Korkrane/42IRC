@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
 /**
  * @brief 
@@ -10,7 +10,6 @@
  */
 void error_handler(std::string error_code, User *user, Channel *channel, std::vector<std::string> parameter)
 {
-    //Besoin de faire une "correspondance" entre le message d erreur et le code
     unsigned int code;
 
     (void)channel;
@@ -303,7 +302,6 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
             break ;
         }
     }
-    //fonction qui va permettre d envoyer le message au serveur
-    //send(user->get_socket(), error_to_send.c_str());
+    user->get_server()->_response_queue.push_back(std::make_pair(user->get_socket(), error_to_send));
     return ;
 }

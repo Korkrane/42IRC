@@ -3,7 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include "../../includes/irc.hpp"
+#include <IRC.hpp>
 
 /**
  * @brief

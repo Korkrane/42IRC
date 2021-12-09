@@ -1,8 +1,4 @@
-#include <irc.hpp>
-
-/*
-** Mahaut
-*/
+#include <IRC.hpp>
 
 /**
  * @brief
@@ -107,21 +103,43 @@ void    Commands::invite(User *user, IRC *server)
     //3. Verifier si le channel correspond bien a un channel
     std::string target_channel = user->get_params().back();
     Channel *chan = find_target_channel(target_channel, user, server);
-    if (!chan)
+    if (chan)
     {
-        //Il n y a pas l'erreur "no such channel", donc il faudrait la creer ?
-        //faire des testsgit
+        //TODO: a tester
+        //4. Verifier que le user est lui meme member
+        if (chan->user_is_member(user) == false)//NOTONCHANNEL
+        {
+            error.push_back(chan->get_name());
+            error_handler("442", user, chan, error);
+            return ;
+        }
+        //5. Verifier que la channel n'est pas full
+        if (chan->get_members_nb() >= USER_MAXCHAN)
+        {
+            return ;
+        }
+        //6. Verifier que celui qui invite n'est pas deja sur le channel
+        if (chan->user_is_member(target_user) == false)
+        {
+            error.push_back(user->get_nickname());
+            error.push_back(chan->get_name());
+            error_handler("443", user, chan, error);
+            return ;
+        }
+        //7. Verifier que le target nick_name est connecte
+        if (server->find_user(target_nick) == true)
+        {
+            error.push_back(user->get_nickname());
+            error_handler("401", user, chan, error);
+            return ;
+        }
+        //8. Ajouter au channel l'user
+        //chan->addMember(target_nick)
+        User *target_user = server->get_user_ptr(target_nick);
+        chan->newMember(target_user, false);
+
+        //9. Envoyer le message au serveur
+        send_rpl("431", user, chan, chan->get_name() + " " + target_user->get_nickname());
     }
-    //4. Verifier qu'on a les droits d'inviter ?
-
-    //5. Verifier que la channel n'est pas full ?
-
-    //6. Verifier que celui qui invite est bien lui-meme sur la channel
-
-    //7. Verifier que celui qui est invite n'est pas deja sur le channel
-
-    //8. Ajouter au channel l'user
-
-    //9. Envoyer le message au serveur
     return ;
 }

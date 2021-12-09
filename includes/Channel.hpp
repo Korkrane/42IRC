@@ -1,8 +1,9 @@
 #pragma once
 
-#include <irc.hpp>
+#include <IRC.hpp>
 
 class User;
+class IRC;
 
 class Channel
 {
@@ -20,7 +21,7 @@ class Channel
         bool                    _has_key;
         unsigned int            _members_nb;
         unsigned int            _operators_nb;
-
+        IRC                     *_serv;
         /*
         ** Fonctions membres privees (classe canonique)
         */
@@ -29,22 +30,33 @@ class Channel
         Channel();
 
     public:
-        Channel(std::string name, User *user);
+        Channel(std::string name, User *user, IRC *server);
         virtual ~Channel();
 
         /*** SETTERS ***/
         void                    set_name(std::string name);
         void                    set_topic(std::string topic);
+        void                    set_topic(User *user, IRC *server, std::vector<std::string> topic);
+        void                    set_has_topic(void);
+        void                    clear_topic(User *user, IRC *server, std::vector<std::string> topic);
         void                    set_modes(std::string modes);
         void                    unset_topic(void);
+        //TODO! Verifier si il faut etre operateur pour set une key
+        void                    set_has_key(void);
+        void                    set_key(std::string key);
+        void                    unset_has_key();
+        void                    drop_key();
 
         /*** GETTERS ***/
         std::string             get_name(void) const;
         std::string             get_topic(void) const;
+        bool                    get_has_topic(void) const;
         std::string             get_modes(void) const;
         unsigned int            get_members_nb(void) const;
         std::vector<User *>     get_members(void) const;
         std::vector<User *>     get_operators(void) const;
+        std::vector<int>        get_members_fd(void) const;
+        bool                    get_has_key(void) const;
 
         /*** UTILS ***/
         bool                    user_is_operator(User *user);
@@ -61,7 +73,6 @@ class Channel
         bool                    isNicknameUnique(User *user);
 
         /* Info sur le channel */
-        //devrait generer une erreur si aucun user n'est dans la liste ?
         bool                    channelHasUsers(void);
         bool                    channelHasOperator(void);
         //bool                    channelHasBanned(void);
@@ -72,8 +83,6 @@ class Channel
         void                    displayTopic(void);
         void                    displayOperators(void);
         void                    displayBanned(void);
-
-
 
         //Ajouter une fonction qui permet d'ajouter un mode
         //Ajouter une fonction qui permet d'enlever un mode
@@ -92,6 +101,9 @@ class Channel
         bool                    has_mode(char mode);
         bool                    is_correct_channel_key(std::string target_key);
         bool                    is_full_channel(void) const;
+
+        void                    delete_channel_from_server(void);
+        std::string             get_unknown_mode(std::string target_modes);
 };
 
 //Utils to display - overloading

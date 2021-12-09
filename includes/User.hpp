@@ -1,6 +1,6 @@
 #pragma once
 
-#include <irc.hpp>
+#include <IRC.hpp>
 
 class IRC;
 class Channel;
@@ -71,8 +71,10 @@ class User
         std::string                 get_password(void) const;
         std::string                 get_message(void) const;
         int                         get_message_status(void) const;
-        int                         get_socket(void) const;
         int                         get_channels_nb(void) const;
+        IRC                         *get_server(void) const;
+        std::string                 get_server_name(void) const;
+        int                         get_socket(void) const;
 
         /* Getters preparsing */
         std::string                 get_unparsed_client_command(void) const;
@@ -102,8 +104,9 @@ class User
         void                        set_registered_nickname(bool is_set);
         void                        set_registered_user(bool is_set);
         void                        set_operator(bool is_set);
-        void                        set_message_status(int status);;
+        void                        set_message_status(int status);
         void                        set_init_socket(int socket);
+        void                        set_socket(int socket);
 
         /* Pre parsing */
        int                          store_string_until_char(std::string *dest, std::string *src, char c, int len);
@@ -128,6 +131,11 @@ class User
        Channel                      *creates_channel(std::string channel_name);
        bool                         is_channel_user(Channel *channel);
        bool                         can_join(void);
+       void                         be_added_to_channel(Channel *chan);
+       void                         decrease_channel_nb();
+       void                         increase_channel_nb();
+       void                         add_channel_to_list(Channel *channel);
+       void                         remove_channel_from_list(Channel *channel);
 };
 
 //Utils to display overloading <<

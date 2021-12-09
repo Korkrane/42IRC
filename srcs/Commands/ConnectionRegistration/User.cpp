@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
 void Commands::user_cmd(User *user, IRC *server)
 {

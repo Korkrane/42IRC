@@ -1,9 +1,6 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
-/**
-* TODO: checker
-*/
-Channel::Channel(std::string name, User *user) : _topic(""), _has_topic(false), _modes(""), _operators(0), _users(0),  _channel_owner(0), _key(""), _has_key(false), _members_nb(0)
+Channel::Channel(std::string name, User *user, IRC *server): _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _operators(0), _users(0),  _channel_owner(user), _key(""), _has_key(false), _members_nb(0), _serv(server)
 {
 	(void)user;
 	(void)name;
@@ -21,7 +18,6 @@ Channel::Channel(std::string name, User *user) : _topic(""), _has_topic(false), 
 
 /**
  * @brief Destroy the Channel:: Channel object
- * TODO: a continuer
  */
 Channel::~Channel(void)
 {
@@ -29,8 +25,13 @@ Channel::~Channel(void)
 	std::cout << "Channel desconstructor called" << std::endl;
 #endif
 	//Supprimer de la liste des channels du IRCServer
-	//Supprimer vider le vecteur de user
-	//vider le vecteur d'operateurs
+	this->delete_channel_from_server();
+	return ;
+}
+
+void		Channel::delete_channel_from_server(void)
+{
+	this->_serv->drop_channel(this);
 	return ;
 }
 
@@ -125,12 +126,6 @@ std::vector<User *>	Channel::get_operators(void) const
 	return (operators);
 }
 
-/** 
-* On identifie son Users  grace a son nickname (unique)
-* voir cas ou il n'y a qu un seul user (a tester)
-* TODO: a remettre a jour avec la version User
-*/
-
 bool				Channel::user_is_operator(User  *user)
 {
 	if (!user)
@@ -143,7 +138,6 @@ bool				Channel::user_is_operator(User  *user)
 	(void)it;
 	(void)ite;
 	(void)nickName;
-	/*
 	while (it != ite)
 	{
 		nickName = (*it)->get_nickname();
@@ -155,20 +149,12 @@ bool				Channel::user_is_operator(User  *user)
 			return (true);
 		}
 	}
-	*/
 #if DEBUG
 	std::cout << "user_is_operator is returning false" << std::endl;
 #endif
 	return (false);
 }
 
-/**
- * @brief 
- * 
- * @param user 
- * @return * A 
- * TODO: reprendre
- */
 bool				Channel::user_is_member(User *user)
 {
 	if (!user)
@@ -179,7 +165,7 @@ bool				Channel::user_is_member(User *user)
 	(void)it;
 	(void)ite;
 	(void)nickName;
-	/*
+	/* */
 	while (it != ite)
 	{
 		nickName = (*it)->get_nickname();
@@ -191,46 +177,27 @@ bool				Channel::user_is_member(User *user)
 			return (true);
 		}
 	}
-	*/
 #if DEBUG
 	std::cout << "user_is_member is returning false" << std::endl;
 #endif
 	return (false);
 }
 
-
-/**
- * @brief 
- * 
- * @param user 
- * @return true 
- * @return false 
- * TODO: revoir
- */
 bool				Channel::user_is_owner(User *user)
 {
 	if (!user)
 		return (false);
-	/*
+	/* */
 	if (user->get_nickname() == this->_channel_owner->get_nickname())
 	{
 #if DEBUG
-		std::cout << "The user " << Users ->get_nickname() << "is the owner of the channel" << std::endl;
+		std::cout << "The user " << user->get_nickname() << "is the owner of the channel" << std::endl;
 #endif
 		return (true);
 	}
-	*/
 	return (false);
 }
 
-/**
- * @brief 
- * 
- * @param user 
- * @return true 
- * @return false 
- * TODO: a reprendre
- */
 bool				Channel::isNicknameUnique(User *user)
 {
 	if (!user)
@@ -242,7 +209,7 @@ bool				Channel::isNicknameUnique(User *user)
 	(void)it;
 	(void)ite;
 	(void)nickName;
-	/*
+	/* */
 	while (it != ite)
 	{
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
@@ -253,20 +220,12 @@ bool				Channel::isNicknameUnique(User *user)
 			return (false);
 		}
 	}
-	*/
 #if DEBUG
 	std::cout << "isNicknameUnique is returning true" << std::endl;
 #endif
 	return (true);
 }
 
-/**
- * @brief 
- * Un user qui cree le channel devient automatiquement un operateur
- * 
- * @param user 
- * @param operator 
- */
 void				Channel::newMember(User *user, bool user_operator)
 {
 	(void)user;
@@ -289,12 +248,6 @@ void				Channel::newOperator(User *user)
 
 }
 
-/**
- * @brief 
- * 
- * @param user 
- * TODO: a reprendre
- */
 void 				Channel::deleteMember(User *user)
 {
 	if (!user)
@@ -305,7 +258,7 @@ void 				Channel::deleteMember(User *user)
 
 	(void)it;
 	(void)ite;
-	/*
+	/* */
 	while (it != ite)
 	{
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
@@ -321,19 +274,12 @@ void 				Channel::deleteMember(User *user)
 #if DEBUG
 	std::cout << "Users  was not found, enable to delete the Users  passed in argument" << std::endl;
 #endif
-*/
 #if DEBUG
 	std::cout << "member was not succesfully deleted." << std::endl;
 #endif
 	return ;
 }
 
-/**
- * @brief 
- * 
- * @param user 
- * TODO: a reprendre
- */
 void				Channel::printMemberInfo(User *user)
 {
 	if (!user)
@@ -344,12 +290,6 @@ void				Channel::printMemberInfo(User *user)
 	return ;
 }
 
-/**
- * @brief 
- * 
- * @param user
- * TODO: a reprendre 
- */
 void				Channel::removeFromOperators(User *user)
 {
 	//Chercher si le Users  est dans la liste
@@ -362,7 +302,7 @@ void				Channel::removeFromOperators(User *user)
 
 	(void)it;
 	(void)ite;
-	/*
+	/* */
 	while (it != ite)
 	{
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
@@ -374,7 +314,6 @@ void				Channel::removeFromOperators(User *user)
 #endif
 		}
 	}
-	*/
 #if DEBUG
 	std::cout << "user wad not successfully removed from operators" << std::endl;
 #endif
@@ -418,20 +357,17 @@ void				Channel::displayChannelInfo(void)
 	return ;
 }
 
-/**
- * @brief 
- * TODO: a reprendre
- */
 void				Channel::displayMembers(void)
 {
 	std::cout << "------- Listing Members / Users s -------" << std::endl;
 	std::vector<User *>::iterator it = this->_users.begin();
 	std::vector<User *>::iterator ite = this->_users.end();
-	//unsigned int num = 0;
+	unsigned int num = 0;
 	while (it != ite)
 	{
-		//std::cout << "Users  " << num << " - " << (*it)->get_nickname() << std::endl;
+		std::cout << "Users  " << num << " - " << (*it)->get_nickname() << std::endl;
 		it++;
+		num++;
 	}
 	std::cout << "----------------------------------------" << std::endl;
 	return ;
@@ -449,10 +385,6 @@ void				Channel::displayTopic(void)
 	return ;
 }
 
-/**
- * @brief 
- * TODO: a reprendre
- */
 void				Channel::displayOperators(void)
 {
 	std::cout << "------- Listing Operators -------" << std::endl;
@@ -460,11 +392,12 @@ void				Channel::displayOperators(void)
 	{
 		std::vector<User *>::iterator it = this->_operators.begin();
 		std::vector<User *>::iterator ite = this->_operators.end();
-		//unsigned int num = 0;
+		unsigned int num = 0;
 		while (it != ite)
 		{
-		//	std::cout << "operator " << num << " - " << (*it)->get_nickname() << std::endl;
+			std::cout << "operator " << num << " - " << (*it)->get_nickname() << std::endl;
 			it++;
+			num++;
 		}
 	}
 	else
@@ -619,6 +552,29 @@ bool			Channel::check_channel_modes(std::string target_modes)
 	return (true);
 }
 
+//TODO: a tester
+std::string		Channel::get_unknown_mode(std::string target_modes)
+{
+	(void)target_modes;
+	int i = 0;
+	std::string	allowed(CHANNEL_VALID_MODES);
+	int len = target_modes.length();
+	std::string error;
+	while (i < len)
+	{
+		if (allowed.find(target_modes[i]) == std::string::npos)
+		{
+			#if DEBUG
+				std::cout << BLUE << "DEBUG: " << "CHANNEL: " << "Invalid char mode: " << target_modes[i] << std::endl;
+			#endif
+			error = target_modes[i];
+			return (error);
+		}
+		i++;
+	}
+	return (" ");
+}
+
 /**
  * @brief 
  * 
@@ -649,4 +605,109 @@ bool			Channel::is_full_channel(void) const
 		return (true);
 	}
 	return (false);
+}
+
+std::vector<int>	Channel::get_members_fd(void) const
+{
+	//Creer un vecteur
+	std::vector<int> sockets;
+	//Faire le tour de chaque User en pushant back sur le vecteur
+	std::vector<User *> users = this->get_members();
+	std::vector<User *>::iterator it = users.begin();
+	std::vector<User *>::iterator ite = users.end();
+	int tmp_sock;
+	while (it != ite)
+	{
+		tmp_sock = (*it)->get_socket();
+		sockets.push_back(tmp_sock);
+		it++;
+	}
+	//retourner le vecteur
+	return (sockets);
+}
+
+bool				Channel::get_has_topic(void) const
+{
+	bool res = this->_has_topic;
+	#if DEBUG
+		std::cout << BLUE << "DEBUG: " << "CHANNEL: Channel has topic ? " << res << std::endl;
+	#endif
+	return (res);
+}
+
+bool            	Channel::get_has_key(void) const
+{
+    bool res = this->_has_key;
+    return (res);
+}
+
+void				Channel::set_has_key(void)
+{
+	this->_has_key = true;
+	return ;
+}
+
+void				Channel::unset_has_key(void)
+{
+	this->_has_key = false;
+	return ;
+}
+
+//TODO!
+//Le check si la cle est correcte devrait etre fait au prealable 
+void				Channel::set_key(std::string key)
+{
+	(void)key;
+	this->_key = key;
+	#if DEBUG
+		std::cout << BLUE << "DEBUG: " << "key has been set to " << key << std::endl;
+	#endif
+	return ;
+}
+
+void				Channel::drop_key(void)
+{
+	this->_key = "";
+	return ;
+}
+
+void				Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
+{
+	this->set_has_topic();
+	(void)user;
+	(void)server;
+	(void)topic;
+	std::string str_topic;
+	std::vector<std::string>::iterator it = topic.begin();
+	std::vector<std::string>::iterator ite = topic.end();
+
+	while (it != ite)
+	{
+		str_topic += (*it);
+		str_topic += " ";
+		it++;
+	}
+	this->_topic = str_topic;
+#if DEBUG
+	std::cout << BLUE << "DEBUG: " << "TOPIC: topic has been set to " << str_topic << std::endl;
+#endif
+	//send message?
+	return ;
+}
+
+void				Channel::clear_topic(User *user, IRC *server, std::vector<std::string> topic)
+{
+	(void)user;
+	(void)server;
+	(void)topic;
+	this->_topic = "";
+	this->_has_topic = false;
+	//TODO: voir si envoyer message au serveur ? A priori non
+	return;
+}
+
+void				Channel::set_has_topic()
+{
+	this->_has_topic = true;
+	return ;
 }

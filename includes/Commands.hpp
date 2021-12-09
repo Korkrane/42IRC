@@ -1,6 +1,6 @@
 #pragma once
 
-#include <irc.hpp>
+#include <IRC.hpp>
 
 class Channel;
 class User;
@@ -16,8 +16,8 @@ public:
 	std::map<std::string, void (*)(User *, IRC *)> _cmds;
 
 	/*** METHODS ***/
-	std::map<std::string, void (*)(User *, IRC *)> get_cmds(void) const;
-	std::map<std::string, void (*)(User *, IRC *)> _initCmds();
+	std::map<std::string, void (*)(User *, IRC *)>	get_cmds(void) const;
+	std::map<std::string, void (*)(User *, IRC *)>	_initCmds();
 
 	static void unknown_cmd(User *user, IRC *server);
 	static void motd_cmd(User *user, IRC *server);
@@ -42,6 +42,10 @@ private:
 	static void 		paramsIsCorrectOther(Commands *command, IRC *server);
 	static std::string	whoHelpParameter(void);
 
+	static std::string								init_rpl(User *user);
+	static void										send_rpl_to_all_members(Channel *channel, std::string rpl);
+	static void										send_rpl(std::string rpl, User *user, Channel *channel, std::string arg);
+
 	/**
 	 * @brief
 	 *
@@ -55,9 +59,10 @@ private:
 	 ** JOIN, MODE, KICK, PART, QUIT and PRIVMSG/NOTICE.
 	 ** See details on RFC 2812.
 	 */
-	static void 			join(User *user, IRC *server);
+	static void 								join(User *user, IRC *server);
+	static void									send_join_message(Channel *channel, User *user, std::vector<std::string> message);
 
-	static void				channel(User *user, IRC *server);
+	//static void								channel(User *user, IRC *server);
 
 
 	static void 			nick_cmd(User *user, IRC *server);
@@ -77,7 +82,14 @@ private:
 	* granted by the server.
 	* Parameters: <channel> *( "," <channel> ) [ <Part Message> ]
 	 */
-	static void part(User *user,IRC *server);
+	static void									part(User *user,IRC *server);
+	static void									send_part_message(Channel *channel, User *user, std::vector<std::string> message);
+
+	static void									mode(User *user, IRC *server);
+	static void									edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server);
+	static bool									should_add_mode(std::string modes);
+	static bool									should_remove_mode(std::string modes);
+	static void									handle_key(Channel *channel, User *user, std::string modes, std::string key, bool add);
 
 	/**
 	 * @brief
@@ -94,7 +106,8 @@ private:
 	 * Parameters: <channel> *( "," <channel> ) <user> *( "," <user> )
                [<comment>]
 	 */
-	static void kick(User *client, IRC *server);
+	static void 								kick(User *client, IRC *server);
+	static void        							send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment);
 
 	/**
 	 * @brief
@@ -109,8 +122,9 @@ private:
      * requesting it.  If the <topic> parameter is an empty string, the
      * topic for that channel will be removed.
 	 */
-	static void topic(User *client, IRC *server);
-
+	static void									topic(User *client, IRC *server);
+	static void									check_topic(Channel *channel, User *user, IRC *server);
+	static void									send_topic_message(Channel *channel, User *user, std::vector<std::string> message);
 	/**
 	 * @brief
 	 *
@@ -124,7 +138,7 @@ private:
      * that server which will generate the reply.
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
-	static void list(User *client, IRC *server);
+	static void									list(User *client, IRC *server);
 
 	/**
 	 * @brief
@@ -132,9 +146,9 @@ private:
 	 * @param user
 	 * @param server
 	 */
-	static void				invite(User *user, IRC *server);
-	static User 			*find_target_nick(std::string target_nick, User *user, IRC *server);
-	static Channel			*find_target_channel(std::string target_channel, User *user, IRC *server);
+	static void									invite(User *user, IRC *server);
+	static User 								*find_target_nick(std::string target_nick, User *user, IRC *server);
+	static Channel								*find_target_channel(std::string target_channel, User *user, IRC *server);
 	/**
 	 * @brief
 	 *
@@ -152,14 +166,6 @@ private:
      * are listed as being on `channel' "*".
 	 * Parameters: [ <channel> *( "," <channel> ) [ <target> ] ]
 	 */
-	static void names(User *client, IRC *server);
+	static void 								names(User *client, IRC *server);
+	static void									send_names_message(Channel *channel, User *user, IRC *server);
 };
-
-/*
-** Attention cas particulier :
-** Note that this message accepts a special argument ("0"), which is
-   a special request to leave all channels the user is currently a member
-   of.  The server will process this message as if the user had sent
-   a PART command (See Section 3.2.2) for each channel he is a member
-   of.
-*/

@@ -1,7 +1,6 @@
-#ifndef SERVER_HPP
-#define SERVER_HPP
+#pragma once
 
-#include "irc.hpp"
+#include "IRC.hpp"
 #include "Client.hpp"
 #include "IRCServer.hpp"
 
@@ -41,5 +40,3 @@ public:
 	// Kick off server's infinite loop (until SIGINT, SIGQUIT or SIGKILL received)
 	void	Run();
 };
-
-#endif

@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 
 void Commands::version_cmd(User *user, IRC *server) // 351 & 402 reply
 {

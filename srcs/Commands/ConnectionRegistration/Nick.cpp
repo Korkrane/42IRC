@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 #include <algorithm>
 
 bool Commands::nickIsAvailable(std::string nickname, IRC *server, User *user)

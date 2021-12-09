@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 #include <User.hpp>
 
 User::User(void)
@@ -669,11 +669,17 @@ void User::display_command(void)
 	this->display_params();
 }
 
+IRC			*User::get_server(void) const
+{
+	IRC *serv = this->_IRCserver;
+	return serv;
+}
+
 Channel		*User::creates_channel(std::string channel_name)
 {
 	//Le channel name a deja ete verifie au prealable
 
-	Channel *chan = new Channel(channel_name, this);
+	Channel *chan = new Channel(channel_name, this, this->get_server());
 	//Le constructeur de channel doit faire le reste;
 	return (chan);
 }
@@ -706,6 +712,7 @@ bool		User::is_channel_user(Channel *channel)
  *
  * @return true
  * @return false
+ * TODO: a reprendre
  */
 bool		User::can_join(void)
 {
@@ -731,6 +738,106 @@ bool		User::can_join(void)
 		it++;
 	}
 	return (true);
+}
+
+void			User::be_added_to_channel(Channel *channel)
+{
+	if (!channel)
+		return ;
+	//Verifier si il y a deja des membres ? Normalement c'est deja fait
+	unsigned int member = channel->get_members_nb();
+	//Si oui on va etre ajoute simplement
+	if (member >= 1)
+	{
+		channel->newMember(this, false);
+	}
+	else
+	{
+		//Si non on va devenir operateur
+		channel->newMember(this, true);
+	}
+	return ;
+}
+
+void		User::set_socket(int socket)
+{
+	this->_socket = socket;
+	return ;
+}
+
+void		User::increase_channel_nb(void)
+{
+	if (this->_channels_nb > 0)
+		this->_channels_nb++;
+	else
+	{
+		#if DEBUG
+			std::cout << BLUE << "DEBUG: " << "USER: Error with nb of channels (++)." << std::endl;
+		#endif
+	}
+	return ;
+}
+
+void		User::decrease_channel_nb(void)
+{
+	if (this->_channels_nb == USER_MAXCHAN)
+	{
+		#if DEBUG
+			std::cout << BLUE << "DEBUG: " << "USER: Error with nb of channels (--)." << std::endl;
+		#endif
+	}
+	this->_channels_nb--;
+}
+
+/**
+ * @brief Les verifications en termes de USER_MACHAN doivent etre faites au prealable
+ * 
+ * @param channel 
+ */
+void		User::add_channel_to_list(Channel *channel)
+{
+	(void)channel;
+	if (channel)
+		this->_channels.push_back(channel);
+	this->increase_channel_nb();
+	return;
+}
+
+/**
+ * @brief On doit avoir verifie au prealable que le user etait bien membre
+ * 
+ * @param channel 
+ */
+void		User::remove_channel_from_list(Channel *channel)
+{
+	//Il faut trouver la channel dans la liste
+	std::vector<Channel *> chans = this->_channels;
+	std::vector<Channel *>::iterator it = chans.begin();
+	std::vector<Channel *>::iterator ite = chans.end();
+	std::string channel_name = channel->get_name();
+	std::string check_name;
+	while (it != ite)
+	{
+		check_name = (*it)->get_name();
+		if (channel_name.compare(check_name) == 0)
+		{
+			//TODO: voir s'il faut faire un delete ?
+			chans.erase(it);
+			this->decrease_channel_nb();
+		}
+		it++;
+	}
+	return;
+}
+
+std::string		User::get_server_name(void) const
+{
+	std::string server_name = this->get_server()->get_name();
+	#if DEBUG
+		std::cout << BLUE << "DEBUG: " << "USER: server_name is " << server_name << std::endl;
+	#endif
+	return (server_name);
+
 }
 
 std::ostream& operator<<(std::ostream &COUT, User *user)

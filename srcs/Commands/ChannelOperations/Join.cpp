@@ -1,4 +1,22 @@
-#include <irc.hpp>
+#include <IRC.hpp>
+
+void    Commands::send_join_message(Channel *channel, User *user, std::vector<std::string> message)
+{
+    (void)message;
+    std::string rpl = init_rpl(user);
+    rpl += " JOIN " + channel->get_name();
+    rpl += "\r\n";
+    //Envoyer le message a tout le channel
+    send_rpl_to_all_members(channel, rpl);
+    //Envoyer le message concernant le topic
+    if (channel->get_has_topic() == true)
+    {
+        send_rpl("332", user, channel, "");
+    }
+    send_rpl("353", user, channel, "");
+    send_rpl("366", user, channel, "");
+    return ;
+}
 
 /**
  * @brief
@@ -11,7 +29,7 @@
  * TODO: a tester
  */
 
-void Commands::join(User *user, IRC *server)
+void        Commands::join(User *user, IRC *server)
 {
     (void)user;
     (void)server;
@@ -38,7 +56,7 @@ void Commands::join(User *user, IRC *server)
             error_handler("403", user, NULL, error);
             return ;
         }
-        //On verifie si la channel existe
+        //On verifie si la channel existe, sinon on va la creer
         Channel *chan = NULL;
         if (server->has_channel(channel) == false)
         {
@@ -66,24 +84,28 @@ void Commands::join(User *user, IRC *server)
         //on verifie si le user n'a pas atteint son quota max de channel
         if (user->can_join() == true)
         {
-            
+            //On verifie si le user ne listen pas deja sur trop de channels
+            if (chan->get_members_nb() >= CHAN_MAXCAPACITY)
+            {
+                error.push_back(channel);
+                error_handler("471", user, NULL, error);
+                return ;
+            }
+            //si oui, rajouter au channel 
+            //TODO: a tester
+            user->be_added_to_channel(chan);
+            //On l'ajoute a sa liste
+            //TODO: envoyer un message a serveur qui indique l'action?
+            user->add_channel_to_list(chan);
         }
-        //On verifie si le user ne listen pas deja sur trop de channels
-        //On verifie si le channel n'a pas deja trop de user (voir la definition des macros)
-
-        //On verifie la valeur de la cle ?
-        //Si la valeur est OK, le client va pouvoir etre ajoute au channel
-        //Si la valeur de la cle n est pas correcte, retourner "ERR_BADCHANNELKEY"
-
-        //creer une channel si elle n existe pas deja
-        //voir si il faut potentiellement quitter toutes les autres channels
-
-        //verifier si la channel a un nom correct
-    }
-    else
-    {
-        //to do: voir comment gerer ce cas la
-        ;
+        //Erreur to many channels car l user fait partie de trop de channels
+        else
+        {
+            error.push_back(channel);
+            error_handler("405", user, NULL, error);
+            return ;
+        }
+        //voir cas ou il y aurait plus de params mais qu ils pourraient etre ignores ?
     }
     return ;
 }

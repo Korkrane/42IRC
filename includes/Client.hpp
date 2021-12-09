@@ -1,7 +1,7 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include "irc.hpp"
+#include "IRC.hpp"
 
 #define BUFFER_SIZE	512		// standard buffer size
 #define CMD_DELIM	"\r\n"

@@ -1,4 +1,4 @@
-#include <irc.hpp>
+#include <IRC.hpp>
 #include <string>
 
 
@@ -18,7 +18,8 @@ std::string ToString(T val)
  *
  * @param code
  * @return std::string
- * TODO: renommer avec User
+ * TODO: Attention - Mahaut : voir si on peut rassembler avec ce que j ai fait (error + send_rpl)
+ * TODO: j ai mis error dans utils mais send_rpl dans commande 
  */
 std::string format_code_str(int code)
 {
