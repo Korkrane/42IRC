@@ -15,7 +15,6 @@ NAMES		=	main.cpp \
 				Commands/ConnectionRegistration/ConnectionRegistration.cpp \
 				Commands/ConnectionRegistration/Nick.cpp \
 				Commands/ConnectionRegistration/Oper.cpp \
-				Commands/ConnectionRegistration/Quit.cpp \
 				Commands/ConnectionRegistration/User.cpp \
 				Commands/SendingMessages/Notice.cpp \
 				Commands/SendingMessages/Privmsg.cpp \

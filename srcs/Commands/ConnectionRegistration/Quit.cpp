@@ -1,5 +1,0 @@
-#include <IRC.hpp>
-
-/*
-** Baudoin
-*/
