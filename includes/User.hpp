@@ -45,9 +45,9 @@ class User
         std::string                 _unparsed_client_command;
 	    std::string                 _prefix;
 	    std::string                 _command_name;
-	    std::vector<std::string>    _params;
     public:
 
+	    std::vector<std::string>    _params;
         std::vector<t_cmd>               _commands;
         void split_if_multiple_command();
 

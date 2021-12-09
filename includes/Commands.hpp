@@ -29,6 +29,7 @@ private:
 	static void 		user_cmd(User *user, IRC *server);
 	static void 		away_cmd(User *user, IRC *server);
 	static void 		version_cmd(User *user, IRC *server);
+	static void			mode_cmd(User *user, IRC *server);
 	static void 		ping_cmd(User *user, IRC *server);
 	static void			notice(User *user, IRC *server);
 	static void			privmsg(User *user, IRC *server);

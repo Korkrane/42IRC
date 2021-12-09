@@ -327,8 +327,7 @@ int User::get_channels_nb(void) const
 
 std::vector<std::string> User::get_params(void) const
 {
-	std::vector<std::string> params = this->_params;
-	return (params);
+	return (this->_params);
 }
 
 std::string User::get_prefix(void) const
@@ -791,8 +790,8 @@ void		User::decrease_channel_nb(void)
 
 /**
  * @brief Les verifications en termes de USER_MACHAN doivent etre faites au prealable
- * 
- * @param channel 
+ *
+ * @param channel
  */
 void		User::add_channel_to_list(Channel *channel)
 {
@@ -805,8 +804,8 @@ void		User::add_channel_to_list(Channel *channel)
 
 /**
  * @brief On doit avoir verifie au prealable que le user etait bien membre
- * 
- * @param channel 
+ *
+ * @param channel
  */
 void		User::remove_channel_from_list(Channel *channel)
 {

@@ -23,9 +23,7 @@ NAMES		=	main.cpp \
 				Commands/Other/Unknown.cpp \
 				Commands/OptionalFeatures/Users.cpp \
 				Commands/ServerQueries/Version.cpp \
-				Commands/UserBasedQueries/Who.cpp \
 				Commands/Ping.cpp \
-				Commands/Motd.cpp \
 				Commands/Commands.cpp \
 				IRCServer/IRCServer.cpp \
 				Replies/build_replies.cpp \

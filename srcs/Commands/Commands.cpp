@@ -32,6 +32,7 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("CAP", cap_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NICK", nick_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("USER", user_cmd));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MODE", mode_cmd));
 	return cmds;
 }
 

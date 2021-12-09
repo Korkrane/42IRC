@@ -185,7 +185,12 @@ void IRC::exec_command(User *user)
 		}
 		if (known_command == 0)
 			this->_commands->unknown_cmd(user, this);
+		user->get_params().clear();
 	}
+	user->_commands.clear();
+	user->set_command("");
+	user->set_prefix("");
+	user->_params.clear();
 	#if DEBUG
 		std::cout  << RED << "EXIT IRC::exec_command" << NC << std::endl;
 	#endif
@@ -215,19 +220,12 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 			std::cout << BLUE << "DEBUG: Client is registered ? " << current_user->user_is_registered() << NC << std::endl;
 		#endif
 		current_user->set_unparsed_client_command(cmd);
-		current_user->store_prefix();
-		current_user->store_command();
-		current_user->store_params();
-		#if DEBUG
-			current_user->display_command();
-		#endif
+		current_user->split_if_multiple_command();
 		if(current_user->user_is_registered() == true)
 		{
-			/*
 			this->exec_command(current_user);
 			responseQueue = this->_response_queue;
 			this->_response_queue.clear();
-			*/
 		}
 		else
 		{
