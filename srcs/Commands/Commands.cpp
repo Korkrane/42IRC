@@ -28,6 +28,7 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WELCOME", welcome_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MOTD", motd_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("VERSION", version_cmd));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("QUIT", quit_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PING", ping_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("CAP", cap_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NICK", nick_cmd));

@@ -18,6 +18,7 @@ NAMES		=	main.cpp \
 				Commands/ConnectionRegistration/Oper.cpp \
 				Commands/ConnectionRegistration/User.cpp \
 				Commands/ConnectionRegistration/Pass.cpp \
+				Commands/ConnectionRegistration/Quit.cpp \
 				Commands/SendingMessages/Notice.cpp \
 				Commands/SendingMessages/Privmsg.cpp \
 				Commands/ServerQueries/Motd.cpp \

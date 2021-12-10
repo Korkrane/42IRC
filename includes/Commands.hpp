@@ -27,6 +27,10 @@ private:
 	static void 		time_cmd(User *user, IRC *server);
 	static void 		cap_cmd(User *user, IRC *server);
 	static void 		user_cmd(User *user, IRC *server);
+
+	static void 		quit_cmd(User *user, IRC *server);
+	static void			quit_cmd(User *user, IRC *server);
+
 	static void 		away_cmd(User *user, IRC *server);
 	static void 		version_cmd(User *user, IRC *server);
 	static void 		ping_cmd(User *user, IRC *server);
