@@ -1,11 +1,11 @@
 #include <IRC.hpp>
 
-void      Commands::send_topic_message(Channel *channel, User *user, std::vector<std::string> message)
+void Commands::send_topic_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server)
 {
     (void)channel;
     (void)user;
     (void)topic;
-    std::string rpl = init_rpl(user);
+    std::string rpl = server->init_rpl(user);
     rpl += " TOPIC ";
     rpl += channel->get_name();
     rpl += " :";
@@ -22,11 +22,11 @@ void      Commands::send_topic_message(Channel *channel, User *user, std::vector
         it++;
     }
     rpl += "\r\n";
+    std::cout << RED << "test" << std::endl;
     //On doit envoyer le message a toute la channel
-    send_rpl_to_all_members(channel, rpl);
-    return ;
+    server->send_rpl_to_all_members(channel, rpl);
+    return;
 }
-
 
 /**
  * @brief
@@ -35,7 +35,7 @@ void      Commands::send_topic_message(Channel *channel, User *user, std::vector
  * @param server
  * Mahaut
  */
-void		Commands::topic(User *user, IRC *server)
+void Commands::topic(User *user, IRC *server)
 {
     (void)user;
     (void)server;
@@ -44,21 +44,21 @@ void		Commands::topic(User *user, IRC *server)
     //Vecteur pour gerer les erreurs
     std::vector<std::string> error;
     // verifier le nombre d argument (ne peut pas etre egal a 1)
-        //retourner erreur ERR_NEEDMOREPARAMS
+    //retourner erreur ERR_NEEDMOREPARAMS
     if (size == 1)
     {
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error);
-        return ;
+        return;
     }
     std::string channel = params[0];
     //verifier que la channel passe en parametre existe
     if (is_correct_channel_name(channel) == false || server->has_channel(channel) == false)
     {
         //NOSUCHCHANNEL
-      error.push_back(channel);
-      error_handler("403", user, NULL, error);
-      return ;
+        error.push_back(channel);
+        error_handler("403", user, NULL, error);
+        return;
     }
     //On va sauvegarder les string qui constituent le topic
     std::vector<std::string> topic;
@@ -75,7 +75,7 @@ void		Commands::topic(User *user, IRC *server)
         //NOTONCHANNEL
         error.push_back(channel);
         error_handler("442", user, chan, error);
-        return ;
+        return;
     }
     //Est-ce qu il faut etre operateur pour set un topic ? a priori non
     //verifier si il y a deja un topic ou pas
@@ -93,12 +93,12 @@ void		Commands::topic(User *user, IRC *server)
     {
         chan->set_topic(user, server, topic);
     }
-    send_topic_message(chan, user, topic);
-    return ;
+    send_topic_message(chan, user, topic, server);
+    return;
 }
 
 //TODO: a tester
-void            Commands::check_topic(Channel *channel, User *user, IRC *server)
+void Commands::check_topic(Channel *channel, User *user, IRC *server)
 {
     (void)channel;
     (void)user;
@@ -108,11 +108,11 @@ void            Commands::check_topic(Channel *channel, User *user, IRC *server)
     if (channel->get_has_topic() == false)
     {
         //RPL _NOTOPIC
-        send_rpl("331", user, channel, "");
+        server->send_rpl("331", user, channel, "");
     }
-    else 
+    else
     {
-        send_rpl("332", user, channel, "");
+        server->send_rpl("332", user, channel, "");
     }
-    return ;
+    return;
 }

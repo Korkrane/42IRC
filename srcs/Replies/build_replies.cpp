@@ -1,7 +1,6 @@
 #include <IRC.hpp>
 #include <string>
 
-
 #include <string>
 #include <sstream>
 
@@ -75,7 +74,8 @@ std::string build_reply(int code, User *user, std::vector<std::string> params)
     case 999:
         //return (":127.0.0.1 PONG 127.0.0.1 :127.0.0.1\r\n"); À CHOISIR SI ON VEUT AVOIR LE MSSG PONG VISIBLE OU NON
         return (":127.0.0.1 PONG\r\n");
-
+    case 332:
+        return prefix + RPL_TOPIC(params[0], params[1]);
     default:
         return std::string("");
     }

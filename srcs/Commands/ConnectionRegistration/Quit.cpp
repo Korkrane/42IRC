@@ -11,10 +11,20 @@ void Commands::send_quit_message(User *user, IRC *server, std::string message)
 //TODO: Mahaut + Baudoin (+Damien )?
 void Commands::quit_cmd(User *user, IRC *server)
 {
-    (void)user;
+#if DEBUG
+    std::cout << RED << "ENTER QUIT CMD" << std::endl;
+#endif
     (void)server;
 
     std::vector<std::string> params = user->get_params();
+#if DEBUG
+    int i = 0;
+    for (std::vector<std::string>::iterator itr = params.begin(); itr != params.end(); itr++)
+    {
+        std::cout << YELLOW << "param(" << i << ")= " << *itr << NC << std::endl;
+        i++;
+    }
+#endif
     int size = user->get_params_size();
     std::string message; //Partie de la reponse qui sera envoyee au serveur
     std::vector<std::string>::iterator it = params.begin();

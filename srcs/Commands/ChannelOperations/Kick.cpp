@@ -2,14 +2,14 @@
 #include <IRC.hpp>
 
 //TODO: a tester
-void        Commands::send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment)
+void Commands::send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment)
 {
     (void)channel;
     (void)user;
     (void)server;
     (void)comment;
 
-    std::string rpl = init_rpl(user);
+    std::string rpl = server->init_rpl(user);
     rpl += " KICK ";
     rpl += channel->get_name() + " ";
     rpl += user->get_nickname() + " ";
@@ -25,14 +25,15 @@ void        Commands::send_kick_message(Channel *channel, User *user, IRC *serve
         it++;
     }
     rpl += "\r\n";
-    #if DEBUG
-        std::cout << BLUE << "DEBUG: " << "KICK: message will be " << rpl  << std::endl;
-    #endif
-    send_rpl_to_all_members(channel, rpl);
-    return ;
+#if DEBUG
+    std::cout << BLUE << "DEBUG: "
+              << "KICK: message will be " << rpl << std::endl;
+#endif
+    server->send_rpl_to_all_members(channel, rpl);
+    return;
 }
 
-void		Commands::kick(User *user, IRC *server)
+void Commands::kick(User *user, IRC *server)
 {
     (void)user;
     (void)server;
@@ -45,7 +46,7 @@ void		Commands::kick(User *user, IRC *server)
     {
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error);
-        return ;
+        return;
     }
 
     //TODO: a tester
@@ -65,24 +66,24 @@ void		Commands::kick(User *user, IRC *server)
     {
         error.push_back(target);
         error_handler("401", user, chan, error);
-        return ;
+        return;
     }
     User *target_user = server->get_user_ptr(target);
     if (chan->user_is_member(target_user) == false)
     {
         error.push_back(target);
         error_handler("401", user, chan, error);
-        return ;
+        return;
     }
     //sinon renvoyer une erreur
     std::vector<std::string> comment;
     if (size >= 3)
     {
-        
+
         std::vector<std::string>::iterator itc = param.begin();
         std::vector<std::string>::iterator ite = param.end();
         itc += 2;
-        
+
         while (itc != ite)
         {
             comment.push_back(*itc);
@@ -94,5 +95,5 @@ void		Commands::kick(User *user, IRC *server)
     user->remove_channel_from_list(chan);
     //on genere la reponse avec comment ou pas
     send_kick_message(chan, target_user, server, comment);
-    return ;
+    return;
 }

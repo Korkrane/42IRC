@@ -64,7 +64,7 @@ NAME		= ircserv
 
 CC			= clang++
 
-FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 -g
+FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 -g3 #-fsanitize=address
 
 RM			= rm -f
 

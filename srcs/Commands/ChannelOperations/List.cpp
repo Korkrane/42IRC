@@ -7,27 +7,27 @@
  * @param server
  * Mahaut
  */
-void		Commands::list(User *user, IRC *server)
+void Commands::list(User *user, IRC *server)
 {
     (void)user;
     (void)server;
     //Si il n y a qu un argument
     std::vector<Channel *>::iterator it = server->get_channels().begin();
     std::vector<Channel *>::iterator ite = server->get_channels().end();
-    //Si il y a plusieurs argument 
+    //Si il y a plusieurs argument
     //TODO: revoir le parsing avec la virgule
     int size = user->get_params_size();
     std::vector<std::string> params = user->get_params();
     if (size == 0)
     {
         //On va tout lister
-        while (it != ite)//RPL_LSI
+        while (it != ite) //RPL_LSI
         {
-            send_rpl("322", user, (*it), "");
+            server->send_rpl("322", user, (*it), "");
             it++;
         }
         //A la fin envoyer listeend
-        send_rpl("323", user, NULL, "");
+        server->send_rpl("323", user, NULL, "");
     }
     else
     {
@@ -40,12 +40,12 @@ void		Commands::list(User *user, IRC *server)
             if (is_correct_channel_name(params[i]) == true)
             {
                 tmp = server->find_channel(params[i]);
-                send_rpl("322", user, tmp, "");
+                server->send_rpl("322", user, tmp, "");
             }
             i++;
         }
         //A la fin envoyer listend
-        send_rpl("323", user, NULL, "");
+        server->send_rpl("323", user, NULL, "");
     }
-    return ;
+    return;
 }

@@ -1,21 +1,21 @@
 #include <IRC.hpp>
 
 /**
- * @brief 
- * 
- * @param channel 
- * @param user 
- * @param server 
+ * @brief
+ *
+ * @param channel
+ * @param user
+ * @param server
  * TODO: A tester
  */
-void        Commands::send_names_message(Channel *channel, User *user, IRC *server)
+void Commands::send_names_message(Channel *channel, User *user, IRC *server)
 {
     (void)server;
     if (channel)
-        send_rpl("366", user, channel, "");//ENDOFNAMES
-    else 
-        send_rpl("366", user, NULL, channel->get_name());
-    return ;
+        server->send_rpl("366", user, channel, ""); //ENDOFNAMES
+    else
+        server->send_rpl("366", user, NULL, channel->get_name());
+    return;
 }
 
 /**
@@ -26,11 +26,11 @@ void        Commands::send_names_message(Channel *channel, User *user, IRC *serv
  * TODO: voir la notion de "nickname visibles"
  * Mahaut
  */
-void		Commands::names(User *user, IRC *server)
+void Commands::names(User *user, IRC *server)
 {
     (void)user;
     (void)server;
-    
+
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
     //Apres test via hexchat, ne pas prendre en compte des args sup a 1
@@ -42,5 +42,5 @@ void		Commands::names(User *user, IRC *server)
     {
         send_names_message(chan, user, server);
     }
-    return ;
+    return;
 }

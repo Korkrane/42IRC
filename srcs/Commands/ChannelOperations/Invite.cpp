@@ -8,7 +8,7 @@
  * @param server
  * @return Channel*
  */
-Channel     *Commands::find_target_channel(std::string target_channel, User *user, IRC *server)
+Channel *Commands::find_target_channel(std::string target_channel, User *user, IRC *server)
 {
     (void)target_channel;
     (void)user;
@@ -28,7 +28,8 @@ Channel     *Commands::find_target_channel(std::string target_channel, User *use
         it++;
     }
 #if DEBUG
-    std::cout << BLUE << "DEBUG: " << "did not find target_nick" << std::endl;
+    std::cout << BLUE << "DEBUG: "
+              << "did not find target_nick" << std::endl;
 #endif
     return (NULL);
 }
@@ -41,7 +42,7 @@ Channel     *Commands::find_target_channel(std::string target_channel, User *use
  * @param server
  * @return User*
  */
-User    *Commands::find_target_nick(std::string target_nick, User *user, IRC *server)
+User *Commands::find_target_nick(std::string target_nick, User *user, IRC *server)
 {
     (void)target_nick;
     (void)user;
@@ -60,7 +61,8 @@ User    *Commands::find_target_nick(std::string target_nick, User *user, IRC *se
         it++;
     }
 #if DEBUG
-    std::cout << BLUE << "DEBUG: " << "did not find target_nick" << std::endl;
+    std::cout << BLUE << "DEBUG: "
+              << "did not find target_nick" << std::endl;
 #endif
     return (NULL);
 }
@@ -73,7 +75,7 @@ User    *Commands::find_target_nick(std::string target_nick, User *user, IRC *se
  * Params: <nickname> <channel>
  * TODO: faire des tests pour voir l'ordre de priorite des erreurs
  */
-void    Commands::invite(User *user, IRC *server)
+void Commands::invite(User *user, IRC *server)
 {
     (void)user;
     (void)server;
@@ -85,20 +87,21 @@ void    Commands::invite(User *user, IRC *server)
     if (user->get_params_size() != 2)
     {
 #if DEBUG
-    std::cout << BLUE << "DEBUG: " << "Invite command incorrect params size" << std::endl;
+        std::cout << BLUE << "DEBUG: "
+                  << "Invite command incorrect params size" << std::endl;
 #endif
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error);
-        return ;
+        return;
     }
     //2. Verifier si le nickname correspond bien a quelqu'un
     std::string target_nick = user->get_params().front();
-    User *target_user = find_target_nick(target_nick,user, server);
+    User *target_user = find_target_nick(target_nick, user, server);
     if (!target_user)
     {
         error.push_back(user->get_nickname());
         error_handler("401", user, NULL, error);
-        return ;
+        return;
     }
     //3. Verifier si le channel correspond bien a un channel
     std::string target_channel = user->get_params().back();
@@ -107,16 +110,16 @@ void    Commands::invite(User *user, IRC *server)
     {
         //TODO: a tester
         //4. Verifier que le user est lui meme member
-        if (chan->user_is_member(user) == false)//NOTONCHANNEL
+        if (chan->user_is_member(user) == false) //NOTONCHANNEL
         {
             error.push_back(chan->get_name());
             error_handler("442", user, chan, error);
-            return ;
+            return;
         }
         //5. Verifier que la channel n'est pas full
         if (chan->get_members_nb() >= USER_MAXCHAN)
         {
-            return ;
+            return;
         }
         //6. Verifier que celui qui invite n'est pas deja sur le channel
         if (chan->user_is_member(target_user) == false)
@@ -124,14 +127,14 @@ void    Commands::invite(User *user, IRC *server)
             error.push_back(user->get_nickname());
             error.push_back(chan->get_name());
             error_handler("443", user, chan, error);
-            return ;
+            return;
         }
         //7. Verifier que le target nick_name est connecte
         if (server->find_user(target_nick) == true)
         {
             error.push_back(user->get_nickname());
             error_handler("401", user, chan, error);
-            return ;
+            return;
         }
         //8. Ajouter au channel l'user
         //chan->addMember(target_nick)
@@ -139,7 +142,7 @@ void    Commands::invite(User *user, IRC *server)
         chan->newMember(target_user, false);
 
         //9. Envoyer le message au serveur
-        send_rpl("431", user, chan, chan->get_name() + " " + target_user->get_nickname());
+        server->send_rpl("431", user, chan, chan->get_name() + " " + target_user->get_nickname());
     }
-    return ;
+    return;
 }
