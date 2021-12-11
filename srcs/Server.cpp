@@ -9,9 +9,6 @@ Server::Server(int port, std::string const &password) :
 
 Server::~Server()
 {
-	_running = false;
-	pthread_join(_ghostBuster, NULL);
-	pthread_mutex_destroy(&_mutex);
 	std::map<int, Client *>::iterator	clientIter;
 	for (clientIter = _clients.begin(); clientIter != _clients.end(); ++clientIter)
 		delete clientIter->second;
@@ -24,8 +21,16 @@ void	Server::SetUp(IRC *irc)
 
 	// Create server socket
 	protoent	*prot = getprotobyname("tcp");
+#ifdef __APPLE__
+	if ((_fd = socket(AF_INET, SOCK_STREAM, prot->p_proto)) == -1)
+#else
 	if ((_fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, prot->p_proto)) == -1)
+#endif
 		SERVER_ERR("socket");
+
+#ifdef __APPLE__
+	fcntl(fd, F_SETFL, O_NONBLOCK);
+#endif
 
 	// Set options for socket
 	int	opt = 1;
@@ -43,13 +48,6 @@ void	Server::SetUp(IRC *irc)
 	// Listen for connections
 	if (listen(_fd, MAX_LISTEN) == -1)
 		SERVER_ERR("listen");
-
-	// Setup thread to timeout ghost client
-	_running = true;
-	if (pthread_mutex_init(&_mutex, NULL) != 0)
-		SERVER_ERR("pthead_mutex_init");
-	if (pthread_create(&_ghostBuster, NULL, timeoutGhostClients, this) != 0)
-		SERVER_ERR("pthread_create");
 
 	std::cout	<< GREEN
 				<< "IRC Server now active on "
@@ -71,10 +69,8 @@ void	Server::acceptClient()
 	}
 	std::cout << "New client on socket #" << clientFD << '\n';
 	
-	pthread_mutex_lock(&_mutex);
 	_clients.insert(std::make_pair(clientFD, new Client(clientFD)));
-	pthread_mutex_unlock(&_mutex);
-	_irc->fds.push_back(clientFD);	// FOR TESTING. Delete this line for production
+	_irc->fds.insert(clientFD);	// FOR TESTING. Delete this line in production
 }
 
 void	Server::removeClient(int fd)
@@ -83,39 +79,39 @@ void	Server::removeClient(int fd)
 	{
 		delete _clients[fd];
 		_clients.erase(fd);
-		_irc->fds.erase(std::find(_irc->fds.begin(), _irc->fds.end(), fd));	// FOR TESTING. Delete this line for production
 	}
 }
 
 void	Server::Run()
 {
-	std::vector<t_clientCmd>			responseQueue;
-	std::vector<int>					disconnectList;
-	std::vector<t_clientCmd>::iterator	rIt;
-	std::vector<int>::iterator			dIt;
+	int	totalFD;
 
 	while (true)
 	{
-		responseQueue.clear();
-		disconnectList.clear();
-	
-		int	totalFD = setFDForReading();
-		recvProcessCommand(totalFD, responseQueue, disconnectList);
-
-		// Send server's response to clients
-		pthread_mutex_lock(&_mutex);
-		for (rIt = responseQueue.begin(); rIt != responseQueue.end(); ++rIt)
-		{
-			int	clientFD = rIt->first;
-			if (_clients.find(clientFD) != _clients.end())
-				_clients[clientFD]->sendResponse(rIt->second);
-		}
-
-		// Disconnect FDs in list
-		for (dIt = disconnectList.begin(); dIt != disconnectList.end(); ++dIt)
-			removeClient(*dIt);
-		pthread_mutex_unlock(&_mutex);
+		disconnectGhostClients();
+		totalFD = setFDForReading();
+		recvProcessCommand(totalFD);
+		usleep(50);	// Sleep for 50 microsecond to save CPU cycle
 	}
+}
+
+void	Server::disconnectGhostClients()
+{
+	std::time_t			now(std::time(NULL));
+	std::vector<int>	disconnectList;
+
+	std::map<int, Client *>::iterator	clientIter;
+	std::vector<int>::iterator			it;
+	for (clientIter = _clients.begin(); clientIter != _clients.end(); ++clientIter)
+	{
+		int	clientFD = clientIter->first;
+		Client &client(*clientIter->second);
+		if (client._isGhost && std::difftime(now, client._connTime) >= CLIENT_TIMEOUT)
+			disconnectList.push_back(clientFD);
+	}
+
+	for (it = disconnectList.begin(); it != disconnectList.end(); ++it)
+		removeClient(*it);
 }
 
 int	Server::setFDForReading()
@@ -125,7 +121,6 @@ int	Server::setFDForReading()
 	FD_SET(_fd, &_fdReader);
 
 	std::map<int, Client *>::iterator	clientIter;
-	pthread_mutex_lock(&_mutex);
 	for (clientIter = _clients.begin(); clientIter != _clients.end(); ++clientIter)
 	{
 		int	clientFD = clientIter->first;
@@ -133,7 +128,6 @@ int	Server::setFDForReading()
 		if (clientFD > _maxFD)
 			_maxFD = clientFD;
 	}
-	pthread_mutex_unlock(&_mutex);
 
 	int	r = select(_maxFD + 1, &_fdReader, NULL, NULL, NULL);
 	if (r == -1)
@@ -141,9 +135,14 @@ int	Server::setFDForReading()
 	return r;
 }
 
-void	Server::recvProcessCommand
-	(int totalFD, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
+void	Server::recvProcessCommand(int totalFD)
 {
+	std::vector<t_clientCmd>			responseQueue;
+	std::vector<int>					disconnectList;
+	std::vector<t_clientCmd>::iterator	rIt;
+	std::vector<int>::iterator			dIt;
+	std::string	cmd;
+
 	// Checking each socket for reading, starting from FD 3 because there should be nothing
 	// to read from 0 (stdin), 1 (stdout) and 2 (stderr)
 	for (int s = 3; s <= _maxFD && totalFD; ++s)
@@ -153,50 +152,34 @@ void	Server::recvProcessCommand
 				acceptClient();
 			else
 			{
+				responseQueue.clear();
+				disconnectList.clear();
+				cmd.clear();
+
 				// Receive a full command, with delimiter, then send it to program to process,
 				// then grab program's response(s)
-				std::string	cmd;
-				pthread_mutex_lock(&_mutex);
 				if (!_clients[s]->receiveCommand(cmd))
 				{
 					removeClient(s);
-					pthread_mutex_unlock(&_mutex);
+					_irc->ClientDisconnect(s);	// Tell the program that client is disconnected
 				}
 				else if (!cmd.empty())
 				{
-					pthread_mutex_unlock(&_mutex);
 					_irc->ProcessCommand(
 						std::make_pair(s, cmd), responseQueue, disconnectList
 					);
+					// Send server's response to clients
+					for (rIt = responseQueue.begin(); rIt != responseQueue.end(); ++rIt)
+					{
+						int	clientFD = rIt->first;
+						if (_clients.find(clientFD) != _clients.end())
+							_clients[clientFD]->sendResponse(rIt->second);
+					}
+					// Disconnect FDs in list
+					for (dIt = disconnectList.begin(); dIt != disconnectList.end(); ++dIt)
+						removeClient(*dIt);
 				}
 			}
 			--totalFD;
 		}
-}
-
-void	*Server::timeoutGhostClients(void *server)
-{
-	Server								&s(*(Server *)server);
-	std::map<int, Client *>::iterator	clientIter;
-	std::time_t							timer(std::time(NULL));
-	Client								*c;
-	std::vector<int>					disconnectList;
-
-	while (s._running)
-	{
-		sleep(1);	// Scan client's list every second
-		++timer;
-		disconnectList.clear();
-		pthread_mutex_lock(&s._mutex);
-		for (clientIter = s._clients.begin(); clientIter != s._clients.end(); ++clientIter)
-		{
-			c = clientIter->second;
-			if (c->_isGhost && timer - c->_connTime >= CLIENT_TIMEOUT)
-				disconnectList.push_back(c->_fd);
-		}
-		for (std::vector<int>::iterator it = disconnectList.begin(); it != disconnectList.end(); ++it)
-			s.removeClient(*it);
-		pthread_mutex_unlock(&s._mutex);
-	}
-	return (NULL);
 }

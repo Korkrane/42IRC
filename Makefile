@@ -9,7 +9,7 @@ OBJS		= $(SRCS:.cpp=.o)
 NAME		= ircserv
 
 CC			= clang++
-FLAGS		= -Wall -Wextra -Werror -std=c++98 -pthread -g -fsanitize=thread
+FLAGS		= -Wall -Wextra -Werror -std=c++98 -g
 
 RM			= rm -f
 
