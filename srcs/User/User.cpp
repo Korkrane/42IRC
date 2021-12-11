@@ -644,10 +644,11 @@ Channel *User::creates_channel(std::string channel_name)
 
 
 //TODO: a refaire, voir simplement si c est dans sa liste de Channels
+/*
 bool User::is_channel_user(Channel *channel)
 {
 	std::cout << PURPLE << "USER :" << "is_channel_user is returning false because it has to be redone." << std::endl;
-	/*
+	
 	if (!channel)
 		return (false);
 	std::vector<User *> users = channel->get_members();
@@ -667,9 +668,9 @@ bool User::is_channel_user(Channel *channel)
 #endif
 			return (true);
 		}
-	*/
 	return (false);
 }
+*/
 
 /**
  * @brief Va permettre de savoir si on a atteint le quota max de chan
@@ -802,6 +803,8 @@ void User::remove_channel_from_list(Channel *channel)
 	return;
 }
 
+//TODO: a supprimer
+/*
 std::string User::get_server_name(void) const
 {
 	std::string server_name = this->get_server()->get_name();
@@ -811,6 +814,7 @@ std::string User::get_server_name(void) const
 #endif
 	return (server_name);
 }
+*/
 
 std::ostream &operator<<(std::ostream &COUT, User *user)
 {

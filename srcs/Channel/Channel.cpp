@@ -1,9 +1,7 @@
 #include <IRC.hpp>
 
-Channel::Channel(std::string name, User *user, IRC *server) : _name(name), _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _operators(0), _users(0), _channel_owner(user), _key(""), _has_key(false), _members_nb(0), _serv(server)
+Channel::Channel(std::string name, User *user) : _name(name), _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _operators(0), _users(0), _channel_owner(user), _key(""), _has_key(false), _members_nb(0)
 {
-	(void)user;
-	(void)name;
 #if DEBUG
 	std::cout << "Channel constructor called" << std::endl;
 #endif
@@ -16,8 +14,10 @@ Channel::Channel(std::string name, User *user, IRC *server) : _name(name), _topi
 	return;
 }
 
-Channel::Channel(std::string name, std::string opt_key) : _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _operators(0), _users(0), _channel_owner(), _key(""), _has_key(false), _members_nb(0), _serv()
+Channel::Channel(std::string name, std::string opt_key) : _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _operators(0), _users(0), _channel_owner(), _key(""), _has_key(false), _members_nb(0)
 {
+	//TODO: Attention si le prefix est '' il faut set le handler mode a true
+	//TODO: ajouter user pour qu on sache qui est le channel owner et par consequent operateur ?
 	this->_name = name;
 	if (!opt_key.empty())
 	{
@@ -25,26 +25,25 @@ Channel::Channel(std::string name, std::string opt_key) : _topic(""), _has_topic
 		this->set_key(opt_key);
 	}
 }
-/**
- * @brief Destroy the Channel:: Channel object
- */
+
 Channel::~Channel(void)
 {
 #if DEBUG
 	std::cout << "Channel desconstructor called" << std::endl;
 #endif
-	//Supprimer de la liste des channels du IRCServer
-	this->delete_channel_from_server();
+	///TODO: Attention verifier pas de leaks
+	//this->delete_channel_from_server();
 	return;
 }
 
+/*
 void Channel::delete_channel_from_server(void)
 {
 	this->_serv->drop_channel(this);
 	return;
 }
+*/
 
-/*** SETTERS ***/
 void Channel::set_name(std::string name)
 {
 	this->_name = name;
@@ -206,6 +205,7 @@ bool Channel::user_is_owner(User *user)
 	return (false);
 }
 
+//TODO: Est-ce que ca devrait plutot venir du serveur ?
 bool Channel::isNicknameUnique(User *user)
 {
 	if (!user)
@@ -214,10 +214,6 @@ bool Channel::isNicknameUnique(User *user)
 	std::vector<User *>::iterator ite = this->_users.end();
 	std::string nickName;
 
-	(void)it;
-	(void)ite;
-	(void)nickName;
-	/* */
 	while (it != ite)
 	{
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
@@ -236,6 +232,7 @@ bool Channel::isNicknameUnique(User *user)
 
 void Channel::newMember(User *user, bool user_operator)
 {
+	//TODO: Attention si c'est egal a true et qu il n y a pas d'owner le user devient channel owner
 	(void)user;
 	if (!user)
 		return;
@@ -730,12 +727,12 @@ void Channel::set_has_topic()
 	return;
 }
 
-void	Channel::displayMode(void) const 
+void	Channel::displayMode(void)
 {
 	bool handles = this->get_handle_modes();
-	if (res)
+	if (handles)
 	{
-		if (this->get_channel_prefix() != )
+		if (this->get_channel_prefix() != '+')//Does not support channel modes
 		std::cout << "Channel :" << this->get_name() << " has mode(s) " << this->get_modes() << std::cout;
 	}
 	else
@@ -744,4 +741,3 @@ void	Channel::displayMode(void) const
 	}
 	return ;
 }
-

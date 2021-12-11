@@ -529,17 +529,17 @@ void IRC::send_rpl(std::string error_code, User *user, Channel *channel, std::st
 	}
 	case 2:
 	{
-		rpl += "Your host is " + user->get_server_name() + ", running on version [1]\r\n";
+		rpl += "Your host is " + this->get_name() + ", running on version [1]\r\n";
 		break;
 	}
 	case 3:
 	{
-		rpl += "This server was created " + user->get_server()->get_server_creation() + "\r\n";
+		rpl += "This server was created " + this->get_server_creation() + "\r\n";
 		break;
 	}
 	case 4:
 	{
-		rpl += user->get_server_name() + " version [1]. Available user MODE : +Oa . Avalaible channel MODE : none. \r\n";
+		rpl += this->get_name() + " version [1]. Available user MODE : +Oa . Avalaible channel MODE : none. \r\n";
 		break;
 	}
 	case 5:
@@ -578,7 +578,7 @@ void IRC::send_rpl(std::string error_code, User *user, Channel *channel, std::st
 	case 315: //RPL_ENDWHO
 	{
 		if (arg.empty())
-			rpl += user->get_server_name();
+			rpl += this->get_name();
 		else
 			rpl += arg;
 		rpl += " :End of WHO list\r\n";
@@ -586,7 +586,7 @@ void IRC::send_rpl(std::string error_code, User *user, Channel *channel, std::st
 	}
 	case 322: //RPL_LIST
 	{
-		rpl += (user->get_server_name() + " :" + channel->get_topic() + "\r\n");
+		rpl += (this->get_name() + " :" + channel->get_topic() + "\r\n");
 		break;
 	}
 	case 323: //RPL_LISTEND
@@ -649,7 +649,7 @@ void IRC::send_rpl(std::string error_code, User *user, Channel *channel, std::st
 	}
 	case 375:
 	{
-		rpl += ":- " + user->get_server_name() + " Message of the day - \r\n";
+		rpl += ":- " + this->get_name() + " Message of the day - \r\n";
 		break;
 	}
 	case 376:
@@ -664,7 +664,7 @@ void IRC::send_rpl(std::string error_code, User *user, Channel *channel, std::st
 	}
 	case 4242:
 	{
-		rpl += ":" + user->get_server_name() + " " + error_code + " " + user->get_nickname() + " :";
+		rpl += ":" + this->get_name() + " " + error_code + " " + user->get_nickname() + " :";
 		rpl = "[CAP] : IRC_90'S does not handle capabilities\r\n";
 		break;
 	}

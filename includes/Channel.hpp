@@ -28,7 +28,7 @@ private:
     Channel();
 
 public:
-    Channel(std::string name, User *user, IRC *server);
+    Channel(std::string name, User *user);
     Channel(std::string name, std::string opt_key);
     virtual ~Channel();
 
@@ -74,6 +74,7 @@ public:
     void                displayTopic(void);
     void                displayOperators(void);
     void                displayBanned(void);
+    void	            displayMode(void);
 
     void                set_handle_modes(void);
     void                set_channel_prefix(void);
@@ -90,7 +91,7 @@ public:
     bool                is_correct_channel_key(std::string target_key);
     bool                is_full_channel(void) const;
 
-    void                delete_channel_from_server(void);
+    //void                delete_channel_from_server(void);
     std::string         get_unknown_mode(std::string target_modes);
 
     //TODO 
@@ -103,6 +104,11 @@ public:
     //TODO: verifier a chaque fois qu'on appel mode que la fonction peut handler des modes
     //TODO: verifier quelles sont les particularites des channels en fonction des prefix
     //TODO: verifier que le get members fd est correcte ?
+    //TODO: Attention si l operateur et/ou channel owner par il faut qu une autre personne soit designee
+    //TODO: ameliorer le destructeur pour etre sur qu on oublie rien (pas de leaks)
+    //TODO:
+    void    set_owner(User *user);
+    void    get_owner(User *user);
 };
 
 //Utils to display - overloading
