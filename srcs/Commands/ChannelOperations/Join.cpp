@@ -8,14 +8,38 @@ void Commands::send_join_message(Channel *channel, User *user, std::vector<std::
     rpl += "\r\n";
     //Envoyer le message a tout le channel
     server->send_rpl_to_all_members(channel, rpl);
-    //Envoyer le message concernant le topic
+    //Envoyer le message concernant le topic (voir RFC2812)
     if (channel->get_has_topic() == true)
-    {
         server->send_rpl("332", user, channel, "");
-    }
     server->send_rpl("353", user, channel, "");
     server->send_rpl("366", user, channel, "");
     return;
+}
+
+/**
+ * @brief Permet de savoir si les arguments qui representeraient la key doivent etre pris en compte ou non.
+ * 
+ * @param channel 
+ * @param params 
+ * @return true 
+ * @return false 
+ */
+bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> params)
+{
+    bool res = true;
+    int size = params.size();
+    if (size < 1)
+        return (res);//Signifie qu'il n'y a pas de key
+    bool has_key = channel->get_has_key();
+    std::string key = channel->get_key();
+    std::string candidate_key = params.front();
+    if (key.compare(candidate_key) == false)//The keys are the same
+        res = false;
+    #if DEBUG
+        if ((!has_key && !key.empty()) || (has_key && key.empty()))
+            std::cout << "DEBUG: " << "CHANNEL :" << "There are some incompatible values regarding key members." << std::endl;
+    #endif
+    return (res)
 }
 
 /**
@@ -26,15 +50,13 @@ void Commands::send_join_message(Channel *channel, User *user, std::vector<std::
  * @param server
  * Mahaut
  * 1ere fonction de la liste des Channel Operations dans la rfc
- * TODO: a tester
+ * TODO: a retester
  */
 
 void Commands::join(User *user, IRC *server)
 {
     std::vector<std::string> error;
 
-    //On verifie le nombre minimum de param
-    //TODO: revoir si mon get params est d'actualite ou si le resultat du parsing est ailleurs
     if (user->get_params_size() < 1)
     {
         error.push_back(user->get_command_name());
@@ -60,7 +82,6 @@ void Commands::join(User *user, IRC *server)
             chan = server->add_channel(channel, opt_key);
         else
         {
-            std::cout << "ICI" << std::endl;
             //Fonction qui permet de recuperer le pointeur de la channel correspondante
             chan = server->find_channel(channel);
             //On verifie si la channel n est pas full
@@ -71,14 +92,17 @@ void Commands::join(User *user, IRC *server)
                 return;
             }
         }
-        if (chan->is_correct_channel_key(opt_key) == false)
+        //TODO: voir s il y a d autres cas d'erreur possible ?
+        if (should_ignore_key(chan, params) == true)
         {
-            error.push_back(channel);
-            error_handler("475", user, NULL, error);
-            return;
+            if (chan->is_correct_channel_key(opt_key) == false)
+            {
+                error.push_back(channel);
+                error_handler("475", user, NULL, error);
+                return;
+            }
         }
         //on verifie si le user n'a pas atteint son quota max de channel
-        //if (user->can_join() == true)
         if (server->user_can_join(chan) == true && !chan->user_is_member(user)) // || pas deja membre a ajouter
         {
             //On verifie si le user ne listen pas deja sur trop de channels
@@ -92,16 +116,8 @@ void Commands::join(User *user, IRC *server)
             user->be_added_to_channel(chan);
             //On l'ajoute a sa liste
             user->add_channel_to_list(chan);
-
+            //On prepare et envoie la reponse du serveur
             send_join_message(chan, user, user->get_params(), server);
-
-            /*
-            reply_params.push_back(chan->get_name());
-            reply_params.push_back(chan->get_topic());
-            reply = build_reply(332, user, reply_params);
-            server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
-            reply_params.clear();
-            */
         }
         //Erreur to many channels car l user fait partie de trop de channels
         else
@@ -110,7 +126,6 @@ void Commands::join(User *user, IRC *server)
             error_handler("405", user, NULL, error);
             return;
         }
-        //voir cas ou il y aurait plus de params mais qu ils pourraient etre ignores ?
     }
     return;
 }

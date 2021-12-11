@@ -46,7 +46,6 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	return cmds;
 }
 
-//TODO: Ne plus utiliser, a suppprimer ?
 std::vector<std::string> Commands::store_second_param_message(std::vector<std::string> params)
 {
 	std::vector<std::string> message;
@@ -66,4 +65,13 @@ bool Commands::prefixed_by_colon(std::string str)
 	if (str[0] == ':')
 		return (true);
 	return (false);
+}
+
+std::string	Commands::get_key(void) const 
+{
+	std::string key = this->_key;
+	#if DEBUG
+		std::cout << "DEBUG: " << "CHANNEL :" << "The correct key is " << key << std::endl;
+	#endif
+	return (key);
 }
