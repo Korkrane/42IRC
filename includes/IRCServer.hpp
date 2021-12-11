@@ -56,6 +56,7 @@ public:
 
     /*** METHODS ****/
     Channel *add_channel(std::string name, std::string opt_key);
+    Channel *add_channel(std::string name, std::string opt_key, User *user);
     void drop_channel(Channel *to_drop);
     bool find_channel(Channel *to_find);
     bool find_user(std::string nickname);

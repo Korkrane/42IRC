@@ -29,7 +29,7 @@ private:
 
 public:
     Channel(std::string name, User *user);
-    Channel(std::string name, std::string opt_key);
+    Channel(std::string name, std::string opt_key, User *user);
     virtual ~Channel();
 
     void                set_name(std::string name);
