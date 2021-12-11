@@ -7,3 +7,4 @@
 #define YELLOW	"\e[33m"
 #define BOLD	"\e[1m"
 #define UNDER	"\e[4m"
+#define PURPLE  "\e[0;35m"

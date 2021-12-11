@@ -1,5 +1,6 @@
 #include <IRC.hpp>
 
+//TODO: a deplacer dans un dossier commande
 void Commands::ping_cmd(User *user, IRC *server)
 {
     (void)user;

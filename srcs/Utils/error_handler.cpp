@@ -303,6 +303,7 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
         break;
     }
     }
-    user->get_server()->_response_queue.push_back(std::make_pair(user->get_socket(), error_to_send));
+    //TODO: a reprendre sans faire get server
+    //user->get_server()->_response_queue.push_back(std::make_pair(user->get_socket(), error_to_send));
     return;
 }

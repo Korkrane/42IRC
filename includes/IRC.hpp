@@ -43,11 +43,12 @@
 #define CHANNEL_FORBIDDEN_CHARS " ,:"
 //Il n'est pas demande expressement de gerer les modes donc on va par defaut mettre ceux qui peuvent servir dans 
 //les commandes que nous avons implemente
-#define CHANNEL_MODES "k"
+#define CHANNEL_MODES "t"
 
 #define MAX_CHAR 4096
 #define CHAN_MAXCAPACITY 5
 #define USER_MAXCHAN 5
+#define SERVER_MAXCHAN 10
 
 class User;
 

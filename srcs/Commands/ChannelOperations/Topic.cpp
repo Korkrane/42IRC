@@ -97,7 +97,8 @@ void Commands::topic(User *user, IRC *server)
     return;
 }
 
-//TODO: a tester
+//TODO: a corriger
+//TODO: verifier si le mode t est en place, sinon l'user ne pourra pas set le topic
 void Commands::check_topic(Channel *channel, User *user, IRC *server)
 {
     (void)channel;

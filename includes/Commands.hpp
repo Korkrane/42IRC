@@ -8,14 +8,17 @@ class IRC;
 
 class Commands
 {
-public:
-	Commands();
+private: 
+	/* Ajout des protos pour que la classe soit canonique */
 	Commands(Commands const &src);
 	Commands &operator=(Commands const &src);
+public:
+	Commands();
 	virtual ~Commands();
+	//TODO: a mettre en prive et faire un getter setter
 	std::map<std::string, void (*)(User *, IRC *)> _cmds;
 
-	/*** METHODS ***/
+	/*** FUNCTIONS ***/
 	std::map<std::string, void (*)(User *, IRC *)> get_cmds(void) const;
 	std::map<std::string, void (*)(User *, IRC *)> _initCmds();
 
@@ -47,10 +50,8 @@ public:
 	static void paramsIsCorrectChannel(Commands *command, IRC *server);
 	static void paramsIsCorrectOther(Commands *command, IRC *server);
 	static std::string whoHelpParameter(void);
+	void displayMode(void) const;
 
-	//static std::string init_rpl(User *user);
-	//static void										send_rpl_to_all_members(Channel *channel, std::string rpl);
-	//static void										send_rpl(std::string rpl, User *user, Channel *channel, std::string arg);
 
 	static void join(User *user, IRC *server);
 	static void send_join_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server);
@@ -88,4 +89,10 @@ public:
 	static bool prefixed_by_colon(std::string str);
 	static void send_full_privmsg(User *target, User *user, IRC *server, std::vector<std::string> message);
 	static void send_one_word_privmsg(User *target, User *user, IRC *server, std::string message);
+	static bool should_ignore_key(Channel *channel, std::vector<std::string> params);
+
+	//confusion avec cette sur channel, pourrait etre supprimee ?
+	static std::string get_channel_key(Channel *channel);
 };
+
+//TODO: faire mon overload de channel (pour affichage)

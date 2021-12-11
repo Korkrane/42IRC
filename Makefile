@@ -66,6 +66,8 @@ CC			= clang++
 
 FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 -g3 #-fsanitize=address
 
+EXTRA_MA 	= -DMALATINI=1
+
 RM			= rm -f
 
 .cpp.o:
@@ -82,6 +84,8 @@ all:		$(NAME)
 run:		$(NAME)
 			./ircserv 6667 pass
 
+test:		${NAME}
+			./ircserv 6667 pass ${EXTRA_MA}
 clean:
 			@$(RM) $(OBJS)
 			@echo "Deleted all but executable"
