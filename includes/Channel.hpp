@@ -52,8 +52,8 @@ public:
     std::vector<User *> get_members(void) const;
     std::vector<User *> get_operators(void) const;
     std::vector<int>    get_members_fd(void) const;
-    bool                get_has_key(void) const;
-    std::string         get_key(void) const;
+    bool                get_has_key(void);
+    std::string         get_key(void);
 
     bool                user_is_operator(User *user);
     bool                user_is_member(User *user);

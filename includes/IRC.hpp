@@ -48,6 +48,7 @@
 #define MAX_CHAR 4096
 #define CHAN_MAXCAPACITY 5
 #define USER_MAXCHAN 5
+#define SERVER_MAXCHAN 10
 
 class User;
 

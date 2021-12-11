@@ -8,9 +8,6 @@ Channel::Channel(std::string name, User *user) : _name(name), _topic(""), _has_t
 
 	//Ajouter le user passe en parametre a la liste des users
 	this->newMember(user, true);
-
-	//Ajouter la channel a la liste contenue dans le serveur
-	//user->_IRCserver->add_channel(this);
 	return;
 }
 
@@ -648,7 +645,7 @@ bool Channel::get_has_topic(void) const
 	return (res);
 }
 
-bool Channel::get_has_key(void) const
+bool Channel::get_has_key(void)
 {
 	bool res = this->_has_key;
 	return (res);
@@ -740,4 +737,13 @@ void	Channel::displayMode(void)
 		std::cout << "Channel : careful, this channel should not handle modes : " << this->get_modes() << std::cout;
 	}
 	return ;
+}
+
+std::string	Channel::get_key(void)
+{
+	std::string key = this->_key;
+	#if DEBUG
+		std::cout << PURPLE << "DEBUG :" << "CHANNEL :" << "the correct key is " << key << std::endl;
+	#endif
+	return (key);
 }

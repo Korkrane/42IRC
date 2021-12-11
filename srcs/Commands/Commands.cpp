@@ -67,11 +67,14 @@ bool Commands::prefixed_by_colon(std::string str)
 	return (false);
 }
 
-std::string	Commands::get_key(void) const 
+//Attention similaire a la meme sur channel
+std::string	Commands::get_channel_key(Channel *channel)
 {
-	std::string key = this->_key;
+	if (!channel)
+		return ("");
+	std::string key = channel->get_key();
 	#if DEBUG
-		std::cout << "DEBUG: " << "CHANNEL :" << "The correct key is " << key << std::endl;
+		std::cout << "DEBUG: " << "COMMAND :" << "The correct channel key is " << key << std::endl;
 	#endif
 	return (key);
 }

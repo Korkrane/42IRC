@@ -13,7 +13,7 @@ void Commands::send_join_message(Channel *channel, User *user, std::vector<std::
         server->send_rpl("332", user, channel, "");
     server->send_rpl("353", user, channel, "");
     server->send_rpl("366", user, channel, "");
-    return;
+    return ;
 }
 
 /**
@@ -39,7 +39,7 @@ bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> para
         if ((!has_key && !key.empty()) || (has_key && key.empty()))
             std::cout << "DEBUG: " << "CHANNEL :" << "There are some incompatible values regarding key members." << std::endl;
     #endif
-    return (res)
+    return (res);
 }
 
 /**
@@ -55,6 +55,7 @@ bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> para
 
 void Commands::join(User *user, IRC *server)
 {
+    std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
 
     if (user->get_params_size() < 1)

@@ -89,6 +89,10 @@ public:
 	static bool prefixed_by_colon(std::string str);
 	static void send_full_privmsg(User *target, User *user, IRC *server, std::vector<std::string> message);
 	static void send_one_word_privmsg(User *target, User *user, IRC *server, std::string message);
+	static bool should_ignore_key(Channel *channel, std::vector<std::string> params);
+
+	//confusion avec cette sur channel, pourrait etre supprimee ?
+	static std::string get_channel_key(Channel *channel);
 };
 
 //TODO: faire mon overload de channel (pour affichage)

@@ -42,10 +42,6 @@ IRC::IRC(std::string const &password) : _socket(0),
 	set_creation(date, now);
 }
 
-/**
- * @brief Destroy the IRC:: IRC object
- *
- */
 IRC::~IRC()
 {
 	delete this->_commands;
@@ -55,9 +51,6 @@ IRC::~IRC()
 	return;
 }
 
-/*
-** Setters
-*/
 void IRC::set_name(std::string name)
 {
 	this->_name = name;
@@ -67,10 +60,6 @@ void IRC::set_name(std::string name)
 	return;
 }
 
-/**
-** TODO: checker si les chaine sont correctes (voir rfc)
-** pour l'ensemble des attributs membres
-*/
 void IRC::set_version(std::string version)
 {
 	this->_version = version;
@@ -101,9 +90,6 @@ void IRC::set_password(std::string password)
 	return;
 }
 
-/*
-** Getters
-*/
 std::string IRC::get_name(void) const
 {
 	std::string name = this->_name;
@@ -283,12 +269,22 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
  */
 Channel *IRC::add_channel(std::string channel, std::string opt_key)
 {
+	//On verifie que la channel ne fait pas deja partie de la liste
+	Channel *find = this->find_channel(channel);
+	if (find)
+	{
+		#if DEBUG
+			std::cout << PURPLE << "DEBUG :" << "IRC :" << "add_channel function called but the channel already exists." << std::endl;
+		#endif
+		//TODO: attention a faire des checks au cas ou je renvois NULL
+		return (NULL);
+	}
+	//On verifie que le serveur n a pas deja trop de channels ?
 	Channel *chan = new Channel(channel, opt_key);
 	this->_channels.push_back(chan);
 	return chan;
 }
 
-//Ajout Mahaut - faire une fonction d'affichage + overloads ?
 std::vector<User *> IRC::get_users(void) const
 {
 	std::vector<User *> users;
@@ -299,11 +295,6 @@ std::vector<User *> IRC::get_users(void) const
 	return (users);
 }
 
-/**
- * @brief
- *
- * @return std::vector<Channel *>
- */
 std::vector<Channel *> IRC::get_channels(void) const
 {
 #if DEBUG
@@ -704,4 +695,18 @@ std::string IRC::init_rpl(User *user)
 	std::string rpl;
 	rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "0";
 	return rpl;
+}
+
+unsigned int	IRC::get_channel_nb(void) const 
+{
+	unsigned int number = 0;
+	std::vector<Channel *> chans = this->get_channels();
+	number = chans.size();
+	#if DEBUG
+		if (number >= SERVER_MAXCHAN)
+		{
+			std::cout << PURPLE << "DEBUG: IRC: " << "channel nb is exceeding !" << std::endl;
+		}
+	#endif
+	return (number);
 }

@@ -52,6 +52,7 @@ public:
     std::vector<User *> get_users(void) const;
     User *get_user(int fd);
     User *get_user_ptr(std::string name);
+    unsigned int get_channel_nb(void) const;
 
     /*** METHODS ****/
     Channel *add_channel(std::string name, std::string opt_key);
