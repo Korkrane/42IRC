@@ -729,3 +729,5 @@ void Channel::set_has_topic()
 	this->_has_topic = true;
 	return;
 }
+
+void	Channel::display
