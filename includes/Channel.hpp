@@ -36,6 +36,7 @@ public:
 
     /*** SETTERS ***/
     void set_name(std::string name);
+    void set_owner(User *user);
     void set_topic(std::string topic);
     void set_topic(User *user, IRC *server, std::vector<std::string> topic);
     void set_has_topic(void);
@@ -72,6 +73,9 @@ public:
     void deleteMember(User *user);
     void printMemberInfo(User *user);
     bool isNicknameUnique(User *user);
+
+    void delete_operator(User *user);
+    void delete_owner();
 
     /* Info sur le channel */
     bool channelHasUsers(void);

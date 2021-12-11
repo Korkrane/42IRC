@@ -56,6 +56,8 @@ public:
     void set_command(std::string);
 
     IRC *_IRCserver;
+
+    bool _to_delete;
     User(void);
     User(int fd);
     virtual ~User();

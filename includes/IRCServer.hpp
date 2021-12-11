@@ -70,6 +70,8 @@ public:
     void send_rpl_to_all_members(Channel *channel, std::string rpl);
     static std::string init_rpl(User *user);
 
+    void delete_user(int fd);
+
     /*** DEBUG ***/
     void displayServerChannels(void) const;
     void displayServerUsers(void) const;

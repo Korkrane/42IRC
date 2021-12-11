@@ -32,6 +32,9 @@ void Commands::send_join_message(Channel *channel, User *user, std::vector<std::
 void Commands::join(User *user, IRC *server)
 {
     std::vector<std::string> error;
+#if DEBUG
+    std::cout << RED << "ENTER JOIN CMD" << NC << std::endl;
+#endif
 
     //On verifie le nombre minimum de param
     //TODO: revoir si mon get params est d'actualite ou si le resultat du parsing est ailleurs
@@ -112,5 +115,7 @@ void Commands::join(User *user, IRC *server)
         }
         //voir cas ou il y aurait plus de params mais qu ils pourraient etre ignores ?
     }
-    return;
+#if DEBUG
+    std::cout << RED << "EXIT JOIN CMD" << NC << std::endl;
+#endif
 }

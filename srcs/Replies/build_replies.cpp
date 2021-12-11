@@ -76,6 +76,8 @@ std::string build_reply(int code, User *user, std::vector<std::string> params)
         return (":127.0.0.1 PONG\r\n");
     case 332:
         return prefix + RPL_TOPIC(params[0], params[1]);
+    case 998:
+        return prefix + "ERROR\r\n";
     default:
         return std::string("");
     }

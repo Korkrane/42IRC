@@ -165,15 +165,11 @@ bool Channel::user_is_operator(User *user)
 
 bool Channel::user_is_member(User *user)
 {
-	if (!user)
-		return (false);
 	std::vector<User *>::iterator it = this->_users.begin();
 	std::vector<User *>::iterator ite = this->_users.end();
 	std::string nickName;
 	(void)it;
-	(void)ite;
-	(void)nickName;
-	/* */
+
 	while (it != ite)
 	{
 		nickName = (*it)->get_nickname();
@@ -184,6 +180,7 @@ bool Channel::user_is_member(User *user)
 #endif
 			return (true);
 		}
+		it++;
 	}
 #if DEBUG
 	std::cout << "user_is_member is returning false" << std::endl;
@@ -255,6 +252,36 @@ void Channel::newOperator(User *user)
 	return;
 }
 
+void Channel::delete_owner()
+{
+	this->_channel_owner = 0;
+}
+
+void Channel::delete_operator(User *user)
+{
+	if (!user)
+		return;
+
+	std::vector<User *>::iterator it = this->_operators.begin();
+	std::vector<User *>::iterator ite = this->_operators.end();
+
+	while (it != ite)
+	{
+		if ((*it)->get_nickname() == (*ite)->get_nickname())
+		{
+			this->_operators.erase(it);
+			this->_members_nb--;
+#if DEBUG
+			std::cout << "Member " << (*it)->get_nickname() << "has been succesfully removed from the Operators s vector." << std::endl;
+#endif
+			return;
+		}
+	}
+#if DEBUG
+	std::cout << "member was not succesfully from Operators deleted." << std::endl;
+#endif
+}
+
 void Channel::deleteMember(User *user)
 {
 	if (!user)
@@ -284,7 +311,6 @@ void Channel::deleteMember(User *user)
 #if DEBUG
 	std::cout << "member was not succesfully deleted." << std::endl;
 #endif
-	return;
 }
 
 void Channel::printMemberInfo(User *user)
