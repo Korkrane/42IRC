@@ -730,4 +730,18 @@ void Channel::set_has_topic()
 	return;
 }
 
-void	Channel::display
+void	Channel::displayMode(void) const 
+{
+	bool handles = this->get_handle_modes();
+	if (res)
+	{
+		if (this->get_channel_prefix() != )
+		std::cout << "Channel :" << this->get_name() << " has mode(s) " << this->get_modes() << std::cout;
+	}
+	else
+	{
+		std::cout << "Channel : careful, this channel should not handle modes : " << this->get_modes() << std::cout;
+	}
+	return ;
+}
+

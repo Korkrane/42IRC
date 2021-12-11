@@ -1,6 +1,10 @@
 #include <IRC.hpp>
 #include <User.hpp>
 
+//TODO: a supprimer
+#include <fstream>
+#include <string>
+
 User::User(void)
 /*
 : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
@@ -12,19 +16,14 @@ User::User(void)
 }
 
 User::User(int fd) : _socket(fd)
-/*: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name(server_name), _server_ip(server_ip), _server_creation(server_creation), _channels(0), _port(port), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
 {
 	_user_is_registered = false;
 #if USERDEBUG
 	std::cout << BLUE << "\t\tDEBUG: User default constructor called with fd parameter only" << NC << std::endl;
-	//displayClientInfo();
 #endif
 	return;
 }
 
-/*
-** Destructeur
-*/
 User::~User(void)
 {
 #if USERDEBUG
@@ -32,10 +31,6 @@ User::~User(void)
 #endif
 	return;
 }
-
-/*
-** Setters
-*/
 
 void User::set_nickname(std::string nickname)
 {
@@ -126,13 +121,9 @@ void User::set_message_status(int status)
 #endif
 }
 
-/*
-** revoir si on prefere utiliser select ou socket
-*/
 void User::set_init_socket(int socket)
 {
 	this->_socket = socket;
-	//this->fd = socket;
 #if USERDEBUG
 	std::cout << "User socket is " << socket << std::endl;
 #endif
@@ -142,9 +133,6 @@ void User::set_unparsed_client_command(std::string client_command)
 {
 	this->_unparsed_client_command = client_command;
 }
-
-#include <fstream>
-#include <string>
 
 void User::split_if_multiple_command()
 {
@@ -189,9 +177,6 @@ void User::split_if_multiple_command()
 	std::cout << RED << "EXIT SPLIT_MULTI_COMMD" << NC << std::endl;
 }
 
-/*
-** Getters
-*/
 std::string User::get_nickname(void) const
 {
 	std::string nick = this->_nickname;
@@ -265,9 +250,6 @@ std::string User::get_away_mssg(void) const
 	return (away);
 }
 
-/*
-** Added
-*/
 std::string User::get_password(void) const
 {
 	std::string pass = this->_password;
@@ -286,9 +268,6 @@ std::string User::get_message(void) const
 	return (message);
 }
 
-/*
-** voir message status
-*/
 int User::get_message_status(void) const
 {
 	int status = this->_message_status;
@@ -298,9 +277,6 @@ int User::get_message_status(void) const
 	return (status);
 }
 
-/*
-** Voir quand la socket est necessaire
-*/
 int User::get_socket(void) const
 {
 	int socket = this->_socket;
@@ -310,10 +286,6 @@ int User::get_socket(void) const
 	return (socket);
 }
 
-/*
-** Puisqu'il s'agit d'un vecteur il est aisé de retrouver sa taille
-** A tester
-*/
 int User::get_channels_nb(void) const
 {
 	int size = this->_channels.size();
@@ -348,16 +320,9 @@ std::string User::get_command_name(void) const
 #endif
 		return ("");
 	}
-
-#if USERDEBUG
-	//std::cout << "This client cmd command_name is " << command_name << std::endl;
-#endif
 	return (command_name);
 }
 
-/*
-** Utils parsing
-*/
 std::string User::get_unparsed_client_command(void) const
 {
 	std::string unparsed;
@@ -370,9 +335,6 @@ std::string User::get_unparsed_client_command(void) const
 #endif
 		return ("");
 	}
-#if USERDEBUG
-	//std::cout << "The unparsed command is : " << unparsed << std::endl;
-#endif
 	return (unparsed);
 }
 
@@ -387,9 +349,6 @@ unsigned int User::get_params_size(void) const
 	return (size);
 }
 
-/*
-** Utils
-*/
 
 bool User::check_if_prefix(void) const
 {
@@ -426,10 +385,6 @@ bool User::user_is_operator(void) const
 #endif
 	return (ope);
 }
-
-/*
-** Parsing client message
-*/
 
 int User::store_string_until_char(std::string *dest, std::string *src, char c, int len)
 {
@@ -525,7 +480,7 @@ void User::store_command()
 		this->_unparsed_client_command.replace(0, i, "");
 		if (hasEnding(this->_command_name, "\r\n"))
 			this->_command_name.resize(this->_command_name.size() - 2);
-
+		//TODO: a revoir pour etre sur qu on ne cassera pas notre parsing ?
 		/*
 		//Proposition Mahaut
 		if (this->check_if_prefix() == false)
@@ -577,7 +532,6 @@ void User::patch_params(std::vector<std::string> *params)
 			break;
 		}
 	}
-
 	std::vector<std::string>::iterator ite = params->end();
 	for (int erase = elem_to_erase; erase != 0; --erase)
 		params->erase(ite);
@@ -617,9 +571,6 @@ void User::set_command(std::string value)
 	this->_command_name = value;
 }
 
-/*
-** Display / Debug
-*/
 void User::displayClientInfo(void)
 {
 	std::cout << "----- Displaying User Info -----" << std::endl;
@@ -671,23 +622,32 @@ void User::display_command(void)
 	this->display_params();
 }
 
+//TODO: a supprimer 
+/*
 IRC *User::get_server(void) const
 {
 	IRC *serv = this->_IRCserver;
 	return serv;
 }
+*/
 
+//TODO: a supprimer
+/*
 Channel *User::creates_channel(std::string channel_name)
 {
-	//Le channel name a deja ete verifie au prealable
-
+	//Le channel name doit deja ete verifie au prealable
 	Channel *chan = new Channel(channel_name, this, this->get_server());
 	//Le constructeur de channel doit faire le reste;
 	return (chan);
 }
+*/
 
+
+//TODO: a refaire, voir simplement si c est dans sa liste de Channels
 bool User::is_channel_user(Channel *channel)
 {
+	std::cout << PURPLE << "USER :" << "is_channel_user is returning false because it has to be redone." << std::endl;
+	/*
 	if (!channel)
 		return (false);
 	std::vector<User *> users = channel->get_members();
@@ -707,7 +667,7 @@ bool User::is_channel_user(Channel *channel)
 #endif
 			return (true);
 		}
-	}
+	*/
 	return (false);
 }
 
@@ -716,7 +676,7 @@ bool User::is_channel_user(Channel *channel)
  *
  * @return true
  * @return false
- * TODO: a reprendre
+ * TODO: a reprendre / ou a supprimer ?
  */
 /*
 bool User::can_join(void)
@@ -764,6 +724,9 @@ void User::be_added_to_channel(Channel *channel)
 		//Si non on va devenir operateur
 		channel->newMember(this, true);
 	}
+	#if DEBUG
+		std::cout << "PURPLE :" << "USER :" << "User be added to channel called : " << this->get_nickname() << std::endl;
+	#endif
 	return;
 }
 
