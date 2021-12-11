@@ -21,7 +21,7 @@ void Server::SetUp(IRC *irc)
 
 	// Create server socket
 	protoent *prot = getprotobyname("tcp");
-#ifdef APPLE
+#ifdef __APPLE__
 	if ((_fd = socket(AF_INET, SOCK_STREAM, prot->p_proto)) == -1)
 	{
 
@@ -31,7 +31,7 @@ void Server::SetUp(IRC *irc)
 #endif
 		SERVER_ERR("socket");
 	}
-#ifdef APPLE
+#ifdef __APPLE__
 	fcntl(_fd, F_SETFL, O_NONBLOCK);
 #endif
 
