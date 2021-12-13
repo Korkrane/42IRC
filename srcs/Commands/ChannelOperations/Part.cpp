@@ -1,6 +1,6 @@
 #include <IRC.hpp>
 
-//TODO: faire une sous fonction d'initialisation du debut de rpl qui reservira a chaque fois
+/*
 void Commands::send_part_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server)
 {
   std::string rpl = server->init_rpl(user);
@@ -24,20 +24,9 @@ void Commands::send_part_message(Channel *channel, User *user, std::vector<std::
   //Maintenant que j ai la reply, je dois l'envoyer a tout le monde
   server->send_rpl_to_all_members(channel, rpl);
 }
+*/
 
-/**
- * @brief
- *
- * @param command
- * @param client
- * @param server
- * Parameters: <channel> *( "," <channel> ) [ <Part Message> ]
- * The PART command causes the user sending the message to be removed
-   from the list of active members for all given channels listed in the
-   parameter string.
- * Le premier param est la channel a quitter et le reste est un potentiel message
- * Si il n y a pas de message on replace par le username du participant ? En faisant nos tests on a vu "Leaving"
- */
+
 void Commands::part(User *user, IRC *server)
 {
   (void)user;
@@ -48,8 +37,12 @@ void Commands::part(User *user, IRC *server)
   // Verifier le nombre d'argument, si il est egal a 1, renvoyer une erreur
   if (user->get_params_size() == 1)
   {
+    //TODO: appel build reply
+    /*
     error.push_back(user->get_command_name());
     error_handler("461", user, NULL, error);
+    */
+    return ;
   }
   //On sauvegarde les arguments qui suivent
   std::string channel = params.front();
@@ -79,8 +72,11 @@ void Commands::part(User *user, IRC *server)
   if (is_correct_channel_name(channel) == false || server->has_channel(channel) == false)
   {
     //NOSUCHCHANNEL
+    //TODO: build reply
+    /*
     error.push_back(channel);
     error_handler("403", user, NULL, error);
+    */
     return;
   }
   //On rececupere le pointeur sur la channel
@@ -90,8 +86,11 @@ void Commands::part(User *user, IRC *server)
   if (chan->user_is_member(user) == false)
   {
     //NOTONCHANNEL
+    //TODO: build reply
+    /*
     error.push_back(channel);
     error_handler("442", user, chan, error);
+    */
     return;
   }
   //TODO: Attention ici je fais un peu les choses en deux facons, faire des tests pour verifier que ce n est pas source d'erreur

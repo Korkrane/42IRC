@@ -12,8 +12,11 @@ void        Commands::oper(User *user, IRC *server)
 
     if (size < 2)
     {
+        //TODO: build reply
+        /*
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error);
+        */
         return ;
     }
     //TODO: voir cas ou il y aurait trop d'arguments?
@@ -21,7 +24,8 @@ void        Commands::oper(User *user, IRC *server)
     //Check if the client is well registered 
     if (user->user_is_registered() == true)
     {
-        error_handler("491", user, NULL, error);
+        //TODO: build reply
+        //error_handler("491", user, NULL, error);
         return ;
     }
     std::string name = params[0];

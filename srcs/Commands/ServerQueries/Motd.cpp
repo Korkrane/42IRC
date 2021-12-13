@@ -8,6 +8,7 @@
  * @param client
  * @param server
  */
+
 void Commands::motd_cmd(User *user, IRC *server)
 {
     (void)user;
@@ -27,9 +28,9 @@ void Commands::motd_cmd(User *user, IRC *server)
             line = "- " + line + "\r\n";
             buff.append(line);
         }
-
         reply_params.push_back(user->get_hostname());
         reply = build_reply(375, user, reply_params);
+        //TODO: a revoir ? est-ce le response queue ne peut pas fait partie du build reply ?
         server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
         reply_params.clear();
 

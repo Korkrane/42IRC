@@ -1,5 +1,5 @@
 #include <IRC.hpp>
 
 /*
-** Baudoin
+** Baudoin (renommer fichier ping)
 */

@@ -34,13 +34,15 @@ bool Commands::nickIsAvailable(std::string nickname, IRC *server, User *user)
 bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
 {
   (void)server;
-
+  (void)user;
+  
   int i = 0;
   int length = nickname.length();
 
   //Preparation du vector qu'on envoie en cas d'erreur
   std::vector<std::string> param_error;
-  param_error.push_back(nickname);
+  //TODO: build reply
+  //param_error.push_back(nickname);
 
   //La taille du nick ne doit pas depasser 9 idealement
   if (length > 9)
@@ -48,8 +50,8 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
 #if DEBUG
     std::cout << "Nickname size is too big and should be avoided." << std::endl;
 #endif
-
-    error_handler("432", user, NULL, param_error);
+    //TODO: build reply
+    //error_handler("432", user, NULL, param_error);
     return (false);
   }
   while (i < length)
@@ -59,7 +61,8 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
 #if DEBUG
       std::cout << "Found special char that should be avoided." << std::endl;
 #endif
-      error_handler("432", user, NULL, param_error);
+      //TODO: build reply
+      //error_handler("432", user, NULL, param_error);
       return (false);
     }
     i++;
@@ -70,7 +73,8 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
 #if DEBUG
     std::cout << "The nickname does not start with an alpha and that should be avoided." << std::endl;
 #endif
-    error_handler("432", user, NULL, param_error);
+    //TODO: build reply
+    //error_handler("432", user, NULL, param_error);
     return (false);
   }
 
@@ -101,11 +105,14 @@ void Commands::nick_cmd(User *user, IRC *server)
 #if DEBUG
     std::cout << "Nick command called but param size is incorrect" << std::endl;
 #endif
-    // TODO test that case
+    // TODO build reply
+    /*
     std::vector<std::string> command;
     std::string cmd_str = user->get_command_name();
     command.push_back(cmd_str);
     error_handler("461", user, NULL, command);
+    */
+    return ;
   }
 
   //Puis on verifie si le nickname est correct grammaticallement (fonction de grammar)
@@ -133,13 +140,13 @@ void Commands::nick_cmd(User *user, IRC *server)
 #if DEBUG
     std::cout << RED << "LOL" << std::endl;
 #endif
-    error_handler("433", user, NULL, param);
+    //TODO: build reply
+    //error_handler("433", user, NULL, param);
 #if DEBUG
     std::cout << RED << "LOL" << std::endl;
 #endif
     return;
   }
-
   user->set_nickname(nick_arg);
 
 #if DEBUG

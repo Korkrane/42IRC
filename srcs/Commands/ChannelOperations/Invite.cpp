@@ -90,8 +90,11 @@ void Commands::invite(User *user, IRC *server)
         std::cout << BLUE << "DEBUG: "
                   << "Invite command incorrect params size" << std::endl;
 #endif
+        //TODO: build reply
+        /*
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error);
+        */
         return;
     }
     //2. Verifier si le nickname correspond bien a quelqu'un
@@ -99,8 +102,11 @@ void Commands::invite(User *user, IRC *server)
     User *target_user = find_target_nick(target_nick, user, server);
     if (!target_user)
     {
+        //TODO: build reply
+        /*
         error.push_back(user->get_nickname());
         error_handler("401", user, NULL, error);
+        */
         return;
     }
     //3. Verifier si le channel correspond bien a un channel
@@ -112,8 +118,11 @@ void Commands::invite(User *user, IRC *server)
         //4. Verifier que le user est lui meme member
         if (chan->user_is_member(user) == false) //NOTONCHANNEL
         {
+            //TODO: build reply
+            /*
             error.push_back(chan->get_name());
             error_handler("442", user, chan, error);
+            */
             return;
         }
         //5. Verifier que la channel n'est pas full
@@ -124,16 +133,22 @@ void Commands::invite(User *user, IRC *server)
         //6. Verifier que celui qui invite n'est pas deja sur le channel
         if (chan->user_is_member(target_user) == false)
         {
+            //TODO: build reply
+            /*
             error.push_back(user->get_nickname());
             error.push_back(chan->get_name());
             error_handler("443", user, chan, error);
+            */
             return;
         }
         //7. Verifier que le target nick_name est connecte
         if (server->find_user(target_nick) == true)
         {
+            //TODO: build reply
+            /*
             error.push_back(user->get_nickname());
             error_handler("401", user, chan, error);
+            */
             return;
         }
         //8. Ajouter au channel l'user
@@ -141,8 +156,9 @@ void Commands::invite(User *user, IRC *server)
         User *target_user = server->get_user_ptr(target_nick);
         chan->newMember(target_user, false);
 
-        //9. Envoyer le message au serveur
-        server->send_rpl("431", user, chan, chan->get_name() + " " + target_user->get_nickname());
+        //9. Envoyer le message au serveur 
+        //TODO: a reprendre en changeant les params (build reply)
+        //server->send_rpl("431", user, chan, chan->get_name() + " " + target_user->get_nickname());
     }
     return;
 }

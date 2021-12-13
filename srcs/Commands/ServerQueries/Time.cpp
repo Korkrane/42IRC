@@ -6,7 +6,7 @@
  *
  * @param client
  * @param server
- * TODO: a reprendre suite a la modification du client
+ * TODO: a tester
  */
 void Commands::time_cmd(User *user, IRC *server)
 {

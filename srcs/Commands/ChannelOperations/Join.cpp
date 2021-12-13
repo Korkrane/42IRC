@@ -1,5 +1,6 @@
 #include <IRC.hpp>
 
+/*
 void Commands::send_join_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server)
 {
     (void)message;
@@ -15,6 +16,7 @@ void Commands::send_join_message(Channel *channel, User *user, std::vector<std::
     server->send_rpl("366", user, channel, "");
     return ;
 }
+*/
 
 /**
  * @brief Permet de savoir si les arguments qui representeraient la key doivent etre pris en compte ou non.
@@ -63,8 +65,11 @@ void Commands::join(User *user, IRC *server)
 
     if (user->get_params_size() < 1)
     {
+        //TODO: build reply
+        /*
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error);
+        */
         return;
     }
     //Dans nos tests via hexchat seuls 2 params sont pris en compte (1 channel et 2 key)
@@ -76,8 +81,11 @@ void Commands::join(User *user, IRC *server)
         //On verifie si l'argument channel est correct
         if (is_correct_channel_name(channel) == false)
         {
+            //TODO: build reply
+            /*
             error.push_back(channel);
             error_handler("403", user, NULL, error);
+            */
             return;
         }
         //On verifie si la channel existe, sinon on va la creer
@@ -91,8 +99,11 @@ void Commands::join(User *user, IRC *server)
             //On verifie si la channel n est pas full
             if (chan->is_full_channel() == true)
             {
+                //TODO: build reply
+                /*
                 error.push_back(channel);
                 error_handler("471", user, chan, error);
+                */
                 return;
             }
         }
@@ -101,8 +112,11 @@ void Commands::join(User *user, IRC *server)
         {
             if (chan->is_correct_channel_key(opt_key) == false)
             {
+                //TODO : build reply
+                /*
                 error.push_back(channel);
                 error_handler("475", user, NULL, error);
+                */
                 return;
             }
         }
@@ -112,8 +126,11 @@ void Commands::join(User *user, IRC *server)
             //On verifie si le user ne listen pas deja sur trop de channels
             if (chan->get_members_nb() >= CHAN_MAXCAPACITY)
             {
+                //TODO: build reply
+                /*
                 error.push_back(channel);
                 error_handler("471", user, NULL, error);
+                */
                 return;
             }
             //si oui, rajouter au channel
@@ -121,13 +138,17 @@ void Commands::join(User *user, IRC *server)
             //On l'ajoute a sa liste
             user->add_channel_to_list(chan);
             //On prepare et envoie la reponse du serveur
-            send_join_message(chan, user, user->get_params(), server);
+            //TODO: ajouter appel au nouveau build_reply
+            //send_join_message(chan, user, user->get_params(), server);
         }
         //Erreur to many channels car l user fait partie de trop de channels
         else
         {
+            //TODO: build reply
+            /*
             error.push_back(channel);
             error_handler("405", user, NULL, error);
+            */
             return;
         }
     }

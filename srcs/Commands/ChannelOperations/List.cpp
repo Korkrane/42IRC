@@ -12,8 +12,9 @@ void Commands::list(User *user, IRC *server)
     (void)user;
     (void)server;
     //Si il n y a qu un argument
-    std::vector<Channel *>::iterator it = server->get_channels().begin();
-    std::vector<Channel *>::iterator ite = server->get_channels().end();
+    std::vector<Channel *> chan = server->get_channels();
+    std::vector<Channel *>::iterator it = chan.begin();
+    std::vector<Channel *>::iterator ite = chan.end();
     //Si il y a plusieurs argument
     //TODO: revoir le parsing avec la virgule
     int size = user->get_params_size();
@@ -23,11 +24,13 @@ void Commands::list(User *user, IRC *server)
         //On va tout lister
         while (it != ite) //RPL_LSI
         {
-            server->send_rpl("322", user, (*it), "");
+            //TODO: build reply
+            //server->send_rpl("322", user, (*it), "");
             it++;
         }
         //A la fin envoyer listeend
-        server->send_rpl("323", user, NULL, "");
+        //TODO: build reply
+        //server->send_rpl("323", user, NULL, "");
     }
     else
     {
@@ -40,12 +43,14 @@ void Commands::list(User *user, IRC *server)
             if (is_correct_channel_name(params[i]) == true)
             {
                 tmp = server->find_channel(params[i]);
-                server->send_rpl("322", user, tmp, "");
+                //TODO: appel build reply
+                //server->send_rpl("322", user, tmp, "");
             }
             i++;
         }
         //A la fin envoyer listend
-        server->send_rpl("323", user, NULL, "");
+        //TODO: appel build reply
+        //server->send_rpl("323", user, NULL, "");
     }
     return;
 }

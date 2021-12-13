@@ -1,5 +1,6 @@
 #include <IRC.hpp>
 
+/*
 void Commands::send_topic_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server)
 {
     (void)channel;
@@ -27,6 +28,7 @@ void Commands::send_topic_message(Channel *channel, User *user, std::vector<std:
     server->send_rpl_to_all_members(channel, rpl);
     return;
 }
+*/
 
 /**
  * @brief
@@ -47,8 +49,11 @@ void Commands::topic(User *user, IRC *server)
     //retourner erreur ERR_NEEDMOREPARAMS
     if (size == 1)
     {
+        //TODO: build reply
+        /*
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error);
+        */
         return;
     }
     std::string channel = params[0];
@@ -56,8 +61,11 @@ void Commands::topic(User *user, IRC *server)
     if (is_correct_channel_name(channel) == false || server->has_channel(channel) == false)
     {
         //NOSUCHCHANNEL
+        //TODO: build reply
+        /*
         error.push_back(channel);
         error_handler("403", user, NULL, error);
+        */
         return;
     }
     //On va sauvegarder les string qui constituent le topic
@@ -73,8 +81,11 @@ void Commands::topic(User *user, IRC *server)
     if (chan->user_is_member(user) == false)
     {
         //NOTONCHANNEL
+        //TODO: build reply
+        /*
         error.push_back(channel);
         error_handler("442", user, chan, error);
+        */
         return;
     }
     //Est-ce qu il faut etre operateur pour set un topic ? a priori non
@@ -93,7 +104,8 @@ void Commands::topic(User *user, IRC *server)
     {
         chan->set_topic(user, server, topic);
     }
-    send_topic_message(chan, user, topic, server);
+    //TODO: build reply
+    //send_topic_message(chan, user, topic, server);
     return;
 }
 
@@ -108,12 +120,15 @@ void Commands::check_topic(Channel *channel, User *user, IRC *server)
     std::vector<std::string> error;
     if (channel->get_has_topic() == false)
     {
-        //RPL _NOTOPIC
-        server->send_rpl("331", user, channel, "");
+        //TODO: build reply RPL _NOTOPIC
+        //server->send_rpl("331", user, channel, "");
+        return;
     }
     else
     {
-        server->send_rpl("332", user, channel, "");
+        //TODO: build reply
+        //server->send_rpl("332", user, channel, "");
+        return;
     }
     return;
 }

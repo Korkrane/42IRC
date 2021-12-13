@@ -1,5 +1,6 @@
 #include <IRC.hpp>
 
+/*
 void Commands::send_full_notice(User *target, User *user, IRC *server, std::vector<std::string> message)
 {
     (void)target;
@@ -25,6 +26,7 @@ void Commands::send_full_notice(User *target, User *user, IRC *server, std::vect
     server->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
     return;
 }
+*/
 
 /**
  * @brief
@@ -46,13 +48,17 @@ void Commands::notice(User *user, IRC *server)
 
     if (size < 2)
     {
+        //TODO: build reply
+        /*
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error); //Not enough params
+        */
         return;
     }
     else if (size == 2)
     {
-        error_handler("412", user, NULL, error); //No text to send
+        //TODO: build reply
+        //error_handler("412", user, NULL, error); //No text to send
         return;
     }
     //TODO: a modifier avec le changement dans le parsing
@@ -63,10 +69,14 @@ void Commands::notice(User *user, IRC *server)
     User *target = server->get_user_ptr(receiver);
     if (!target)
     {
+        //TODO: build reply
+        /*
         error.push_back(receiver);
         error_handler("401", user, NULL, error);
+        */
         return;
     }
-    send_full_notice(target, user, server, message);
+    //TODO: build reply
+    //send_full_notice(target, user, server, message);
     return;
 }

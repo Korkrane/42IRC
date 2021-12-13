@@ -5,11 +5,6 @@ void            Commands::mode(User *user, IRC *server)
     #if DEBUG
         std::cout << RED << "ENTER MODE COMMAND" << NC << std::endl;
     #endif
-
-        (void)user;
-    (void)server;
-
-    /*
     //Check du nombre d'arguments
     std::string modes;
     std::string channel;
@@ -19,8 +14,11 @@ void            Commands::mode(User *user, IRC *server)
     std::vector<std::string> error;
     if (param_size < 2)
     {
+        //TODO: appel build reply
+        /*
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error);
+        */
         return ;
     }
     //Verifier comment gerer plus de 2 arguments
@@ -32,8 +30,11 @@ void            Commands::mode(User *user, IRC *server)
         //On check la channel (syntaxe)
         if (is_correct_channel_name(channel) == false)
         {
+            //TODO: appel build reply
+            /*
             error.push_back(channel);
             error_handler("403", user, NULL, error);
+            */
             return ;
         }
         //On check si la channel existe ?
@@ -47,26 +48,33 @@ void            Commands::mode(User *user, IRC *server)
         //On check si l'user est membre de la channel
         if (chan->user_is_member(user) == false)
         {
+            //TODO: appel build reply
+            /*
             error.push_back(user->get_nickname());
             error.push_back(channel);
             error_handler("441", user, NULL, error);
+            */
             return ;
         }
         //On doit checker les modes
         bool check = chan->check_channel_modes(modes);
         if (check == false)//ERR_UNKNOWN MODE
         {
+            //TODO: appel build reply
             //Isoler le char qui n est pas reconnu
+            /*
             std::string incorrect = chan->get_unknown_mode(channel);
             error.push_back(incorrect);
             error.push_back(channel);
             error_handler("472", user, chan, error);
+            */
+            return ;
+           ;
         }
         std::string key = params[3];
         //et surtout qui va gerer ce qu il faut faire
         edit_modes(chan, user, modes, key, server);
     }
-    */
     #if DEBUG
         std::cout << RED << "EXIT MODE COMMAND" << NC << std::endl;
     #endif

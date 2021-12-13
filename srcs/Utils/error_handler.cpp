@@ -1,13 +1,6 @@
 #include <IRC.hpp>
 
-/**
- * @brief
- *
- * @param error_code
- * @param user
- * @param channel
- * @param parameter
- */
+/*
 void error_handler(std::string error_code, User *user, Channel *channel, std::vector<std::string> parameter)
 {
     unsigned int code;
@@ -108,12 +101,7 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
     }
     case 431:
     {
-        std::vector<std::string>::iterator it = parameter.begin();
-        std::vector<std::string>::iterator it2 = it++;
-        std::string val1 = (*it);
-        std::string val2 = (*it2);
-        error_to_send = ERR_FILEERROR(val1, val2);
-        break;
+       //erreur
     }
     case 432:
     {
@@ -122,7 +110,7 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
     }
     case 433:
     {
-        std::cout << "LOL" << std::endl;
+        //std::cout << "LOL" << std::endl;
         error_to_send = ERR_NICKNAMEINUSE(parameter.front());
         break;
     }
@@ -307,3 +295,4 @@ void error_handler(std::string error_code, User *user, Channel *channel, std::ve
     //user->get_server()->_response_queue.push_back(std::make_pair(user->get_socket(), error_to_send));
     return;
 }
+*/

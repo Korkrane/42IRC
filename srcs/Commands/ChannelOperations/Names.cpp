@@ -1,13 +1,6 @@
 #include <IRC.hpp>
 
-/**
- * @brief
- *
- * @param channel
- * @param user
- * @param server
- * TODO: A tester
- */
+/*
 void Commands::send_names_message(Channel *channel, User *user, IRC *server)
 {
     (void)server;
@@ -17,6 +10,7 @@ void Commands::send_names_message(Channel *channel, User *user, IRC *server)
         server->send_rpl("366", user, NULL, channel->get_name());
     return;
 }
+*/
 
 /**
  * @brief
@@ -40,7 +34,9 @@ void Commands::names(User *user, IRC *server)
     //On va juste retourner rpl mais pas d'erreur
     if (chan)
     {
-        send_names_message(chan, user, server);
+        //TODO: appel build reply
+        return ;
+        //send_names_message(chan, user, server);
     }
     return;
 }

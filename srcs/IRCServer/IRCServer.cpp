@@ -91,7 +91,7 @@ void IRC::set_password(std::string password)
 	return;
 }
 
-std::string IRC::get_name(void) const
+std::string IRC::get_name(void)
 {
 	std::string name = this->_name;
 #if DEBUG
@@ -100,7 +100,7 @@ std::string IRC::get_name(void) const
 	return (name);
 }
 
-std::string IRC::get_version(void) const
+std::string IRC::get_version(void)
 {
 	std::string version = this->_version;
 #if DEBUG
@@ -109,7 +109,7 @@ std::string IRC::get_version(void) const
 	return (version);
 }
 
-std::string IRC::get_password(void) const
+std::string IRC::get_password(void)
 {
 	std::string password = this->_password;
 #if DEBUG
@@ -118,7 +118,7 @@ std::string IRC::get_password(void) const
 	return (password);
 }
 
-int IRC::get_socket(void) const
+int IRC::get_socket(void)
 {
 	int socket = this->_socket;
 #if DEBUG
@@ -127,7 +127,7 @@ int IRC::get_socket(void) const
 	return (socket);
 }
 
-std::string IRC::get_server_creation(void) const
+std::string IRC::get_server_creation(void)
 {
 	std::string server_creation = this->_server_creation;
 #if DEBUG
@@ -335,7 +335,7 @@ Channel *IRC::add_channel(std::string channel, std::string opt_key, User *user)
 	return chan;
 }
 
-std::vector<User *> IRC::get_users(void) const
+std::vector<User *> IRC::get_users(void)
 {
 	std::vector<User *> users;
 	users = this->_users;
@@ -345,16 +345,13 @@ std::vector<User *> IRC::get_users(void) const
 	return (users);
 }
 
-std::vector<Channel *> IRC::get_channels(void) const
+std::vector<Channel *> IRC::get_channels(void)
 {
 	return (this->_channels);
 }
 
-/**
- * @brief
- * TODO: a tester
- */
-void IRC::displayServerChannels(void) const
+/*
+void IRC::displayServerChannels(void) 
 {
 	std::vector<Channel *> channels = get_channels();
 	std::vector<Channel *>::iterator it = channels.begin();
@@ -367,8 +364,10 @@ void IRC::displayServerChannels(void) const
 		it++;
 	}
 }
+*/
 
-void IRC::displayServerUsers(void) const
+/*
+void IRC::displayServerUsers(void) 
 {
 	std::vector<User *> users = get_users();
 	std::vector<User *>::iterator it = users.begin();
@@ -381,8 +380,10 @@ void IRC::displayServerUsers(void) const
 		it++;
 	}
 }
+*/
 
-bool IRC::has_channel(std::string channel_name) const
+
+bool IRC::has_channel(std::string channel_name)
 {
 	std::vector<Channel *> chans = this->get_channels();
 	std::vector<Channel *>::iterator it = chans.begin();
@@ -400,7 +401,7 @@ bool IRC::has_channel(std::string channel_name) const
 	return (false);
 }
 
-Channel *IRC::find_channel(std::string channel_name) const
+Channel *IRC::find_channel(std::string channel_name)
 {
 	(void)channel_name;
 	std::vector<Channel *> chans = this->get_channels();
@@ -536,6 +537,8 @@ bool IRC::user_can_join(Channel *channel)
 	return (true);
 }
 
+//TODO: A utiliser dans build reply?
+/*
 void IRC::send_rpl_to_all_members(Channel *channel, std::string rpl)
 {
 	std::vector<User *> members = channel->get_members();
@@ -544,12 +547,15 @@ void IRC::send_rpl_to_all_members(Channel *channel, std::string rpl)
 	User *user = (*it);
 	while (it != ite)
 	{
+
 		this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
 		it++;
 	}
 	return;
 }
+*/
 
+/*
 void IRC::send_rpl(std::string error_code, User *user, Channel *channel, std::string arg)
 {
 	unsigned int code;
@@ -735,6 +741,7 @@ void IRC::send_rpl(std::string error_code, User *user, Channel *channel, std::st
 	this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
 	return;
 }
+*/
 
 std::string IRC::init_rpl(User *user)
 {
@@ -743,7 +750,7 @@ std::string IRC::init_rpl(User *user)
 	return rpl;
 }
 
-unsigned int	IRC::get_channel_nb(void) const
+unsigned int	IRC::get_channel_nb(void)
 {
 	unsigned int number = 0;
 	std::vector<Channel *> chans = this->get_channels();
@@ -755,4 +762,15 @@ unsigned int	IRC::get_channel_nb(void) const
 		}
 	#endif
 	return (number);
+}
+
+std::string		IRC::get_port(void)
+{
+	std::string port = this->_port;
+	return (port);
+}
+
+void			IRC::set_port(std::string port)
+{
+	this->_port = port;
 }

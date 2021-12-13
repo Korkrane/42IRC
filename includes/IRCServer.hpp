@@ -19,6 +19,8 @@ private:
     std::string _date;
     std::string _server_creation;
     std::string const _svPassword;
+    //TODO: remettre le port dans le constructeur
+    std::string _port;
 
 public:
     IRC();
@@ -43,16 +45,18 @@ public:
     void set_password(std::string password);
 
     /*** GETTERS ***/
-    std::string get_name(void) const;
-    std::string get_version(void) const;
-    std::string get_password(void) const;
-    int get_socket(void) const;
-    std::string get_server_creation(void) const;
-    std::vector<Channel *> get_channels(void) const;
-    std::vector<User *> get_users(void) const;
+    std::string get_name(void);
+    std::string get_version(void);
+    std::string get_password(void);
+    int get_socket(void);
+    std::string get_server_creation(void);
+    std::vector<Channel *> get_channels(void);
+    std::vector<User *> get_users(void);
     User *get_user(int fd);
     User *get_user_ptr(std::string name);
-    unsigned int get_channel_nb(void) const;
+    unsigned int get_channel_nb(void);
+    std::string get_port(void);
+    void set_port(std::string port_number);
 
     /*** METHODS ****/
     Channel *add_channel(std::string name, std::string opt_key);
@@ -63,19 +67,19 @@ public:
 
     std::vector<Channel *>::iterator get_channel_it(Channel *to_find);
 
-    bool has_channel(std::string channel_name) const;
-    Channel *find_channel(std::string channel_name) const;
+    bool has_channel(std::string channel_name);
+    Channel *find_channel(std::string channel_name);
     void process_command(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
 
     bool user_can_join(Channel *channel);
     void send_rpl(std::string error_code, User *user, Channel *channel, std::string arg);
     void send_rpl_to_all_members(Channel *channel, std::string rpl);
     static std::string init_rpl(User *user);
-    static std::string build_reply(int code, std::vector<User *>users, std::vector<std::string> params, std::string command);
+    std::string build_reply(int code, std::vector<User *>users, std::vector<Channel *> channels, std::vector<std::string> params, std::string command);
 
     void delete_user(int fd);
 
     /*** DEBUG ***/
-    void displayServerChannels(void) const;
-    void displayServerUsers(void) const;
+    void displayServerChannels(void);
+    void displayServerUsers(void);
 };

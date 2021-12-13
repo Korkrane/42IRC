@@ -2,6 +2,7 @@
 #include <IRC.hpp>
 
 //TODO: a tester
+/*
 void Commands::send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment)
 {
     (void)channel;
@@ -32,6 +33,7 @@ void Commands::send_kick_message(Channel *channel, User *user, IRC *server, std:
     server->send_rpl_to_all_members(channel, rpl);
     return;
 }
+*/
 
 void Commands::kick(User *user, IRC *server)
 {
@@ -44,8 +46,11 @@ void Commands::kick(User *user, IRC *server)
     //on verifie le nombres de parametre
     if (size <= 2)
     {
+        //TODO: build reply
+        /*
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error);
+        */
         return;
     }
 
@@ -58,32 +63,39 @@ void Commands::kick(User *user, IRC *server)
     if (is_correct_channel_name(channel) || server->has_channel(channel) == false)
     {
         //NOTONCHANNEL
+        //TODO: build reply
+        /*
         error.push_back(channel);
         error_handler("442", user, chan, error);
+        */
     }
     //on check si l'user existe et fait partie du channel
     if (server->find_user(target) == false)
     {
+        //TODO: build reply
+        /*
         error.push_back(target);
         error_handler("401", user, chan, error);
+        */
         return;
     }
     User *target_user = server->get_user_ptr(target);
     if (chan->user_is_member(target_user) == false)
     {
+        //TODO: build reply
+        /*
         error.push_back(target);
         error_handler("401", user, chan, error);
+        */
         return;
     }
     //sinon renvoyer une erreur
     std::vector<std::string> comment;
     if (size >= 3)
     {
-
         std::vector<std::string>::iterator itc = param.begin();
         std::vector<std::string>::iterator ite = param.end();
         itc += 2;
-
         while (itc != ite)
         {
             comment.push_back(*itc);
@@ -94,6 +106,7 @@ void Commands::kick(User *user, IRC *server)
     chan->deleteMember(target_user);
     user->remove_channel_from_list(chan);
     //on genere la reponse avec comment ou pas
-    send_kick_message(chan, target_user, server, comment);
+    //TODO: ajouter appel au nouveau build reply
+    //send_kick_message(chan, target_user, server, comment);
     return;
 }

@@ -14,13 +14,17 @@ void Commands::privmsg(User *user, IRC *server)
     std::vector<std::string> params = user->get_params();
     if (size < 2)
     {
+        //TODO: build reply
+        /*
         error.push_back(user->get_command_name());
         error_handler("461", user, NULL, error); //Not enough params
+        */
         return;
     }
     else if (size == 2)
     {
-        error_handler("412", user, NULL, error); //No text to send
+        //TODO: build reply
+        //error_handler("412", user, NULL, error); //No text to send
         return;
     }
     //On analyse les params
@@ -33,20 +37,27 @@ void Commands::privmsg(User *user, IRC *server)
     User *target = server->get_user_ptr(receiver);
     if (!target)
     {
+        //TODO: build reply
+        /*
         error.push_back(receiver);
         error_handler("401", user, NULL, error);
+        */
         return;
     }
     //Deux cas de figure observes
     //Si le premier mot est prefixe d'un :
     if (prefixed_by_colon(message.front()) == true)
     {
+        //TODO: build reply
         //Tout le message sera transmis
-        send_full_privmsg(target, user, server, message);
+        //send_full_privmsg(target, user, server, message);
+        return ;
     }
     else
     {
-        send_one_word_privmsg(target, user, server, message.front());
+        //TODO: build reply
+        //send_one_word_privmsg(target, user, server, message.front());
+        return ;
     }
     //Si il ne l'est pas
     //seul le premier mot est transmis et le reste est ignore
@@ -55,6 +66,7 @@ void Commands::privmsg(User *user, IRC *server)
 }
 
 //TODO: a tester - Attention si on veut implementer away il y a des choses a ajouter
+/*
 void Commands::send_full_privmsg(User *target, User *user, IRC *server, std::vector<std::string> message)
 {
     (void)target;
@@ -79,8 +91,9 @@ void Commands::send_full_privmsg(User *target, User *user, IRC *server, std::vec
     server->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
     return;
 }
+*/
 
-//TODO: a tester
+/*
 void Commands::send_one_word_privmsg(User *target, User *user, IRC *server, std::string message)
 {
     (void)user;
@@ -91,3 +104,4 @@ void Commands::send_one_word_privmsg(User *target, User *user, IRC *server, std:
     rpl += "\r\n";
     return;
 }
+*/
