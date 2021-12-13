@@ -70,6 +70,7 @@ public:
     void send_rpl(std::string error_code, User *user, Channel *channel, std::string arg);
     void send_rpl_to_all_members(Channel *channel, std::string rpl);
     static std::string init_rpl(User *user);
+    static std::string build_reply(int code, std::vector<User *>users, std::vector<std::string> params, std::string command);
 
     /*** DEBUG ***/
     void displayServerChannels(void) const;

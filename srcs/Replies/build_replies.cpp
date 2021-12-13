@@ -29,6 +29,29 @@ std::string format_code_str(int code)
     return ToString(code);
 }
 
+//TODO: Question : est-ce qu on fait une fonction separee ou est-ce qu on la raccroche a la classe IRC ?
+std::string IRC::build_reply(int code, std::vector<User *>users, std::vector<std::string> params, std::string command)
+{
+    //Si la commande est emptuy c'est qu'il s'agit d'un 
+    (void)code;
+    (void)users;
+    (void)params;
+    (void)command;
+
+    std::string rpl;
+    return (rpl);
+}
+
+/**
+ * @brief Fonction principale qui va permettre au serveur d'envoyer les RPL, les ERR 
+ * mais egalement les messages "specifiques" emanant de chaque commande.
+ * TODO: Mahaut : faire un overload avec plus d'arguments puis on reprendra uniquement la partie overloadee ?
+ * TODO: A mettre dans la classe serveur ?
+ * @param code 
+ * @param user 
+ * @param params 
+ * @return std::string 
+ */
 std::string build_reply(int code, User *user, std::vector<std::string> params)
 {
     (void)code;

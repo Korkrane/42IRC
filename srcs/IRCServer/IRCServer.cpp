@@ -1,5 +1,6 @@
 #include <IRC.hpp>
 
+//TODO: Mettre d'autre valeur que null?
 IRC::IRC(void) : _socket(0),
 				 _totChannels(0),
 				 _totUsers(0),
