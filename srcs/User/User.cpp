@@ -17,6 +17,7 @@ User::User(void)
 
 User::User(int fd) : _socket(fd)
 {
+	_to_delete = false;
 	_user_is_registered = false;
 #if USERDEBUG
 	std::cout << BLUE << "\t\tDEBUG: User default constructor called with fd parameter only" << NC << std::endl;

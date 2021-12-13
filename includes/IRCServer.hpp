@@ -56,6 +56,7 @@ public:
 
     /*** METHODS ****/
     Channel *add_channel(std::string name, std::string opt_key);
+    Channel *add_channel(std::string name, std::string opt_key, User *user);
     void drop_channel(Channel *to_drop);
     bool find_channel(Channel *to_find);
     bool find_user(std::string nickname);
@@ -71,6 +72,8 @@ public:
     void send_rpl_to_all_members(Channel *channel, std::string rpl);
     static std::string init_rpl(User *user);
     static std::string build_reply(int code, std::vector<User *>users, std::vector<std::string> params, std::string command);
+
+    void delete_user(int fd);
 
     /*** DEBUG ***/
     void displayServerChannels(void) const;

@@ -18,11 +18,11 @@ void Commands::send_join_message(Channel *channel, User *user, std::vector<std::
 
 /**
  * @brief Permet de savoir si les arguments qui representeraient la key doivent etre pris en compte ou non.
- * 
- * @param channel 
- * @param params 
- * @return true 
- * @return false 
+ *
+ * @param channel
+ * @param params
+ * @return true
+ * @return false
  */
 bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> params)
 {
@@ -57,6 +57,9 @@ void Commands::join(User *user, IRC *server)
 {
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
+#if DEBUG
+    std::cout << RED << "ENTER JOIN CMD" << NC << std::endl;
+#endif
 
     if (user->get_params_size() < 1)
     {
@@ -80,7 +83,7 @@ void Commands::join(User *user, IRC *server)
         //On verifie si la channel existe, sinon on va la creer
         Channel *chan = NULL;
         if (server->has_channel(channel) == false)
-            chan = server->add_channel(channel, opt_key);
+            chan = server->add_channel(channel, opt_key, user);
         else
         {
             //Fonction qui permet de recuperer le pointeur de la channel correspondante
@@ -128,5 +131,7 @@ void Commands::join(User *user, IRC *server)
             return;
         }
     }
-    return;
+#if DEBUG
+    std::cout << RED << "EXIT JOIN CMD" << NC << std::endl;
+#endif
 }

@@ -11,8 +11,9 @@ Channel::Channel(std::string name, User *user) : _name(name), _topic(""), _has_t
 	return;
 }
 
-Channel::Channel(std::string name, std::string opt_key) : _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _operators(0), _users(0), _channel_owner(), _key(""), _has_key(false), _members_nb(0)
+Channel::Channel(std::string name, std::string opt_key, User *user) : _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _operators(0), _users(0), _channel_owner(user), _key(""), _has_key(false), _members_nb(0)
 {
+	std::cout << YELLOW << "wrong construct" << std::endl;
 	//TODO: Attention si le prefix est '' il faut set le handler mode a true
 	//TODO: ajouter user pour qu on sache qui est le channel owner et par consequent operateur ?
 	this->_name = name;
@@ -161,18 +162,14 @@ bool Channel::user_is_operator(User *user)
 
 bool Channel::user_is_member(User *user)
 {
-	if (!user)
-		return (false);
 	std::vector<User *>::iterator it = this->_users.begin();
 	std::vector<User *>::iterator ite = this->_users.end();
 	std::string nickName;
-	(void)it;
-	(void)ite;
-	(void)nickName;
-	/* */
+
 	while (it != ite)
 	{
 		nickName = (*it)->get_nickname();
+		std::cout << PURPLE << "lol" << NC << std::endl;
 		if (nickName == user->get_nickname())
 		{
 #if DEBUG
@@ -180,6 +177,7 @@ bool Channel::user_is_member(User *user)
 #endif
 			return (true);
 		}
+		it++;
 	}
 #if DEBUG
 	std::cout << "user_is_member is returning false" << std::endl;
@@ -189,10 +187,8 @@ bool Channel::user_is_member(User *user)
 
 bool Channel::user_is_owner(User *user)
 {
-	if (!user)
-		return (false);
-	/* */
-	if (user->get_nickname() == this->_channel_owner->get_nickname())
+	std::cout << "ENTER IN USER IS OWWNER" << std::endl;
+	if (user->get_nickname().compare(this->_channel_owner->get_nickname()) ==0)
 	{
 #if DEBUG
 		std::cout << "The user " << user->get_nickname() << "is the owner of the channel" << std::endl;
@@ -249,28 +245,47 @@ void Channel::newOperator(User *user)
 	return;
 }
 
+void Channel::delete_owner()
+{
+	this->_channel_owner = 0;
+}
+
+void Channel::delete_operator(User *user)
+{
+
+	std::vector<User *>::iterator it = this->_operators.begin();
+	std::vector<User *>::iterator ite = this->_operators.end();
+
+	while (it != ite)
+	{
+		if ((*it)->get_nickname() == user->get_nickname())
+		{
+			this->_operators.erase(it);
+			this->_members_nb--;
+			return;
+		}
+		it++;
+	}
+#if DEBUG
+	std::cout << "member was not succesfully from Operators deleted." << std::endl;
+#endif
+}
+
 void Channel::deleteMember(User *user)
 {
-	if (!user)
-		return;
-
 	std::vector<User *>::iterator it = this->_users.begin();
 	std::vector<User *>::iterator ite = this->_users.end();
 
-	(void)it;
-	(void)ite;
-	/* */
 	while (it != ite)
 	{
-		if ((*it)->get_nickname() == (*ite)->get_nickname())
+		if ((*it)->get_nickname() == user->get_nickname())
 		{
+			std::cout << "test" << std::endl;
 			this->_users.erase(it);
 			this->_members_nb--;
-#if DEBUG
-			std::cout << "Member " << (*it)->get_nickname() << "has been succesfully removed from the Users s vector." << std::endl;
-#endif
 			return;
 		}
+		it++;
 	}
 #if DEBUG
 	std::cout << "Users  was not found, enable to delete the Users  passed in argument" << std::endl;
@@ -278,7 +293,6 @@ void Channel::deleteMember(User *user)
 #if DEBUG
 	std::cout << "member was not succesfully deleted." << std::endl;
 #endif
-	return;
 }
 
 void Channel::printMemberInfo(User *user)
@@ -729,12 +743,12 @@ void	Channel::displayMode(void)
 	bool handles = this->get_handle_modes();
 	if (handles)
 	{
-		if (this->get_channel_prefix() != '+')//Does not support channel modes
-		std::cout << "Channel :" << this->get_name() << " has mode(s) " << this->get_modes() << std::cout;
+		//if (this->get_channel_prefix() != '+')//Does not support channel modes
+		//std::cout << "Channel :" << this->get_name() << " has mode(s) " << this->get_modes() << std::cout;
 	}
 	else
 	{
-		std::cout << "Channel : careful, this channel should not handle modes : " << this->get_modes() << std::cout;
+		//std::cout << "Channel : careful, this channel should not handle modes : " << this->get_modes() << std::cout;
 	}
 	return ;
 }

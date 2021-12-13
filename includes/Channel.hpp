@@ -29,7 +29,7 @@ private:
 
 public:
     Channel(std::string name, User *user);
-    Channel(std::string name, std::string opt_key);
+    Channel(std::string name, std::string opt_key, User *user);
     virtual ~Channel();
 
     void                set_name(std::string name);
@@ -95,13 +95,15 @@ public:
     //void                delete_channel_from_server(void);
     std::string         get_unknown_mode(std::string target_modes);
 
-    //TODO 
+    void                delete_operator(User *user);
+    void                delete_owner();
+    //TODO
     //Ajouter une fonction qui permet d'ajouter un mode
     //Ajouter une fonction qui permet d'enlever un mode
     //verifier si j incremente bien le nombre d operateurs
     //TODO: verifier que j ai bien enregistre le prefix via tous les constructeurs
     //ajouter des sous fonctions dans le destructeur pour vider les vecteurs
-    //TODO: revoir la notion de channel owner ? 
+    //TODO: revoir la notion de channel owner ?
     //TODO: verifier a chaque fois qu'on appel mode que la fonction peut handler des modes
     //TODO: verifier quelles sont les particularites des channels en fonction des prefix
     //TODO: verifier que le get members fd est correcte ?
@@ -114,5 +116,5 @@ public:
 
 //Utils to display - overloading
 std::ostream &operator<<(std::ostream COUT, Channel *channel);
-//TODO: A remettre en membre 
+//TODO: A remettre en membre
 bool                    is_correct_channel_name(std::string target_name);

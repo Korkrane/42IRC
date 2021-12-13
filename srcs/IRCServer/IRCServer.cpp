@@ -159,14 +159,11 @@ void IRC::exec_command(User *user)
 		user->set_command((*it)._command_name);
 		user->set_params((*it)._params);
 		user->set_prefix((*it)._prefix);
-		std::cout << user->get_command_name();
-		std::cout << user->get_prefix();
-
 		while (itc != this->_commands->_cmds.end())
 		{
 			if (itc->first == (*it)._command_name)
 			{
-
+				/*
 #if DEBUG
 				int i = 0;
 				std::vector<std::string> t = user->get_params();
@@ -176,7 +173,7 @@ void IRC::exec_command(User *user)
 					i++;
 				}
 #endif
-
+*/
 				(*itc->second)(user, this);
 				known_command += 1;
 				break;
@@ -196,14 +193,41 @@ void IRC::exec_command(User *user)
 #endif
 }
 
+//when a user request a /quit, remove it from chans and delete the User instance.
+void IRC::delete_user(int fd)
+{
+#if DEBUG
+	std::cout << RED << "ENTER IN DELETE_USER\n"
+			  << NC;
+#endif
+	User *user = this->get_user(fd);
+
+	std::vector<Channel *> chans = this->get_channels();
+	for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++)
+	{
+		//delete in members vector channel
+		if ((*it)->user_is_member(user))
+			(*it)->deleteMember(user);
+		//delete in operators vector channel
+		if ((*it)->user_is_operator(user))
+		{
+			(*it)->delete_operator(user);
+			// TODO add new operator randomly if it was the only operator in the chan
+		}
+		//delete in owner if he it was him
+		if ((*it)->user_is_owner(user))
+			(*it)->delete_owner();
+	}
+	delete user;
+#if DEBUG
+	std::cout << RED << "EXIT IN DELETE_USER\n"
+			  << NC;
+#endif
+}
+
 void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
 {
-
-	(void)responseQueue;
-	(void)disconnectList;
-
 #if DEBUG
-	std::cout << BLUE << "\tDEBUG: Enter in IRC::ProcessCommand" << NC << std::endl;
 	std::cout << BLUE << "\tDEBUG: with clientfd: " << command.first << NC << std::endl;
 	std::cout << BLUE << "\tDEBUG: with command: " << command.second << NC;
 #endif
@@ -235,21 +259,26 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 			this->exec_command(current_user);
 			responseQueue = this->_response_queue;
 			this->_response_queue.clear();
+			//Si on a eu une commande quit
+			if (current_user->_to_delete == true)
+			{
+				this->delete_user(clientFD);
+				disconnectList.push_back(clientFD);
+			}
 		}
 	}
 	else //SI PREMIERE FOIS QU'IL SE CONNECTE
 	{
 #if DEBUG
-		std::cout << BLUE << "\tDEBUG: Client not found in the user list" << NC << std::endl;
+		std::cout << BLUE << "\tDEBUG: Client first connection" << NC << std::endl;
 #endif
 		this->fds.push_back(clientFD);
-		current_user = new User(clientFD);
+		//current_user = new User(clientFD);
+		this->_users.push_back(new User(clientFD));
+		current_user = _users.back();
 
 		current_user->set_unparsed_client_command(cmd);
 		current_user->split_if_multiple_command();
-#if DEBUG
-		std::cout << BLUE << "DEBUG: Client is registered before exec ?" << current_user->user_is_registered() << NC << std::endl;
-#endif
 		this->exec_command(current_user);
 #if DEBUG
 		std::cout << BLUE << "DEBUG: Client is registered after exec?" << current_user->user_is_registered() << NC << std::endl;
@@ -268,6 +297,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
  * @param new_channel
  * TODO: verifier que la channel ne fait pas deja partie de la liste
  */
+
 Channel *IRC::add_channel(std::string channel, std::string opt_key)
 {
 	//On verifie que la channel ne fait pas deja partie de la liste
@@ -281,7 +311,26 @@ Channel *IRC::add_channel(std::string channel, std::string opt_key)
 		return (NULL);
 	}
 	//On verifie que le serveur n a pas deja trop de channels ?
-	Channel *chan = new Channel(channel, opt_key);
+	Channel *chan = new Channel(channel, opt_key, 0);
+	this->_channels.push_back(chan);
+	return chan;
+}
+
+
+Channel *IRC::add_channel(std::string channel, std::string opt_key, User *user)
+{
+	//On verifie que la channel ne fait pas deja partie de la liste
+	Channel *find = this->find_channel(channel);
+	if (find)
+	{
+		#if DEBUG
+			std::cout << PURPLE << "DEBUG :" << "IRC :" << "add_channel function called but the channel already exists." << std::endl;
+		#endif
+		//TODO: attention a faire des checks au cas ou je renvois NULL
+		return (NULL);
+	}
+	//On verifie que le serveur n a pas deja trop de channels ?
+	Channel *chan = new Channel(channel, opt_key, user);
 	this->_channels.push_back(chan);
 	return chan;
 }
@@ -298,10 +347,6 @@ std::vector<User *> IRC::get_users(void) const
 
 std::vector<Channel *> IRC::get_channels(void) const
 {
-#if DEBUG
-	std::cout << BLUE << "DEBUG: "
-			  << "get_channels function called" << std::endl;
-#endif
 	return (this->_channels);
 }
 
@@ -698,7 +743,7 @@ std::string IRC::init_rpl(User *user)
 	return rpl;
 }
 
-unsigned int	IRC::get_channel_nb(void) const 
+unsigned int	IRC::get_channel_nb(void) const
 {
 	unsigned int number = 0;
 	std::vector<Channel *> chans = this->get_channels();
