@@ -112,7 +112,7 @@
 #define C_RPL_MYINFO "004"
 #define RPL_BOUNCE(servername, portnumber) ("Try server" + servername + ", port" + portnumber "\r\n");// 005
 #define C_RPL_BOUNCE "005"
-#define RPL_USERHOST 
+#define RPL_USERHOST
 #define C_RPL_USERHOST "302"
 #define RPL_ISON
 #define C_RPL_ISON "303"
@@ -236,12 +236,12 @@
 #define C_RPL_STATSUPTIME "242"
 #define RPL_STATSOLINE(hostmask, name) ("O " + hostmask + " * " + name + "\r\n");// 243
 #define C_RPL_STATSOLINE "243"
-#define RPL_UMODEIS                (user_mode_string)(user_mode_string + "\r\n");                                                                                                         // 221
-#define C_RPL_UMODEIS                                                       "221"                                                                                                        
-#define RPL_ADMINLOC2(admin_info)  (":" + admin_info + "\r\n");                                                                                                                            // 258
-#define C_RPL_ADMINLOC2                                                      "258"
-#define RPL_ADMINEMAIL(admin_info) (":" + admin_info + "\r\n");                                                                                                                            // 259
-#define C_RPL_ADMINEMAIL                                                     "259"
+#define RPL_UMODEIS(user_mode_string)(user_mode_string + "\r\n");// 221
+#define C_RPL_UMODEIS "221"
+#define RPL_ADMINLOC2(admin_info)  (":" + admin_info + "\r\n");// 258
+#define C_RPL_ADMINLOC2 "258"
+#define RPL_ADMINEMAIL(admin_info) (":" + admin_info + "\r\n");// 259
+#define C_RPL_ADMINEMAIL "259"
 #define RPL_SERVLIST(name, server, mask, type, hopcount, info) (name + " " + server + " " + mask + " " + type + " " + hopcount + " " + info + "\r\n");// 234
 #define C_RPL_SERVLIST "234"
 #define RPL_SERVLISTEND(mask, type) (mask + " " + type + " :End of service listing\r\n");// 235

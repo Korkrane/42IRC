@@ -36,11 +36,9 @@ IRC::IRC(std::string const &password) : _socket(0),
 	std::cout << BLUE << "DEBUG: IRC constructor with pass parameter called" << NC << std::endl;
 #endif
 	_commands = new Commands();
-
 	time_t now = time(0);
 	std::string date = ctime(&now);
-	//TODO: a reprendre ? Pb de compil Mahaut merge
-	set_creation(date, now);
+	set_creation(date);
 }
 
 IRC::~IRC()
@@ -49,100 +47,59 @@ IRC::~IRC()
 #if DEBUG
 	std::cout << BLUE << "DEBUG: IRC destructor called" << NC << std::endl;
 #endif
-	return;
 }
 
 void IRC::set_name(std::string name)
 {
 	this->_name = name;
-#if DEBUG
-	std::cout << "Name has been set successfully to " << name << std::endl;
-#endif
-	return;
 }
 
 void IRC::set_version(std::string version)
 {
 	this->_version = version;
-#if DEBUG
-	std::cout << "Version has been set successfully to " << version << std::endl;
-#endif
-	return;
 }
 
-//TODO: A reprendre ? Pb compil merge Mahaut
-void IRC::set_creation(std::string date, time_t time)
+void IRC::set_creation(std::string date)
 {
-	(void)time;
 	date.erase(date.size() - 1); //time command put a \n at the end of the date so i delete it here
 	this->_server_creation = date;
-#if DEBUG
-	std::cout << "Creation date has been set successfully to " << date << std::endl;
-#endif
-	return;
 }
 
 void IRC::set_password(std::string password)
 {
 	this->_password = password;
-#if DEBUG
-	std::cout << "password has been set successfully to " << password << std::endl;
-#endif
-	return;
 }
 
 std::string IRC::get_name(void)
 {
-	std::string name = this->_name;
-#if DEBUG
-	std::cout << "IRC version is " << _version << std::endl;
-#endif
-	return (name);
+	return (this->_name);
 }
 
 std::string IRC::get_version(void)
 {
-	std::string version = this->_version;
-#if DEBUG
-	std::cout << "IRC version is " << version << std::endl;
-#endif
-	return (version);
+	return (this->_version);
 }
 
 std::string IRC::get_password(void)
 {
-	std::string password = this->_password;
-#if DEBUG
-	std::cout << "IRC password is " << password << std::endl;
-#endif
-	return (password);
+	return (this->_password);
 }
 
 int IRC::get_socket(void)
 {
-	int socket = this->_socket;
-#if DEBUG
-	std::cout << "IRC socket is " << socket << std::endl;
-#endif
-	return (socket);
+	return (this->_socket);
 }
 
 std::string IRC::get_server_creation(void)
 {
-	std::string server_creation = this->_server_creation;
-#if DEBUG
-	std::cout << BLUE << "IRC_DEBUG: IRC creation is " << server_creation << NC << std::endl;
-#endif
-	return (server_creation);
+	return (this->_server_creation);
 }
 
 User *IRC::get_user(int fd)
 {
 	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
-	{
 		if ((*it)->get_socket() == fd)
 			return *it;
-	}
 	return NULL;
 }
 
@@ -197,8 +154,7 @@ void IRC::exec_command(User *user)
 void IRC::delete_user(int fd)
 {
 #if DEBUG
-	std::cout << RED << "ENTER IN DELETE_USER\n"
-			  << NC;
+	std::cout << RED << "ENTER IN DELETE_USER\n" << NC;
 #endif
 	User *user = this->get_user(fd);
 
@@ -220,8 +176,7 @@ void IRC::delete_user(int fd)
 	}
 	delete user;
 #if DEBUG
-	std::cout << RED << "EXIT IN DELETE_USER\n"
-			  << NC;
+	std::cout << RED << "EXIT IN DELETE_USER\n" << NC;
 #endif
 }
 
@@ -291,12 +246,6 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 	}
 }
 
-/**
- * @brief
- *
- * @param new_channel
- * TODO: verifier que la channel ne fait pas deja partie de la liste
- */
 
 Channel *IRC::add_channel(std::string channel, std::string opt_key)
 {
@@ -305,17 +254,16 @@ Channel *IRC::add_channel(std::string channel, std::string opt_key)
 	if (find)
 	{
 		#if DEBUG
-			std::cout << PURPLE << "DEBUG :" << "IRC :" << "add_channel function called but the channel already exists." << std::endl;
+			std::cout << PURPLE << "DEBUG: IRC: add_channel function called but the channel already exists." << NC << std::endl;
 		#endif
-		//TODO: attention a faire des checks au cas ou je renvois NULL
+		//TODO attention a faire des checks au cas ou je renvois NULL
 		return (NULL);
 	}
-	//On verifie que le serveur n a pas deja trop de channels ?
+	//TODO On verifie que le serveur n a pas deja trop de channels ?
 	Channel *chan = new Channel(channel, opt_key, 0);
 	this->_channels.push_back(chan);
 	return chan;
 }
-
 
 Channel *IRC::add_channel(std::string channel, std::string opt_key, User *user)
 {
@@ -324,12 +272,12 @@ Channel *IRC::add_channel(std::string channel, std::string opt_key, User *user)
 	if (find)
 	{
 		#if DEBUG
-			std::cout << PURPLE << "DEBUG :" << "IRC :" << "add_channel function called but the channel already exists." << std::endl;
+			std::cout << PURPLE << "DEBUG: IRC: add_channel function called but the channel already exists." << NC << std::endl;
 		#endif
 		//TODO: attention a faire des checks au cas ou je renvois NULL
 		return (NULL);
 	}
-	//On verifie que le serveur n a pas deja trop de channels ?
+	//TODO On verifie que le serveur n a pas deja trop de channels ?
 	Channel *chan = new Channel(channel, opt_key, user);
 	this->_channels.push_back(chan);
 	return chan;
@@ -337,12 +285,7 @@ Channel *IRC::add_channel(std::string channel, std::string opt_key, User *user)
 
 std::vector<User *> IRC::get_users(void)
 {
-	std::vector<User *> users;
-	users = this->_users;
-#if DEBUG
-	std::cout << "get_users function called" << std::endl;
-#endif
-	return (users);
+	return (this->_users);
 }
 
 std::vector<Channel *> IRC::get_channels(void)
@@ -350,8 +293,7 @@ std::vector<Channel *> IRC::get_channels(void)
 	return (this->_channels);
 }
 
-/*
-void IRC::displayServerChannels(void) 
+void IRC::displayServerChannels(void)
 {
 	std::vector<Channel *> channels = get_channels();
 	std::vector<Channel *>::iterator it = channels.begin();
@@ -364,10 +306,9 @@ void IRC::displayServerChannels(void)
 		it++;
 	}
 }
-*/
 
-/*
-void IRC::displayServerUsers(void) 
+
+void IRC::displayServerUsers(void)
 {
 	std::vector<User *> users = get_users();
 	std::vector<User *>::iterator it = users.begin();
@@ -380,7 +321,6 @@ void IRC::displayServerUsers(void)
 		it++;
 	}
 }
-*/
 
 
 bool IRC::has_channel(std::string channel_name)
@@ -393,9 +333,7 @@ bool IRC::has_channel(std::string channel_name)
 	{
 		check_name = (*it)->get_name();
 		if (check_name.compare(channel_name) == 0)
-		{
 			return (true);
-		}
 		it++;
 	}
 	return (false);
@@ -414,8 +352,7 @@ Channel *IRC::find_channel(std::string channel_name)
 		if (check_name.compare(channel_name) == 0)
 		{
 #if DEBUG
-			std::cout << BLUE << "DEBUG: "
-					  << "IRCServ: found channel, returning ptr" << std::endl;
+			std::cout << BLUE << "DEBUG: IRC: found channel" << channel_name << ", returning ptr" << NC << std::endl;
 #endif
 			return (*it);
 		}
@@ -459,9 +396,7 @@ bool IRC::find_channel(Channel *to_find)
 	{
 		check_name = (*it)->get_name();
 		if (to_find_name.compare(check_name) == 0)
-		{
 			return (true);
-		}
 		it++;
 	}
 	return (false);
@@ -478,9 +413,7 @@ std::vector<Channel *>::iterator IRC::get_channel_it(Channel *to_find)
 	{
 		check_name = (*it)->get_name();
 		if (to_find_name.compare(check_name) == 0)
-		{
 			return (it);
-		}
 		it++;
 	}
 	//Sera superieur a end si il n est pas trouve ?
@@ -528,9 +461,8 @@ bool IRC::user_can_join(Channel *channel)
 
 	if (user_nb >= USER_MAXCHAN)
 	{
-#if USERDEBUG
-		std::cout << BLUE << "USERDEBUG: USER :"
-				  << "Can not join new channel" << std::endl;
+#if DEBUG
+		std::cout << RED << "DEBUG: userCan not join new channel because he reach USER_MAXCHAN" << NC << std::endl;
 #endif
 		return (false);
 	}
@@ -551,194 +483,6 @@ void IRC::send_rpl_to_all_members(Channel *channel, std::string rpl)
 		this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
 		it++;
 	}
-	return;
-}
-*/
-
-/*
-void IRC::send_rpl(std::string error_code, User *user, Channel *channel, std::string arg)
-{
-	unsigned int code;
-
-	(void)channel;
-	code = atoi(error_code.c_str());
-	std::string rpl;
-	switch (code)
-	{
-	case 1:
-	{
-		rpl += "Welcome to the Internet Relay Network " + user->get_nickname() + "\r\n";
-		break;
-	}
-	case 2:
-	{
-		rpl += "Your host is " + this->get_name() + ", running on version [1]\r\n";
-		break;
-	}
-	case 3:
-	{
-		rpl += "This server was created " + this->get_server_creation() + "\r\n";
-		break;
-	}
-	case 4:
-	{
-		rpl += this->get_name() + " version [1]. Available user MODE : +Oa . Avalaible channel MODE : none. \r\n";
-		break;
-	}
-	case 5:
-	{
-		rpl += "Sorry IRC's capacity is full. Please retry connection later\r\n";
-		break;
-	}
-	case 221: //RPL_UMODEIS
-	{
-		if (user->user_is_operator() == false || user->user_is_away())
-			rpl += user->get_nickname() + " :no mode set";
-		else
-			rpl += user->get_nickname() + " :active mode +";
-		if (user->user_is_away() == true)
-			rpl += "a";
-		if (user->user_is_away() == true)
-			rpl += "O";
-		rpl += "\r\n";
-		break;
-	}
-	case 301: //RPL_AWAY
-	{
-		rpl += (arg + "\r\n");
-		break;
-	}
-	case 305: //RPL_UNAWAY
-	{
-		rpl += "You are no longer marked as being away\r\n";
-		break;
-	}
-	case 306: //RPL_NOWAWAY
-	{
-		rpl += "You have been marked as being away\r\n";
-		break;
-	}
-	case 315: //RPL_ENDWHO
-	{
-		if (arg.empty())
-			rpl += this->get_name();
-		else
-			rpl += arg;
-		rpl += " :End of WHO list\r\n";
-		break;
-	}
-	case 322: //RPL_LIST
-	{
-		rpl += (this->get_name() + " :" + channel->get_topic() + "\r\n");
-		break;
-	}
-	case 323: //RPL_LISTEND
-	{
-		rpl += " :End of LIST\r\n";
-		break;
-	}
-	case 331: //RPL_NOTOPIC
-	{
-		rpl += (channel->get_name() + " :No topic is set\r\n");
-		break;
-	}
-	case 332: //RPL_TOPIC
-	{
-		rpl += (channel->get_name() + " :" + channel->get_topic() + "\r\n");
-		break;
-	}
-	//TODO: a tester
-	case 341:
-	{
-		rpl = init_rpl(user);
-		rpl += channel->get_name();
-		rpl += " " + user->get_nickname();
-		rpl += "\r\n";
-		break;
-	}
-	case 352: //RPL_WHO
-	{
-		rpl = ":127.0.0.1 " + error_code + " " + user->get_nickname() + " ";
-		rpl += arg;
-		break;
-	}
-	case 353: // RPL_NAMEREPLY
-	{
-		rpl = ":127.0.0.1 " + error_code + " " + user->get_nickname();
-		rpl += (" = " + channel->get_name() + " :");
-		std::vector<User *> tmp = channel->get_members();
-		std::vector<User *>::iterator it = tmp.begin();
-		std::vector<User *>::iterator ite = tmp.end();
-		while (it != ite)
-		{
-			if (channel->user_is_operator(*it) == 1)
-				rpl += "@";
-			rpl += ((*it)->get_nickname() + " ");
-			it++;
-		}
-		rpl += "\r\n";
-		//std::cout << "rpl: |" << rpl << "|" << std::endl;
-		break;
-	}
-	case 366: // ENDOFNAMES
-	{
-		rpl = ":127.0.0.1 " + error_code + " " + user->get_nickname() + " ";
-		if (channel)
-			rpl += channel->get_name();
-		else
-			rpl += arg;
-		rpl += " :End of NAMES list\r\n";
-		break;
-	}
-	case 375:
-	{
-		rpl += ":- " + this->get_name() + " Message of the day - \r\n";
-		break;
-	}
-	case 376:
-	{
-		rpl += ":End of MOTD command\r\n";
-		break;
-	}
-	case 381: // YOUREOPER
-	{
-		rpl += "You are now an IRC operator\r\n";
-		break;
-	}
-	case 4242:
-	{
-		rpl += ":" + this->get_name() + " " + error_code + " " + user->get_nickname() + " :";
-		rpl = "[CAP] : IRC_90'S does not handle capabilities\r\n";
-		break;
-	}
-	case 4243:
-	{
-		rpl += user->get_nickname() + ": sets mode " + arg + " on " + user->get_nickname() + "\r\n";
-		break;
-	}
-	case 4244: // customhelp
-	{
-		// Liste des commandes dispo sur notre IRC
-		rpl += "Available commands:\n";
-		rpl += "---> Globales: NICK | OPER | MODE | WHO | AWAY | HELP | KILL | QUIT \n";
-		rpl += "---> On Channels: JOIN | PART | TOPIC | NAMES | LIST | KICK\n";
-		rpl += "---> To send messages: PRIVMSG | NOTICE";
-		rpl += "\r\n";
-		break;
-	}
-	case 4245:
-	{
-		rpl += arg + "\r\n";
-		break;
-	}
-	default:
-	{
-		rpl = "No RPL set \r\n";
-		break;
-	}
-	}
-	//Envoie du message a la queue du serveur
-	this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
 	return;
 }
 */
@@ -766,8 +510,7 @@ unsigned int	IRC::get_channel_nb(void)
 
 std::string		IRC::get_port(void)
 {
-	std::string port = this->_port;
-	return (port);
+	return (this->_port);
 }
 
 void			IRC::set_port(std::string port)

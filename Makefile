@@ -26,7 +26,7 @@ NAMES		=	main.cpp \
 				Commands/Other/Unknown.cpp \
 				Commands/OptionalFeatures/Users.cpp \
 				Commands/ServerQueries/Version.cpp \
-				Commands/Ping.cpp \
+				Commands/ServerQueries/Ping.cpp \
 				Commands/Commands.cpp \
 				IRCServer/IRCServer.cpp \
 				Replies/build_replies.cpp \
@@ -64,7 +64,7 @@ NAME		= ircserv
 
 CC			= clang++
 
-FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
+FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
 
 EXTRA_MA 	= -DMALATINI=1
 

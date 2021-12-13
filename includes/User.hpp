@@ -40,7 +40,6 @@ private:
     bool _user_has_registered_nick;
     bool _user_is_registered;
 
-    /* Correspond a la commande pre parsee */
     std::string _unparsed_client_command;
     std::string _prefix;
     std::string _command_name;
@@ -54,7 +53,6 @@ public:
     void set_prefix(std::string);
     void set_command(std::string);
 
-    //IRC *_IRCserver;
     bool _to_delete;
 
     User(void);
@@ -73,7 +71,6 @@ public:
     std::string get_message(void) const;
     int get_message_status(void) const;
     int get_channels_nb(void) const;
-    //IRC *get_server(void) const;
     int get_socket(void) const;
 
     std::string get_unparsed_client_command(void) const;
@@ -110,7 +107,7 @@ public:
     int store_string_until_char(std::string *dest, std::string *src, char c, int len);
     void patch_params(std::vector<std::string> *params);
     void split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c);
-    bool hasEnding(std::string const &fullString, std::string const &ending);
+    bool string_end_with(std::string const &fullString, std::string const &ending);
     void store_prefix(void);
     void store_command(void);
     void store_params(void);
@@ -119,13 +116,11 @@ public:
     void store_command(std::vector<t_cmd>::iterator it);
     void store_params(std::vector<t_cmd>::iterator it);
 
-    void displayClientInfo(void);
-    void displayChannels(void);
+    void display_client_info(void);
+    void display_channels(void);
     void display_command(void);
     void display_params(void);
 
-    //Channel *creates_channel(std::string channel_name);
-    //bool is_channel_user(Channel *channel);
     void be_added_to_channel(Channel *chan);
     void decrease_channel_nb();
     void increase_channel_nb();
@@ -134,5 +129,3 @@ public:
 };
 
 std::ostream &operator<<(std::ostream &COUT, User *user);
-//TODO: attention il y a peut etre des fonctions plus utilisees qu on peut supprimer ?
-//TODO: supprimer canjoin + is channel user ?

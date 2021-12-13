@@ -29,7 +29,6 @@ public:
     IRC(std::string const &password);
     virtual ~IRC();
 
-    //TODO passer en privé
     std::vector<User *> _users;
     std::vector<int> fds;
     Commands *_commands;
@@ -40,7 +39,7 @@ public:
 
     void set_name(std::string name);
     void set_version(std::string version);
-    void set_creation(std::string date, time_t time);
+    void set_creation(std::string date);
     void set_port(int port);
     void set_password(std::string password);
 

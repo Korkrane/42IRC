@@ -21,7 +21,6 @@ private:
     bool                 _has_key;
     unsigned int         _members_nb;
     unsigned int         _operators_nb;
-    //IRC                 *_serv;
 
     Channel(Channel const &src);
     Channel &operator=(Channel const &src);
@@ -64,7 +63,6 @@ public:
     void                newMember(User *user, bool user_operator);
     void                newOperator(User *user);
     void                deleteMember(User *user);
-    void                printMemberInfo(User *user);
     bool                isNicknameUnique(User *user);
 
     bool                channelHasUsers(void);
@@ -92,7 +90,6 @@ public:
     bool                is_correct_channel_key(std::string target_key);
     bool                is_full_channel(void) const;
 
-    //void                delete_channel_from_server(void);
     std::string         get_unknown_mode(std::string target_modes);
 
     void                delete_operator(User *user);
