@@ -469,14 +469,12 @@ bool IRC::user_can_join(Channel *channel)
 	return (true);
 }
 
-
 void IRC::send_rpl(std::string code, User *user, std::vector<std::string> params, std::string command)
 {
 	std::string rpl = this->build_reply(code, user, params, command);
 	this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
 }
 
-//void IRC::send_rpl_to_all_members(Channel *channel, std::string rpl)
 void IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, std::vector<std::string> params, std::string command)
 {
 	std::vector<User *>::iterator it = users.begin();
@@ -488,15 +486,6 @@ void IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, st
 		it++;
 	}
 }
-
-/*
-std::string IRC::init_rpl(User *user)
-{
-	std::string rpl;
-	rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "0";
-	return rpl;
-}
-*/
 
 unsigned int	IRC::get_channel_nb(void)
 {
