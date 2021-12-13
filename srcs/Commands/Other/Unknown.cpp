@@ -1,24 +1,9 @@
 #include <IRC.hpp>
 
-/**
- * @brief
- *
- * @param client
- * @param server
- * TODO: a reprendre suite a la modification de clientm
- */
-void Commands::unknown_cmd(User *client, IRC *server)
+void Commands::unknown_cmd(User *user, IRC *server)
 {
-    (void)client;
-    (void)server;
-    /*
-    std::vector<std::string> reply_params;
-    std::string              reply;
+    std::vector<std::string> params;
 
-    //A reprendre suite a la modif de client
-    //reply_params.push_back(client->get_command_name());
-    reply = build_reply(421, client, reply_params);
-    send_reply(reply);
-    */
-   return ;
+    params.push_back(user->get_command_name());
+    server->send_rpl("421", user, params, "");
 }

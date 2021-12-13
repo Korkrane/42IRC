@@ -32,15 +32,14 @@ std::string format_code_str(int code)
 
 std::string IRC::build_reply(std::string code, User *user, std::vector<std::string> params, std::string command)
 {
-    std::string code_str;
     std::string prefix;
 
     int int_code = atoi(code.c_str());
 
     if (user->get_nickname().empty())
-        prefix = ":" + user->get_hostname() + " " + code_str + " * ";
+        prefix = ":" + user->get_hostname() + " " + code + " * ";
     else
-        prefix = ":" + user->get_hostname() + " " + code_str + " " + user->get_nickname() + " ";
+        prefix = ":" + user->get_hostname() + " " + code + " " + user->get_nickname() + " ";
     //Si la commande est emptuy c'est qu'il s'agit d'un message d erreur classique
     if (command.empty())
     {
@@ -154,7 +153,6 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                 return prefix + ERR_NOMOTD();
             case 423:
                 return prefix + ERR_NOADMININFO(params[0]);
-            //TODO: a tester verifier (voir si appelee)
             case 424:
             {
                 std::vector<std::string>::iterator it = params.begin();
@@ -274,74 +272,8 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         //Partie qui va permettre aux commandes d'envoyer leur "message custom"
         return prefix;
     }
-    //all members - unique
     #if DEBUG
         std::cout << PURPLE << "BUILD : REPLY : Error, did not match any case" << std::endl;
     #endif
     return prefix;
-}
-
-/**
- * @brief Fonction principale qui va permettre au serveur d'envoyer les RPL, les ERR
- * mais egalement les messages "specifiques" emanant de chaque commande.
- * TODO: Mahaut : faire un overload avec plus d'arguments puis on reprendra uniquement la partie overloadee ?
- * TODO: A mettre dans la classe serveur ?
- * @param code
- * @param user
- * @param params
- * @return std::string
- */
-std::string build_reply(int code, User *user, std::vector<std::string> params)
-{
-    (void)code;
-    (void)user;
-    std::string code_str;
-    std::string prefix;
-
-    code_str = format_code_str(code);
-    if (user->get_nickname().empty())
-        prefix = ":" + user->get_hostname() + " " + code_str + " * ";
-    else
-        prefix = ":" + user->get_hostname() + " " + code_str + " " + user->get_nickname() + " ";
-    switch (code)
-    {
-    case 1:
-        return prefix + RPL_WELCOME(params[0], params[1], params[2]);
-    case 2:
-        return prefix + RPL_YOURHOST(params[0], "1.0");
-    case 3:
-        return prefix + RPL_CREATED(params[0]);
-    case 4: // TODO remove hardcoded version value
-        return prefix + RPL_MYINFO(params[0], "1.0", USER_VALID_MODES, CHANNEL_VALID_MODES);
-    case 305:
-        return prefix + RPL_UNAWAY();
-    case 306:
-        return prefix + RPL_NOWAWAY();
-    case 351:
-        return prefix + RPL_VERSION(params[0], params[1], params[2], params[3]);
-    case 372:
-        return prefix + RPL_MOTD(params[0]);
-    case 375:
-        return prefix + RPL_MOTDSTART(params[0]);
-    case 376:
-        return prefix + RPL_ENDOFMOTD();
-    case 391:
-        return prefix + RPL_TIME(params[0], params[1]);
-    case 402:
-        return prefix + ERR_NOSUCHSERVER(params[0]);
-    case 421:
-        return prefix + ERR_UNKNOWNCOMMAND(params[0]);
-    case 422:
-        return prefix + ERR_NOMOTD();
-    case 999:
-        //return (":127.0.0.1 PONG 127.0.0.1 :127.0.0.1\r\n"); À CHOISIR SI ON VEUT AVOIR LE MSSG PONG VISIBLE OU NON
-        return (":127.0.0.1 PONG\r\n");
-    case 332:
-        return prefix + RPL_TOPIC(params[0], params[1]);
-    case 998:
-        return prefix + "ERROR\r\n";
-    default:
-        return std::string("");
-    }
-    return std::string("");
 }

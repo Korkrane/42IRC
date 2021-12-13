@@ -1,29 +1,21 @@
 #include <IRC.hpp>
 
-void Commands::version_cmd(User *user, IRC *server) // 351 & 402 reply
+void Commands::version_cmd(User *user, IRC *server)
 {
-    (void)user;
-    (void)server;
-    std::vector<std::string> reply_params;
-    std::string              reply;
+    std::vector<std::string> params;
 
-
-    if (user->get_params().empty() || (user->get_params()[0] == server->get_name())) // si pas de server precise donné l'actuel
+    if (user->get_params().empty() || (user->get_params()[0] == server->get_name()))
     {
         // TODO check for degublevel & comments (hardcoded atm)
-        reply_params.push_back(server->get_version());
-        reply_params.push_back("debuglevel00");
-        reply_params.push_back(server->get_name());
-        reply_params.push_back("random comments as test");
-        reply = build_reply(351, user, reply_params);
-        server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
-        reply_params.clear();
+        params.push_back(server->get_version());
+        params.push_back("debuglevel00");
+        params.push_back(server->get_name());
+        params.push_back("random comments as test");
+        server->send_rpl("351", user, params, "");
     }
     else if (!user->get_params().empty() && user->get_params()[0] != server->get_name())
     {
-        reply_params.push_back(user->get_params()[0]);
-        reply = build_reply(402, user, reply_params);
-        server->_response_queue.push_back(std::make_pair(user->get_socket(), reply));
-        reply_params.clear();
+        params.push_back(user->get_params()[0]);
+        server->send_rpl("402", user, params, "");
     }
 }

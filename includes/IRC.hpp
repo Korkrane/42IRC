@@ -11,6 +11,7 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include <list>
 #include <map>
@@ -41,7 +42,7 @@
 #define USER_VALID_MODES "aiwroOs"
 #define CHANNEL_VALID_MODES "OovaimnpsrtklbeI"
 #define CHANNEL_FORBIDDEN_CHARS " ,:"
-//Il n'est pas demande expressement de gerer les modes donc on va par defaut mettre ceux qui peuvent servir dans 
+//Il n'est pas demande expressement de gerer les modes donc on va par defaut mettre ceux qui peuvent servir dans
 //les commandes que nous avons implemente
 #define CHANNEL_MODES "t"
 
