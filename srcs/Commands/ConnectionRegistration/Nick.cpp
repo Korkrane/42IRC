@@ -81,66 +81,42 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
   return true;
 }
 
-/**
- * @brief
- *
- * @param command
- * @param user
- * @param server
- * Parameters: <nickname>
- * NICK command is used to give user a nickname or change the existing
-   one.
- * La commande nick va etre appelee pendant la client registration puis "manuellement"
- * a la guise du client ensuite.
- */
 void Commands::nick_cmd(User *user, IRC *server)
 {
-  (void)server;
+  #if DEBUG
+    std::cout << RED << "ENTER NICK CMD " << NC << std::endl;
+  #endif
 
-#if DEBUG
-  std::cout << RED << "ENTER NICK CMD " << NC << std::endl;
-#endif
+  std::vector<std::string> params;
+  // check params nb
   if (user->get_params_size() != 1)
   {
-#if DEBUG
-    std::cout << "Nick command called but param size is incorrect" << std::endl;
-#endif
-    // TODO build reply
-    /*
-    std::vector<std::string> command;
-    std::string cmd_str = user->get_command_name();
-    command.push_back(cmd_str);
-    error_handler("461", user, NULL, command);
-    */
+    params.push_back(user->get_command_name());
+    server->send_rpl("461", user, params, "");
     return ;
   }
-
-  //Puis on verifie si le nickname est correct grammaticallement (fonction de grammar)
-  std::string nick_arg = user->get_params().front();
-#if DEBUG
-  std::cout << "param for nick command is " << nick_arg << std::endl;
-#endif
-  std::vector<std::string> param;
-  if (checkNickGrammar(nick_arg, server, user) == false)
+  //check if nick is valid
+  std::string nick = user->get_params().front();
+  if (checkNickGrammar(nick, server, user) == false)
   {
-#if DEBUG
-    std::cout << RED << "DEBUG: NICK GRAMMAR CHECK RETURN FALSE" << NC << std::endl;
-#endif
+    #if DEBUG
+      std::cout << RED << "DEBUG: NICK GRAMMAR CHECK RETURN FALSE" << NC << std::endl;
+    #endif
+    //TODO handle error case
     return;
   }
-
-  //Puis on verifie que le nickname n existe pas deja (-> sinon cas de collision)
-  if (nickIsAvailable(nick_arg, server, user) == false)
+  //check nick collision
+  if (nickIsAvailable(nick, server, user) == false)
   {
-
-    param.push_back(user->get_params().front());
-
-    //TODO: build reply
-    //error_handler("433", user, NULL, param);
+    params.push_back(user->get_params().front());
+    //TODO check if serv has to sent error code or command name
+    server->send_rpl("433", user, params, "");
     return;
   }
-  user->set_nickname(nick_arg);
-
+  user->set_nickname(nick);
+#if DEBUG
+  std::cout << PURPLE << "DEBUG: SUCCESS NICK CMD" << NC << std::endl;
+#endif
 #if DEBUG
   std::cout << RED << "EXIT NICK CMD " << NC << std::endl;
 #endif

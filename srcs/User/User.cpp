@@ -314,6 +314,7 @@ void User::store_command(std::vector<t_cmd>::iterator it)
 		{
 			(*it)._command_name.resize((*it)._command_name.size() - 2);
 		}
+		std::transform((*it)._command_name.begin(), (*it)._command_name.end(),(*it)._command_name.begin(), ::toupper);
 	}
 }
 
