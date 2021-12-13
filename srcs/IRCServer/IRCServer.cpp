@@ -469,30 +469,34 @@ bool IRC::user_can_join(Channel *channel)
 	return (true);
 }
 
-//TODO: A utiliser dans build reply?
-/*
-void IRC::send_rpl_to_all_members(Channel *channel, std::string rpl)
+
+void IRC::send_rpl(std::string code, User *user, std::vector<std::string> params, std::string command)
 {
-	std::vector<User *> members = channel->get_members();
-	std::vector<User *>::iterator it = members.begin();
-	std::vector<User *>::iterator ite = members.end();
-	User *user = (*it);
+	std::string rpl = this->build_reply(code, user, params, command);
+	this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
+}
+
+//void IRC::send_rpl_to_all_members(Channel *channel, std::string rpl)
+void IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, std::vector<std::string> params, std::string command)
+{
+	std::vector<User *>::iterator it = users.begin();
+	std::vector<User *>::iterator ite = users.end();
 	while (it != ite)
 	{
-
-		this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
+		std::string rpl = this->build_reply(code, (*it), params, command);
+		this->_response_queue.push_back(std::make_pair((*it)->get_socket(), rpl));
 		it++;
 	}
-	return;
 }
-*/
 
+/*
 std::string IRC::init_rpl(User *user)
 {
 	std::string rpl;
 	rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "0";
 	return rpl;
 }
+*/
 
 unsigned int	IRC::get_channel_nb(void)
 {

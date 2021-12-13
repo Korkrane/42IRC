@@ -88,6 +88,7 @@ void Commands::join(User *user, IRC *server)
             */
             return;
         }
+        // TODO check if multiple channels to join
         //On verifie si la channel existe, sinon on va la creer
         Channel *chan = NULL;
         if (server->has_channel(channel) == false)
@@ -138,8 +139,7 @@ void Commands::join(User *user, IRC *server)
             //On l'ajoute a sa liste
             user->add_channel_to_list(chan);
             //On prepare et envoie la reponse du serveur
-            //TODO: ajouter appel au nouveau build_reply
-            //send_join_message(chan, user, user->get_params(), server);
+            server->send_rpl_to_all_members("", chan->get_members(), params, "JOIN");
         }
         //Erreur to many channels car l user fait partie de trop de channels
         else

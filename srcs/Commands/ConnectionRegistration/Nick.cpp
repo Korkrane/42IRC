@@ -35,7 +35,7 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
 {
   (void)server;
   (void)user;
-  
+
   int i = 0;
   int length = nickname.length();
 
@@ -132,19 +132,11 @@ void Commands::nick_cmd(User *user, IRC *server)
   //Puis on verifie que le nickname n existe pas deja (-> sinon cas de collision)
   if (nickIsAvailable(nick_arg, server, user) == false)
   {
-#if DEBUG
-    std::cout << RED << "LOL" << std::endl;
-#endif
+
     param.push_back(user->get_params().front());
-//A tester
-#if DEBUG
-    std::cout << RED << "LOL" << std::endl;
-#endif
+
     //TODO: build reply
     //error_handler("433", user, NULL, param);
-#if DEBUG
-    std::cout << RED << "LOL" << std::endl;
-#endif
     return;
   }
   user->set_nickname(nick_arg);

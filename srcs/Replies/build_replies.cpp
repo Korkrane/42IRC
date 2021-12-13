@@ -29,25 +29,22 @@ std::string format_code_str(int code)
     return ToString(code);
 }
 
-//TODO: Question : est-ce qu on fait une fonction separee ou est-ce qu on la raccroche a la classe IRC ?
-//TODO: verifier que tous les codes utilises sont bien implementes ici
-std::string IRC::build_reply(int code, std::vector<User *>users, std::vector<Channel *> channels, std::vector<std::string> params, std::string command)
+
+std::string IRC::build_reply(std::string code, User *user, std::vector<std::string> params, std::string command)
 {
     std::string code_str;
     std::string prefix;
 
-    code_str = format_code_str(code);
-    User *user = users.front();
-    //TODO: choisit entre init reply et ca 
-    //prefix = init_rpl();
-    if (users[0]->get_nickname().empty())
-        prefix = ":" + users[0]->get_hostname() + " " + code_str + " * ";
+    int int_code = atoi(code.c_str());
+
+    if (user->get_nickname().empty())
+        prefix = ":" + user->get_hostname() + " " + code_str + " * ";
     else
-        prefix = ":" + users[0]->get_hostname() + " " + code_str + " " + users[0]->get_nickname() + " ";
-    //Si la commande est emptuy c'est qu'il s'agit d'un message d erreur classique (Baudoin)
+        prefix = ":" + user->get_hostname() + " " + code_str + " " + user->get_nickname() + " ";
+    //Si la commande est emptuy c'est qu'il s'agit d'un message d erreur classique
     if (command.empty())
     {
-        switch (code)
+        switch (int_code)
         {
             case 1:
                 return prefix + RPL_WELCOME(params[0], params[1], params[2]);
@@ -72,15 +69,15 @@ std::string IRC::build_reply(int code, std::vector<User *>users, std::vector<Cha
             //case 315:
             //    return prefix + RPL_ENDOFWHO(user->get_name());
             case 322:
-                return prefix + RPL_LIST(this->get_name(), channels[0]->get_topic());
+                return prefix + RPL_LIST(this->get_name(), params[1]);
             case 323:
                 return prefix + RPL_LISTEND();
             case 351:
                 return prefix + RPL_VERSION(params[0], params[1], params[2], params[3]);
             case 331:
-                return prefix + RPL_NOTOPIC(channels[0]->get_name());
+                return prefix + RPL_NOTOPIC(params[0]);
             case 332:
-                return prefix + RPL_TOPIC(channels[0]->get_name(), channels[0]->get_topic());
+                return prefix + RPL_TOPIC(params[0], params[1]);
             /*
             case 341:
                 return prefix + RPL_INVITING(channels[0]->get_name(), user[0]->get_nickname());
@@ -92,6 +89,7 @@ std::string IRC::build_reply(int code, std::vector<User *>users, std::vector<Cha
            //TODO: a tester
             case 353:
             {
+                /*
                 prefix += " = " + channels[0]->get_name() + " :";
                 std::vector<User *> tmp = channels[0]->get_members();
                 std::vector<User *>::iterator it = tmp.begin();
@@ -105,6 +103,7 @@ std::string IRC::build_reply(int code, std::vector<User *>users, std::vector<Cha
                 }
                 prefix +=  "\r\n";
                 return prefix;
+                */
             }
             //TODO: a tester
             /*
@@ -275,6 +274,7 @@ std::string IRC::build_reply(int code, std::vector<User *>users, std::vector<Cha
         //Partie qui va permettre aux commandes d'envoyer leur "message custom"
         return prefix;
     }
+    //all members - unique
     #if DEBUG
         std::cout << PURPLE << "BUILD : REPLY : Error, did not match any case" << std::endl;
     #endif
@@ -282,14 +282,14 @@ std::string IRC::build_reply(int code, std::vector<User *>users, std::vector<Cha
 }
 
 /**
- * @brief Fonction principale qui va permettre au serveur d'envoyer les RPL, les ERR 
+ * @brief Fonction principale qui va permettre au serveur d'envoyer les RPL, les ERR
  * mais egalement les messages "specifiques" emanant de chaque commande.
  * TODO: Mahaut : faire un overload avec plus d'arguments puis on reprendra uniquement la partie overloadee ?
  * TODO: A mettre dans la classe serveur ?
- * @param code 
- * @param user 
- * @param params 
- * @return std::string 
+ * @param code
+ * @param user
+ * @param params
+ * @return std::string
  */
 std::string build_reply(int code, User *user, std::vector<std::string> params)
 {

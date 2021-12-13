@@ -71,10 +71,13 @@ public:
     void process_command(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
 
     bool user_can_join(Channel *channel);
-    void send_rpl(std::string error_code, User *user, Channel *channel, std::string arg);
-    void send_rpl_to_all_members(Channel *channel, std::string rpl);
+    //void send_rpl(std::string error_code, User *user, Channel *channel, std::string arg);
+    //void send_rpl_to_all_members(Channel *channel, std::string rpl);
+    void send_rpl(std::string code, User *user, std::vector<std::string> params, std::string command);
+    void send_rpl_to_all_members(std::string code, std::vector<User* > user, std::vector<std::string> params, std::string command);
+
     static std::string init_rpl(User *user);
-    std::string build_reply(int code, std::vector<User *>users, std::vector<Channel *> channels, std::vector<std::string> params, std::string command);
+    std::string build_reply(std::string code, User * user, std::vector<std::string> params, std::string command);
 
     void delete_user(int fd);
 

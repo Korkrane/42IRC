@@ -156,7 +156,7 @@ void Commands::invite(User *user, IRC *server)
         User *target_user = server->get_user_ptr(target_nick);
         chan->newMember(target_user, false);
 
-        //9. Envoyer le message au serveur 
+        //9. Envoyer le message au serveur
         //TODO: a reprendre en changeant les params (build reply)
         //server->send_rpl("431", user, chan, chan->get_name() + " " + target_user->get_nickname());
     }
