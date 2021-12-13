@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -42,7 +41,7 @@ std::vector<std::string>    ft_split(std::string line, std::string charset)
     if (charset.empty())
     {
 #if DEBUG
-    std::cout << BLUE << "DEBUG: " << "ft_split called but charset is null" << std::endl;
+    std::cout << BLUE << "DEBUG: " << "ft_split called but charset is null" << NC << std::endl;
 #endif
         splitted.push_back(line);
         return (splitted);

@@ -442,14 +442,21 @@ bool IRC::find_user(std::string nickname)
 	return (res);
 }
 
-//TODO: A tester
-User *IRC::get_user_ptr(std::string nick)
+User *IRC::get_user_ptr(std::string name)
 {
-	(void)nick;
-
 	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
 	{
-		if ((*it)->get_nickname() == nick)
+		if ((*it)->get_nickname() == name)
+			return *it;
+	}
+	return (NULL);
+}
+
+Channel *IRC::get_channel_ptr(std::string name)
+{
+	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		if ((*it)->get_name() == name)
 			return *it;
 	}
 	return (NULL);

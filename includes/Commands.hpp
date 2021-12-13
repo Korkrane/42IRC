@@ -8,7 +8,7 @@ class IRC;
 
 class Commands
 {
-private: 
+private:
 	/* Ajout des protos pour que la classe soit canonique */
 	Commands(Commands const &src);
 	Commands &operator=(Commands const &src);
@@ -28,13 +28,12 @@ public:
 	static void time_cmd(User *user, IRC *server);
 	static void cap_cmd(User *user, IRC *server);
 	static void user_cmd(User *user, IRC *server);
-
 	static void quit_cmd(User *user, IRC *server);
-	static void send_quit_message(User *user, IRC *server, std::string message);
+	static void ping_cmd(User *user, IRC *server);
+
 
 	static void away_cmd(User *user, IRC *server);
 	static void version_cmd(User *user, IRC *server);
-	static void ping_cmd(User *user, IRC *server);
 	static void pass(User *user, IRC *server);
 
 	static void notice(User *user, IRC *server);
@@ -52,13 +51,13 @@ public:
 	static std::string whoHelpParameter(void);
 	void displayMode(void) const;
 
-
 	static void join(User *user, IRC *server);
-	static void send_join_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server);
+
 
 	static void nick_cmd(User *user, IRC *server);
 	static bool checkNickGrammar(std::string nick, IRC *server, User *user);
 	static bool nickIsAvailable(std::string nick, IRC *server, User *user);
+
 	static void part(User *user, IRC *server);
 	static void send_part_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server);
 
@@ -85,6 +84,7 @@ public:
 	static void send_names_message(Channel *channel, User *user, IRC *server);
 
 	static void privmsg(User *user, IRC *server);
+	static std::vector<std::string> fill_recipients(std::string targets);
 	static std::vector<std::string> store_second_param_message(std::vector<std::string> params);
 	static bool prefixed_by_colon(std::string str);
 	static void send_full_privmsg(User *target, User *user, IRC *server, std::vector<std::string> message);

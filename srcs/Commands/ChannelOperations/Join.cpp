@@ -1,23 +1,5 @@
 #include <IRC.hpp>
 
-/*
-void Commands::send_join_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server)
-{
-    (void)message;
-    std::string rpl = server->init_rpl(user);
-    rpl += " JOIN " + channel->get_name();
-    rpl += "\r\n";
-    //Envoyer le message a tout le channel
-    server->send_rpl_to_all_members(channel, rpl);
-    //Envoyer le message concernant le topic (voir RFC2812)
-    if (channel->get_has_topic() == true)
-        server->send_rpl("332", user, channel, "");
-    server->send_rpl("353", user, channel, "");
-    server->send_rpl("366", user, channel, "");
-    return ;
-}
-*/
-
 /**
  * @brief Permet de savoir si les arguments qui representeraient la key doivent etre pris en compte ou non.
  *

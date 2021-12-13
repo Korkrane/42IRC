@@ -53,6 +53,7 @@ public:
     std::vector<User *> get_users(void);
     User *get_user(int fd);
     User *get_user_ptr(std::string name);
+    Channel *get_channel_ptr(std::string name);
     unsigned int get_channel_nb(void);
     std::string get_port(void);
     void set_port(std::string port_number);

@@ -88,21 +88,20 @@ void Commands::nick_cmd(User *user, IRC *server)
   #endif
 
   std::vector<std::string> params;
-  // check params nb
+  // check if nick given
   if (user->get_params_size() != 1)
   {
     params.push_back(user->get_command_name());
-    server->send_rpl("461", user, params, "");
+    server->send_rpl("431", user, params, "");
     return ;
   }
   //check if nick is valid
   std::string nick = user->get_params().front();
   if (checkNickGrammar(nick, server, user) == false)
   {
-    #if DEBUG
-      std::cout << RED << "DEBUG: NICK GRAMMAR CHECK RETURN FALSE" << NC << std::endl;
-    #endif
-    //TODO handle error case
+    params.push_back(nick);
+    //TODO check if serv has to sent error code or command name
+    server->send_rpl("432", user, params, "");
     return;
   }
   //check nick collision
@@ -114,6 +113,9 @@ void Commands::nick_cmd(User *user, IRC *server)
     return;
   }
   user->set_nickname(nick);
+
+  if(!user->get_realname().empty() && !user->get_hostname().empty() && !user->get_username().empty()) //lier au cas dans user.cpp ligne33
+    user->set_registered_user(true);
 #if DEBUG
   std::cout << PURPLE << "DEBUG: SUCCESS NICK CMD" << NC << std::endl;
 #endif

@@ -30,7 +30,8 @@ void Commands::user_cmd(User *user, IRC *server)
         user->set_username(user->get_params()[0]);
         user->set_hostname(user->get_params()[2]);
         user->set_realname(user->get_params()[3]);
-        user->set_registered_user(true);
+        if(!user->get_nickname().empty()) //TODO dans le cas ou pas de nick a la connection il devra refaire un /nick valide
+            user->set_registered_user(true);
     }
     #if DEBUG
         std::cout << RED << "EXIT USER CMD " << NC << std::endl;

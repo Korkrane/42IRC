@@ -43,6 +43,7 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PART", part));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TOPIC", topic));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PASS", pass));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PRIVMSG", privmsg));
 	return cmds;
 }
 
