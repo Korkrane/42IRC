@@ -63,7 +63,7 @@ NAME		= ircserv
 
 CC			= clang++
 
-FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
+FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 -g3 #-fsanitize=address
 
 EXTRA_MA 	= -DMALATINI=1
 
