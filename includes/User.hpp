@@ -127,6 +127,8 @@ public:
     void increase_channel_nb();
     void add_channel_to_list(Channel *channel);
     void remove_channel_from_list(Channel *channel);
+
+    void display_params_bis(void);
 };
 
 std::ostream &operator<<(std::ostream &COUT, User *user);

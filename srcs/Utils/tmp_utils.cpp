@@ -5,3 +5,16 @@ void send_reply(std::string reply)
 {
     std::cout << BLUE << reply << NC << std::endl;
 }
+
+void    display_vector_string(std::vector<std::string> vector)
+{
+    std::vector<std::string>::iterator it = vector.begin();
+    std::vector<std::string>::iterator ite = vector.end();
+
+    while (it != ite)
+    {
+        std::cout << PURPLE << (*it) << std::endl;
+        it++;
+    }
+    return ;
+}

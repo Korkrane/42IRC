@@ -438,6 +438,25 @@ void User::display_params(void) //const
 	return;
 }
 
+void	User::display_params_bis(void)
+{
+	std::vector<std::string> params = this->get_params();
+	std::vector<std::string>::iterator it = params.begin();
+	std::vector<std::string>::iterator ite = params.end();
+
+	int index = 0;
+	std::string tmp;
+	std::cout << PURPLE << "Printing params" << std::endl;
+	while (it != ite)
+	{
+		tmp = (*it);
+		std::cout << PURPLE << "Params " << index << ": " << tmp << std::endl;
+		index++;
+		it++;
+	}
+	return ;
+}
+
 void User::display_command(void)
 {
 	std::cout << "--- Displaying Last command parsed ---" << std::endl;

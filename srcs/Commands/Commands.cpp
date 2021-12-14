@@ -84,7 +84,8 @@ std::vector<std::string> Commands::get_channel_targets(User *user, IRC *server)
 {
 	(void)user;
 	(void)server;
-	std::vector<std::string> targets;
+	std::vector<std::string> params = user->get_params();
+	std::vector<std::string> targets = ft_split(params[0], ",");
 	return (targets);
 }
 
@@ -92,6 +93,7 @@ std::vector<std::string>	Commands::get_key_targets(User *user, IRC *server)
 {
 	(void)user;
 	(void)server;
-	std::vector<std::string> targets;
+	std::vector<std::string> params = user->get_params();
+	std::vector<std::string> targets = ft_split(params[1], ",");
 	return (targets);
 }
