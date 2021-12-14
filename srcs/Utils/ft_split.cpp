@@ -76,23 +76,3 @@ std::vector<std::string>    ft_split(std::string line, std::string charset)
     }
     return (splitted);
 }
-
-/*
-int main(int argc, char **argv)
-{
-    (void)argc;
-    (void)argv;
-    std::string test = "coucou je teste des trucs !";
-    std::vector<std::string> splitted = ft_split(test, " ");
-    std::vector<std::string>::iterator it = splitted.begin();
-    std::vector<std::string>::iterator ite = splitted.end();
-    int i = 0;
-    while (it != ite)
-    {
-        std::cout << i << " " << (*it) << std::endl;
-        it++;
-        i++;
-    }
-    return (0);
-}
-*/

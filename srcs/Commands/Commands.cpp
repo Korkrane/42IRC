@@ -79,3 +79,19 @@ std::string	Commands::get_channel_key(Channel *channel)
 	#endif
 	return (key);
 }
+
+std::vector<std::string> Commands::get_channel_targets(User *user, IRC *server)
+{
+	(void)user;
+	(void)server;
+	std::vector<std::string> targets;
+	return (targets);
+}
+
+std::vector<std::string>	Commands::get_key_targets(User *user, IRC *server)
+{
+	(void)user;
+	(void)server;
+	std::vector<std::string> targets;
+	return (targets);
+}

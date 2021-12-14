@@ -537,3 +537,30 @@ std::ostream &operator<<(std::ostream &COUT, User *user)
 	COUT << user->get_nickname();
 	return (COUT);
 }
+
+//Va permettre de boucler quand il y a plusieurs users ou channel passes en parametres
+unsigned int User::count_commas(void) const
+{
+	unsigned int commas = 0;
+	std::vector<std::string> params = this->get_params();
+	std::vector<std::string>::iterator it = params.begin();
+	std::vector<std::string>::iterator ite = params.end();
+
+	std::string tmp;
+	//int pos = 0;
+	while (it != ite)
+	{
+		tmp = (*it);
+		//pos = tmp.find(' ');
+		if (tmp.find(' ') == std::string::npos)
+		{
+			//On a pas trouve d'espace
+			commas++;
+		}
+		it++;
+	}
+	#if DEBUG
+		std::cout << PURPLE << "DEBUG: " << "USER: Counting " << commas << " commas in the params" << std::endl;
+	#endif
+	return (commas);
+}

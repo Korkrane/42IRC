@@ -91,8 +91,8 @@ public:
 	static void send_one_word_privmsg(User *target, User *user, IRC *server, std::string message);
 	static bool should_ignore_key(Channel *channel, std::vector<std::string> params);
 
-	//confusion avec cette sur channel, pourrait etre supprimee ?
 	static std::string get_channel_key(Channel *channel);
-};
 
-//TODO: faire mon overload de channel (pour affichage)
+	static std::vector<std::string> get_channel_targets(User *user, IRC *server);
+	static std::vector<std::string> get_key_targets(User *user, IRC *server);
+};

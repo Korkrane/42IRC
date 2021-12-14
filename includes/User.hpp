@@ -79,6 +79,7 @@ public:
     std::string get_prefix(void) const;
     unsigned int get_params_size(void) const;
     bool check_if_prefix(void) const;
+    unsigned int count_commas(void) const;
 
     bool user_is_registered(void) const;
     bool user_registered_password(void) const;

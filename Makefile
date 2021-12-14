@@ -34,7 +34,6 @@ NAMES		=	main.cpp \
 				User/User.cpp \
 				Utils/ft_split.cpp \
 				Utils/tmp_utils.cpp \
-				Utils/error_handler.cpp \
 
 
 INCLUDES	=	./includes/Channel.hpp \
