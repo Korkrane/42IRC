@@ -12,6 +12,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <iterator>
 
 #include <list>
 #include <map>

@@ -62,6 +62,8 @@ public:
 	static void send_part_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server);
 
 	static void mode(User *user, IRC *server);
+	static void mode_channel(User *user, IRC *server);
+	static void mode_user(User *user, IRC *server);
 	static void edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server);
 	static bool should_add_mode(std::string modes);
 	static bool should_remove_mode(std::string modes);

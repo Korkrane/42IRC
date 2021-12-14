@@ -83,7 +83,14 @@ void Server::removeClient(int fd)
 		std::cout << "Client on socket #" << fd << " disconnected\n";
 		delete _clients[fd];
 		_clients.erase(fd);
+		std::vector<int>::iterator t= std::find(_irc->fds.begin(), _irc->fds.end(), fd);
+			std::cout << "LOL:" << *t << std::endl;
 		_irc->fds.erase(std::find(_irc->fds.begin(), _irc->fds.end(), fd)); // FOR TESTING
+		std::vector<User *> us = _irc->get_users();
+		for (std::vector<User *>::iterator it = us.begin(); it != us.end(); ++it)
+			if ((*it)->get_socket() == fd)
+				std::cout << "LOL:" << *it << std::endl;
+		_irc->delete_user(fd);
 	}
 }
 
@@ -113,9 +120,6 @@ void Server::Run()
 		for (std::vector<int>::const_iterator it = disconnectList.begin();
 			 it != disconnectList.end(); ++it)
 			removeClient(*it);
-
-			responseQueue.clear();
-		disconnectList.clear();
 	}
 }
 
