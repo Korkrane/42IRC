@@ -6,7 +6,7 @@
 void Commands::motd_cmd(User *user, IRC *server)
 {
     #if DEBUG
-        std::cout << RED << "DEBUG: enter motd_cmd" << NC << std::endl;
+        std::cout << RED << "ENTER motd_cmd" << NC << std::endl;
     #endif
     std::vector<std::string> params;
 
@@ -33,6 +33,6 @@ void Commands::motd_cmd(User *user, IRC *server)
     else
         server->send_rpl("422", user, params, "");
     #if DEBUG
-        std::cout << RED << "DEBUG: enter motd_cmd" << NC << std::endl;
+        std::cout << RED << "EXIT motd_cmd" << NC << std::endl;
     #endif
 }

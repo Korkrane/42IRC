@@ -227,9 +227,10 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 #if DEBUG
 		std::cout << BLUE << "\tDEBUG: Client first connection" << NC << std::endl;
 #endif
+
 		this->fds.push_back(clientFD);
-		//current_user = new User(clientFD);
-		this->_users.push_back(new User(clientFD));
+		User *tmp = new User(clientFD);
+		this->_users.push_back(tmp);
 		current_user = _users.back();
 
 		current_user->set_unparsed_client_command(cmd);
@@ -240,9 +241,9 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 #endif
 		if (current_user->user_is_registered() == true)
 			this->_commands->welcome_cmd(current_user, this);
-		responseQueue = this->_response_queue;
+		responseQueue = this->_response_queue; //leaks ici
 		this->_response_queue.clear();
-		this->_users.push_back(current_user);
+		delete tmp;
 	}
 }
 

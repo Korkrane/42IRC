@@ -10,7 +10,20 @@ static void	exitProperly()
 	if (gServer)
 		delete gServer;
 	if (gIRC)
+	{
+		std::vector<User *> users = gIRC->get_users();
+		users.clear();
+		/*
+		std::vector<User *> users = gIRC->get_users();
+		std::vector<Channel *> channels = gIRC->get_channels();
+
+		for(std::vector<User *>::iterator it = users.begin(); it != users.end(); it++)
+			delete (*it);
+		for(std::vector<Channel *>::iterator it2 = channels.begin(); it2 != channels.end(); it2++)
+			delete (*it2);
+		*/
 		delete gIRC;
+	}
 }
 
 static void	handleSignal(int signum)

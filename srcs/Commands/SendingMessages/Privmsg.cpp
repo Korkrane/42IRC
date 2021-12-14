@@ -2,9 +2,7 @@
 
 std::vector<std::string> Commands::fill_recipients(std::string target)
 {
-    std::vector<std::string> recipients;
-
-    recipients = ft_split(target, ",");
+    std::vector<std::string> recipients = ft_split(target, ",");
     #if DEBUG
         for(std::vector<std::string>::iterator it = recipients.begin(); it != recipients.end(); it++)
             std::cout << PURPLE << "Target for privmsg: " << (*it) << std::endl;
@@ -12,75 +10,60 @@ std::vector<std::string> Commands::fill_recipients(std::string target)
     return recipients;
 }
 
-void Commands::privmsg(User *user, IRC *server)
-{
-    #if DEBUG
-        std::cout << RED << "ENTER PRIVMSG CMD" << NC << std::endl;
-    #endif
-    int size = user->get_params_size();
-    std::vector<std::string> error;
-    std::vector<std::string> params = user->get_params();
-    //TODO
-    // 411ERR_NORECIPIENT
-              //":No recipient given (<command>)"
-    //404 ERR CAN NOT SEND TO CHAN
+    //TODO 404 ERR CAN NOT SEND TO CHAN
     //Sent to a user who is either (a) not on a channel
     //       which is mode +n or (b) not a chanop (or mode +v) on
     //       a channel which has mode +m set or where the user is
     //       banned and is trying to send a PRIVMSG message to
     //       that channel.
-    //401 no_such_nick when didnt find the user target
-    //412 no text to send
-    //407 err too many targets
-     //Returned to a client which is attempting to send a
-     //      PRIVMSG/NOTICE using the user@host destination format
-     //      and for a user@host which has several occurrences.
-     //
-     //    - Returned to a client which trying to send a
-     //      PRIVMSG/NOTICE to too many recipients.
-     //
-     //    - Returned to a client which is attempting to JOIN a safe
-     //      channel using the shortname when there are more than one
-     //      such channel.
-    //TODO: je n ai pas reussi a reproduire l erreur toomanytarget
-    //TODO /privmsg user2,user3,#chanlol  hello  -- with #chanlol not existing gonna send hello to user2 & user3 and return 401 for chan
-    if (size < 1)
+
+void Commands::privmsg(User *user, IRC *server)
+{
+    #if DEBUG
+        std::cout << RED << "ENTER PRIVMSG CMD" << NC << std::endl;
+    #endif
+    std::vector<std::string> params = user->get_params();
+    if (user->get_params_size() < 1) //s'il n'y a pas de recipient
     {
         std::vector<std::string> params_reply;
         params_reply.push_back(user->get_command_name());
         server->send_rpl("411", user, params_reply, "");
         return;
     }
-    else if (size < 2)
+    else if (user->get_params_size() < 2) //s'il n'y a pas de message à envoyer
     {
         std::vector<std::string> params_reply;
         server->send_rpl("412", user, params_reply, "");
         return;
     }
-    //On analyse les params
-    std::string target = params.front();
-    std::vector<std::string> targets = fill_recipients(target);
-
-    for(std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); it++)
+    //Dans le cas ou il y a plusieurs recipinets ex: /privmsg user1,user2,#channel3
+    std::vector<std::string> recipients = fill_recipients(params[0]);
+    //Envoie le message pour chaque recipient
+    for(std::vector<std::string>::iterator it = recipients.begin(); it != recipients.end(); it++)
     {
         std::string message = params[1];
+        //CHeck si le recipient est un user ou une channel
         User *targetuser = server->get_user_ptr((*it));
         Channel *targetchannel = server->get_channel_ptr((*it));
-        if(!targetuser && !targetchannel)
+        if(!targetuser && !targetchannel) //si il n'existe pas de channel ou d'user à ce nom
         {
             std::vector<std::string> reply_params;
-
             reply_params.push_back((*it));
-            ///TODO check if he sends notice or error
-            server->send_rpl("401", user, reply_params, "");
+            server->send_rpl("401", user, reply_params, ""); ///TODO check if he sends notice or error
         }
-        else if(targetuser && !targetchannel)
+        else if(targetuser && !targetchannel) //si le recipient est un user
         {
-            //TODO build reply correctly
-            //here add elements to handle away status :)
-            server->send_rpl("1001", targetuser, params, "PRIVMSG");
+            std::vector<std::string> reply_params;
+            if(targetuser->user_is_away()) //si le recipient est afk
+            {
+                reply_params.push_back(targetuser->get_nickname());
+                reply_params.push_back(targetuser->get_away_mssg());
+                server->send_rpl("301", user, reply_params, "");
+            }
+            else //TODO build reply correctly
+                server->send_rpl("1001", targetuser, reply_params, "PRIVMSG");
         }
-        else if(!targetuser && targetchannel)
+        else if(!targetuser && targetchannel) //si le recipient est un channel
         {
             //TODO build reply correctly
             server->send_rpl_to_all_members("1001", targetchannel->get_members(), params, "PRIVMSG");

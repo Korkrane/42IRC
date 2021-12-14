@@ -12,14 +12,17 @@ User::User(void)
 
 User::User(int fd) : _socket(fd)
 {
+	#if DEBUG
+		std::cout << BLUE << "DEBUG: User constructor called with fd param" << NC << std::endl;
+	#endif
 	_to_delete = false;
 	_user_is_registered = false;
 }
 
 User::~User(void)
 {
-#if USERDEBUG
-	std::cout << "User destructor called" << std::endl;
+#if DEBUG
+	std::cout << BLUE << "DEBUG: User destructor" << NC << std::endl;
 #endif
 }
 

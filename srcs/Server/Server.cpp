@@ -113,6 +113,9 @@ void Server::Run()
 		for (std::vector<int>::const_iterator it = disconnectList.begin();
 			 it != disconnectList.end(); ++it)
 			removeClient(*it);
+
+			responseQueue.clear();
+		disconnectList.clear();
 	}
 }
 
