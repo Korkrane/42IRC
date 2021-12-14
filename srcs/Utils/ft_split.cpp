@@ -4,26 +4,25 @@
 #include <string>
 #include <IRC.hpp>
 
-//TODO: a mettre sur user
-void    User::ft_split_channels(std::string line, char charset)
+//TODO: a mettre sur user (fichier)
+void    User::ft_split_channels(std::string l, char charset)
 {
-    std::string              buffer;
-    size_t                   i = 0;
-    //size_t                 pos = 0;
-    size_t                   len = line.length();
-
-    if (line.empty())
+    if (l.empty())
     {
         #if DEBUG
             std::cout << BLUE << "ERROR: line is empty" << NC << std::endl;
         #endif
         return ;
-    }
-        
+    }   
+    std::string tmp;
+    std::istringstream line(l);
     //On va lire la string a splitter
-    while (i < len)
+    while (std::getline(line, tmp, charset))
     {
-        i = line.find(charset, pos);
+        this->_splitted_channels.push_back(tmp);
+        tmp.clear();
+        /*
+        i = line.find(charset, i);
         //Si on trouve quelque chose (\0) inclu
         if (i == std::string::npos)
         {
@@ -31,33 +30,31 @@ void    User::ft_split_channels(std::string line, char charset)
             this->_splitted_channels.push_back(line);
             return ;
         }
+        else
+        {
+            tmp = line.substr(i + 1);
+            std::cout << GREEN << "tmp splitted is " << tmp << std::endl;
+            this->_splitted_channels.push_back(tmp);
+            tmp.clear();
+        }
         //TODO: a revoir (cas ou on trouve au moins une fois le char recherche)
+        */
     }
     return ;
 }
 
-void    User::ft_split_args(std::string line, char charset)
+void    User::ft_split_args(std::string l, char charset)
 {
-    std::string              buffer;
-    size_t                   i = 0;
-    //size_t                 pos = 0;
-    size_t                   len = line.length();
-
-    if (line.empty())
+   if (l.empty())
         return ;
+    
+    std::string tmp;
+    std::istringstream line(l);
     //On va lire la string a splitter
-    while (i < len)
+    while (std::getline(line, tmp, charset))
     {
-        //pos = i;
-        i = line.find(charset, pos);
-        //Si on trouve quelque chose (\0) inclu
-        if (i == std::string::npos)
-        {
-            //std::cout << "line is " << line << std::endl;
-            this->_splitted_args.push_back(line);
-            return ;
-        }
-        //TODO: a revoir (cas ou on trouve au moins une fois le char recherche)
+        this->_splitted_args.push_back(tmp);
+        tmp.clear();
     }
     return ;
 }
