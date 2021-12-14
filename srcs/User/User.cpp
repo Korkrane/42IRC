@@ -17,6 +17,7 @@ User::User(int fd) : _socket(fd)
 	#endif
 	_to_delete = false;
 	_user_is_registered = false;
+	_is_away = false;
 }
 
 User::~User(void)

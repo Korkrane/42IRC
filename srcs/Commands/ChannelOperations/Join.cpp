@@ -56,14 +56,14 @@ void Commands::join(User *user, IRC *server)
         std::cout << "PRINTING SPLITTED ARGS" << std::endl;
         display_vector_string(user->_splitted_args);
         std::cout << NC << std::endl;
-    #endif        
+    #endif
+    /* */
     if (user->get_params_size() < 1)
     {
         error.push_back(user->get_command_name());
         server->send_rpl("461", user, error, "");
         return ;
     }
-    /* */
     else
     {
         unsigned int max = user->_splitted_channels.size();
@@ -97,7 +97,6 @@ void Commands::join(User *user, IRC *server)
                 chan = server->add_channel(channel, user);
                 //chan = server->get_channels().back();
             }
-            /* */
             //chan->displayChannelInfo();
             else if (!channel.empty())
             {
@@ -136,11 +135,11 @@ void Commands::join(User *user, IRC *server)
                 user->add_channel_to_list(chan);
                 check_roles(chan, user, true);
                 //On prepare et envoie la reponse du serveur
-                #if DEBUG
-                    std::cout << PURPLE << "DEBUG: JOIN: " << "Success params !" << std::endl;
+                server->send_rpl_to_all_members("", chan->get_members(), params, "JOIN");//user->_splitted_channels
+                 #if DEBUG
+                    std::cout << PURPLE << "DEBUG: JOIN: " << "Success params !" << NC << std::endl;
+                    chan->displayChannelInfo();
                 #endif
-                chan->displayChannelInfo();
-                server->send_rpl_to_all_members("", chan->get_members(), params, "JOIN");
                 //TODO: a rajouter topic
                 //server->send_rpl("", user, error, "TOPIC");
                 //TODO: a rajouer names

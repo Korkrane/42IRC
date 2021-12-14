@@ -254,7 +254,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                 return prefix + ERR_USERSDONTMATCH();
             //TODO: changer de numero ?
             case 999:
-                //return (":127.0.0.1 PONG 127.0.0.1 :127.0.0.1\r\n"); À CHOISIR SI ON VEUT AVOIR LE MSSG PONG VISIBLE OU NON
+                //return (":127.0.0.1 PONG 127.0.0.1 :127.0.0.1\r\n"); //À CHOISIR SI ON VEUT AVOIR LE MSSG PONG VISIBLE OU NON
                 return (":127.0.0.1 PONG\r\n");
             case 998:
                 return prefix + "ERROR\r\n";
@@ -271,9 +271,29 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
     {
         //Partie qui va permettre aux commandes d'envoyer leur "message custom"
         //std::cout << "ICI" << std::endl;
-        std::string prefix = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
-        prefix += " " + command + " " +  "\r\n";
-        return prefix;
+        if (command.compare("JOIN") == 0)
+        {
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            rpl += " " + command + " " + params[0] + "\r\n";
+            return rpl;
+        } 
+        if(command == "PRIVMSG")
+        {
+            std::cout << GREEN << "build privmsg reply" << std::endl;
+            std::string rpl;
+
+            rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
+            rpl += " " + command + " " + user->get_nickname() + " " + params[3] + "\r\n";
+            return rpl;
+        }
+        if(command == "MODE_USER")
+        {
+            std::cout << GREEN << "build mode reply" << std::endl;
+            std::string rpl;
+
+            rpl = ":" + user->get_nickname() + " MODE " + user->get_nickname() + " :" + params[0] +  "\r\n";
+            return rpl;
+        }
     }
     #if DEBUG
         std::cout << PURPLE << "BUILD : REPLY : Error, did not match any case" << std::endl;

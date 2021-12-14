@@ -97,6 +97,8 @@ void Commands::nick_cmd(User *user, IRC *server)
   }
   //check if nick is valid
   std::string nick = user->get_params().front();
+  std::cout << "LOL NAME" << std::endl;
+  //std::cout << "LOL NAME2:" << nick << std::endl;
   if (checkNickGrammar(nick, server, user) == false)
   {
     params.push_back(nick);

@@ -90,10 +90,13 @@ void	Commands::get_channel_targets(User *user, IRC *server)
 	unsigned int size = params.size();
 	
 	#if DEBUG
-		std::cout << GREEN << "The size of params is " << size << std::endl;
+		std::cout << "Params front is " << params.front() << std::endl;
 	#endif
+	std::string line = params.front();
 	if (size >= 1)
-		user->ft_split_channels(params[0], ',');
+	{
+		user->ft_split_channels(line, ',');
+ 	}
 }
 
 void	Commands::get_key_targets(User *user, IRC *server)
@@ -103,6 +106,6 @@ void	Commands::get_key_targets(User *user, IRC *server)
 	std::vector<std::string> params = user->get_params();
 	unsigned int size = params.size();
 	
-	if (size >= 1)
+	if (size > 1)
 		user->ft_split_args(params[1], ',');
 }
