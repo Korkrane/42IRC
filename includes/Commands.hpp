@@ -52,6 +52,7 @@ public:
 	void displayMode(void) const;
 
 	static void join(User *user, IRC *server);
+	static void	check_roles(Channel *chan, User *user, bool added);
 
 
 	static void nick_cmd(User *user, IRC *server);

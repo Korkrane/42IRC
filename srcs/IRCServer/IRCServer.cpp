@@ -477,6 +477,10 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, std
 	while (it != ite)
 	{
 		std::string rpl = this->build_reply(code, (*it), params, command);
+		#if DEBUG
+			std::cout << "Send reply to all members called" << std::endl;
+			std::cout << GREEN << rpl << NC << std::endl;
+		#endif
 		this->_response_queue.push_back(std::make_pair((*it)->get_socket(), rpl));
 		it++;
 	}

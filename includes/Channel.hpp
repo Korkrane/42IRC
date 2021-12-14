@@ -108,7 +108,9 @@ public:
     //TODO: ameliorer le destructeur pour etre sur qu on oublie rien (pas de leaks)
     //TODO:
     void    set_owner(User *user);
-    void    get_owner(User *user);
+    User    *get_owner(void);
+    //void    addChannelOwner(User *user);
+    bool    is_channel_owner(User *user);
 };
 
 //Utils to display - overloading

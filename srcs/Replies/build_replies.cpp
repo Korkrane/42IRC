@@ -270,6 +270,9 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
     else
     {
         //Partie qui va permettre aux commandes d'envoyer leur "message custom"
+        //std::cout << "ICI" << std::endl;
+        std::string prefix = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+        prefix += " " + command + " " +  "\r\n";
         return prefix;
     }
     #if DEBUG

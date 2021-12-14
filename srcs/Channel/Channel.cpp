@@ -6,10 +6,29 @@ Channel::Channel(std::string name, User *user) : _name(name), _prefix(name[0]), 
 	std::cout << "Channel constructor called" << std::endl;
 #endif
 	//Ajouter le user passe en parametre a la liste des users
-	this->newMember(user, true);
+//	this->newMember(user, true);
+	this->set_owner(user);
 	return;
 	//std::vector<User *> *operators = new std::vector<User *>;//TODO: Attention a free dans le destructeur
 
+}
+
+void	Channel::set_owner(User *user)
+{
+	this->_channel_owner = user;
+}
+
+User *Channel::get_owner(void)
+{
+	return (this->_channel_owner);
+}
+
+
+bool	Channel::is_channel_owner(User *user)
+{
+	if (user == this->get_owner())
+		return (true);
+	return (false);
 }
 
 /*
@@ -198,7 +217,7 @@ void Channel::newMember(User *user, bool user_operator)
 	(void)user_operator;
 	if (!user)
 	{
-		std::cout << "ERROR ! User is NULL" << std::endl;
+	//	std::cout << "ERROR ! User is NULL" << std::endl;
 		return;
 	}
 	/* */
@@ -217,7 +236,7 @@ void Channel::newOperator(User *user)
 {
 	if (!user)
 	{
-		std::cout << "ERROR ! User is NULL" << std::endl;
+		//std::cout << "ERROR ! User is NULL" << std::endl;
 		return;
 	}
 	/* */

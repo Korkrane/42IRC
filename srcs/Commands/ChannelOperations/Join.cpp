@@ -1,5 +1,23 @@
 #include <IRC.hpp>
 
+void    Commands::check_roles(Channel *chan, User *user, bool added)
+{
+    (void)chan;
+    (void)user;
+    (void)added;
+
+    if (chan->is_channel_owner(user) == true && chan->user_is_operator(user) == false)
+    {
+        chan->newOperator(user);
+    }
+    //ne devrait pas arriver
+    if (chan->is_channel_owner(user) == true && chan->user_is_member(user) == false)
+    {
+        chan->newMember(user, false);
+    }
+    return ;
+}
+
 //TODO: a revoir
 bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> params)
 {
@@ -61,7 +79,6 @@ void Commands::join(User *user, IRC *server)
                 opt_key = user->_splitted_args[index];
             else
                 opt_key = "";
-
             #if DEBUG
                 std::cout << BLUE << "channel " << channel << std::endl;
                 std::cout << BLUE << "opt key " << opt_key << std::endl;
@@ -78,10 +95,10 @@ void Commands::join(User *user, IRC *server)
             if (!channel.empty() && server->has_channel(channel) == false)
             {
                 chan = server->add_channel(channel, user);
-                //std::cout << "ICI" << std::endl;
-                chan = server->get_channels().back();
+                //chan = server->get_channels().back();
             }
-            /*
+            /* */
+            //chan->displayChannelInfo();
             else if (!channel.empty())
             {
                 //Fonction qui permet de recuperer le pointeur de la channel correspondante
@@ -117,11 +134,17 @@ void Commands::join(User *user, IRC *server)
                 user->be_added_to_channel(chan);
                 //On l'ajoute a sa liste
                 user->add_channel_to_list(chan);
+                check_roles(chan, user, true);
                 //On prepare et envoie la reponse du serveur
                 #if DEBUG
                     std::cout << PURPLE << "DEBUG: JOIN: " << "Success params !" << std::endl;
                 #endif
+                chan->displayChannelInfo();
                 server->send_rpl_to_all_members("", chan->get_members(), params, "JOIN");
+                //TODO: a rajouter topic
+                //server->send_rpl("", user, error, "TOPIC");
+                //TODO: a rajouer names
+                //server->send_rpl("", user, error, "NAMES");
             }
             //Erreur to many channels car l user fait partie de trop de channels
             else
@@ -130,11 +153,11 @@ void Commands::join(User *user, IRC *server)
                 server->send_rpl("405", user, error, "");
                 return ;
             }
-            */
+            #if DEBUG
+                std::cout << "index is " << index << NC << std::endl;
+            #endif
             index++;
         }
     }
-    //delete target_channel;
-    //delete target_key;
     return ;
 }
