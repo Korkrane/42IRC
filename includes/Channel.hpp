@@ -14,6 +14,7 @@ private:
     bool                _has_topic;
     std::string         _modes;
     bool                _handle_modes;
+    //Attention c'est devenu un pointeur ce qui n etait pas le cas
     std::vector<User *> _operators;
     std::vector<User *> _users;
     User                *_channel_owner;
@@ -28,7 +29,6 @@ private:
 
 public:
     Channel(std::string name, User *user);
-    Channel(std::string name, std::string opt_key, User *user);
     virtual ~Channel();
 
     void                set_name(std::string name);

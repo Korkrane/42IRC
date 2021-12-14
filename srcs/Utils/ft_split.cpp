@@ -4,28 +4,97 @@
 #include <string>
 #include <IRC.hpp>
 
-/**
- * @brief
- *
- * @param str
- * @param charset
- * @return int
- */
-int                         ft_len(std::string str, std::string charset)
+//TODO: a mettre sur user
+void    User::ft_split_channels(std::string line, char charset)
 {
-    (void)str;
+    (void)line;
     (void)charset;
-    int len = 0;
-    return (len);
+
+    std::string              buffer;
+    size_t                   i = 0;
+    size_t                   pos = 0;
+    size_t                   len = line.length();
+
+    //On va lire la string a splitter
+    while (pos < len)
+    {
+        pos = i;
+        i = line.find(charset, pos);
+        //Si on trouve quelque chose (\0) inclu
+        if (pos != i)
+        {
+            //SI on est arrive au \0
+            if (i == std::string::npos)
+            {
+                this->_splitted_channels.push_back(line);
+                #if DEBUG
+                    //std::cout << PURPLE << "Displaying result split: " << std::endl;
+                    //display_vector_string(this->_splitted_channels);
+                #endif
+            }
+            //TODO: a revoir (cas ou on trouve au moins une fois le char recherche)
+            /*
+            else
+            {
+                splitted.push_back(line.substr(i));
+                //splitted.back().resize(i - pos);
+            }
+            */
+        }
+        //i++;
+    }
+    #if DEBUG
+        //std::cout << PURPLE << "Displaying result split: " << std::endl;
+        //display_vector_string(*splitted);
+    #endif
+    return ;
 }
 
-/**
- * @brief : version C++ de split
- *
- * @param line
- * @param charset
- * TODO: A tester
- */
+void    User::ft_split_args(std::string line, char charset)
+{
+    (void)line;
+    (void)charset;
+
+    std::string              buffer;
+    size_t                   i = 0;
+    size_t                   pos = 0;
+    size_t                   len = line.length();
+
+    //On va lire la string a splitter
+    while (pos < len)
+    {
+        pos = i;
+        i = line.find(charset, pos);
+        //Si on trouve quelque chose (\0) inclu
+        if (pos != i)
+        {
+            //SI on est arrive au \0
+            if (i == std::string::npos)
+            {
+                this->_splitted_args.push_back(line);
+                #if DEBUG
+                    std::cout << PURPLE << "Displaying result split: " << std::endl;
+                    display_vector_string(this->_splitted_channels);
+                #endif
+            }
+            //TODO: a revoir (cas ou on trouve au moins une fois le char recherche)
+            /*
+            else
+            {
+                splitted.push_back(line.substr(i));
+                //splitted.back().resize(i - pos);
+            }
+            */
+        }
+        //i++;
+    }
+    #if DEBUG
+        //std::cout << PURPLE << "Displaying result split: " << std::endl;
+        //display_vector_string(*splitted);
+    #endif
+    return ;
+}
+
 std::vector<std::string>    ft_split(std::string line, std::string charset)
 {
     (void)line;

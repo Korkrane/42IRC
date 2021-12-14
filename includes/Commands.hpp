@@ -93,6 +93,6 @@ public:
 
 	static std::string get_channel_key(Channel *channel);
 
-	static std::vector<std::string> get_channel_targets(User *user, IRC *server);
-	static std::vector<std::string> get_key_targets(User *user, IRC *server);
+	static void get_channel_targets(User *user, IRC *server);
+	static void get_key_targets(User *user, IRC *server);
 };

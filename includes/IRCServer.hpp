@@ -19,7 +19,6 @@ private:
     std::string _date;
     std::string _server_creation;
     std::string const _svPassword;
-    //TODO: remettre le port dans le constructeur
     std::string _port;
 
 public:
@@ -59,7 +58,7 @@ public:
     void set_port(std::string port_number);
 
     /*** METHODS ****/
-    Channel *add_channel(std::string name, std::string opt_key);
+    Channel *add_channel(std::string name, User *user);
     Channel *add_channel(std::string name, std::string opt_key, User *user);
     void drop_channel(Channel *to_drop);
     bool find_channel(Channel *to_find);
