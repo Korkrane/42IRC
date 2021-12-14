@@ -276,7 +276,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
             rpl += " " + command + " " + params[0] + "\r\n";
             return rpl;
-        } 
+        }
         if(command == "PRIVMSG")
         {
             std::cout << GREEN << "build privmsg reply" << std::endl;
@@ -286,7 +286,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             rpl += " " + command + " " + user->get_nickname() + " " + params[3] + "\r\n";
             return rpl;
         }
-        if(command == "MODE_USER")
+        else if(command == "MODE_USER")
         {
             std::cout << GREEN << "build mode reply" << std::endl;
             std::string rpl;
