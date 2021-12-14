@@ -52,6 +52,7 @@ public:
 	void displayMode(void) const;
 
 	static void join(User *user, IRC *server);
+	static void	check_roles(Channel *chan, User *user, bool added);
 
 
 	static void nick_cmd(User *user, IRC *server);
@@ -95,6 +96,6 @@ public:
 
 	static std::string get_channel_key(Channel *channel);
 
-	static std::vector<std::string> get_channel_targets(User *user, IRC *server);
-	static std::vector<std::string> get_key_targets(User *user, IRC *server);
+	static void get_channel_targets(User *user, IRC *server);
+	static void get_key_targets(User *user, IRC *server);
 };

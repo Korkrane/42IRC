@@ -57,5 +57,6 @@ class User;
 std::string build_reply(int code, User *server, std::vector<std::string> params);
 void        error_handler(std::string error_code, User *user, Channel *channel, std::vector<std::string> parameter);
 void        send_reply(std::string reply);
-std::vector<std::string> ft_split(std::string line, std::string charset);
+//std::vector<std::string> *ft_split(std::string line, char charset);
+std::vector<std::string>    ft_split(std::string line, std::string charset);//A verifier
 void    display_vector_string(std::vector<std::string> vector);

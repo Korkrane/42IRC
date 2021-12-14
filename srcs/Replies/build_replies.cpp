@@ -278,13 +278,19 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             rpl += " " + command + " " + user->get_nickname() + " " + params[3] + "\r\n";
             return rpl;
         }
-        if(command == "MODE_USER")
+        else if(command == "MODE_USER")
         {
             std::cout << GREEN << "build mode reply" << std::endl;
             std::string rpl;
 
             rpl = ":" + user->get_nickname() + " MODE " + user->get_nickname() + " :" + params[0] +  "\r\n";
             return rpl;
+        }
+        else if (command == "JOIN")
+        {
+            std::string prefix = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            prefix += " " + command + " " +  "\r\n";
+            return prefix;
         }
     }
     #if DEBUG

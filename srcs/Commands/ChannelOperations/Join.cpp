@@ -1,5 +1,23 @@
 #include <IRC.hpp>
 
+void    Commands::check_roles(Channel *chan, User *user, bool added)
+{
+    (void)chan;
+    (void)user;
+    (void)added;
+
+    if (chan->is_channel_owner(user) == true && chan->user_is_operator(user) == false)
+    {
+        chan->newOperator(user);
+    }
+    //ne devrait pas arriver
+    if (chan->is_channel_owner(user) == true && chan->user_is_member(user) == false)
+    {
+        chan->newMember(user, false);
+    }
+    return ;
+}
+
 //TODO: a revoir
 bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> params)
 {
@@ -27,32 +45,46 @@ void Commands::join(User *user, IRC *server)
     std::string                 opt_key;
 
     //Check nombre de params
+    //std::vector<std::string> target_channel
+    get_channel_targets(user, server);
+    get_key_targets(user, server);
+
+    #if DEBUG
+        //TODO: a mettre en prive
+        std::cout << "PRINTING SPLITTED CHANNELS" << std::endl;
+        display_vector_string(user->_splitted_channels);
+        std::cout << "PRINTING SPLITTED ARGS" << std::endl;
+        display_vector_string(user->_splitted_args);
+        std::cout << NC << std::endl;
+    #endif        
     if (user->get_params_size() < 1)
     {
         error.push_back(user->get_command_name());
         server->send_rpl("461", user, error, "");
         return ;
     }
+    /* */
     else
     {
-        std::vector<std::string> target_channel = get_channel_targets(user, server);
-        std::vector<std::string> target_key = get_key_targets(user, server);
-        
-        unsigned int max = target_channel.size();
+        unsigned int max = user->_splitted_channels.size();
         unsigned int index = 0;
-        unsigned int comp = target_key.size();
+        unsigned int comp = user->_splitted_args.size();
+        //unsigned int in = 0;
         while (index < max)
         {
             //on update nos variables
-            channel = target_channel[index];
+            channel = user->_splitted_channels[index];
             //Si l'element dans le vecteur a cette position n est pas nul
-            if (!(target_key[comp].empty()))
-                opt_key = target_key[comp];
+            if (!user->_splitted_channels.empty() && index < comp && !user->_splitted_channels[index].empty())
+                opt_key = user->_splitted_args[index];
             else
                 opt_key = "";
-
+            #if DEBUG
+                std::cout << BLUE << "channel " << channel << std::endl;
+                std::cout << BLUE << "opt key " << opt_key << std::endl;
+            #endif
             //On verifie que le parametre peut correspondre a un nom de channel valide
-            if (is_correct_channel_name(channel) == false)
+            if (!channel.empty() && is_correct_channel_name(channel) == false)
             {
                 error.push_back(channel);
                 server->send_rpl("403", user, error, "");
@@ -60,9 +92,14 @@ void Commands::join(User *user, IRC *server)
             }
             //On verifie si la channel existe, sinon on va la creer (par defaut il n y a pas de cle quand on la cree)
             Channel *chan = NULL;
-            if (server->has_channel(channel) == false)
-                chan = server->add_channel(channel, NULL, user);
-            else
+            if (!channel.empty() && server->has_channel(channel) == false)
+            {
+                chan = server->add_channel(channel, user);
+                //chan = server->get_channels().back();
+            }
+            /* */
+            //chan->displayChannelInfo();
+            else if (!channel.empty())
             {
                 //Fonction qui permet de recuperer le pointeur de la channel correspondante
                 chan = server->find_channel(channel);
@@ -97,8 +134,17 @@ void Commands::join(User *user, IRC *server)
                 user->be_added_to_channel(chan);
                 //On l'ajoute a sa liste
                 user->add_channel_to_list(chan);
+                check_roles(chan, user, true);
                 //On prepare et envoie la reponse du serveur
+                #if DEBUG
+                    std::cout << PURPLE << "DEBUG: JOIN: " << "Success params !" << std::endl;
+                #endif
+                chan->displayChannelInfo();
                 server->send_rpl_to_all_members("", chan->get_members(), params, "JOIN");
+                //TODO: a rajouter topic
+                //server->send_rpl("", user, error, "TOPIC");
+                //TODO: a rajouer names
+                //server->send_rpl("", user, error, "NAMES");
             }
             //Erreur to many channels car l user fait partie de trop de channels
             else
@@ -107,9 +153,11 @@ void Commands::join(User *user, IRC *server)
                 server->send_rpl("405", user, error, "");
                 return ;
             }
+            #if DEBUG
+                std::cout << "index is " << index << NC << std::endl;
+            #endif
             index++;
-            comp++;
-        }   
+        }
     }
     return ;
 }

@@ -247,41 +247,24 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 	}
 }
 
-
-Channel *IRC::add_channel(std::string channel, std::string opt_key)
+//TODO: a supprimer ?
+Channel *IRC::add_channel(std::string channel, User *user)
 {
-	//On verifie que la channel ne fait pas deja partie de la liste
-	Channel *find = this->find_channel(channel);
-	if (find)
-	{
-		#if DEBUG
-			std::cout << PURPLE << "DEBUG: IRC: add_channel function called but the channel already exists." << NC << std::endl;
-		#endif
-		//TODO attention a faire des checks au cas ou je renvois NULL
-		return (NULL);
-	}
-	//TODO On verifie que le serveur n a pas deja trop de channels ?
-	Channel *chan = new Channel(channel, opt_key, 0);
+	Channel *chan = new Channel(channel, user);
 	this->_channels.push_back(chan);
+	this->_totChannels++;
 	return chan;
 }
 
+//TODO: A supprimer ?
 Channel *IRC::add_channel(std::string channel, std::string opt_key, User *user)
 {
-	//On verifie que la channel ne fait pas deja partie de la liste
-	Channel *find = this->find_channel(channel);
-	if (find)
-	{
-		#if DEBUG
-			std::cout << PURPLE << "DEBUG: IRC: add_channel function called but the channel already exists." << NC << std::endl;
-		#endif
-		//TODO: attention a faire des checks au cas ou je renvois NULL
-		return (NULL);
-	}
-	//TODO On verifie que le serveur n a pas deja trop de channels ?
-	Channel *chan = new Channel(channel, opt_key, user);
+	(void)opt_key;
+	Channel *chan = new Channel(channel, user);
+	/* */
 	this->_channels.push_back(chan);
-	return chan;
+	this->_totChannels++;//TODO: attention verifier qu on le decremente pas
+	return chan;//TODO: attention a le free a la fin
 }
 
 std::vector<User *> IRC::get_users(void)
@@ -479,6 +462,9 @@ bool IRC::user_can_join(Channel *channel)
 
 int IRC::send_rpl(std::string code, User *user, std::vector<std::string> params, std::string command)
 {
+	#if DEBUG
+		std::cout << PURPLE << "DEBUG: SEND REPLY: " << "RPL/ERR code is " << code << std::endl;
+	#endif
 	std::string rpl = this->build_reply(code, user, params, command);
 	this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
 	return (0);
@@ -491,6 +477,10 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, std
 	while (it != ite)
 	{
 		std::string rpl = this->build_reply(code, (*it), params, command);
+		#if DEBUG
+			std::cout << "Send reply to all members called" << std::endl;
+			std::cout << GREEN << rpl << NC << std::endl;
+		#endif
 		this->_response_queue.push_back(std::make_pair((*it)->get_socket(), rpl));
 		it++;
 	}

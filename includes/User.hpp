@@ -45,7 +45,11 @@ private:
     std::string _command_name;
 
 public:
+    //TODO: a mettre en prive
     std::vector<std::string> _params;
+    //Ajouts mahaut
+    std::vector<std::string> _splitted_channels;//A clear a chaque commande comme le parsint
+    std::vector<std::string> _splitted_args;
     std::vector<t_cmd> _commands;
     void split_if_multiple_command();
 
@@ -129,6 +133,8 @@ public:
     void remove_channel_from_list(Channel *channel);
 
     void display_params_bis(void);
+    void    ft_split_channels(std::string line, char charset);
+    void    ft_split_args(std::string line, char charset);
 };
 
 std::ostream &operator<<(std::ostream &COUT, User *user);

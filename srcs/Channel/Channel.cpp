@@ -1,16 +1,38 @@
 #include <IRC.hpp>
 
-Channel::Channel(std::string name, User *user) : _name(name), _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _operators(0), _users(0), _channel_owner(user), _key(""), _has_key(false), _members_nb(0)
+Channel::Channel(std::string name, User *user) : _name(name), _prefix(name[0]), _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _channel_owner(user), _key(""), _has_key(false), _members_nb(0), _operators_nb(0)//Attention a incrementer les deux derniers
 {
 #if DEBUG
 	std::cout << "Channel constructor called" << std::endl;
 #endif
 	//Ajouter le user passe en parametre a la liste des users
-	this->newMember(user, true);
+//	this->newMember(user, true);
+	this->set_owner(user);
 	return;
+	//std::vector<User *> *operators = new std::vector<User *>;//TODO: Attention a free dans le destructeur
+
 }
 
-Channel::Channel(std::string name, std::string opt_key, User *user) : _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _operators(0), _users(0), _channel_owner(user), _key(""), _has_key(false), _members_nb(0)
+void	Channel::set_owner(User *user)
+{
+	this->_channel_owner = user;
+}
+
+User *Channel::get_owner(void)
+{
+	return (this->_channel_owner);
+}
+
+
+bool	Channel::is_channel_owner(User *user)
+{
+	if (user == this->get_owner())
+		return (true);
+	return (false);
+}
+
+/*
+Channel::Channel(std::string name, User *user) : _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _operators(0), _users(0), _channel_owner(user), _key(""), _has_key(false), _members_nb(0)
 {
 	//TODO: Attention si le prefix est '' il faut set le handler mode a true
 	//TODO: ajouter user pour qu on sache qui est le channel owner et par consequent operateur ?
@@ -21,6 +43,7 @@ Channel::Channel(std::string name, std::string opt_key, User *user) : _topic("")
 		this->set_key(opt_key);
 	}
 }
+*/
 
 Channel::~Channel(void)
 {
@@ -191,19 +214,32 @@ void Channel::newMember(User *user, bool user_operator)
 {
 	//TODO: Attention si c'est egal a true et qu il n y a pas d'owner le user devient channel owner
 	(void)user;
+	(void)user_operator;
 	if (!user)
+	{
+	//	std::cout << "ERROR ! User is NULL" << std::endl;
 		return;
+	}
+	/* */
 	this->_users.push_back(user);
+	//std::cout << "ICI" << std::endl;
 	this->_members_nb++;
 	if (user_operator == true)
 		newOperator(user);
+	#if DEBUG
+		std::cout << "new Member function ok " << NC << std::endl;
+	#endif
 	return;
 }
 
 void Channel::newOperator(User *user)
 {
 	if (!user)
+	{
+		//std::cout << "ERROR ! User is NULL" << std::endl;
 		return;
+	}
+	/* */
 	this->_operators.push_back(user);
 	this->_operators_nb++;
 	return;

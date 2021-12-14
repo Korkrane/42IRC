@@ -80,9 +80,6 @@ $(NAME):	$(OBJS)
 
 all:		$(NAME)
 
-run:		$(NAME)
-			./ircserv 6667 pass
-
 test:		${NAME}
 			./ircserv 6667 pass ${EXTRA_MA}
 clean:
