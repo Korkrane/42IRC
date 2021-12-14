@@ -243,7 +243,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 			this->_commands->welcome_cmd(current_user, this);
 		responseQueue = this->_response_queue; //leaks ici
 		this->_response_queue.clear();
-		delete tmp;
+		//delete tmp;
 	}
 }
 
