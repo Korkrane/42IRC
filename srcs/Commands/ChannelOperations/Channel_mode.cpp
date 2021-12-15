@@ -36,7 +36,7 @@ int     Commands::pos_next_mode(std::string str, int prev_pos)
 {
     int pos = prev_pos;
     int len = str.length();
-    while (!isalpha(str[pos] && pos < len))
+    while (!isalpha(str[pos]) && pos < len)
     {
         pos++;
     }
@@ -64,6 +64,10 @@ void Commands::mode_channel(User *user, IRC *server)
     std::vector<std::string>    error;
     std::string                 key;
 
+    #if DEBUG
+        std::cout << "DISPLAY GET PARAMS MODE" << std::endl;
+        display_vector_string(user->get_params());
+    #endif
     if (param_size == 0)
     {
         #if DEBUG
@@ -105,12 +109,13 @@ void Commands::mode_channel(User *user, IRC *server)
         bool check = chan->check_channel_modes(modes);
         if (check == false)//ERR_UNKNOWN MODE
         {
+            //Attention je vais generer plus d erreurs puisque nous ne gerons pas tous les modes
             std::string incorrect = chan->get_unknown_mode(channel);
             error.push_back(incorrect);
             error.push_back(channel);
             return (return_error("472", user, server, error, ""));
         }
-        std::string key = params[3];
+        //SOus fonction qui va permettre l execution
         edit_modes(chan, user, modes, key, server);
     }
 }
@@ -149,11 +154,18 @@ void            Commands::edit_modes(Channel *channel, User *user, std::string m
 {
     (void)server;
 
-    //faire une fonction qui permet de savoir si c est des plus ou des moins
+    //TODO: A supprimer ?
+    /*
     bool add = should_add_mode(modes);
     bool remove = should_remove_mode(modes);
     if ((add && remove) || (!add && !remove))
+    {
+        #if DEBUG
+            std::cout << "Incoherent sign." << std::endl;
+        #endif
         return ;
+    }
+    */
     int len = modes.length();
     int i = 0;
     char sign;
@@ -174,9 +186,15 @@ void            Commands::edit_modes(Channel *channel, User *user, std::string m
             #endif 
             if (m == 'k' && sign == '+')
             {
-                handle_key(channel, user, modes, key, add);
+                #if DEBUG
+                    std::cout << "WILL CALL HANDLE KEY." << std::endl;
+                #endif
+                handle_key(channel, user, modes, key, true);
                 //TODO: ajouter le message
             }
         }
     }
+    #if DEBUG
+        std::cout << PURPLE << "END EDIT MODES" << NC << std::endl;
+    #endif 
 }
