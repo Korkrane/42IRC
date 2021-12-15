@@ -60,3 +60,5 @@ void        send_reply(std::string reply);
 //std::vector<std::string> *ft_split(std::string line, char charset);
 std::vector<std::string>    ft_split(std::string line, std::string charset);//A verifier
 void    display_vector_string(std::vector<std::string> vector);
+
+std::vector<std::string>    old_ft_split(std::string line, std::string charset);

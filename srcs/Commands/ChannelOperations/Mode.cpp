@@ -74,6 +74,49 @@ void Commands::mode_channel(User *user, IRC *server)
     }
 }
 
+//TODO to complete based on what mode we are implementing
+void Commands::modif_user(User *user, IRC *server, std::string modifications)
+{
+    (void)server;
+    bool sign;
+    for (std::string::iterator it = modifications.begin(); it != modifications.end(); it++)
+    {
+        switch ((*it))
+        {
+            case '+':
+            {
+                sign = true;
+                continue ;
+            }
+            case '-':
+            {
+                sign = false;
+                continue ;
+            }
+            case 'a':
+            {
+                (sign == true) ? user->set_is_away(true) : user->set_is_away(false);
+                std::cout << "after mode affect a user away ? " << user->user_is_away() << std::endl;
+                continue ;
+            }
+            case 'i':
+                continue ;
+            case 'w':
+                continue ;
+            case 'r':
+                continue ;
+            case 'o':
+                continue ;
+            case 'O':
+                continue ;
+            case 's':
+                continue ;
+            default:
+                continue ;
+        }
+    }
+}
+
 void            Commands::mode_user(User *user, IRC *server)
 {
     int param_size = user->get_params_size();
@@ -114,7 +157,6 @@ void            Commands::mode_user(User *user, IRC *server)
             bool sign = true;
             std::string modes(USER_VALID_MODES);
             std::string modes_changed;
-            std::cout << modes << std::endl;
             for(std::string::iterator it = params[1].begin(); it != params[1].end(); it++)
             {
                 if((*it) == '-')
@@ -129,68 +171,57 @@ void            Commands::mode_user(User *user, IRC *server)
                     modes_changed.push_back((*it));
                     continue ;
                 }
-                std::cout << "value tested: " << (*it) << std::endl;
-                if(modes.find((*it) ) != std::string::npos)
+                //std::cout << "value tested: " << (*it) << std::endl;
+                if(modes.find((*it)) != std::string::npos)
                 {
-                    std::cout << "FOUND" << std::endl;
-                    std::string user_mode = user->get_modes();
-                    if(sign == true)
+                    std::string user_modes = user->get_modes();
+                    if(sign == true && (user_modes.find((*it)) == std::string::npos)) //add mode to user
                     {
-                        if(user_mode.find((*it)) == std::string::npos)
-                        {
-                            std::cout << "have to add mode to user" << std::endl;
-                            modes_changed.push_back((*it)); //add it to the string sent as reply
-                            user->set_modes(user->get_modes() + (*it)); //add the new mode to user's modes
-                            std::cout << "user modes after add : " << user->get_modes() << std::endl;
-                        }
+                        //std::cout << "add mode" << std::endl;
+                        modes_changed.push_back((*it));
+                        user->set_modes(user->get_modes() + (*it));
                     }
-                    else
+                    else if(sign == false && (user_modes.find((*it)) != std::string::npos)) //remove mode to user
                     {
-                        if(user_mode.find((*it)) != std::string::npos)
-                        {
-                            std::cout << "have to remove mode to user" << std::endl;
-                            modes_changed.push_back((*it)); //add it to the string sent as reply
-                            user_mode.erase(std::remove(user_mode.begin(), user_mode.end(), (*it)), user_mode.end());
-                            user->set_modes(user_mode);
-                            std::cout << "user modes after remove : " << user->get_modes() << std::endl;
-                        }
+                        //std::cout << "remove mode" << std::endl;
+                        modes_changed.push_back((*it));
+                        user_modes.erase(std::remove(user_modes.begin(), user_modes.end(), (*it)), user_modes.end());
+                        user->set_modes(user_modes);
                     }
                 }
                 else
-                {
-                    std::cout << "NOT FOUND" << std::endl;
                     has_unknown_mode = true;
-                }
             }
             if(has_unknown_mode)
             {
                 server->send_rpl("501", user, reply_params, "");
                 reply_params.clear();
             }
-            std::cout << "before patching format:" << modes_changed << std::endl;
             //here need to format string replied for reply -+i+
             std::string format_modes_params;
+            std::cout << "modes_changed before put it in format_modes:" << modes_changed << std::endl;
             for(std::string::iterator it = modes_changed.begin(); it != modes_changed.end(); it++)
             {
-                std::cout << "check char: "<<(*it) << "and next char" << (*(it +1)) << std::endl;
-                if(((*it) == '+' || (*it) == '-') && (*(it+1) != '+' && *(it+1) != '-' && (it+1) != modes_changed.end()))
+                if(format_modes_params.empty() && ((*it) != '-' && (*it) != '+'))
+                    format_modes_params.push_back('+');
+                if((*it) != '+' && (*it) != '-')
                 {
-                        format_modes_params.push_back((*it));
-                        format_modes_params.push_back((*(it+1)));
+                    format_modes_params.push_back((*it));
+                    continue ;
                 }
+                if(((*it) == '+' || (*it) == '-') && (*(it+1) != '+' && *(it+1) != '-' && (it+1) != modes_changed.end()))
+                        format_modes_params.push_back((*it));
             }
-            std::cout << "after patching reply format:" << modes_changed << std::endl;
             std::cout << "after patching reply format:" << format_modes_params << std::endl;
-            reply_params.push_back(format_modes_params);
-            server->send_rpl("1005", user, reply_params, "MODE_USER");
+            if(!format_modes_params.empty())
+            {
+                reply_params.push_back(format_modes_params);
+                server->send_rpl("1005", user, reply_params, "MODE_USER");
+                modif_user(user, server, format_modes_params);
+            }
         }
         else
-        {
-            #if DEBUG
-                std::cout << PURPLE << "DEBUG: user want change modes of someone else :(" << NC << std::endl;
-            #endif
             server->send_rpl("502", user, reply_params, ""); //ERR_USERDONTMATCH
-        }
     }
 }
 

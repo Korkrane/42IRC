@@ -116,7 +116,7 @@
 #define C_RPL_USERHOST "302"
 #define RPL_ISON
 #define C_RPL_ISON "303"
-#define RPL_AWAY(nick, away_message) (nick + " :" + away_message + "\r\n");// 301
+#define RPL_AWAY(nick, away_message) (nick + " " + away_message + "\r\n");// 301
 #define C_RPL_AWAY "301"
 #define RPL_UNAWAY() (":You are no longer marked as being away\r\n");// 305
 #define c_RPL_UNAWAY "305"

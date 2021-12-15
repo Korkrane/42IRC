@@ -25,6 +25,7 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	std::map<std::string, void (*)(User *, IRC *)> cmds;
 
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TIME", time_cmd));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("AWAY", away_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WELCOME", welcome_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MOTD", motd_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("VERSION", version_cmd));
@@ -88,7 +89,7 @@ void	Commands::get_channel_targets(User *user, IRC *server)
 	std::vector<std::string> targets;
 	(void)targets;
 	unsigned int size = params.size();
-	
+
 	#if DEBUG
 		std::cout << "Params front is " << params.front() << std::endl;
 	#endif
@@ -105,7 +106,7 @@ void	Commands::get_key_targets(User *user, IRC *server)
 	(void)server;
 	std::vector<std::string> params = user->get_params();
 	unsigned int size = params.size();
-	
+
 	if (size > 1)
 		user->ft_split_args(params[1], ',');
 }

@@ -59,6 +59,8 @@ void User::set_operator_status(bool value)
 
 void User::set_is_away(bool value)
 {
+	if(value == true && this->get_away_mssg().empty())
+		this->set_away_mssg("I'm away");
 	this->_is_away = value;
 }
 
@@ -118,8 +120,8 @@ void User::split_if_multiple_command()
 		this->store_command(it);
 		this->store_params(it);
 #if DEBUG
-		std::cout << "prefix=" << (*it)._prefix << std::endl;
-		std::cout << "command=" << (*it)._command_name << std::endl;
+		std::cout << "prefix= " << (*it)._prefix << std::endl;
+		std::cout << "command= " << (*it)._command_name << std::endl;
 
 		int i = 0;
 		for (std::vector<std::string>::iterator itr = (*it)._params.begin(); itr != (*it)._params.end(); itr++)
@@ -243,7 +245,7 @@ bool User::user_is_registered(void) const
 
 bool User::user_is_away(void) const
 {
-	return (this->_user_is_away);
+	return (this->_is_away);
 }
 
 bool User::user_is_operator(void) const

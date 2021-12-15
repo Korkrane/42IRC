@@ -25,6 +25,7 @@ NAMES		=	main.cpp \
 				Commands/ServerQueries/Time.cpp \
 				Commands/Other/Unknown.cpp \
 				Commands/OptionalFeatures/Users.cpp \
+				Commands/OptionalFeatures/Away.cpp \
 				Commands/ServerQueries/Version.cpp \
 				Commands/ServerQueries/Ping.cpp \
 				Commands/Commands.cpp \

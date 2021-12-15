@@ -64,6 +64,7 @@ public:
 
 	static void mode(User *user, IRC *server);
 	static void mode_channel(User *user, IRC *server);
+	static void modif_user(User *user, IRC *server, std::string modifications);
 	static void mode_user(User *user, IRC *server);
 	static void edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server);
 	static bool should_add_mode(std::string modes);

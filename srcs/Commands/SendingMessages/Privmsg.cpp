@@ -2,7 +2,10 @@
 
 std::vector<std::string> Commands::fill_recipients(std::string target)
 {
-    std::vector<std::string> recipients = ft_split(target, ",");
+    #if DEBUG
+        std::cout << PURPLE << "ENTER IN FILL RECIPIENTS FOR PRIVMSG" << NC << std::endl;
+    #endif
+    std::vector<std::string> recipients = old_ft_split(target, ",");
     #if DEBUG
         for(std::vector<std::string>::iterator it = recipients.begin(); it != recipients.end(); it++)
             std::cout << PURPLE << "Target for privmsg: " << (*it) << std::endl;
@@ -60,26 +63,22 @@ void Commands::privmsg(User *user, IRC *server)
                 std::cout << PURPLE << "DEBUG: Target is a user" << NC << std::endl;
             #endif
             std::vector<std::string> reply_params;
-            if(targetuser->user_is_away()) //si le recipient est afk
+            #if DEBUG
+                std::cout << PURPLE << "DEBUG: target is away ? " << targetuser->user_is_away() << NC << std::endl;
+            #endif
+            if(targetuser->user_is_away()) //si le recipient est afk prevenir celui qui envoie
             {
-                #if DEBUG
-                    std::cout << PURPLE << "DEBUG: target is away" << NC << std::endl;
-                #endif
                 reply_params.push_back(targetuser->get_nickname());
                 reply_params.push_back(targetuser->get_away_mssg());
                 server->send_rpl("301", user, reply_params, "");
+                reply_params.clear();
             }
-            else //TODO build reply correctly
-            {
-                #if DEBUG
-                    std::cout << PURPLE << "DEBUG: send mssg to target" << NC << std::endl;
-                #endif
-                reply_params.push_back(user->get_nickname());
-                reply_params.push_back(user->get_username());
-                reply_params.push_back(user->get_hostname());
-                reply_params.push_back(message);
-                server->send_rpl("1001", targetuser, reply_params, "PRIVMSG");
-            }
+            //puis (qu'il soit afk ou non) le recipient recoit le message
+            reply_params.push_back(user->get_nickname());
+            reply_params.push_back(user->get_username());
+            reply_params.push_back(user->get_hostname());
+            reply_params.push_back(message);
+            server->send_rpl("1001", targetuser, reply_params, "PRIVMSG");
         }
         else if(!targetuser && targetchannel) //si le recipient est un channel
         {

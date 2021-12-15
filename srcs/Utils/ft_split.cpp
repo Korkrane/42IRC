@@ -19,7 +19,7 @@ void    User::ft_split_channels(std::string line, char charset)
         #endif
         return ;
     }
-        
+
     //On va lire la string a splitter
     while (pos < len)
     {
@@ -84,6 +84,57 @@ std::vector<std::string>    ft_split(std::string line, std::string charset)
 
     if (!line.empty())
         return (splitted);
+
+    //Si le charset est null
+    if (charset.empty())
+    {
+#if DEBUG
+    std::cout << BLUE << "DEBUG: " << "ft_split called but charset is null" << NC << std::endl;
+#endif
+        splitted.push_back(line);
+        return (splitted);
+    }
+    //On va lire la string a splitter
+    while (i < len)
+    {
+        pos = i;
+        i = line.find(charset, pos);
+        //Si on trouve quelque chose (\0) inclu
+        if (pos != i)
+        {
+            //SI on est arrive au \0
+            if (i == std::string::npos)
+            {
+                #if DEBUG
+                    std::cout << BLUE << "DEBUG: " << "0. Splitting adding " << line.substr(pos) << std::endl;
+                #endif
+                splitted.push_back(line.substr(pos));
+                return (splitted);
+            }
+            else
+            {
+                #if DEBUG
+                    std::cout << BLUE << "DEBUG: " << "1. Splitting adding " << line.substr(pos) << std::endl;
+                #endif
+                splitted.push_back(line.substr(pos));
+                splitted.back().resize(i - pos);
+            }
+        }
+        i += charset.length();
+    }
+    return (splitted);
+}
+
+std::vector<std::string>    old_ft_split(std::string line, std::string charset)
+{
+    (void)line;
+    (void)charset;
+
+    std::vector<std::string> splitted;
+    std::string              buffer;
+    size_t                   i = 0;
+    size_t                   pos = 0;
+    size_t                   len = line.length();
 
     //Si le charset est null
     if (charset.empty())

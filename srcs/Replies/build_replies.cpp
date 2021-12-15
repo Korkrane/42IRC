@@ -56,11 +56,11 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             /*
             case 5:
                 return prefix + RPL_BOUNCE(this->get_name(), this->get_port());
+            */
             case 221:
                  return prefix + RPL_UMODEIS(user->get_modes());
             case 301:
-                return prefix + RPL_AWAY(user->get_nickname(), user->get_away_mssg());
-            */
+                return prefix + RPL_AWAY(params[0], params[1]);
             case 305:
                 return prefix + RPL_UNAWAY();
             case 306:
@@ -279,7 +279,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         }
         if(command == "PRIVMSG")
         {
-            std::cout << GREEN << "build privmsg reply" << std::endl;
+            std::cout << GREEN << "build privmsg reply" << NC << std::endl;
             std::string rpl;
 
             rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
@@ -288,7 +288,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         }
         else if(command == "MODE_USER")
         {
-            std::cout << GREEN << "build mode reply" << std::endl;
+            std::cout << GREEN << "build mode reply" << NC << std::endl;
             std::string rpl;
 
             rpl = ":" + user->get_nickname() + " MODE " + user->get_nickname() + " :" + params[0] +  "\r\n";
