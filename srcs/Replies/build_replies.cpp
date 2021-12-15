@@ -17,8 +17,6 @@ std::string ToString(T val)
  *
  * @param code
  * @return std::string
- * TODO: Attention - Mahaut : voir si on peut rassembler avec ce que j ai fait (error + send_rpl)
- * TODO: j ai mis error dans utils mais send_rpl dans commande
  */
 std::string format_code_str(int code)
 {
@@ -269,12 +267,20 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
     //TODO: coder la partie pour les commandes + gerer le cas d'envoir a tout une channel
     else
     {
-        //Partie qui va permettre aux commandes d'envoyer leur "message custom"
-        //std::cout << "ICI" << std::endl;
-        if (command.compare("JOIN") == 0)
+        if (command.compare("JOIN") == 0 ||
+            command.compare("TOPIC") == 0)
         {
             std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
             rpl += " " + command + " " + params[0] + "\r\n";
+            return rpl;
+        }
+        else if (command.compare("PART") == 0)
+        {
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            rpl += " " + command + " " + params[0] + " " + params[1] + "\r\n";
+            #if DEBUG
+                std::cout << "Part reply is :" << rpl << NC << std::endl;
+            #endif
             return rpl;
         }
         if(command == "PRIVMSG")

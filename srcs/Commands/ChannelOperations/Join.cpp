@@ -37,7 +37,7 @@ void Commands::join(User *user, IRC *server)
     std::vector<std::string>    params = user->get_params();
     std::vector<std::string>    error;
     std::string                 channel;
-    std::string                 opt_key;
+    std::string                 opt_key = "";
 
     //Va permettre de gerer le cas ou il y a plusieurs channels
     get_channel_targets(user, server);
@@ -71,9 +71,6 @@ void Commands::join(User *user, IRC *server)
             //Si l'element dans le vecteur a cette position n est pas nul
             if (!user->_splitted_channels.empty() && index < comp && !user->_splitted_channels[index].empty())
                 opt_key = user->_splitted_args[index];
-            else
-                opt_key = "";
-
             /*
             #if DEBUG
                 std::cout << BLUE << "channel " << channel << std::endl;
@@ -145,6 +142,9 @@ void Commands::join(User *user, IRC *server)
 
 void    Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
 {
+    #if DEBUG
+        std::cout << GREEN << "user joins function called." << NC << std::endl;
+    #endif
     //si oui, rajouter au channel
     user->be_added_to_channel(chan);
 

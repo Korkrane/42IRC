@@ -54,6 +54,7 @@ public:
 	static void join(User *user, IRC *server);
 	static void	check_roles(Channel *chan, User *user, bool added);
 	static void user_joins(User *user, IRC *server, Channel *chan, int index);
+	static void user_parts(User *user, IRC *server, Channel *chan, int index, std::string bye_message);
 
 
 	static void nick_cmd(User *user, IRC *server);

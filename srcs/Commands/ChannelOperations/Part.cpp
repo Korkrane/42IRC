@@ -1,103 +1,67 @@
 #include <IRC.hpp>
 
-/*
-void Commands::send_part_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server)
-{
-  std::string rpl = server->init_rpl(user);
-  rpl += " PART " + channel->get_name();
-
-  //Faire le tour de message
-  std::vector<std::string>::iterator it = message.begin();
-  std::vector<std::string>::iterator ite = message.end();
-  while (it != ite)
-  {
-    rpl += (*it);
-    rpl += " ";
-    it++;
-  }
-  //On termine
-  rpl += "\r\n";
-#if DEBUG
-  std::cout << BLUE << "DEBUG: "
-            << "COMMAND PART: the repply is" << rpl << std::endl;
-#endif
-  //Maintenant que j ai la reply, je dois l'envoyer a tout le monde
-  server->send_rpl_to_all_members(channel, rpl);
-}
-*/
-
-
 void Commands::part(User *user, IRC *server)
 {
-  (void)user;
-  (void)server;
   //Preparation du serveur d'arguments en cas d'ereur
   std::vector<std::string> error;
   std::vector<std::string> params = user->get_params();
+  std::string              channel;
+  std::string              bye_message = "Leaving";
+  unsigned int            size = params.size();
+
+  get_channel_targets(user, server);
+  if (size > 1)
+    bye_message = params[1];
+
   // Verifier le nombre d'argument, si il est egal a 1, renvoyer une erreur
-  if (user->get_params_size() == 1)
+  if (size == 1)
   {
-    //TODO: appel build reply
-    /*
     error.push_back(user->get_command_name());
-    error_handler("461", user, NULL, error);
-    */
-    return ;
+    return (return_error("461", user, server, error, ""));
   }
-  //On sauvegarde les arguments qui suivent
-  std::string channel = params.front();
-  std::vector<std::string> message;
 
-  if (user->get_params_size() > 2)
+  unsigned int max = user->_splitted_channels.size();
+  unsigned int index = 0;
+
+  while (index < max)
   {
-    std::vector<std::string>::iterator it = params.begin();
-    it++;
-    std::vector<std::string>::iterator ite = params.end();
-    //TODO: faire une fonction separee pour pouvoir la reutiliser et tester
-    while (it != ite)
+    channel = user->_splitted_channels[index];
+    //On verifie que la channel existe bien le nom doit etre correct et la channel doit exister
+    if (is_correct_channel_name(channel) == false || server->has_channel(channel) == false)
     {
-      message.push_back(*it);
-      it++;
+      error.push_back(channel);
+      return (return_error("403", user, server, error, ""));
     }
-  }
-  //Le message sera simplement "leaving"
-  else
-  {
-    message.push_back("Leaving");
-  }
+    //On rececupere le pointeur sur la channel
+    Channel *chan = server->find_channel(channel);
 
-  //On va sauvegarer tous les arguments qui suivent comme le message qui peut etre en differentes strings
-
-  //On verifie que la channel existe bien le nom doit etre correct et la channel doit exister
-  if (is_correct_channel_name(channel) == false || server->has_channel(channel) == false)
-  {
-    //NOSUCHCHANNEL
-    //TODO: build reply
-    /*
-    error.push_back(channel);
-    error_handler("403", user, NULL, error);
-    */
-    return;
+    //si il n est pas membre on retourne une erreur
+    if (chan->user_is_member(user) == false)
+    {
+      error.push_back(channel);
+      return (return_error("442", user, server, error, ""));
+    }
+    user_parts(user, server, chan, index, bye_message);
+    index++;
   }
-  //On rececupere le pointeur sur la channel
-  Channel *chan = server->find_channel(channel);
+  user->_splitted_channels.clear();
+  return;
+}
 
-  //si il n est pas membre on retourne une erreur
-  if (chan->user_is_member(user) == false)
-  {
-    //NOTONCHANNEL
-    //TODO: build reply
-    /*
-    error.push_back(channel);
-    error_handler("442", user, chan, error);
-    */
-    return;
-  }
-  //TODO: Attention ici je fais un peu les choses en deux facons, faire des tests pour verifier que ce n est pas source d'erreur
+void  Commands::user_parts(User *user, IRC *server, Channel *chan, int index, std::string bye_message)
+{
+  #if DEBUG
+    std::cout << GREEN << "user parts function called." << NC << std::endl;
+    std::cout << BLUE << " Bye message is: " << bye_message << NC << std::endl;
+  #endif
   //si il est membre on quitte le channel
+  std::vector<std::string> chan_vec;
+  chan_vec.push_back(user->_splitted_channels[index]);
+  chan_vec.push_back(bye_message);
+  server->send_rpl_to_all_members("", chan->get_members(), chan_vec, "PART");
+  chan_vec.clear();
   chan->deleteMember(user);
   //On enleve la cannel de sa liste;
   user->remove_channel_from_list(chan);
-  //Envoyer un message au serveur pour qu'il le transmette?
-  return;
+  return ;
 }
