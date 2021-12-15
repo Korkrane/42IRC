@@ -104,11 +104,14 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             }
             case 366:
             {
-                std::string rpl = ":127.0.0.1" + code + " " + user->get_nickname() + " ";
+                std::string rpl = ":127.0.0.1 " + code + " " + user->get_nickname() + " ";
                 int size = params.size();
                 if (size > 0)           
                     rpl += params[0];
                 rpl += " :End of NAMES list\r\n";
+                #if DEBUG
+                std::cout << rpl << std::endl;
+#endif
                 return (rpl);
             }
             case 371:

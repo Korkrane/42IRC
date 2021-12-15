@@ -90,7 +90,8 @@ public:
 	static Channel *find_target_channel(std::string target_channel, User *user, IRC *server);
 
 	static void names(User *user, IRC *server);
-	static void send_names_message(Channel *channel, User *user, IRC *server);
+	static void send_members_nick(User *user, Channel *channel, IRC *server);
+	//static void send_names_message(Channel *channel, User *user, IRC *server);
 
 	static void privmsg(User *user, IRC *server);
 	static std::vector<std::string> fill_recipients(std::string targets);
