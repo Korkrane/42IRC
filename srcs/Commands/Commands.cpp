@@ -100,6 +100,33 @@ void	Commands::get_channel_targets(User *user, IRC *server)
  	}
 }
 
+std::string	Commands::get_bye_message(User *user, IRC *server)
+{
+	(void)server;
+	
+	//tous les mots qui viennent apres le premier font partie de la string
+	std::string bye_message = "";
+	std::vector<std::string> params = user->get_params();
+	unsigned int size = params.size();
+	if (size == 0)
+		return (bye_message);
+	std::vector<std::string>::iterator it = params.begin();
+	it++;//on skippe le premier mot
+	std::vector<std::string>::iterator ite = params.end();
+	while (it != ite)
+	{
+		bye_message += (*it);
+		if (it + 1 == ite)
+			break;
+		bye_message += " ";
+		it++;
+	}
+	#if DEBUG
+		std::cout << "Bye message: " << bye_message << std::endl;
+	#endif
+	return (bye_message);
+}
+
 void	Commands::get_key_targets(User *user, IRC *server)
 {
 	(void)user;

@@ -1,134 +1,86 @@
 #include <IRC.hpp>
 
-/*
-void Commands::send_topic_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server)
-{
-    (void)channel;
-    (void)user;
-    (void)topic;
-    std::string rpl = server->init_rpl(user);
-    rpl += " TOPIC ";
-    rpl += channel->get_name();
-    rpl += " :";
-    //Ajouter toutes les string params
-    std::vector<std::string>::iterator it = message.begin();
-    std::vector<std::string>::iterator ite = message.end();
-    while (it != ite)
-    {
-        rpl += (*it);
-        //Pour ne pas ajouter un espace au dernier mot
-        if (it + 1 == ite)
-            break;
-        rpl += " ";
-        it++;
-    }
-    rpl += "\r\n";
-    std::cout << RED << "test" << std::endl;
-    //On doit envoyer le message a toute la channel
-    server->send_rpl_to_all_members(channel, rpl);
-    return;
-}
-*/
-
-/**
- * @brief
- *
- * @param client
- * @param server
- * Mahaut
- */
 void Commands::topic(User *user, IRC *server)
 {
-    (void)user;
-    (void)server;
-    unsigned int size = user->get_params_size();
-    std::vector<std::string> params = user->get_params();
-    //Vecteur pour gerer les erreurs
-    std::vector<std::string> error;
-    // verifier le nombre d argument (ne peut pas etre egal a 1)
-    //retourner erreur ERR_NEEDMOREPARAMS
-    if (size == 1)
+    unsigned int                size = user->get_params_size();
+    std::vector<std::string>    params = user->get_params();
+    std::vector<std::string>    error;
+    std::string                 channel = params[0];
+
+    if (size == 0)
     {
-        //TODO: build reply
-        /*
         error.push_back(user->get_command_name());
-        error_handler("461", user, NULL, error);
-        */
-        return;
+        return (return_error("461", user, server, error, ""));
     }
-    std::string channel = params[0];
+
     //verifier que la channel passe en parametre existe
     if (is_correct_channel_name(channel) == false || server->has_channel(channel) == false)
     {
-        //NOSUCHCHANNEL
-        //TODO: build reply
-        /*
         error.push_back(channel);
-        error_handler("403", user, NULL, error);
-        */
-        return;
+        return (return_error("403", user, server, error, ""));
     }
+
     //On va sauvegarder les string qui constituent le topic
     std::vector<std::string> topic;
-    int i = 1;
-    while (!params[i].empty())
+    unsigned int i = 1;
+    while (i < size)
     {
         topic.push_back(params[i]);
+        i++;
     }
     //et que le client y est registered
     Channel *chan = server->find_channel(channel);
     //si il n est pas membre on retourne une erreur
     if (chan->user_is_member(user) == false)
     {
-        //NOTONCHANNEL
-        //TODO: build reply
-        /*
         error.push_back(channel);
-        error_handler("442", user, chan, error);
-        */
-        return;
+        return (return_error("442", user, server, error, ""));
     }
-    //Est-ce qu il faut etre operateur pour set un topic ? a priori non
-    //verifier si il y a deja un topic ou pas
-    if (params[1].empty())
+    if (size > 1 && params[1].empty())
     {
         check_topic(chan, user, server);
     }
+    //Si la channel porte le mode "t", seuls les operateurs peuvent set le topic
+    if (chan->has_mode('t') == true && !chan->user_is_operator(user))
+        return ;
     //Si la chaine est une chaine vide (comprendre contient uniquement :), ca unset les topic (clear)
     //Si il n y a pas de chaine, alors fait permet de checker quel est le topic
-    else if (params[1].compare(":") == false)
+    else if (size > 1 && params[1].compare(":") == false)
     {
         chan->clear_topic(user, server, topic);
+        #if DEBUG
+            std::cout << "TOPIC has been cleared." << std::endl;
+        #endif
+    }
+    else if (size > 1)
+    {
+        chan->set_topic(user, server, topic);
+         #if DEBUG
+            std::cout << "TOPIC has been set to " << chan->get_topic() << std::endl;
+        #endif
     }
     else
     {
-        chan->set_topic(user, server, topic);
+        #if DEBUG
+            std::cout << PURPLE << "Topic is not going to be edited." << std::endl;
+        #endif
     }
-    //TODO: build reply
-    //send_topic_message(chan, user, topic, server);
+    server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
     return;
 }
 
-//TODO: a corriger
-//TODO: verifier si le mode t est en place, sinon l'user ne pourra pas set le topic
 void Commands::check_topic(Channel *channel, User *user, IRC *server)
 {
-    (void)channel;
-    (void)user;
-    (void)server;
-
     std::vector<std::string> error;
     if (channel->get_has_topic() == false)
     {
-        //TODO: build reply RPL _NOTOPIC
-        //server->send_rpl("331", user, channel, "");
-        return;
+        error.push_back(user->get_command_name());
+        return (return_error("331", user, server, error, ""));
     }
     else
     {
-        //TODO: build reply
-        //server->send_rpl("332", user, channel, "");
-        return;
+        error.push_back(user->get_command_name());
+        return (return_error("332", user, server, error, ""));
     }
     return;
 }

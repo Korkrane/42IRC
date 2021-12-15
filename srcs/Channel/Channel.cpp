@@ -70,7 +70,8 @@ std::string Channel::get_name(void) const
 
 std::string Channel::get_topic(void) const
 {
-	return (this->_topic);
+	std::string topic = this->_topic;
+	return (topic);
 }
 
 std::string Channel::get_modes(void) const
@@ -623,10 +624,10 @@ void Channel::drop_key(void)
 
 void Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
 {
-	this->set_has_topic();
 	(void)user;
 	(void)server;
-	(void)topic;
+
+	this->set_has_topic();
 	std::string str_topic;
 	std::vector<std::string>::iterator it = topic.begin();
 	std::vector<std::string>::iterator ite = topic.end();
@@ -634,13 +635,12 @@ void Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
 	while (it != ite)
 	{
 		str_topic += (*it);
+		if (it + 1 == ite)
+			break;
 		str_topic += " ";
 		it++;
 	}
 	this->_topic = str_topic;
-#if DEBUG
-	std::cout << BLUE << "DEBUG: TOPIC: topic has been set to " << str_topic << NC << std::endl;
-#endif
 }
 
 void Channel::clear_topic(User *user, IRC *server, std::vector<std::string> topic)

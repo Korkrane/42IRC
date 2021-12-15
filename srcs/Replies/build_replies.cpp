@@ -267,8 +267,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
     //TODO: coder la partie pour les commandes + gerer le cas d'envoir a tout une channel
     else
     {
-        if (command.compare("JOIN") == 0 ||
-            command.compare("TOPIC") == 0)
+        if (command.compare("JOIN") == 0)
         {
             std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
             rpl += " " + command + " " + params[0] + "\r\n";
@@ -278,6 +277,29 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         {
             std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
             rpl += " " + command + " " + params[0] + " " + params[1] + "\r\n";
+            #if DEBUG
+                std::cout << "Part reply is :" << rpl << NC << std::endl;
+            #endif
+            return rpl;
+        }
+        //Attention comportement differents en fontion du nombre de params
+        else if (command.compare("TOPIC") == 0)
+        {
+            unsigned int size = params.size();
+            #if DEBUG
+                std::cout << BLUE << "Size is: " << size << NC << std::endl;
+            #endif
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            rpl += " " + command + " " + params[0];
+            if (size > 1)
+                rpl += " " + params[1] + "\r\n";
+            else
+            {
+                Channel *chan = this->find_channel(params[0]);
+                if (chan)
+                    rpl += chan->get_topic();
+                rpl += "\r\n";
+            }   
             #if DEBUG
                 std::cout << "Part reply is :" << rpl << NC << std::endl;
             #endif

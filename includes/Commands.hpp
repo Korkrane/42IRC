@@ -63,6 +63,7 @@ public:
 
 	static void part(User *user, IRC *server);
 	static void send_part_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server);
+	static std::string get_bye_message(User *user, IRC *server);
 
 	static void mode(User *user, IRC *server);
 	static void mode_channel(User *user, IRC *server);

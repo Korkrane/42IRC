@@ -6,13 +6,18 @@ void Commands::part(User *user, IRC *server)
   std::vector<std::string> error;
   std::vector<std::string> params = user->get_params();
   std::string              channel;
-  std::string              bye_message = "Leaving";
+  std::string              bye_message;
   unsigned int            size = params.size();
 
+  //Preparation du bye message
   get_channel_targets(user, server);
-  if (size > 1)
-    bye_message = params[1];
+  bye_message = get_bye_message(user, server);
+  if (bye_message.empty())
+    bye_message = "Leaving";
 
+  #if DEBUG
+    std::cout << BLUE << "Bye message is: " << bye_message << NC << std::endl;
+  #endif
   // Verifier le nombre d'argument, si il est egal a 1, renvoyer une erreur
   if (size == 1)
   {

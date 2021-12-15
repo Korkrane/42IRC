@@ -326,6 +326,9 @@ bool IRC::has_channel(std::string channel_name)
 Channel *IRC::find_channel(std::string channel_name)
 {
 	(void)channel_name;
+	if (channel_name.empty())
+		return (NULL);
+	
 	std::vector<Channel *> chans = this->get_channels();
 	std::vector<Channel *>::iterator it = chans.begin();
 	std::vector<Channel *>::iterator ite = chans.end();
