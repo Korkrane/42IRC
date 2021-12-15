@@ -48,8 +48,8 @@
 #define CHANNEL_MODES "t"
 
 #define MAX_CHAR 4096
-#define CHAN_MAXCAPACITY 5
-#define USER_MAXCHAN 5
+#define CHAN_MAXCAPACITY 10
+#define USER_MAXCHAN 10
 #define SERVER_MAXCHAN 10
 
 class User;

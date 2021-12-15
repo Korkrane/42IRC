@@ -37,6 +37,7 @@ bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> para
     return (res);
 }
 
+//TODO: faire des sous fonctions pour nettoyer
 void Commands::join(User *user, IRC *server)
 {
     std::vector<std::string>    params = user->get_params();
@@ -44,24 +45,23 @@ void Commands::join(User *user, IRC *server)
     std::string                 channel;
     std::string                 opt_key;
 
-    //Check nombre de params
-    //std::vector<std::string> target_channel
+    //Va permettre de gerer le cas ou il y a plusieurs channels
     get_channel_targets(user, server);
     get_key_targets(user, server);
 
     #if DEBUG
-        //TODO: a mettre en prive
         std::cout << "PRINTING SPLITTED CHANNELS" << std::endl;
         display_vector_string(user->_splitted_channels);
         std::cout << "PRINTING SPLITTED ARGS" << std::endl;
         display_vector_string(user->_splitted_args);
         std::cout << NC << std::endl;
     #endif
-    /* */
     if (user->get_params_size() < 1)
     {
         error.push_back(user->get_command_name());
         server->send_rpl("461", user, error, "");
+        user->_splitted_args.clear();
+        user->_splitted_channels.clear();
         return ;
     }
     else
@@ -88,6 +88,8 @@ void Commands::join(User *user, IRC *server)
             {
                 error.push_back(channel);
                 server->send_rpl("403", user, error, "");
+                user->_splitted_args.clear();
+                user->_splitted_channels.clear();
                 return ;
             }
             //On verifie si la channel existe, sinon on va la creer (par defaut il n y a pas de cle quand on la cree)
@@ -105,18 +107,32 @@ void Commands::join(User *user, IRC *server)
                 //On verifie si la channel n est pas full
                 if (chan->is_full_channel() == true)
                 {
+                    #if DEBUG
+                        chan->displayChannelInfo();
+                    #endif
                     error.push_back(channel);
                     server->send_rpl("471", user, error, "");
+                    user->_splitted_args.clear();
+                    user->_splitted_channels.clear();
                     return ;
                 }
             }
             //Cas ou on passe une cle en argument alors que le mode n est pas active
             if (should_ignore_key(chan, params) == true)
             {
+                #if DEBUG
+                    std::cout << BLUE << "Even if there is a key mentionend we should ignored it" << NC << std::endl;
+                #endif
+                //TODO: a replacer ca ailleurs ?
                 if (chan->is_correct_channel_key(opt_key) == false)
                 {
+                    #if DEBUG
+                        chan->displayChannelInfo();
+                    #endif
                     error.push_back(channel);
                     server->send_rpl("475", user, error, "");
+                    user->_splitted_args.clear();
+                    user->_splitted_channels.clear();
                     return ;
                 }
             }
@@ -126,7 +142,23 @@ void Commands::join(User *user, IRC *server)
                 //On verifie si le user ne listen pas deja sur trop de channels
                 if (chan->get_members_nb() >= CHAN_MAXCAPACITY)
                 {
+                    #if DEBUG
+                        chan->displayChannelInfo();
+                    #endif
                     server->send_rpl("471", user, params, "");
+                    user->_splitted_args.clear();
+                    user->_splitted_channels.clear();
+                    return ;
+                }
+                //Erreur too many channels
+                else if (user->get_channels_nb() >= USER_MAXCHAN)
+                {
+                    #if DEBUG
+                        chan->displayChannelInfo();
+                    #endif
+                    server->send_rpl("405", user, params, "");
+                    user->_splitted_args.clear();
+                    user->_splitted_channels.clear();
                     return ;
                 }
                 //si oui, rajouter au channel
@@ -153,6 +185,8 @@ void Commands::join(User *user, IRC *server)
             {
                 error.push_back(channel);
                 server->send_rpl("405", user, error, "");
+                user->_splitted_args.clear();
+                user->_splitted_channels.clear();
                 return ;
             }
             #if DEBUG
@@ -161,5 +195,7 @@ void Commands::join(User *user, IRC *server)
             index++;
         }
     }
+    user->_splitted_args.clear();
+    user->_splitted_channels.clear();
     return ;
 }

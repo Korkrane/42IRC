@@ -5,12 +5,8 @@ Channel::Channel(std::string name, User *user) : _name(name), _prefix(name[0]), 
 #if DEBUG
 	std::cout << "Channel constructor called" << std::endl;
 #endif
-	//Ajouter le user passe en parametre a la liste des users
-//	this->newMember(user, true);
 	this->set_owner(user);
-	return;
-	//std::vector<User *> *operators = new std::vector<User *>;//TODO: Attention a free dans le destructeur
-
+	return ;
 }
 
 void	Channel::set_owner(User *user)
@@ -31,20 +27,6 @@ bool	Channel::is_channel_owner(User *user)
 	return (false);
 }
 
-/*
-Channel::Channel(std::string name, User *user) : _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _operators(0), _users(0), _channel_owner(user), _key(""), _has_key(false), _members_nb(0)
-{
-	//TODO: Attention si le prefix est '' il faut set le handler mode a true
-	//TODO: ajouter user pour qu on sache qui est le channel owner et par consequent operateur ?
-	this->_name = name;
-	if (!opt_key.empty())
-	{
-		this->set_has_key();
-		this->set_key(opt_key);
-	}
-}
-*/
-
 Channel::~Channel(void)
 {
 #if DEBUG
@@ -54,14 +36,6 @@ Channel::~Channel(void)
 	//this->delete_channel_from_server();
 	return;
 }
-
-/*
-void Channel::delete_channel_from_server(void)
-{
-	this->_serv->drop_channel(this);
-	return;
-}
-*/
 
 void Channel::set_name(std::string name)
 {
@@ -185,7 +159,7 @@ bool Channel::user_is_owner(User *user)
 	return (false);
 }
 
-//TODO: Est-ce que ca devrait plutot venir du serveur ?
+/*
 bool Channel::isNicknameUnique(User *user)
 {
 	if (!user)
@@ -209,6 +183,7 @@ bool Channel::isNicknameUnique(User *user)
 #endif
 	return (true);
 }
+*/
 
 void Channel::newMember(User *user, bool user_operator)
 {
@@ -325,6 +300,9 @@ void Channel::removeFromOperators(User *user)
 //TODO à tester
 bool Channel::channelHasOperator(void)
 {
+	unsigned int size = this->_operators.size();
+	if (size <= 0)
+		return (false);
 	std::vector<User *>::iterator it = this->_operators.begin();
 	if (!(*it))
 		return (false);
@@ -333,6 +311,9 @@ bool Channel::channelHasOperator(void)
 
 bool Channel::channelHasUsers(void)
 {
+	unsigned int size = this->_operators.size();
+	if (size <= 0)
+		return (false);
 	std::vector<User *>::iterator it = this->_users.begin();
 	if (!(*it))
 		return (false);
@@ -342,9 +323,18 @@ bool Channel::channelHasUsers(void)
 	return (true);
 }
 
+unsigned int	Channel::get_operators_nb(void) const
+{
+	std::vector<User *> operators = this->get_operators();
+	unsigned int size = operators.size();
+	return (size);
+}
+
 void Channel::displayChannelInfo(void)
 {
 	std::cout << "------- Displaying Channel [" << this->get_name() << "] -------" << std::endl;
+	std::cout << "Number of members :" << this->get_members_nb() << std::endl;
+	std::cout << "Number of operators :" << this->get_operators_nb() << std::endl;
 	this->displayTopic();
 	this->displayMembers();
 	this->displayOperators();

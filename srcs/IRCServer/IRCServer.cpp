@@ -467,6 +467,8 @@ int IRC::send_rpl(std::string code, User *user, std::vector<std::string> params,
 	#endif
 	std::string rpl = this->build_reply(code, user, params, command);
 	this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
+	//user->_splitted_channels.clear();
+	//user->_splitted_args.clear();
 	return (0);
 }
 
@@ -483,6 +485,8 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, std
 		#endif
 		this->_response_queue.push_back(std::make_pair((*it)->get_socket(), rpl));
 		it++;
+		//(*it)->_splitted_channels.clear();
+		//(*it)->_splitted_args.clear();
 	}
 	return (0);
 }
