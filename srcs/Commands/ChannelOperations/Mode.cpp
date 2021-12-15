@@ -1,29 +1,37 @@
 #include <IRC.hpp>
 
+/**
+ * @brief exemple de test qui doivent marcher : /mode #channel +key secret
+ * Dans mes tests sur free node je n ai pas reussi a unset une key (on me demandait toujours un mot de passe)
+ * Par contre pour le mode t soit doit fonctionner correctement
+ * 
+ * @param user 
+ * @param server 
+ */
 void Commands::mode_channel(User *user, IRC *server)
 {
-  //Check du nombre d'arguments
-    std::string modes;
-    std::string channel;
-    int param_size = user->get_params_size();
-    std::vector<std::string> params;
-    //Preparation du vecteur qui permet de gerer les erreurs
-    std::vector<std::string> error;
+    std::string                 modes;
+    std::string                 channel;
+    int                         param_size = user->get_params_size();
+    std::vector<std::string>    params;
+    std::vector<std::string>    error;
+    std::string                 key;
+
     if (param_size < 2)
     {
-        //TODO: appel build reply
-        /*
         error.push_back(user->get_command_name());
-        error_handler("461", user, NULL, error);
-        */
-        return ;
+        return (return_error("461", user, server, error, ""));
     }
-    //Verifier comment gerer plus de 2 arguments
+
     else
     {
         //On store la channel passee en parametre et les modes demandes
-        channel = params[1];
-        modes = params[2];
+        channel = params[0];
+        modes = params[1];
+        if (param_size > 2)
+            key = params[2];
+
+        //On veut gerer +t, -t, +k key
         //On check la channel (syntaxe)
         if (is_correct_channel_name(channel) == false)
         {
