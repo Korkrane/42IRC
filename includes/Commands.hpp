@@ -53,6 +53,7 @@ public:
 
 	static void join(User *user, IRC *server);
 	static void	check_roles(Channel *chan, User *user, bool added);
+	static void user_joins(User *user, IRC *server, Channel *chan, int index);
 
 
 	static void nick_cmd(User *user, IRC *server);
@@ -99,4 +100,6 @@ public:
 
 	static void get_channel_targets(User *user, IRC *server);
 	static void get_key_targets(User *user, IRC *server);
+
+	static void	return_error(std::string error_code, User *user, IRC *server, std::vector<std::string> error, std::string arg);
 };

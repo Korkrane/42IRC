@@ -110,3 +110,11 @@ void	Commands::get_key_targets(User *user, IRC *server)
 	if (size > 1)
 		user->ft_split_args(params[1], ',');
 }
+
+void	Commands::return_error(std::string error_code, User *user, IRC *server, std::vector<std::string> error, std::string arg)
+{
+	server->send_rpl(error_code, user, error, arg);
+	user->_splitted_args.clear();
+	user->_splitted_channels.clear();
+	return ;
+}
