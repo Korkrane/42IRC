@@ -102,11 +102,15 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                 return prefix;
                 */
             }
-            //TODO: a tester
-            /*
             case 366:
-                return prefix + RPL_ENDOFNAMES(channel[0]->get_name());
-            */
+            {
+                std::string rpl = ":127.0.0.1" + code + " " + user->get_nickname() + " ";
+                int size = params.size();
+                if (size > 0)           
+                    rpl += params[0];
+                rpl += " :End of NAMES list\r\n";
+                return (rpl);
+            }
             case 371:
                 return prefix + RPL_INFO(params[0]);
             case 372:
@@ -311,6 +315,23 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             #endif
             return rpl;
         }
+        /*
+        else if (command.compare("NAMES") == 0)
+        {
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            int size = params.size();
+            if (size > 0)
+            {
+                if (!params[0].empty())
+                    rpl += params[0];
+            }
+            rpl += " :End of NAMES list\r\n";
+            #if DEBUG
+                std::cout << "Names reply is "<< rpl << std::endl;
+            #endif
+            return (rpl);
+        }
+        */
         if(command == "PRIVMSG")
         {
             std::cout << GREEN << "build privmsg reply" << NC << std::endl;
