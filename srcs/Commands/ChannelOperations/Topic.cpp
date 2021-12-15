@@ -54,7 +54,7 @@ void Commands::topic(User *user, IRC *server)
     }
     else if (size > 1)
     {
-        chan->set_topic(user, server, topic);
+        chan->set_topic(user, server, params);
          #if DEBUG
             std::cout << "TOPIC has been set to " << chan->get_topic() << std::endl;
         #endif

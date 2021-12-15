@@ -290,14 +290,20 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                 std::cout << BLUE << "Size is: " << size << NC << std::endl;
             #endif
             std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
-            rpl += " " + command + " " + params[0];
             if (size > 1)
+            {
+                rpl += " " + command + " " + params[0];
                 rpl += " " + params[1] + "\r\n";
+            }
             else
             {
+                rpl += " 332 : ";
+                #if DEBUG 
+                    std::cout << "params0 est " << params[0] << std::endl;
+                #endif
                 Channel *chan = this->find_channel(params[0]);
                 if (chan)
-                    rpl += chan->get_topic();
+                    rpl += " "+ chan->get_topic() + " ";
                 rpl += "\r\n";
             }   
             #if DEBUG

@@ -405,9 +405,17 @@ bool is_correct_channel_name(std::string target_name)
 	while (i < length)
 	{
 		if (forbidden.find(target_name[1]) != std::string::npos)
+		{
+			#if DEBUG
+				std::cout << "is correct channel name will return false." << std::endl;
+			#endif
 			return (false);
+		}
 		i++;
 	}
+	#if DEBUG
+		std::cout << "is correct channel name will return true." << std::endl;
+	#endif
 	return (true);
 }
 
@@ -641,6 +649,9 @@ void Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
 		it++;
 	}
 	this->_topic = str_topic;
+	#if DEBUG
+		std::cout << "Topic has been set to set: " << this->_topic << std::endl;
+	#endif
 }
 
 void Channel::clear_topic(User *user, IRC *server, std::vector<std::string> topic)

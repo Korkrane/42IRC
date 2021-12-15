@@ -317,9 +317,17 @@ bool IRC::has_channel(std::string channel_name)
 	{
 		check_name = (*it)->get_name();
 		if (check_name.compare(channel_name) == 0)
+		{
+			#if DEBUG
+				std::cout << "has channel will return true." << std::endl;
+			#endif
 			return (true);
+		}
 		it++;
 	}
+	#if DEBUG
+		std::cout << "has channel will return false." << std::endl;
+	#endif
 	return (false);
 }
 
