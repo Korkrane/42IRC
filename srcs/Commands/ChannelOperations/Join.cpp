@@ -135,11 +135,14 @@ void Commands::join(User *user, IRC *server)
                 user->add_channel_to_list(chan);
                 check_roles(chan, user, true);
                 //On prepare et envoie la reponse du serveur
-                server->send_rpl_to_all_members("", chan->get_members(), params, "JOIN");//user->_splitted_channels
+                std::vector<std::string> chan_vec;
+                chan_vec.push_back(user->_splitted_channels[index]);
+                server->send_rpl_to_all_members("", chan->get_members(), chan_vec, "JOIN");//user->_splitted_channels
                  #if DEBUG
                     std::cout << PURPLE << "DEBUG: JOIN: " << "Success params !" << NC << std::endl;
                     chan->displayChannelInfo();
                 #endif
+                chan_vec.clear();
                 //TODO: a rajouter topic
                 //server->send_rpl("", user, error, "TOPIC");
                 //TODO: a rajouer names
