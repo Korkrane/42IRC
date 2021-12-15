@@ -10,6 +10,8 @@ NAMES		=	main.cpp \
 				Commands/ChannelOperations/List.cpp \
 				Commands/ChannelOperations/Part.cpp \
 				Commands/ChannelOperations/Mode.cpp \
+				Commands/ChannelOperations/User_mode.cpp \
+				Commands/ChannelOperations/Channel_mode.cpp \
 				Commands/ChannelOperations/Names.cpp \
 				Commands/ChannelOperations/Topic.cpp \
 				Commands/ConnectionRegistration/Cap.cpp \

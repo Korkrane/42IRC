@@ -22,6 +22,7 @@ private:
     bool                 _has_key;
     unsigned int         _members_nb;
     unsigned int         _operators_nb;
+    char                 _mode_sign;
 
     Channel(Channel const &src);
     Channel &operator=(Channel const &src);
@@ -42,6 +43,8 @@ public:
     void                set_key(std::string key);
     void                unset_has_key();
     void                drop_key();
+    char                get_mode_sign(void);
+    void                set_mode_sign(char c);    
 
     std::string         get_name(void) const;
     std::string         get_topic(void) const;

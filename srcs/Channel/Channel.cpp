@@ -27,6 +27,16 @@ bool	Channel::is_channel_owner(User *user)
 	return (false);
 }
 
+char	Channel::get_mode_sign(void)
+{
+	return (this->_mode_sign);
+}
+
+void	Channel::set_mode_sign(char c)
+{
+	this->_mode_sign = c;
+}
+
 Channel::~Channel(void)
 {
 #if DEBUG

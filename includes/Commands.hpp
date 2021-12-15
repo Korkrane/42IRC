@@ -73,6 +73,8 @@ public:
 	static bool should_add_mode(std::string modes);
 	static bool should_remove_mode(std::string modes);
 	static void handle_key(Channel *channel, User *user, std::string modes, std::string key, bool add);
+	static char get_mode_sign(std::string str, int pos);
+	static int pos_next_mode(std::string str, int prev_pos);
 
 	static void kick(User *client, IRC *server);
 	static void send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment);
