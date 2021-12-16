@@ -501,6 +501,33 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, std
 	return (0);
 }
 
+void send_rpl_display_user(User *user, User *target, std::string command)
+{
+	(void)user;
+	(void)command;
+	(void)target;
+
+	return;
+}
+
+void send_rpl_display_all_users(User *user, std::string command)
+{
+	(void)user;
+	(void)command;
+	/*
+	std::vector<User *> users = this->get_users();
+	std::vector<User *>::iterator it = users.begin();
+	std::vector<User *>::iterator ite = users.end();
+
+	while (it != ite)
+	{
+		this->send_rpl_display_user(user, (*it), command);
+		it++;
+	}
+	*/
+	return;
+}
+
 unsigned int	IRC::get_channel_nb(void)
 {
 	unsigned int number = 0;

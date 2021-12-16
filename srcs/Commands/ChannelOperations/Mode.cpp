@@ -1,5 +1,5 @@
 #include <IRC.hpp>
-<<<<<<< HEAD
+
 /*
 void Commands::mode_channel(User *user, IRC *server)
 {
@@ -222,8 +222,6 @@ void            Commands::mode_user(User *user, IRC *server)
             server->send_rpl("502", user, reply_params, ""); //ERR_USERDONTMATCH
     }
 }
-=======
->>>>>>> 2c2ed8e540d18cf437b97e38979f85a90360ceea
 
 void            Commands::mode(User *user, IRC *server)
 {
