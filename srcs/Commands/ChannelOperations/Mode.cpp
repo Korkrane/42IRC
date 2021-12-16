@@ -17,12 +17,6 @@ void            Commands::mode(User *user, IRC *server)
         std::vector<std::string> reply_params;
         reply_params.push_back(params[0]);
         server->send_rpl("401", user, reply_params, ""); //ERR_NOSUCHNICK
-        return ;
-    }
-    else
-    {
-        //Baudoin: autre cas possible ou pas?
-        return ;
     }
     #if DEBUG
         std::cout << RED << "EXIT MODE COMMAND" << NC << std::endl;

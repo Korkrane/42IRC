@@ -34,7 +34,6 @@ public:
 	Server(int port, std::string const &password);
 	~Server();
 
-
 	void	SetUp(IRC *irc);
 
 	// Kick off server's infinite loop (until SIGINT, SIGQUIT or SIGKILL received)

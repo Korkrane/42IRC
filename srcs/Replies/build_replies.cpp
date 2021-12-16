@@ -106,7 +106,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             {
                 std::string rpl = ":127.0.0.1 " + code + " " + user->get_nickname() + " ";
                 int size = params.size();
-                if (size > 0)           
+                if (size > 0)
                     rpl += params[0];
                 rpl += " :End of NAMES list\r\n";
                 #if DEBUG
@@ -307,14 +307,14 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             else
             {
                 rpl += " 332 : ";
-                #if DEBUG 
+                #if DEBUG
                     std::cout << "params0 est " << params[0] << std::endl;
                 #endif
                 Channel *chan = this->find_channel(params[0]);
                 if (chan)
                     rpl += " "+ chan->get_topic() + " ";
                 rpl += "\r\n";
-            }   
+            }
             #if DEBUG
                 std::cout << "Part reply is :" << rpl << NC << std::endl;
             #endif
@@ -340,6 +340,15 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         if(command == "PRIVMSG")
         {
             std::cout << GREEN << "build privmsg reply" << NC << std::endl;
+            std::string rpl;
+
+            rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
+            rpl += " " + command + " " + params[3] + " " + params[4] + "\r\n";
+            return rpl;
+        }
+        else if(command == "NOTICE")
+        {
+            std::cout << GREEN << "build notice reply" << NC << std::endl;
             std::string rpl;
 
             rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];

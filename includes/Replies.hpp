@@ -182,7 +182,7 @@
 #define C_RPL_ENDOFINFO "374"
 #define RPL_MOTDSTART(server) (":- " + server + " Message of the day - \r\n");// 375
 #define C_MOTDSTART "375"
-#define RPL_MOTD(text) (":- " + text + "\r\n");// 372
+#define RPL_MOTD(text) (":" + text);// 372
 #define C_RPL_MOTD "372"
 #define RPL_ENDOFMOTD() (":End of MOTD command\r\n");// 376
 #define C_RPL_ENDOFMOTD "376"

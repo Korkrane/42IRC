@@ -47,6 +47,7 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("OPER", oper));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KILL", kill));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("DIE", die));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NOTICE", notice));
 	return cmds;
 }
 
@@ -105,7 +106,7 @@ void	Commands::get_channel_targets(User *user, IRC *server)
 std::string	Commands::get_bye_message(User *user, IRC *server)
 {
 	(void)server;
-	
+
 	//tous les mots qui viennent apres le premier font partie de la string
 	std::string bye_message = "";
 	std::vector<std::string> params = user->get_params();

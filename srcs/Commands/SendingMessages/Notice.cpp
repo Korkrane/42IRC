@@ -1,82 +1,86 @@
 #include <IRC.hpp>
 
-/*
-void Commands::send_full_notice(User *target, User *user, IRC *server, std::vector<std::string> message)
-{
-    (void)target;
-    (void)user;
-    (void)server;
-    (void)message;
-
-    std::string rpl = server->init_rpl(user);
-    rpl += " NOTICE " + target->get_nickname();
-    std::vector<std::string>::iterator it = message.begin();
-    std::vector<std::string>::iterator ite = message.end();
-
-    while (it != ite)
-    {
-        rpl += (*it);
-        if (it + 1 == ite)
-            break;
-        rpl += " ";
-        it++;
-    }
-    rpl += "\r\n";
-    //TODO: verifier si ca doit etre user ou target
-    server->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
-    return;
-}
-*/
-
-/**
- * @brief
- *
- * @param user
- * @param server
- * Baudoin + aide Mahaut
- * TODO: updater avec changement du parsing ?
- */
 void Commands::notice(User *user, IRC *server)
 {
-    (void)user;
-    (void)server;
-
-    int size = user->get_params_size();
+    #if DEBUG
+        std::cout << RED << "ENTER NOTICE CMD" << NC << std::endl;
+    #endif
     std::vector<std::string> params = user->get_params();
-    //Preparation du vecteur a envoyer en cas d'erreur
-    std::vector<std::string> error;
+    if (user->get_params_size() < 1) //s'il n'y a pas de recipient
+    {
+        std::vector<std::string> reply_params;
+        reply_params.push_back(user->get_command_name());
+        server->send_rpl("411", user, reply_params, "");
+        return;
+    }
+    else if (user->get_params_size() < 2) //s'il n'y a pas de message à envoyer
+    {
+        std::vector<std::string> reply_params;
+        server->send_rpl("412", user, reply_params, "");
+        return;
+    }
+    //Dans le cas ou il y a plusieurs recipinets ex: /privmsg user1,user2,#channel3
+    std::vector<std::string> recipients = fill_recipients(params[0]);
+    //Envoie le message pour chaque recipient
+    for(std::vector<std::string>::iterator it = recipients.begin(); it != recipients.end(); it++)
+    {
+        std::string message = params[1];
+        //Check si le recipient est un user ou une channel
+        User *targetuser = server->get_user_ptr((*it));
+        Channel *targetchannel = server->get_channel_ptr((*it));
+        if(!targetuser && !targetchannel) //si il n'existe pas de channel ou d'user à ce nom
+        {
+            #if DEBUG
+                std::cout << PURPLE << "DEBUG: Target doesnt exist" << NC << std::endl;
+            #endif
+            std::vector<std::string> reply_params;
+            reply_params.push_back((*it));
+            server->send_rpl("401", user, reply_params, "");
+        }
+        else if(targetuser && !targetchannel) //si le recipient est un user
+        {
+            #if DEBUG
+                std::cout << PURPLE << "DEBUG: Target is a user" << NC << std::endl;
+            #endif
+            std::vector<std::string> reply_params;
+            //le recipient recoit le message
+            reply_params.push_back(user->get_nickname());
+            reply_params.push_back(user->get_username());
+            reply_params.push_back(user->get_hostname());
+            reply_params.push_back(targetuser->get_nickname());
+            reply_params.push_back(message);
+            server->send_rpl("1001", targetuser, reply_params, "NOTICE");
+        }
+        else if(!targetuser && targetchannel) //si le recipient est un channel
+        {
+            #if DEBUG
+                std::cout << BLUE << "DEBUG: Target is a channel" << NC << std::endl;
+            #endif
+            std::vector<std::string> reply_params;
 
-    if (size < 2)
-    {
-        //TODO: build reply
-        /*
-        error.push_back(user->get_command_name());
-        error_handler("461", user, NULL, error); //Not enough params
-        */
-        return;
+            reply_params.push_back(user->get_nickname());
+            reply_params.push_back(user->get_username());
+            reply_params.push_back(user->get_hostname());
+            reply_params.push_back(targetchannel->get_name());
+            reply_params.push_back(message);
+            std::vector<User *> users_execept_sender;
+            std::vector<User *> users = targetchannel->get_members();;
+
+            for (unsigned long i=0; i< users.size(); i++)
+                users_execept_sender.push_back(users[i]);
+            User *sender = server->get_user_ptr(user->get_nickname());
+            for(std::vector<User *>::iterator it = users_execept_sender.begin(); it != users_execept_sender.end(); it++)
+            {
+                if ((*it) == sender)
+                {
+                    users_execept_sender.erase(it);
+                    break;
+                }
+            }
+            server->send_rpl_to_all_members("1001", users_execept_sender, reply_params, "NOTICE");
+        }
     }
-    else if (size == 2)
-    {
-        //TODO: build reply
-        //error_handler("412", user, NULL, error); //No text to send
-        return;
-    }
-    //TODO: a modifier avec le changement dans le parsing
-    std::string receiver = params.front();
-    std::vector<std::string> message = store_second_param_message(params);
-    //TODO: je n ai pas reussi a reproduire l erreur toomanytarget
-    //On verifie qu'on trouve la target
-    User *target = server->get_user_ptr(receiver);
-    if (!target)
-    {
-        //TODO: build reply
-        /*
-        error.push_back(receiver);
-        error_handler("401", user, NULL, error);
-        */
-        return;
-    }
-    //TODO: build reply
-    //send_full_notice(target, user, server, message);
-    return;
+    #if DEBUG
+        std::cout << RED << "EXIT NOTICE CMD" << NC << std::endl;
+    #endif
 }

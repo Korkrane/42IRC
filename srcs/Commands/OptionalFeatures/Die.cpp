@@ -7,11 +7,9 @@ void Commands::die(User *user, IRC *server)
     #endif
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> params_reply;
+
     if(user->get_operator_status() == false)
-    {
         server->send_rpl("481", user, params_reply, "");
-        return ;
-    }
     else
     {
         server->die = true;
