@@ -17,8 +17,6 @@ std::string ToString(T val)
  *
  * @param code
  * @return std::string
- * TODO: Attention - Mahaut : voir si on peut rassembler avec ce que j ai fait (error + send_rpl)
- * TODO: j ai mis error dans utils mais send_rpl dans commande
  */
 std::string format_code_str(int code)
 {
@@ -104,11 +102,18 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                 return prefix;
                 */
             }
-            //TODO: a tester
-            /*
             case 366:
-                return prefix + RPL_ENDOFNAMES(channel[0]->get_name());
-            */
+            {
+                std::string rpl = ":127.0.0.1 " + code + " " + user->get_nickname() + " ";
+                int size = params.size();
+                if (size > 0)           
+                    rpl += params[0];
+                rpl += " :End of NAMES list\r\n";
+                #if DEBUG
+                std::cout << rpl << std::endl;
+#endif
+                return (rpl);
+            }
             case 371:
                 return prefix + RPL_INFO(params[0]);
             case 372:
@@ -271,14 +276,67 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
     //TODO: coder la partie pour les commandes + gerer le cas d'envoir a tout une channel
     else
     {
-        //Partie qui va permettre aux commandes d'envoyer leur "message custom"
-        //std::cout << "ICI" << std::endl;
         if (command.compare("JOIN") == 0)
         {
             std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
             rpl += " " + command + " " + params[0] + "\r\n";
             return rpl;
         }
+        else if (command.compare("PART") == 0)
+        {
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            rpl += " " + command + " " + params[0] + " " + params[1] + "\r\n";
+            #if DEBUG
+                std::cout << "Part reply is :" << rpl << NC << std::endl;
+            #endif
+            return rpl;
+        }
+        //Attention comportement differents en fontion du nombre de params
+        else if (command.compare("TOPIC") == 0)
+        {
+            unsigned int size = params.size();
+            #if DEBUG
+                std::cout << BLUE << "Size is: " << size << NC << std::endl;
+            #endif
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            if (size > 1)
+            {
+                rpl += " " + command + " " + params[0];
+                rpl += " " + params[1] + "\r\n";
+            }
+            else
+            {
+                rpl += " 332 : ";
+                #if DEBUG 
+                    std::cout << "params0 est " << params[0] << std::endl;
+                #endif
+                Channel *chan = this->find_channel(params[0]);
+                if (chan)
+                    rpl += " "+ chan->get_topic() + " ";
+                rpl += "\r\n";
+            }   
+            #if DEBUG
+                std::cout << "Part reply is :" << rpl << NC << std::endl;
+            #endif
+            return rpl;
+        }
+        /*
+        else if (command.compare("NAMES") == 0)
+        {
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            int size = params.size();
+            if (size > 0)
+            {
+                if (!params[0].empty())
+                    rpl += params[0];
+            }
+            rpl += " :End of NAMES list\r\n";
+            #if DEBUG
+                std::cout << "Names reply is "<< rpl << std::endl;
+            #endif
+            return (rpl);
+        }
+        */
         if(command == "PRIVMSG")
         {
             std::cout << GREEN << "build privmsg reply" << NC << std::endl;

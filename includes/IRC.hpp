@@ -41,7 +41,7 @@
 #define NICK_VALID_CHARS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-^_[]{}\\|"
 #define CHANNEL_VALID_CHARS "#&!+"
 #define USER_VALID_MODES "aiwroOs"
-#define CHANNEL_VALID_MODES "OovaimnpsrtklbeI"
+#define CHANNEL_VALID_MODES "+=tk"//On ne gere que ces modes mais il en existe davantage
 #define CHANNEL_FORBIDDEN_CHARS " ,:"
 //Il n'est pas demande expressement de gerer les modes donc on va par defaut mettre ceux qui peuvent servir dans
 //les commandes que nous avons implemente

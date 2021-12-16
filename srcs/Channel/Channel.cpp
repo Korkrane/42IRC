@@ -27,6 +27,16 @@ bool	Channel::is_channel_owner(User *user)
 	return (false);
 }
 
+char	Channel::get_mode_sign(void)
+{
+	return (this->_mode_sign);
+}
+
+void	Channel::set_mode_sign(char c)
+{
+	this->_mode_sign = c;
+}
+
 Channel::~Channel(void)
 {
 #if DEBUG
@@ -70,7 +80,8 @@ std::string Channel::get_name(void) const
 
 std::string Channel::get_topic(void) const
 {
-	return (this->_topic);
+	std::string topic = this->_topic;
+	return (topic);
 }
 
 std::string Channel::get_modes(void) const
@@ -404,9 +415,17 @@ bool is_correct_channel_name(std::string target_name)
 	while (i < length)
 	{
 		if (forbidden.find(target_name[1]) != std::string::npos)
+		{
+			#if DEBUG
+				std::cout << "is correct channel name will return false." << std::endl;
+			#endif
 			return (false);
+		}
 		i++;
 	}
+	#if DEBUG
+		std::cout << "is correct channel name will return true." << std::endl;
+	#endif
 	return (true);
 }
 
@@ -623,10 +642,10 @@ void Channel::drop_key(void)
 
 void Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
 {
-	this->set_has_topic();
 	(void)user;
 	(void)server;
-	(void)topic;
+
+	this->set_has_topic();
 	std::string str_topic;
 	std::vector<std::string>::iterator it = topic.begin();
 	std::vector<std::string>::iterator ite = topic.end();
@@ -634,13 +653,15 @@ void Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
 	while (it != ite)
 	{
 		str_topic += (*it);
+		if (it + 1 == ite)
+			break;
 		str_topic += " ";
 		it++;
 	}
 	this->_topic = str_topic;
-#if DEBUG
-	std::cout << BLUE << "DEBUG: TOPIC: topic has been set to " << str_topic << NC << std::endl;
-#endif
+	#if DEBUG
+		std::cout << "Topic has been set to set: " << this->_topic << std::endl;
+	#endif
 }
 
 void Channel::clear_topic(User *user, IRC *server, std::vector<std::string> topic)

@@ -1,5 +1,6 @@
 #include <IRC.hpp>
 
+<<<<<<< HEAD
 void Commands::mode_channel(User *user, IRC *server)
 {
   //Check du nombre d'arguments
@@ -229,6 +230,8 @@ void            Commands::mode_user(User *user, IRC *server)
     }
 }
 
+=======
+>>>>>>> f261d12eff4ec43c9134d50bd83e2a58d0970655
 void            Commands::mode(User *user, IRC *server)
 {
     #if DEBUG
@@ -244,7 +247,6 @@ void            Commands::mode(User *user, IRC *server)
     else if(!targetchannel && !targetuser)
     {
         std::vector<std::string> reply_params;
-
         reply_params.push_back(params[0]);
         server->send_rpl("401", user, reply_params, ""); //ERR_NOSUCHNICK
         return ;
@@ -257,121 +259,4 @@ void            Commands::mode(User *user, IRC *server)
     #if DEBUG
         std::cout << RED << "EXIT MODE COMMAND" << NC << std::endl;
     #endif
-}
-
-//TODO: voir comment gerer le cas ou il n y aurait ni + ni - //par defaut irssi et hex considere un + si pas de signe :)
-bool            Commands::should_add_mode(std::string modes)
-{
-    //si on trouve un +, oui
-    bool res = false;
-    if (modes[0] == '+')
-    {
-        res = true;
-    }
-    return (res);
-}
-
-bool            Commands::should_remove_mode(std::string modes)
-{
-    bool res = false;
-    if (modes[0] == '-')
-    {
-        res = true;
-    }
-    return (res);
-}
-
-void            Commands::handle_key(Channel *channel, User *user, std::string modes, std::string key, bool add)
-{
-    (void)channel;
-    (void)user;
-    (void)modes;
-    (void)add;
-    if (add == true)
-    {
-       if (channel->get_has_key() == true)
-       {
-           //TODO: faire des tests pour voir s il faut quand meme renvoyer un message
-            #if DEBUG
-               std::cout << BLUE << "DEBUG: " << "MODE: key is already set." << std::endl;
-           #endif
-           return ;
-       }
-       if (!key.empty())
-       {
-           channel->set_has_key();
-           channel->set_key(key);
-       }
-       else
-       {
-           #if DEBUG
-               std::cout << BLUE << "DEBUG: " << "MODE: key argument is empty" << std::endl;
-           #endif
-           //TODO: faire des tests et voir comment gerer ce cas
-           return ;
-       }
-
-    }
-    else
-    {
-        if (channel->get_has_key() == false)
-        {
-            #if DEBUG
-                std::cout << BLUE << "DEBUG: " << "MPDE: key is already unset." << std::endl;
-            #endif
-            return ;
-        }
-        else
-        {
-            channel->unset_has_key();
-            channel->drop_key();
-        }
-
-    }
-    return ;
-}
-
-/**
- * @brief Il y a beaucoup de modes donc on va seulement implementer ceux utilises dans les commandes obligatoires
- *
- * @param channel
- * @param user
- * @param modes
- * @param server
- * TODO: a tester
- */
-void            Commands::edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server)
-{
-    (void)server;
-    //faire une fonction qui permet de savoir si c est des plus ou des moins
-    bool add = should_add_mode(modes);
-    bool remove = should_remove_mode(modes);
-    if ((add && remove) || (!add && !remove))
-    {
-        #if DEBUG
-            std::cout << BLUE << "DEBUG: " << "MODE: bad sign in command params." << std::endl;
-        #endif
-        return ;
-    }
-    //On verifie que modes ne fait pas plus de 4 char
-    int len = modes.length();
-    if (len > 4)
-    {
-        #if DEBUG
-            std::cout << BLUE << "DEBUG: " << "MODE: too many chars in param." << std::endl;
-        #endif
-        return ;
-    }
-    //Pour l'instant on ne gere que le mode k
-    int i = 0;
-    if (i < len)
-    {
-        if (modes[i] == 'k')
-        {
-            handle_key(channel, user, modes, key, add);
-        }
-        i++;
-    }
-    //si je trouve un k je fais le necessaire pour l ajouter ou l enlever
-    //TODO: verifier/faire la creation du message
 }

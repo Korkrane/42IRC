@@ -51,6 +51,8 @@ public:
 
 	static void join(User *user, IRC *server);
 	static void	check_roles(Channel *chan, User *user, bool added);
+	static void user_joins(User *user, IRC *server, Channel *chan, int index);
+	static void user_parts(User *user, IRC *server, Channel *chan, int index, std::string bye_message);
 
 
 	static void nick_cmd(User *user, IRC *server);
@@ -59,6 +61,7 @@ public:
 
 	static void part(User *user, IRC *server);
 	static void send_part_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server);
+	static std::string get_bye_message(User *user, IRC *server);
 
 	static void mode(User *user, IRC *server);
 	static void mode_channel(User *user, IRC *server);
@@ -68,6 +71,8 @@ public:
 	static bool should_add_mode(std::string modes);
 	static bool should_remove_mode(std::string modes);
 	static void handle_key(Channel *channel, User *user, std::string modes, std::string key, bool add);
+	static char get_mode_sign(std::string str, int pos);
+	static int pos_next_mode(std::string str, int prev_pos);
 
 	static void kick(User *client, IRC *server);
 	static void send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment);
@@ -83,7 +88,8 @@ public:
 	static Channel *find_target_channel(std::string target_channel, User *user, IRC *server);
 
 	static void names(User *user, IRC *server);
-	static void send_names_message(Channel *channel, User *user, IRC *server);
+	static void send_members_nick(User *user, Channel *channel, IRC *server);
+	//static void send_names_message(Channel *channel, User *user, IRC *server);
 
 	static void privmsg(User *user, IRC *server);
 	static std::vector<std::string> fill_recipients(std::string targets);
@@ -97,4 +103,6 @@ public:
 
 	static void get_channel_targets(User *user, IRC *server);
 	static void get_key_targets(User *user, IRC *server);
+
+	static void	return_error(std::string error_code, User *user, IRC *server, std::vector<std::string> error, std::string arg);
 };

@@ -319,15 +319,26 @@ bool IRC::has_channel(std::string channel_name)
 	{
 		check_name = (*it)->get_name();
 		if (check_name.compare(channel_name) == 0)
+		{
+			#if DEBUG
+				std::cout << "has channel will return true." << std::endl;
+			#endif
 			return (true);
+		}
 		it++;
 	}
+	#if DEBUG
+		std::cout << "has channel will return false." << std::endl;
+	#endif
 	return (false);
 }
 
 Channel *IRC::find_channel(std::string channel_name)
 {
 	(void)channel_name;
+	if (channel_name.empty())
+		return (NULL);
+	
 	std::vector<Channel *> chans = this->get_channels();
 	std::vector<Channel *>::iterator it = chans.begin();
 	std::vector<Channel *>::iterator ite = chans.end();
@@ -482,13 +493,10 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, std
 	{
 		std::string rpl = this->build_reply(code, (*it), params, command);
 		#if DEBUG
-			std::cout << "Send reply to all members called" << std::endl;
-			std::cout << GREEN << rpl << NC << std::endl;
+			std::cout << GREEN << "Reply built is : " << rpl << std::endl;
 		#endif
 		this->_response_queue.push_back(std::make_pair((*it)->get_socket(), rpl));
 		it++;
-		//(*it)->_splitted_channels.clear();
-		//(*it)->_splitted_args.clear();
 	}
 	return (0);
 }
