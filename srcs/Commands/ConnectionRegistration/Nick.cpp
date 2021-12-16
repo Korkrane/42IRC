@@ -20,10 +20,6 @@ bool Commands::nickIsAvailable(std::string nickname, IRC *server, User *user)
     std::transform(cmp.begin(), cmp.end(), cmp.begin(), ::toupper);
     if (cmp.compare(str) == 0)
     {
-#if DEBUG
-      std::cout << "There must be a nickname collision." << std::endl;
-      std::cout << str << " is should be the same as " << cmp << std::endl;
-#endif
       return (false);
     }
     it++;
@@ -47,7 +43,7 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
   //La taille du nick ne doit pas depasser 9 idealement
   if (length > 9)
   {
-#if DEBUG
+#if DEBUG == 1
     std::cout << "Nickname size is too big and should be avoided." << std::endl;
 #endif
     //TODO: build reply
@@ -58,9 +54,6 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
   {
     if (!std::strchr(NICK_VALID_CHARS, nickname[i]))
     {
-#if DEBUG
-      std::cout << "Found special char that should be avoided." << std::endl;
-#endif
       //TODO: build reply
       //error_handler("432", user, NULL, param_error);
       return (false);
@@ -70,7 +63,7 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
   //Le premier caractere doit etre un alpha (a retester)
   if (!isalpha(nickname[0]))
   {
-#if DEBUG
+#if DEBUG == 1
     std::cout << "The nickname does not start with an alpha and that should be avoided." << std::endl;
 #endif
     //TODO: build reply
@@ -83,7 +76,7 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
 
 void Commands::nick_cmd(User *user, IRC *server)
 {
-  #if DEBUG
+  #if DEBUG == 1
     std::cout << RED << "ENTER NICK CMD " << NC << std::endl;
   #endif
 

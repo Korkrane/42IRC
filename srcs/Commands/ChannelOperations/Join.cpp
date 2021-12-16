@@ -160,8 +160,8 @@ void    Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     server->send_rpl_to_all_members("", chan->get_members(), chan_vec, "JOIN");//user->_splitted_channels
     chan_vec.clear();
 
-    //TODO: a rajouter topic
+    topic(user, server);
+    names(user, server);
     //server->send_rpl("", user, error, "TOPIC");
-    //TODO: a rajouer names
     //server->send_rpl("", user, error, "NAMES");
 }

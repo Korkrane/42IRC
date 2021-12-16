@@ -32,9 +32,6 @@ void            Commands::mode_user(User *user, IRC *server)
     }
     else if(param_size == 2) //SI TARGET + MODES TO CHANGE
     {
-        #if DEBUG
-            std::cout << PURPLE << "DEBUG: MODE has user target and mode to change" << NC << std::endl;
-        #endif
         if(user->get_nickname() == params[0])
         {
             bool has_unknown_mode = false;

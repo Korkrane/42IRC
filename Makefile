@@ -68,25 +68,23 @@ NAME		= ircserv
 
 CC			= clang++
 
-FLAGS		= -DDEBUG -Wall -Wextra -Werror -std=c++98 -g3 #-fsanitize=address
+FLAGS		= -D DEBUG=0 -Wall -Wextra -Werror -std=c++98 -g3 #-fsanitize=address -DDEBUG
 
-EXTRA_MA 	= -DMALATINI=1
+EXTRA_MA 	= -DMALATINI
 
 RM			= rm -f
 
 .cpp.o:
-			@$(CC) $(FLAGS) -I$(INC_DIR) -c $< -o $(<:.cpp=.o)
+			@$(CC) ${FLAGS} ${EXTRA_MA} -I$(INC_DIR) -c $< -o $(<:.cpp=.o) 
 
 $(NAME):	$(OBJS)
 			@echo "Object files compiled"
-			@$(CC) $(FLAGS) $(OBJS) -I$(INC_DIR) -o $(NAME)
+			@$(CC) $(FLAGS) ${EXTRA_MA} $(OBJS) -I$(INC_DIR) -o $(NAME)
 			@echo "Executable created"
 			@echo "Compilation finished"
 
 all:		$(NAME)
 
-test:		${NAME}
-			./ircserv 6667 pass ${EXTRA_MA}
 clean:
 			@$(RM) $(OBJS)
 			@echo "Deleted all but executable"

@@ -15,9 +15,6 @@ void Commands::part(User *user, IRC *server)
   if (bye_message.empty())
     bye_message = "Leaving";
 
-  #if DEBUG
-    std::cout << BLUE << "Bye message is: " << bye_message << NC << std::endl;
-  #endif
   // Verifier le nombre d'argument, si il est egal a 1, renvoyer une erreur
   if (size == 1)
   {
@@ -55,10 +52,6 @@ void Commands::part(User *user, IRC *server)
 
 void  Commands::user_parts(User *user, IRC *server, Channel *chan, int index, std::string bye_message)
 {
-  #if DEBUG
-    std::cout << GREEN << "user parts function called." << NC << std::endl;
-    std::cout << BLUE << " Bye message is: " << bye_message << NC << std::endl;
-  #endif
   //si il est membre on quitte le channel
   std::vector<std::string> chan_vec;
   chan_vec.push_back(user->_splitted_channels[index]);
