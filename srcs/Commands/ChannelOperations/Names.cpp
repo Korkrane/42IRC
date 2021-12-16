@@ -6,10 +6,6 @@ void    Commands::send_members_nick(User *user, Channel *channel, IRC *server)
     (void)user;
     (void)server;
 
-#if DEBUG
-    std::cout << "SEND MEMBERS NICK CALLED" << std::endl;
-#endif
-
     std::vector<User *> members = channel->get_members();
     std::vector<User *>::iterator it = members.begin();
     std::vector<User *>::iterator ite = members.end();
@@ -28,7 +24,7 @@ void    Commands::send_members_nick(User *user, Channel *channel, IRC *server)
         it++;
     }
     rpl += "\r\n";
-    #if DEBUG
+    #if MALATINI == 1
         std::cout << GREEN << "response will be : " << rpl << std::endl;
     #endif
     server->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
@@ -55,9 +51,6 @@ void Commands::names(User *user, IRC *server)
         error.push_back(user->get_command_name());
         return (return_error("461", user, server, error, NULL));//NEED MORE PARAMS
     }
-    #if DEBUG
-        std::cout << GREEN << "Here we go!" << std::endl;
-    #endif
     Channel *chan = NULL;
     //On va juste retourner rpl mais pas d'erreur
     get_channel_targets(user, server);
@@ -69,23 +62,14 @@ void Commands::names(User *user, IRC *server)
         chan = server->find_channel((*it));
         if (chan)
         {
-            #if DEBUG
-                std::cout << BLUE << "Names found channel. " << chan->get_name() << std::endl;
-            #endif
                 send_members_nick(user, chan, server);
                 server->send_rpl("366", user, params, "");
         }
         else
         {
-            #if DEBUG
-                std::cout << BLUE << "Names did not found" << chan->get_name() << std::endl;
-            #endif
             //server->send_rpl("366", user, params, (*it));//End of names
+            ;
         }
-            
-        #if DEBUG
-             std::cout << "Successfull command names." << std::endl;
-        #endif
         pos++;
         it++;
     }

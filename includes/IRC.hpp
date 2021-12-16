@@ -43,8 +43,6 @@
 #define USER_VALID_MODES "aiwroOs"
 #define CHANNEL_VALID_MODES "+=tk"//On ne gere que ces modes mais il en existe davantage
 #define CHANNEL_FORBIDDEN_CHARS " ,:"
-//Il n'est pas demande expressement de gerer les modes donc on va par defaut mettre ceux qui peuvent servir dans
-//les commandes que nous avons implemente
 #define CHANNEL_MODES "t"
 
 #define MAX_CHAR 4096
@@ -59,8 +57,7 @@ class User;
 std::string build_reply(int code, User *server, std::vector<std::string> params);
 void        error_handler(std::string error_code, User *user, Channel *channel, std::vector<std::string> parameter);
 void        send_reply(std::string reply);
-//std::vector<std::string> *ft_split(std::string line, char charset);
-std::vector<std::string>    ft_split(std::string line, std::string charset);//A verifier
+std::vector<std::string>    ft_split(std::string line, std::string charset);
 void    display_vector_string(std::vector<std::string> vector);
 
 std::vector<std::string>    old_ft_split(std::string line, std::string charset);
