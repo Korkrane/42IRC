@@ -119,6 +119,8 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                 return prefix + RPL_MOTDSTART(params[0]);
             case 376:
                 return prefix + RPL_ENDOFMOTD();
+            case 381:
+                return prefix + RPL_YOUREOPER();
             case 391:
                 return prefix + RPL_TIME(params[0], params[1]);
             case 401:
@@ -283,7 +285,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             std::string rpl;
 
             rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
-            rpl += " " + command + " " + user->get_nickname() + " " + params[3] + "\r\n";
+            rpl += " " + command + " " + params[3] + " " + params[4] + "\r\n";
             return rpl;
         }
         else if(command == "MODE_USER")

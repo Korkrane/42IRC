@@ -77,6 +77,7 @@ void Commands::privmsg(User *user, IRC *server)
             reply_params.push_back(user->get_nickname());
             reply_params.push_back(user->get_username());
             reply_params.push_back(user->get_hostname());
+            reply_params.push_back(targetuser->get_nickname());
             reply_params.push_back(message);
             server->send_rpl("1001", targetuser, reply_params, "PRIVMSG");
         }
@@ -89,8 +90,17 @@ void Commands::privmsg(User *user, IRC *server)
             reply_params.push_back(user->get_nickname());
             reply_params.push_back(user->get_username());
             reply_params.push_back(user->get_hostname());
+            reply_params.push_back(targetchannel->get_name());
             reply_params.push_back(message);
-            server->send_rpl_to_all_members("1001", targetchannel->get_members(), reply_params, "PRIVMSG");
+            std::vector<User *> users_execept_sender = targetchannel->get_members();
+            User *sender = server->get_user_ptr(user->get_nickname());
+            for(std::vector<User *>::iterator it = users_execept_sender.begin(); it != users_execept_sender.end(); it++)
+            {
+                if ((*it) == sender)
+                    users_execept_sender.erase(it);
+            }
+            //server->send_rpl_to_all_members("1001", targetchannel->get_members(), reply_params, "PRIVMSG");
+            server->send_rpl_to_all_members("1001", users_execept_sender, reply_params, "PRIVMSG");
         }
     }
     #if DEBUG
