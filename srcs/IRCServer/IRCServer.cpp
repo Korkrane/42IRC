@@ -35,6 +35,7 @@ IRC::IRC(std::string const &password) : _socket(0),
 #if DEBUG
 	std::cout << BLUE << "DEBUG: IRC constructor with pass parameter called" << NC << std::endl;
 #endif
+	die = false;
 	_commands = new Commands();
 	time_t now = time(0);
 	std::string date = ctime(&now);
@@ -245,6 +246,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		responseQueue = this->_response_queue; //leaks ici
 		this->_response_queue.clear();
 	}
+	disconnectList = this->_disconnect_list;
 }
 
 //TODO: a supprimer ?

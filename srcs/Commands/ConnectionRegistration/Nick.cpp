@@ -92,18 +92,16 @@ void Commands::nick_cmd(User *user, IRC *server)
   if (user->get_params_size() != 1)
   {
     params.push_back(user->get_command_name());
-    server->send_rpl("431", user, params, "");
+    server->send_rpl("431", user, params, ""); //ERR_NONICKNAMEGIVEN
     return ;
   }
   //check if nick is valid
   std::string nick = user->get_params().front();
-  std::cout << "LOL NAME" << std::endl;
-  //std::cout << "LOL NAME2:" << nick << std::endl;
   if (checkNickGrammar(nick, server, user) == false)
   {
     params.push_back(nick);
     //TODO check if serv has to sent error code or command name
-    server->send_rpl("432", user, params, "");
+    server->send_rpl("432", user, params, ""); //ERR_ERRONEOUSNICKNAME
     return;
   }
   //check nick collision

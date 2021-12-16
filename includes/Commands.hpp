@@ -30,18 +30,16 @@ public:
 	static void user_cmd(User *user, IRC *server);
 	static void quit_cmd(User *user, IRC *server);
 	static void ping_cmd(User *user, IRC *server);
-
-
 	static void away_cmd(User *user, IRC *server);
 	static void version_cmd(User *user, IRC *server);
 	static void pass(User *user, IRC *server);
-
-	static void notice(User *user, IRC *server);
-	static void send_full_notice(User *target, User *user, IRC *server, std::vector<std::string> message);
-
 	static void kill(User *user, IRC *server);
 	static void who(User *user, IRC *server);
 	static void oper(User *user, IRC *server);
+	static void die(User *user, IRC *server);
+
+	static void notice(User *user, IRC *server);
+	static void send_full_notice(User *target, User *user, IRC *server, std::vector<std::string> message);
 
 	static void displayAllClients(Channel *channel);
 	static void displayChannel(Channel *channel, User *client);

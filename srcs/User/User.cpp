@@ -250,7 +250,7 @@ bool User::user_is_away(void) const
 
 bool User::user_is_operator(void) const
 {
-	return (this->_user_is_oper);
+	return (this->_has_operator_status);
 }
 
 int User::store_string_until_char(std::string *dest, std::string *src, char c, int len)

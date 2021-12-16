@@ -120,6 +120,9 @@ void Server::Run()
 		for (std::vector<int>::const_iterator it = disconnectList.begin();
 			 it != disconnectList.end(); ++it)
 			removeClient(*it);
+
+		if(_irc->die == true)
+			exitProperly();
 	}
 }
 

@@ -34,7 +34,6 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("CAP", cap_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NICK", nick_cmd));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("USER", user_cmd));
-	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("MODE", mode));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("JOIN", join));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("INVITE", invite));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KICK", kick));
@@ -45,6 +44,9 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("TOPIC", topic));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PASS", pass));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("PRIVMSG", privmsg));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("OPER", oper));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KILL", kill));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("DIE", die));
 	return cmds;
 }
 

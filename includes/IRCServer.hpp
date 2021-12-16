@@ -28,10 +28,12 @@ public:
     IRC(std::string const &password);
     virtual ~IRC();
 
+    bool die;
     std::vector<User *> _users;
     std::vector<int> fds;
     Commands *_commands;
     std::vector<t_clientCmd> _response_queue;
+    std::vector<int> _disconnect_list;
 
     void ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
     void exec_command(User *);

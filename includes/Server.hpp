@@ -39,4 +39,8 @@ public:
 
 	// Kick off server's infinite loop (until SIGINT, SIGQUIT or SIGKILL received)
 	void	Run();
+
+	//friend void	exitProperly();
 };
+
+void	exitProperly();

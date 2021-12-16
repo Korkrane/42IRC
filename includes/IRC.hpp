@@ -52,6 +52,8 @@
 #define USER_MAXCHAN 10
 #define SERVER_MAXCHAN 10
 
+#define OPER_PASS "admin"
+#define OPER_NAME "admin"
 class User;
 
 std::string build_reply(int code, User *server, std::vector<std::string> params);

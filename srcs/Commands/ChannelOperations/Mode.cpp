@@ -106,7 +106,11 @@ void Commands::modif_user(User *user, IRC *server, std::string modifications)
             case 'r':
                 continue ;
             case 'o':
+            {
+                (sign == true) ? user->set_operator(true) : user->set_operator(false);
+                std::cout << "after mode affect a user operator ? " << user->user_is_operator() << std::endl;
                 continue ;
+            }
             case 'O':
                 continue ;
             case 's':
