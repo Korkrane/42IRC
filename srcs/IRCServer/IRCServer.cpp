@@ -435,11 +435,33 @@ bool IRC::find_user(std::string nickname)
 	return (res);
 }
 
+//Nickname
 User *IRC::get_user_ptr(std::string name)
 {
 	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
 	{
 		if ((*it)->get_nickname() == name)
+			return *it;
+	}
+	return (NULL);
+}
+
+//TODO: voir comment on pourrait eviter les doublons
+User *IRC::get_user_ptr_username(std::string name)
+{
+	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if ((*it)->get_username() == name)
+			return *it;
+	}
+	return (NULL);
+}
+
+User *IRC::get_user_ptr_realname(std::string name)
+{
+	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if ((*it)->get_realname() == name)
 			return *it;
 	}
 	return (NULL);
@@ -469,11 +491,31 @@ bool IRC::user_can_join(Channel *channel)
 	return (true);
 }
 
+//Va permettre de retouner uen reponse avec tous les membres d'une channel
+int IRC::send_rpl_chan(std::string code, Channel *channel, IRC *server, User *user)
+{
+	(void)code;
+	(void)channel;
+	(void)server;
+	(void)user;
+
+	std::vector<User *> users = channel->get_members();
+	std::vector<User *>::iterator it = users.begin();
+	std::vector<User *>::iterator ite = users.end();
+
+	while (it != ite)
+	{
+		server->send_rpl_display_user(user, (*it), channel, "", code);
+		it++;
+	}
+	return (0);
+}
+
 int IRC::send_rpl(std::string code, User *user, std::vector<std::string> params, std::string command)
 {
 	std::string rpl = this->build_reply(code, user, params, command);
 #if MALATINI
-	std::cout << GREEN << "Rpl is : " << rpl << NC << std::endl;
+	std::cout << GREEN << rpl << NC << std::endl;
 #endif
 	this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
 	//user->_splitted_channels.clear();
@@ -489,7 +531,7 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, std
 	{
 		std::string rpl = this->build_reply(code, (*it), params, command);
 #if MALATINI
-	std::cout << GREEN << "Rpl is : " << rpl << NC << std::endl;
+	std::cout << GREEN << rpl << NC << std::endl;
 #endif
 		this->_response_queue.push_back(std::make_pair((*it)->get_socket(), rpl));
 		it++;
@@ -497,35 +539,36 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, std
 	return (0);
 }
 
-int IRC::send_rpl_display_user(User *user, User *target, Channel *chan, std::string command)
+//Utilisee pojur join notamment
+int IRC::send_rpl_display_user(User *user, User *target, Channel *chan, std::string command, std::string code)
 {
 	(void)command;
 	std::string rpl;
+	/*
 	rpl = "127.0.0.1 352 " + user->get_nickname() + " ";
 	if (user)
 		rpl = "*";
 	else
 		return (-1);
 	rpl += target->get_username() + " ";
-	rpl += "127.0.0.1 ";
+	*/
+	rpl += "127.0.0.1 " + code;
 	//Il faudrait qu on ait un serveur name
-	rpl += "0" + target->get_nickname();
+	rpl += target->get_nickname() + " " + chan->get_name();
+	//TODO: a revoir Baudoin
 	if (target->get_is_away() == true)
 	{
-		rpl += " G ";
+		rpl += " G";
 	}
-	else
-	{
-		rpl += " H";
-	}
+	rpl += ":";
 	bool is_op = chan->user_is_operator(target);
 	if (chan && is_op == true)
 	{
 		rpl += "@";
 	}
-	rpl += " :0 " + target->get_realname() + "\r\n";
+	rpl += target->get_nickname() + "\r\n";
 #if MALATINI
-	std::cout << GREEN << "send_rpl_display_user called." << std::endl;
+	std::cout << BLUE << "send_rpl_display_user called." << std::endl;
 	std::cout << GREEN << rpl << NC << std::endl;
 #endif
 	this->_response_queue.push_back(std::make_pair(user->get_socket(), rpl));
@@ -533,7 +576,7 @@ int IRC::send_rpl_display_user(User *user, User *target, Channel *chan, std::str
 }
 
 //TODO: a tester
-int IRC::send_rpl_display_all_users(User *user, Channel *channel, std::string command)
+int IRC::send_rpl_display_all_users(std::string code, User *user, Channel *channel, std::string command)
 {
 #if MALATINI
 	std::cout << BLUE << "send_rpl_display_all_users called" << NC << std::endl;
@@ -547,7 +590,7 @@ int IRC::send_rpl_display_all_users(User *user, Channel *channel, std::string co
 
 	while (it != ite)
 	{
-		this->send_rpl_display_user(user, (*it), channel, command);
+		this->send_rpl_display_user(user, (*it), channel, command, code);
 		it++;
 	}
 	//END OF WHO

@@ -54,6 +54,8 @@ public:
     std::vector<User *> get_users(void);
     User *get_user(int fd);
     User *get_user_ptr(std::string name);
+    User *get_user_ptr_username(std::string username);
+    User *get_user_ptr_realname(std::string realname);
     Channel *get_channel_ptr(std::string name);
     unsigned int get_channel_nb(void);
     std::string get_port(void);
@@ -74,11 +76,12 @@ public:
 
     bool user_can_join(Channel *channel);
     
-    int send_rpl_display_all_users(User *user, Channel *chan, std::string command);
-    int send_rpl_display_user(User *user, User *target, Channel *chan, std::string command);
+    int send_rpl_display_all_users(std::string code, User *user, Channel *chan, std::string command);
+    int send_rpl_display_user(User *user, User *target, Channel *chan, std::string command, std::string code);
 
     int send_rpl(std::string code, User *user, std::vector<std::string> params, std::string command);
     int send_rpl_to_all_members(std::string code, std::vector<User* > user, std::vector<std::string> params, std::string command);
+    int send_rpl_chan(std::string code, Channel *channel, IRC *server, User *user);
 
     static std::string init_rpl(User *user);
     std::string build_reply(std::string code, User * user, std::vector<std::string> params, std::string command);

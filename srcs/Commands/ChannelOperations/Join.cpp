@@ -135,11 +135,14 @@ void    Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     //On prepare et envoie la reponse du serveur
     std::vector<std::string> chan_vec;
     chan_vec.push_back(user->_splitted_channels[index]);
-    server->send_rpl_to_all_members("", chan->get_members(), chan_vec, "JOIN");//user->_splitted_channels
+    std::vector<User *> users;
+    users.push_back(user);
+    server->send_rpl_to_all_members("", users, chan_vec, "JOIN"); //user->_splitted_channels
     chan_vec.clear();
+    //user->_splitted_args.clear();
+    //user->_splitted_channels.clear();
 
-    topic(user, server);
-    names(user, server);
-    //server->send_rpl("", user, error, "TOPIC");
-    //server->send_rpl("", user, error, "NAMES");
+
+    //topic(user, server);
+    //names(user, server);
 }

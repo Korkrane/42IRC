@@ -42,6 +42,7 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KILL", kill));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("DIE", die));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NOTICE", notice));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WHO", who));
 	return cmds;
 }
 

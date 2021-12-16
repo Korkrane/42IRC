@@ -14,6 +14,7 @@ NAMES		=	main.cpp \
 				Commands/ChannelOperations/Channel_mode.cpp \
 				Commands/ChannelOperations/Names.cpp \
 				Commands/ChannelOperations/Topic.cpp \
+				Commands/ChannelOperations/Who.cpp \
 				Commands/ConnectionRegistration/Cap.cpp \
 				Commands/ConnectionRegistration/ConnectionRegistration.cpp \
 				Commands/ConnectionRegistration/Nick.cpp \
