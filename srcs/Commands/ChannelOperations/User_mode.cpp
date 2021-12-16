@@ -1,5 +1,6 @@
 #include <IRC.hpp>
 
+/*
 void            Commands::mode_user(User *user, IRC *server)
 {
     int param_size = user->get_params_size();
@@ -150,3 +151,4 @@ void Commands::modif_user(User *user, IRC *server, std::string modifications)
         }
     }
 }
+*/
