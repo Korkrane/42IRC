@@ -2,16 +2,10 @@
 
 Commands::Commands() : _cmds(_initCmds())
 {
-#if DEBUG
-	std::cout << BLUE << "DEBUG: Commands constructor called" << NC << std::endl;
-#endif
 };
 
 Commands::~Commands()
 {
-#if DEBUG
-	std::cout << BLUE << "DEBUG: Command destructor called" << NC << std::endl;
-#endif
 }
 
 std::map<std::string, void (*)(User *, IRC *)> Commands::get_cmds(void) const
@@ -78,7 +72,7 @@ std::string	Commands::get_channel_key(Channel *channel)
 	if (!channel)
 		return ("");
 	std::string key = channel->get_key();
-	#if DEBUG
+	#if DEBUG == 1
 		std::cout << "DEBUG: " << "COMMAND :" << "The correct channel key is " << key << std::endl;
 	#endif
 	return (key);
@@ -93,7 +87,7 @@ void	Commands::get_channel_targets(User *user, IRC *server)
 	(void)targets;
 	unsigned int size = params.size();
 
-	#if DEBUG
+	#if DEBUG == 1
 		std::cout << "Params front is " << params.front() << std::endl;
 	#endif
 	std::string line = params.front();
@@ -124,7 +118,7 @@ std::string	Commands::get_bye_message(User *user, IRC *server)
 		bye_message += " ";
 		it++;
 	}
-	#if DEBUG
+	#if DEBUG == 1
 		std::cout << "Bye message: " << bye_message << std::endl;
 	#endif
 	return (bye_message);

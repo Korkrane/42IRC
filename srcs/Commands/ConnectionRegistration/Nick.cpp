@@ -109,10 +109,10 @@ void Commands::nick_cmd(User *user, IRC *server)
 
   if(!user->get_realname().empty() && !user->get_hostname().empty() && !user->get_username().empty()) //lier au cas dans user.cpp ligne33
     user->set_registered_user(true);
-#if DEBUG
+#if DEBUG == 1
   std::cout << PURPLE << "DEBUG: SUCCESS NICK CMD" << NC << std::endl;
 #endif
-#if DEBUG
+#if DEBUG == 1
   std::cout << RED << "EXIT NICK CMD " << NC << std::endl;
 #endif
 }

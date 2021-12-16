@@ -71,7 +71,6 @@ void Server::acceptClient()
 		return;
 	}
 	std::cout << "New client on socket #" << clientFD << '\n';
-
 	_clients.insert(std::make_pair(clientFD, new Client(clientFD)));
 	//_irc->fds.push_back(clientFD);	// FOR TESTING
 }
@@ -84,12 +83,17 @@ void Server::removeClient(int fd)
 		delete _clients[fd];
 		_clients.erase(fd);
 		std::vector<int>::iterator t= std::find(_irc->fds.begin(), _irc->fds.end(), fd);
-			std::cout << "LOL:" << *t << std::endl;
+		(void)t;
+#if DEBUG == 1
+		std::cout << "LOL:" << *t << std::endl;
+#endif
 		_irc->fds.erase(std::find(_irc->fds.begin(), _irc->fds.end(), fd)); // FOR TESTING
 		std::vector<User *> us = _irc->get_users();
 		for (std::vector<User *>::iterator it = us.begin(); it != us.end(); ++it)
+		#if DEBUG == 1
 			if ((*it)->get_socket() == fd)
 				std::cout << "LOL:" << *it << std::endl;
+		#endif
 		_irc->delete_user(fd);
 	}
 }
@@ -165,7 +169,7 @@ void Server::recvProcessCommand(int totalFD, std::vector<t_clientCmd> &responseQ
 					removeClient(s);
 				else if (!cmd.empty())
 				{
-#if DEBUG
+#if DEBUG == 1
 					std::cout << BLUE << "DEBUG: Server has to process command" << NC << std::endl;
 #endif
 					_irc->process_command(std::make_pair(s, cmd), responseQueue, disconnectList);

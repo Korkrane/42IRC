@@ -242,7 +242,7 @@ void            Commands::mode(User *user, IRC *server)
         reply_params.push_back(params[0]);
         server->send_rpl("401", user, reply_params, ""); //ERR_NOSUCHNICK
     }
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "EXIT MODE COMMAND" << NC << std::endl;
     #endif
 }

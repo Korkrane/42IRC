@@ -56,13 +56,9 @@ void Commands::mode_channel(User *user, IRC *server)
     std::vector<std::string>    error;
     std::string                 key;
 
-    #if DEBUG
-        std::cout << "DISPLAY GET PARAMS MODE" << std::endl;
-        display_vector_string(user->get_params());
-    #endif
     if (param_size == 0)
     {
-        #if DEBUG
+        #if DEBUG == 1
             std::cout << "ERROR ! Param size is " << 0 << std::endl;
         #endif
         return ;
@@ -152,20 +148,20 @@ void            Commands::edit_modes(Channel *channel, User *user, std::string m
     while (i != -1 && i < len)
     {
         sign = get_mode_sign(modes, i);
-        #if DEBUG
+        #if DEBUG == 1
             std::cout << GREEN << "Sign is " << sign << NC << std::endl;
         #endif   
         i = pos_next_mode(modes, i);
         if (i != -1)
         {
              m = modes[i];
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << GREEN << "pos is is " << i << NC << std::endl;
                 std::cout << PURPLE << "corresponging char is " << modes[i] << NC << std::endl;
             #endif 
             if (m == 'k' && sign == '+')
             {
-                #if DEBUG
+                #if DEBUG == 1
                     std::cout << "WILL CALL HANDLE KEY." << std::endl;
                 #endif
                 handle_key(channel, user, modes, key, true);
@@ -173,7 +169,7 @@ void            Commands::edit_modes(Channel *channel, User *user, std::string m
             }
         }
     }
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << PURPLE << "END EDIT MODES" << NC << std::endl;
     #endif 
 }

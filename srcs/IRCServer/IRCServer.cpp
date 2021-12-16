@@ -10,7 +10,7 @@ IRC::IRC(void) : _socket(0),
 				 _server_creation("null"),
 				 _svPassword("null")
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << BLUE << "DEBUG: IRC default constructor called" << NC << std::endl;
 #endif
 	_commands = new Commands();
@@ -32,7 +32,7 @@ IRC::IRC(std::string const &password) : _socket(0),
 										_server_creation("null"),
 										_svPassword(password)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << BLUE << "DEBUG: IRC constructor with pass parameter called" << NC << std::endl;
 #endif
 	die = false;
@@ -45,7 +45,7 @@ IRC::IRC(std::string const &password) : _socket(0),
 IRC::~IRC()
 {
 	delete this->_commands;
-#if DEBUG
+#if DEBUG == 1
 	std::cout << BLUE << "DEBUG: IRC destructor called" << NC << std::endl;
 #endif
 }
@@ -106,7 +106,7 @@ User *IRC::get_user(int fd)
 
 void IRC::exec_command(User *user)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << RED << "ENTER IRC::exec_command" << NC << std::endl;
 #endif
 	std::map<std::string, void (*)(User *, IRC *)>::iterator itc = this->_commands->_cmds.begin();
@@ -122,7 +122,7 @@ void IRC::exec_command(User *user)
 			if (itc->first == (*it)._command_name)
 			{
 				/*
-#if DEBUG
+#if DEBUG == 1
 				int i = 0;
 				std::vector<std::string> t = user->get_params();
 				for (std::vector<std::string>::iterator itr = t.begin(); itr != t.end(); itr++)
@@ -146,7 +146,7 @@ void IRC::exec_command(User *user)
 	user->set_command("");
 	user->set_prefix("");
 	user->_params.clear();
-#if DEBUG
+#if DEBUG == 1
 	std::cout << RED << "EXIT IRC::exec_command" << NC << std::endl;
 #endif
 }
@@ -154,7 +154,7 @@ void IRC::exec_command(User *user)
 //when a user request a /quit, remove it from chans and delete the User instance.
 void IRC::delete_user(int fd)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << RED << "ENTER IN DELETE_USER\n" << NC;
 #endif
 	User *user = this->get_user(fd);
@@ -178,18 +178,20 @@ void IRC::delete_user(int fd)
 	std::vector<User *> us = this->get_users();
 
 	std::vector<User *>::iterator t= std::find(us.begin(), us.end(), user);
-			std::cout << "gonna erase:" << *t << std::endl;
-
+	(void)t;
+#if DEBUG == 1
+	std::cout << "gonna erase:" << *t << std::endl;
+#endif
 	us.erase(std::find(us.begin(), us.end(), user));
 	delete user;
-#if DEBUG
+#if DEBUG == 1
 	std::cout << RED << "EXIT IN DELETE_USER\n" << NC;
 #endif
 }
 
 void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << BLUE << "\tDEBUG: with clientfd: " << command.first << NC << std::endl;
 	std::cout << BLUE << "\tDEBUG: with command: " << command.second << NC;
 #endif
@@ -200,7 +202,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 
 	if (!(std::find(fds.begin(), fds.end(), clientFD) == fds.end()))
 	{
-		#if DEBUG
+		#if DEBUG == 1
 			std::cout << BLUE << "DEBUG: Client found in the user list" << NC << std::endl;
 			//std::cout << BLUE << "DEBUG: Client is registered ? " << current_user->user_is_registered() << NC << std::endl;
 		#endif
@@ -228,7 +230,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 	}
 	else //SI PREMIERE FOIS QU'IL SE CONNECTE
 	{
-#if DEBUG
+#if DEBUG == 1
 		std::cout << BLUE << "\tDEBUG: Client first connection" << NC << std::endl;
 #endif
 		this->fds.push_back(clientFD);
@@ -238,7 +240,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		current_user->set_unparsed_client_command(cmd);
 		current_user->split_if_multiple_command();
 		this->exec_command(current_user);
-#if DEBUG
+#if DEBUG == 1
 		std::cout << BLUE << "DEBUG: Client is registered after exec?" << current_user->user_is_registered() << NC << std::endl;
 #endif
 		if (current_user->user_is_registered() == true)
@@ -320,14 +322,14 @@ bool IRC::has_channel(std::string channel_name)
 		check_name = (*it)->get_name();
 		if (check_name.compare(channel_name) == 0)
 		{
-			#if DEBUG
+			#if DEBUG == 1
 				std::cout << "has channel will return true." << std::endl;
 			#endif
 			return (true);
 		}
 		it++;
 	}
-	#if DEBUG
+	#if DEBUG == 1
 		std::cout << "has channel will return false." << std::endl;
 	#endif
 	return (false);
@@ -348,7 +350,7 @@ Channel *IRC::find_channel(std::string channel_name)
 		check_name = (*it)->get_name();
 		if (check_name.compare(channel_name) == 0)
 		{
-#if DEBUG
+#if DEBUG == 1
 			std::cout << BLUE << "DEBUG: IRC: found channel" << channel_name << ", returning ptr" << NC << std::endl;
 #endif
 			return (*it);
@@ -459,7 +461,7 @@ bool IRC::user_can_join(Channel *channel)
 
 	if (user_nb >= USER_MAXCHAN)
 	{
-#if DEBUG
+#if DEBUG == 1
 		std::cout << RED << "DEBUG: userCan not join new channel because he reach USER_MAXCHAN" << NC << std::endl;
 #endif
 		return (false);

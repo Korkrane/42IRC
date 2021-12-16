@@ -2,7 +2,7 @@
 
 void Commands::pass(User *user, IRC *server)
 {
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "ENTER PASS CMD" << NC << std::endl;
     #endif
     if(user->user_is_registered() == true)
@@ -11,7 +11,7 @@ void Commands::pass(User *user, IRC *server)
         server->send_rpl("462", user, rpl_params, "");
     }
     //TODO wrong pass at connection, what do we do ?
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "EXIT PASS CMD" << NC << std::endl;
     #endif
 }

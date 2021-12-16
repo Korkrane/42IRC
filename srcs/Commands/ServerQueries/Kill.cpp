@@ -2,7 +2,7 @@
 
 void Commands::kill(User *user, IRC *server)
 {
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "ENTER KILL CMD" << NC << std::endl;
     #endif
     std::vector<std::string> params = user->get_params();
@@ -33,7 +33,7 @@ void Commands::kill(User *user, IRC *server)
             server->send_rpl("401", user, params_reply, "");
         }
     }
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "EXIT KILL CMD" << NC << std::endl;
     #endif
 }

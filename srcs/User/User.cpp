@@ -5,14 +5,14 @@ User::User(void)
 /*
 : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
 {
-#if USERDEBUG
+#if USERDEBUG  == 1
 	std::cout << "User default constructor called" << std::endl;
 #endif
 }
 
 User::User(int fd) : _socket(fd)
 {
-	#if DEBUG
+	#if DEBUG == 1
 		std::cout << BLUE << "DEBUG: User constructor called with fd param" << NC << std::endl;
 	#endif
 	_to_delete = false;
@@ -22,7 +22,7 @@ User::User(int fd) : _socket(fd)
 
 User::~User(void)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << BLUE << "DEBUG: User destructor" << NC << std::endl;
 #endif
 }
@@ -96,8 +96,9 @@ void User::set_unparsed_client_command(std::string client_command)
 
 void User::split_if_multiple_command()
 {
-
-	std::cout << RED << "ENTER SPLIT_MULTI_COMMD" << NC << std::endl;
+	#if DEBUG == 1
+		std::cout << RED << "ENTER SPLIT_MULTI_COMMD" << NC << std::endl;
+	#endif
 	t_cmd new_command;
 	std::string s = this->_unparsed_client_command;
 	std::string delimiter = "\r\n";
@@ -107,19 +108,24 @@ void User::split_if_multiple_command()
 	while ((pos = s.find(delimiter)) != std::string::npos)
 	{
 		token = s.substr(0, pos);
-		std::cout << "unparsed command pushed to vector:" << token << std::endl;
+		#if DEBUG == 1
+			std::cout << "unparsed command pushed to vector:" << token << std::endl;
+		#endif
 		new_command._unparsed = s;
 		this->_commands.push_back(new_command);
 		s.erase(0, pos + delimiter.length());
 	}
 	int i = 0;
+	(void)i;
 	for (std::vector<t_cmd>::iterator it = _commands.begin(); it != _commands.end(); it++)
 	{
-		std::cout << "--COMMAND N° " << i++ <<  "--" << std::endl;
+		#if DEBUG == 1
+			std::cout << "--COMMAND N° " << i++ <<  "--" << std::endl;
+		#endif
 		this->store_prefix(it);
 		this->store_command(it);
 		this->store_params(it);
-#if DEBUG
+#if DEBUG == 1
 		std::cout << "prefix= " << (*it)._prefix << std::endl;
 		std::cout << "command= " << (*it)._command_name << std::endl;
 
@@ -132,7 +138,9 @@ void User::split_if_multiple_command()
 		std::cout << std::endl;
 #endif
 	}
-	std::cout << RED << "EXIT SPLIT_MULTI_COMMD" << NC << std::endl;
+	#if DEBUG == 1
+		std::cout << RED << "EXIT SPLIT_MULTI_COMMD" << NC << std::endl;
+	#endif
 }
 
 std::string User::get_nickname(void) const
@@ -486,7 +494,7 @@ void User::be_added_to_channel(Channel *channel)
 		//TODO Si non on va devenir operateur
 		channel->newMember(this, true);
 	}
-	#if DEBUG
+	#if DEBUG == 1
 		std::cout << PURPLE << "USER: be_added_to_channel called for: " << this->get_nickname() << std::endl;
 	#endif
 	return;
@@ -503,7 +511,7 @@ void User::increase_channel_nb(void)
 		this->_channels_nb++;
 	else
 	{
-#if DEBUG
+#if DEBUG == 1
 		std::cout << RED << "USER: Error with nb of channels (++)." << std::endl;
 #endif
 	}
@@ -513,7 +521,7 @@ void User::decrease_channel_nb(void)
 {
 	if (this->_channels_nb == USER_MAXCHAN)
 	{
-		#if DEBUG
+		#if DEBUG == 1
 			std::cout << RED << "USER: Error with nb of channels (--)." << std::endl;
 		#endif
 	}
@@ -584,7 +592,7 @@ unsigned int User::count_commas(void) const
 		}
 		it++;
 	}
-	#if DEBUG
+	#if DEBUG == 1
 		std::cout << PURPLE << "DEBUG: " << "USER: Counting " << commas << " commas in the params" << std::endl;
 	#endif
 	return (commas);

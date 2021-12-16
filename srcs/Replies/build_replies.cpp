@@ -109,7 +109,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                 if (size > 0)
                     rpl += params[0];
                 rpl += " :End of NAMES list\r\n";
-                #if DEBUG
+                #if DEBUG == 1
                 std::cout << rpl << std::endl;
 #endif
                 return (rpl);
@@ -268,7 +268,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             default:
                 return std::string("");
             }
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << PURPLE << "BUILD : REPLY : Error, did not match any case" << std::endl;
             #endif
             return std::string("");
@@ -286,7 +286,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         {
             std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
             rpl += " " + command + " " + params[0] + " " + params[1] + "\r\n";
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << "Part reply is :" << rpl << NC << std::endl;
             #endif
             return rpl;
@@ -295,7 +295,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         else if (command.compare("TOPIC") == 0)
         {
             unsigned int size = params.size();
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << BLUE << "Size is: " << size << NC << std::endl;
             #endif
             std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
@@ -307,7 +307,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             else
             {
                 rpl += " 332 : ";
-                #if DEBUG
+                #if DEBUG == 1
                     std::cout << "params0 est " << params[0] << std::endl;
                 #endif
                 Channel *chan = this->find_channel(params[0]);
@@ -315,7 +315,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                     rpl += " "+ chan->get_topic() + " ";
                 rpl += "\r\n";
             }
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << "Part reply is :" << rpl << NC << std::endl;
             #endif
             return rpl;
@@ -331,7 +331,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                     rpl += params[0];
             }
             rpl += " :End of NAMES list\r\n";
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << "Names reply is "<< rpl << std::endl;
             #endif
             return (rpl);
@@ -364,7 +364,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             return rpl;
         }
     }
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << PURPLE << "BUILD : REPLY : Error, did not match any case" << std::endl;
     #endif
     return prefix;

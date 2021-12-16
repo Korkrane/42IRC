@@ -2,11 +2,11 @@
 
 std::vector<std::string> Commands::fill_recipients(std::string target)
 {
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << PURPLE << "ENTER IN FILL RECIPIENTS FOR PRIVMSG" << NC << std::endl;
     #endif
     std::vector<std::string> recipients = old_ft_split(target, ",");
-    #if DEBUG
+    #if DEBUG == 1
         for(std::vector<std::string>::iterator it = recipients.begin(); it != recipients.end(); it++)
             std::cout << PURPLE << "Target for privmsg: " << (*it) << std::endl;
     #endif
@@ -15,7 +15,7 @@ std::vector<std::string> Commands::fill_recipients(std::string target)
 
 void Commands::privmsg(User *user, IRC *server)
 {
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "ENTER PRIVMSG CMD" << NC << std::endl;
     #endif
     std::vector<std::string> params = user->get_params();
@@ -43,7 +43,7 @@ void Commands::privmsg(User *user, IRC *server)
         Channel *targetchannel = server->get_channel_ptr((*it));
         if(!targetuser && !targetchannel) //si il n'existe pas de channel ou d'user à ce nom
         {
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << PURPLE << "DEBUG: Target doesnt exist" << NC << std::endl;
             #endif
             std::vector<std::string> reply_params;
@@ -52,11 +52,11 @@ void Commands::privmsg(User *user, IRC *server)
         }
         else if(targetuser && !targetchannel) //si le recipient est un user
         {
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << PURPLE << "DEBUG: Target is a user" << NC << std::endl;
             #endif
             std::vector<std::string> reply_params;
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << PURPLE << "DEBUG: target is away ? " << targetuser->user_is_away() << NC << std::endl;
             #endif
             if(targetuser->user_is_away()) //si le recipient est afk prevenir celui qui envoie
@@ -76,7 +76,7 @@ void Commands::privmsg(User *user, IRC *server)
         }
         else if(!targetuser && targetchannel) //si le recipient est un channel
         {
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << BLUE << "DEBUG: Target is a channel" << NC << std::endl;
             #endif
             std::vector<std::string> reply_params;
@@ -111,7 +111,7 @@ void Commands::privmsg(User *user, IRC *server)
             }
         }
     }
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "EXIT PRIVMSG CMD" << NC << std::endl;
     #endif
 }

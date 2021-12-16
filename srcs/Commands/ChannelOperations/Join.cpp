@@ -43,16 +43,6 @@ void Commands::join(User *user, IRC *server)
     get_channel_targets(user, server);
     get_key_targets(user, server);
 
-    /*
-    #if DEBUG
-        std::cout << "PRINTING SPLITTED CHANNELS" << std::endl;
-        display_vector_string(user->_splitted_channels);
-        std::cout << "PRINTING SPLITTED ARGS" << std::endl;
-        display_vector_string(user->_splitted_args);
-        std::cout << NC << std::endl;
-    #endif
-    */
-
     //Si il n'y a pas de param
     if (user->get_params_size() < 1)
     {
@@ -71,12 +61,6 @@ void Commands::join(User *user, IRC *server)
             //Si l'element dans le vecteur a cette position n est pas nul
             if (!user->_splitted_channels.empty() && index < comp && !user->_splitted_channels[index].empty())
                 opt_key = user->_splitted_args[index];
-            /*
-            #if DEBUG
-                std::cout << BLUE << "channel " << channel << std::endl;
-                std::cout << BLUE << "opt key " << opt_key << std::endl;
-            #endif
-            */
 
             //On verifie que le parametre peut correspondre a un nom de channel valide
             if (!channel.empty() && is_correct_channel_name(channel) == false)
@@ -104,9 +88,6 @@ void Commands::join(User *user, IRC *server)
             //Cas ou on passe une cle en argument alors que le mode n est pas active
             if (should_ignore_key(chan, params) == true)
             {
-                #if DEBUG
-                    std::cout << BLUE << "Even if there is a key mentionend we should ignored it" << NC << std::endl;
-                #endif
                 //Il y a une cle mais ce n est pas la bonne 
                 if (chan->is_correct_channel_key(opt_key) == false)
                 {
@@ -142,9 +123,6 @@ void Commands::join(User *user, IRC *server)
 
 void    Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
 {
-    #if DEBUG
-        std::cout << GREEN << "user joins function called." << NC << std::endl;
-    #endif
     //si oui, rajouter au channel
     user->be_added_to_channel(chan);
 
