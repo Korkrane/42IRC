@@ -9,53 +9,59 @@ int    Commands::who_match_user(User *user, IRC *server)
     (void)user;
     (void)server;
 
-    return (1);
-}
     /*
     std::vector<User *> users = server->get_users();
     std::vector<User *>::iterator it = users.begin();
     std::vector<User *>::iterator ite = users.end();
     std::vector<std::string> params = user->get_params();
+    */
     //On va chercher si un user correspond au param passe en parametre
-    std::string target_user = params.front();
-    User *tmp = NULL;
+    //std::string target_user = params.front();
+    //User *tmp = NULL;
+    /*
     unsigned int count = 0;
     while (it != ite)
     {
-        tmp = server->get_user_ptr(target_user);
+       // tmp = server->get_user_ptr(target_user);
         if (tmp)
         {
-            server->send_rpl_display_user(user, tmp, NULL, "WHO", "315");
+            */
+            server->send_rpl_display_user(user, NULL, user->_target_channel, "WHO", "352");
+            /*
             count++;
         }
         tmp = server->get_user_ptr_realname(target_user);
         {
-            server->send_rpl_display_user(user, tmp, NULL, "WHO");
+            server->send_rpl_display_user(user, tmp, NULL, "WHO", "352");
             count++;
         }
         tmp = server->get_user_ptr_username(target_user);
         {
-            server->send_rpl_display_user(user, tmp, NULL, "WHO");
+            server->send_rpl_display_user(user, tmp, NULL, "WHO", "353");
             count++;
         }
         it++;
     }
-    if (count > 0)
-    {
-        server->send_rpl("315", user, params, "");//End of who
-    }
-    return  (count);
+    //if (count > 0)
+   // {
+        */
+        server->send_rpl("315", user, user->get_params(), "");//End of who
+    //}
+    return  (0);
 }
-*/
 
 void    Commands::who(User *user, IRC *server)
 {
     (void)user;
     (void)server;
 
+    who_match_user(user, server);
+
+/*
     return;
 }
-    /*
+*/
+/*
     std::vector<std::string> params = user->get_params();
     int size = params.size();
 
@@ -66,7 +72,7 @@ void    Commands::who(User *user, IRC *server)
         if (chan)
         {
             //On doit retourner un message avec tous les clients
-            server->send_rpl_display_all_users(code, user, chan,"WHO");
+            server->send_rpl_display_all_users("", user, chan,"WHO");
             return;
         }
     }
@@ -95,5 +101,6 @@ void    Commands::who(User *user, IRC *server)
         }
     }
     return;
+    */
+    return;
 }
-*/

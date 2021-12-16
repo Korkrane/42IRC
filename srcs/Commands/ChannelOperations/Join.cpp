@@ -123,6 +123,9 @@ void Commands::join(User *user, IRC *server)
 
 void    Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
 {
+#if MALATINI
+    std::cout << BLUE << "user_joins called" << NC << std::endl;
+#endif
     //si oui, rajouter au channel
     user->be_added_to_channel(chan);
 
@@ -142,7 +145,27 @@ void    Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     //user->_splitted_args.clear();
     //user->_splitted_channels.clear();
 
+    //Equivalent appel de names 
+    user->_target_channel = chan;
 
+    std::string success_rpl_1;
+    success_rpl_1 = ":127.0.0.1 353 " + user->get_nickname() + " = " + chan->get_name() + " :";
+    if (chan->user_is_operator(user) == true)
+    {
+        success_rpl_1 += "@";
+        //TODO:: changer operateur pour n en avoir qu un seul? et pas un vector
+        User *ope = chan->get_operators().front();
+        std::string operator_name = ope->get_nickname();
+        success_rpl_1 += operator_name + "\r\n";
+    }
+    #if MALATINI
+    std::cout << GREEN << success_rpl_1 << NC << std::endl;
+#endif
+    server->_response_queue.push_back(std::make_pair(user->get_socket(), success_rpl_1));
+    server->send_rpl("366", user, user->get_params(), "");
     //topic(user, server);
     //names(user, server);
+    user->_target_channel = chan;
+    who(user, server);
+    //user->_target_channel = NULL;
 }

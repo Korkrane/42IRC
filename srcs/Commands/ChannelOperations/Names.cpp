@@ -1,7 +1,8 @@
 #include <IRC.hpp>
 
 //TODO: A remettre dans build_rpl ?
-void    Commands::send_members_nick(User *user, Channel *channel, IRC *server)
+//On va afficher tous les users sauf lui
+void    Commands::send_members_nick(User *user, Channel *channel, IRC *server, std::string code)
 {
     (void)user;
     (void)server;
@@ -12,10 +13,17 @@ void    Commands::send_members_nick(User *user, Channel *channel, IRC *server)
 
     std::string rpl;
 
-    rpl = ":127.0.0.1 353 " + user->get_nickname();
+    rpl = ":127.0.0.1 " + code + " " + user->get_nickname();
     rpl += " = " + channel->get_name() + " :";
     while (it != ite)
     {
+        /*
+        if ((*it)->get_nickname() == user->get_nickname())
+        {
+            it++;
+            continue;
+        }
+        */
         if (channel->user_is_operator(*it) == true)
         {
             rpl += "@";
@@ -39,7 +47,15 @@ void    Commands::send_members_nick(User *user, Channel *channel, IRC *server)
  */
 void Commands::names(User *user, IRC *server)
 {
-    std::vector<std::string>    params = user->get_params();
+    //Names appele automatiquement par les autres commandes fructueuses    
+    if (!user->_target_channel)
+    {
+        send_members_nick(user, user->_target_channel, server, "353");
+        server->send_rpl("366", user, user->get_params(), "");
+        user->_target_channel = NULL;
+        return;
+    }
+    std::vector<std::string> params = user->get_params();
     std::vector<std::string>    error;
     unsigned int                size = params.size();
     std::string                 channel;
@@ -62,8 +78,9 @@ void Commands::names(User *user, IRC *server)
         chan = server->find_channel((*it));
         if (chan)
         {
-                send_members_nick(user, chan, server);
-                server->send_rpl("366", user, params, "");
+            //TODO: verifier le code 
+            send_members_nick(user, chan, server, "353");
+            server->send_rpl("366", user, params, "");
         }
         else
         {

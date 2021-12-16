@@ -115,8 +115,14 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                 return prefix + RPL_UNAWAY();
             case 306:
                 return prefix + RPL_NOWAWAY();
-            //case 315:
-            //    return prefix + RPL_ENDOFWHO(user->get_name());
+            case 315:
+            {
+                std::string rpl = ":";
+                Channel *channel = this->find_channel(params[0]);
+                rpl += user->get_nickname() + "!" + user->get_nickname() + "@0 315 : ";
+                rpl += channel->get_name() + " :End of WHO list \r\n";
+                return (rpl);
+            }
             case 322:
                 return prefix + RPL_LIST(this->get_name(), params[1]);
             case 323:
@@ -330,7 +336,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
     {
         if (command.compare("JOIN") == 0)
         {
-            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "0";
             rpl += " " + command + " " + params[0] + "\r\n";
             return rpl;
         }

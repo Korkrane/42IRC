@@ -543,30 +543,21 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User*> users, std
 int IRC::send_rpl_display_user(User *user, User *target, Channel *chan, std::string command, std::string code)
 {
 	(void)command;
+	(void)target;
 	std::string rpl;
-	/*
-	rpl = "127.0.0.1 352 " + user->get_nickname() + " ";
-	if (user)
-		rpl = "*";
-	else
-		return (-1);
-	rpl += target->get_username() + " ";
-	*/
-	rpl += "127.0.0.1 " + code;
+	rpl += ":127.0.0.1 " + code + " ";
 	//Il faudrait qu on ait un serveur name
-	rpl += target->get_nickname() + " " + chan->get_name();
-	//TODO: a revoir Baudoin
-	if (target->get_is_away() == true)
-	{
-		rpl += " G";
-	}
-	rpl += ":";
-	bool is_op = chan->user_is_operator(target);
-	if (chan && is_op == true)
-	{
-		rpl += "@";
-	}
-	rpl += target->get_nickname() + "\r\n";
+	rpl += user->get_nickname() + " " + chan->get_name() + " ";
+
+	User *op = chan->get_operators().front();
+	std::string op_name = op->get_nickname();
+
+	//TODO: attention on devrait avoir le get realname mais la valeur a l air d'etre notee en dure "realname"
+	rpl += op_name + " " + "127.0.0.1 0 " + user->get_nickname() + " ";
+
+	if (chan->user_is_operator(user) == true)
+		rpl += "H";
+	rpl += "@ :0 realname\r\n";
 #if MALATINI
 	std::cout << BLUE << "send_rpl_display_user called." << std::endl;
 	std::cout << GREEN << rpl << NC << std::endl;
@@ -597,7 +588,7 @@ int IRC::send_rpl_display_all_users(std::string code, User *user, Channel *chann
 #if MALATINI
 	std::cout << BLUE << "END OF WHO" << NC << std::endl;
 #endif
-	this->send_rpl("318", user, user->get_params(), "");
+	this->send_rpl("315", user, user->get_params(), "");
 	return (0);
 }
 

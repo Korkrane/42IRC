@@ -46,6 +46,7 @@ private:
 
 public:
     //TODO: a mettre en prive
+    Channel *_target_channel;
     std::vector<std::string> _params;
     //Ajouts mahaut
     std::vector<std::string> _splitted_channels;//A clear a chaque commande comme le parsint
