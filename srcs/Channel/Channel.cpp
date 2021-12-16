@@ -138,7 +138,9 @@ bool Channel::user_is_member(User *user)
 
 bool Channel::user_is_owner(User *user)
 {
-	std::cout << "ENTER IN USER IS OWNER" << std::endl;
+	#if DEBUG == 1
+		std::cout << "ENTER IN USER IS OWNER" << std::endl;
+	#endif
 	if (user->get_nickname().compare(this->_channel_owner->get_nickname()) ==0)
 	{
 		return (true);
@@ -210,7 +212,9 @@ void Channel::deleteMember(User *user)
 	{
 		if ((*it)->get_nickname() == user->get_nickname())
 		{
-			std::cout << "test" << std::endl;
+			#if DEBUG == 1
+				std::cout << "test" << std::endl;
+			#endif
 			this->_users.erase(it);
 			this->_members_nb--;
 			return;
