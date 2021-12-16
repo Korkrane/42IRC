@@ -1,6 +1,5 @@
 #include <IRC.hpp>
-
-<<<<<<< HEAD
+/*
 void Commands::mode_channel(User *user, IRC *server)
 {
   //Check du nombre d'arguments
@@ -13,10 +12,8 @@ void Commands::mode_channel(User *user, IRC *server)
     if (param_size < 2)
     {
         //TODO: appel build reply
-        /*
-        error.push_back(user->get_command_name());
-        error_handler("461", user, NULL, error);
-        */
+        //error.push_back(user->get_command_name());
+        //error_handler("461", user, NULL, error);
         return ;
     }
     //Verifier comment gerer plus de 2 arguments
@@ -28,11 +25,9 @@ void Commands::mode_channel(User *user, IRC *server)
         //On check la channel (syntaxe)
         if (is_correct_channel_name(channel) == false)
         {
-            //TODO: appel build reply
-            /*
-            error.push_back(channel);
-            error_handler("403", user, NULL, error);
-            */
+            //TODO: appel build replys
+            //error.push_back(channel);
+            //error_handler("403", user, NULL, error);
             return ;
         }
         //On check si la channel existe ?
@@ -47,11 +42,9 @@ void Commands::mode_channel(User *user, IRC *server)
         if (chan->user_is_member(user) == false)
         {
             //TODO: appel build reply
-            /*
-            error.push_back(user->get_nickname());
-            error.push_back(channel);
-            error_handler("441", user, NULL, error);
-            */
+            //error.push_back(user->get_nickname());
+            //error.push_back(channel);
+            //error_handler("441", user, NULL, error);
             return ;
         }
         //On doit checker les modes
@@ -60,12 +53,10 @@ void Commands::mode_channel(User *user, IRC *server)
         {
             //TODO: appel build reply
             //Isoler le char qui n est pas reconnu
-            /*
-            std::string incorrect = chan->get_unknown_mode(channel);
-            error.push_back(incorrect);
-            error.push_back(channel);
-            error_handler("472", user, chan, error);
-            */
+            //std::string incorrect = chan->get_unknown_mode(channel);
+            //error.push_back(incorrect);
+            //error.push_back(channel);
+            //error_handler("472", user, chan, error);
             return ;
            ;
         }
@@ -74,6 +65,7 @@ void Commands::mode_channel(User *user, IRC *server)
         edit_modes(chan, user, modes, key, server);
     }
 }
+*/
 
 //TODO to complete based on what mode we are implementing
 void Commands::modif_user(User *user, IRC *server, std::string modifications)
@@ -230,8 +222,6 @@ void            Commands::mode_user(User *user, IRC *server)
     }
 }
 
-=======
->>>>>>> f261d12eff4ec43c9134d50bd83e2a58d0970655
 void            Commands::mode(User *user, IRC *server)
 {
     #if DEBUG
@@ -242,8 +232,9 @@ void            Commands::mode(User *user, IRC *server)
     Channel *targetchannel = server->get_channel_ptr((params[0]));
     if(targetuser)
         mode_user(user, server);
-    else if(targetchannel)
-        mode_channel(user, server);
+    //TODO: a reprendre    
+    //else if(targetchannel)
+    //    mode_channel(user, server);
     else if(!targetchannel && !targetuser)
     {
         std::vector<std::string> reply_params;

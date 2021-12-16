@@ -1,5 +1,6 @@
 #include <IRC.hpp>
 
+/*
 bool            Commands::should_remove_mode(std::string modes)
 {
     bool res = false;
@@ -46,15 +47,6 @@ int     Commands::pos_next_mode(std::string str, int prev_pos)
     return (pos);
 }
 
-/**
- * @brief exemple de test qui doivent marcher : /mode #channel +key secret
- * Dans mes tests sur free node je n ai pas reussi a unset une key (on me demandait toujours un mot de passe)
- * Par contre pour le mode t soit doit fonctionner correctement
- * Fonction pour les deux parties
- * 
- * @param user 
- * @param server 
- */
 void Commands::mode_channel(User *user, IRC *server)
 {
     std::string                 modes;
@@ -153,19 +145,6 @@ void            Commands::handle_key(Channel *channel, User *user, std::string m
 void            Commands::edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server)
 {
     (void)server;
-
-    //TODO: A supprimer ?
-    /*
-    bool add = should_add_mode(modes);
-    bool remove = should_remove_mode(modes);
-    if ((add && remove) || (!add && !remove))
-    {
-        #if DEBUG
-            std::cout << "Incoherent sign." << std::endl;
-        #endif
-        return ;
-    }
-    */
     int len = modes.length();
     int i = 0;
     char sign;
@@ -198,3 +177,4 @@ void            Commands::edit_modes(Channel *channel, User *user, std::string m
         std::cout << PURPLE << "END EDIT MODES" << NC << std::endl;
     #endif 
 }
+*/
