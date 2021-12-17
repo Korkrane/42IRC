@@ -8,31 +8,38 @@ void Commands::motd_cmd(User *user, IRC *server)
     #if DEBUG
         std::cout << RED << "ENTER MOTD CMD" << NC << std::endl;
     #endif
-    std::vector<std::string> params;
+    std::vector<std::string> params = user->get_params();
+    std::vector<std::string> reply_params;
 
-    std::ifstream infile("./cmd_files/motd");
-    if (infile.is_open())
+    if(!params.empty() && params[0] != server->get_name())
     {
-        params.push_back(user->get_hostname());
-        server->send_rpl("375", user, params, "");
-        params.clear();
-
-        std::string buff;
-        for (std::string line; getline(infile, line);)
-        {
-            line = "- " + line + "\r\n";
-            //buff.append(line);
-            params.push_back(buff);
-            params.push_back(line);
-            server->send_rpl("372", user, params, "");
-            params.clear();
-        }
-
-        server->send_rpl("376", user, params, "");
-        params.clear();
+        reply_params.push_back(params[0]);
+        server->send_rpl("402", user, reply_params, "");
     }
     else
-        server->send_rpl("422", user, params, "");
+    {
+        std::ifstream infile("./cmd_files/motd");
+        if (infile.is_open())
+        {
+            reply_params.push_back(user->get_hostname());
+            server->send_rpl("375", user, reply_params, "");
+            reply_params.clear();
+
+            std::string buff;
+            for (std::string line; getline(infile, line);)
+            {
+                line = "- " + line + "\r\n";
+                reply_params.push_back(line);
+                server->send_rpl("372", user, reply_params, "");
+                reply_params.clear();
+            }
+
+            server->send_rpl("376", user, reply_params, "");
+            reply_params.clear();
+        }
+        else
+            server->send_rpl("422", user, params, "");
+    }
     #if DEBUG
         std::cout << RED << "EXIT MOTD CMD" << NC << std::endl;
     #endif

@@ -192,7 +192,7 @@
 #define C_RPL_REHASHING "382"
 #define RPL_YOURESERVICE(servicename) ("You are service " + servicename + "\r\n");// 383
 #define C_RPL_YOURESERVICE "383"
-#define RPL_TIME(server, local_time) (server + " :" + local_time + "\r\n");// 391
+#define RPL_TIME(server, local_time) (server + " :" + local_time);// 391
 #define C_RPL_TIME "391"
 #define RPL_USERSSTART() (":UserID Terminal Host\r\n");// 392
 #define C_RPL_USERSSTART "392"

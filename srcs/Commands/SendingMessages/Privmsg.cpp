@@ -57,9 +57,9 @@ void Commands::privmsg(User *user, IRC *server)
             #endif
             std::vector<std::string> reply_params;
             #if DEBUG
-                std::cout << PURPLE << "DEBUG: target is away ? " << targetuser->user_is_away() << NC << std::endl;
+                std::cout << PURPLE << "DEBUG: target is away ? " << targetuser->is_away() << NC << std::endl;
             #endif
-            if(targetuser->user_is_away()) //si le recipient est afk prevenir celui qui envoie
+            if(targetuser->is_away()) //si le recipient est afk prevenir celui qui envoie
             {
                 reply_params.push_back(targetuser->get_nickname());
                 reply_params.push_back(targetuser->get_away_mssg());

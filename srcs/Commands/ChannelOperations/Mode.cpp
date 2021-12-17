@@ -89,8 +89,8 @@ void Commands::modif_user(User *user, IRC *server, std::string modifications)
             }
             case 'a':
             {
-                (sign == true) ? user->set_is_away(true) : user->set_is_away(false);
-                std::cout << "after mode affect a user away ? " << user->user_is_away() << std::endl;
+                (sign == true) ? user->is_away(true) : user->is_away(false);
+                std::cout << "after mode affect a user away ? " << user->is_away() << std::endl;
                 continue ;
             }
             case 'i':
@@ -101,8 +101,8 @@ void Commands::modif_user(User *user, IRC *server, std::string modifications)
                 continue ;
             case 'o':
             {
-                (sign == true) ? user->set_operator(true) : user->set_operator(false);
-                std::cout << "after mode affect a user operator ? " << user->user_is_operator() << std::endl;
+                (sign == true) ? user->is_operator(true) : user->is_operator(false);
+                std::cout << "after mode affect a user operator ? " << user->is_operator() << std::endl;
                 continue ;
             }
             case 'O':
@@ -233,7 +233,7 @@ void            Commands::mode(User *user, IRC *server)
     Channel *targetchannel = server->get_channel_ptr((params[0]));
     if(targetuser)
         mode_user(user, server);
-    //TODO: a reprendre    
+    //TODO: a reprendre
     //else if(targetchannel)
     //    mode_channel(user, server);
     else if(!targetchannel && !targetuser)

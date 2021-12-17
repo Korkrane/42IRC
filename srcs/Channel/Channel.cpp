@@ -1,15 +1,15 @@
 #include <IRC.hpp>
 
-Channel::Channel(std::string name, User *user) : _name(name), _prefix(name[0]), _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _channel_owner(user), _key(""), _has_key(false), _members_nb(0), _operators_nb(0)//Attention a incrementer les deux derniers
+Channel::Channel(std::string name, User *user) : _name(name), _prefix(name[0]), _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _channel_owner(user), _key(""), _has_key(false), _members_nb(0), _operators_nb(0) //Attention a incrementer les deux derniers
 {
 #if DEBUG
 	std::cout << "Channel constructor called" << std::endl;
 #endif
 	this->set_owner(user);
-	return ;
+	return;
 }
 
-void	Channel::set_owner(User *user)
+void Channel::set_owner(User *user)
 {
 	this->_channel_owner = user;
 }
@@ -19,20 +19,19 @@ User *Channel::get_owner(void)
 	return (this->_channel_owner);
 }
 
-
-bool	Channel::is_channel_owner(User *user)
+bool Channel::is_channel_owner(User *user)
 {
 	if (user == this->get_owner())
 		return (true);
 	return (false);
 }
 
-char	Channel::get_mode_sign(void)
+char Channel::get_mode_sign(void)
 {
 	return (this->_mode_sign);
 }
 
-void	Channel::set_mode_sign(char c)
+void Channel::set_mode_sign(char c)
 {
 	this->_mode_sign = c;
 }
@@ -157,16 +156,16 @@ bool Channel::user_is_member(User *user)
 bool Channel::user_is_owner(User *user)
 {
 	std::cout << "ENTER IN USER IS OWNER" << std::endl;
-	if (user->get_nickname().compare(this->_channel_owner->get_nickname()) ==0)
+	if (user->get_nickname().compare(this->_channel_owner->get_nickname()) == 0)
 	{
-		#if DEBUG
-			std::cout << "The user " << user->get_nickname() << "is owner of the channel" << std::endl;
-		#endif
+#if DEBUG
+		std::cout << "The user " << user->get_nickname() << "is owner of the channel" << std::endl;
+#endif
 		return (true);
 	}
-	#if DEBUG
-		std::cout << "The user " << user->get_nickname() << "isn't owner of the channel" << std::endl;
-	#endif
+#if DEBUG
+	std::cout << "The user " << user->get_nickname() << "isn't owner of the channel" << std::endl;
+#endif
 	return (false);
 }
 
@@ -203,7 +202,7 @@ void Channel::newMember(User *user, bool user_operator)
 	(void)user_operator;
 	if (!user)
 	{
-	//	std::cout << "ERROR ! User is NULL" << std::endl;
+		//	std::cout << "ERROR ! User is NULL" << std::endl;
 		return;
 	}
 	/* */
@@ -212,9 +211,9 @@ void Channel::newMember(User *user, bool user_operator)
 	this->_members_nb++;
 	if (user_operator == true)
 		newOperator(user);
-	#if DEBUG
-		std::cout << "new Member function ok " << NC << std::endl;
-	#endif
+#if DEBUG
+	std::cout << "new Member function ok " << NC << std::endl;
+#endif
 	return;
 }
 
@@ -334,7 +333,7 @@ bool Channel::channelHasUsers(void)
 	return (true);
 }
 
-unsigned int	Channel::get_operators_nb(void) const
+unsigned int Channel::get_operators_nb(void) const
 {
 	std::vector<User *> operators = this->get_operators();
 	unsigned int size = operators.size();
@@ -416,16 +415,16 @@ bool is_correct_channel_name(std::string target_name)
 	{
 		if (forbidden.find(target_name[1]) != std::string::npos)
 		{
-			#if DEBUG
-				std::cout << "is correct channel name will return false." << std::endl;
-			#endif
+#if DEBUG
+			std::cout << "is correct channel name will return false." << std::endl;
+#endif
 			return (false);
 		}
 		i++;
 	}
-	#if DEBUG
-		std::cout << "is correct channel name will return true." << std::endl;
-	#endif
+#if DEBUG
+	std::cout << "is correct channel name will return true." << std::endl;
+#endif
 	return (true);
 }
 
@@ -538,9 +537,9 @@ bool Channel::check_channel_modes(std::string target_modes)
 	{
 		if (allowed.find(target_modes[i]) == std::string::npos)
 		{
-			#if DEBUG
-				std::cout << BLUE << "DEBUG: CHANNEL: Find invalid char when checking modes string: " << target_modes[i] << NC << std::endl;
-			#endif
+#if DEBUG
+			std::cout << BLUE << "DEBUG: CHANNEL: Find invalid char when checking modes string: " << target_modes[i] << NC << std::endl;
+#endif
 			return (false);
 		}
 		i++;
@@ -560,9 +559,9 @@ std::string Channel::get_unknown_mode(std::string target_modes)
 	{
 		if (allowed.find(target_modes[i]) == std::string::npos)
 		{
-			#if DEBUG
-				std::cout << BLUE << "DEBUG: CHANNEL: Invalid char mode: " << target_modes[i] << NC << std::endl;
-			#endif
+#if DEBUG
+			std::cout << BLUE << "DEBUG: CHANNEL: Invalid char mode: " << target_modes[i] << NC << std::endl;
+#endif
 			error = target_modes[i];
 			return (error);
 		}
@@ -592,18 +591,18 @@ bool Channel::is_full_channel(void) const
 
 std::vector<int> Channel::get_members_fd(void) const
 {
-	std::vector<int> sockets;
+	std::vector<int> fds;
 	std::vector<User *> users = this->get_members();
 	std::vector<User *>::iterator it = users.begin();
 	std::vector<User *>::iterator ite = users.end();
-	int tmp_sock;
+	int tmp;
 	while (it != ite)
 	{
-		tmp_sock = (*it)->get_socket();
-		sockets.push_back(tmp_sock);
+		tmp = (*it)->get_fd();
+		fds.push_back(tmp);
 		it++;
 	}
-	return (sockets);
+	return (fds);
 }
 
 bool Channel::get_has_topic(void) const
@@ -630,9 +629,9 @@ void Channel::unset_has_key(void)
 void Channel::set_key(std::string key)
 {
 	this->_key = key;
-	#if DEBUG
-		std::cout << BLUE << "DEBUG: key has been set to " << key << std::endl;
-	#endif
+#if DEBUG
+	std::cout << BLUE << "DEBUG: key has been set to " << key << std::endl;
+#endif
 }
 
 void Channel::drop_key(void)
@@ -659,9 +658,9 @@ void Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
 		it++;
 	}
 	this->_topic = str_topic;
-	#if DEBUG
-		std::cout << "Topic has been set to set: " << this->_topic << std::endl;
-	#endif
+#if DEBUG
+	std::cout << "Topic has been set to set: " << this->_topic << std::endl;
+#endif
 }
 
 void Channel::clear_topic(User *user, IRC *server, std::vector<std::string> topic)
@@ -678,7 +677,7 @@ void Channel::set_has_topic()
 	this->_has_topic = true;
 }
 
-void	Channel::displayMode(void)
+void Channel::displayMode(void)
 {
 	bool handles = this->get_handle_modes();
 	if (handles)
@@ -690,14 +689,14 @@ void	Channel::displayMode(void)
 	{
 		//std::cout << "Channel : careful, this channel should not handle modes : " << this->get_modes() << std::cout;
 	}
-	return ;
+	return;
 }
 
-std::string	Channel::get_key(void)
+std::string Channel::get_key(void)
 {
 	std::string key = this->_key;
-	#if DEBUG
-		std::cout << PURPLE << "DEBUG : CHANNEL: the correct key is " << key << NC << std::endl;
-	#endif
+#if DEBUG
+	std::cout << PURPLE << "DEBUG : CHANNEL: the correct key is " << key << NC << std::endl;
+#endif
 	return (key);
 }

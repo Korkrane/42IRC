@@ -3,20 +3,21 @@
 
 User::User(void)
 /*
-: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _has_operator_status(false), _is_away(false), _away_mssg("null"), _password("null"), _message_status(0), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_is_oper(0), _user_is_away(0), _user_has_registered_pass(0), _user_has_registered_nick(0), _user_is_registered(0) */
+: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _is_oper(false), _is_away(false), _away_mssg("null"), _password("null"), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_has_registered_pass(0), _user_has_registered_nick(0), is_registered(0) */
 {
 #if USERDEBUG
 	std::cout << "User default constructor called" << std::endl;
 #endif
 }
 
-User::User(int fd) : _socket(fd)
+User::User(int fd) : _fd(fd)
 {
-	#if DEBUG
-		std::cout << BLUE << "DEBUG: User constructor called with fd param" << NC << std::endl;
-	#endif
+#if DEBUG
+	std::cout << BLUE << "DEBUG: User constructor called with fd param" << NC << std::endl;
+#endif
 	_to_delete = false;
-	_user_is_registered = false;
+	_is_registered = false;
+	_is_oper = false;
 	_is_away = false;
 }
 
@@ -44,62 +45,47 @@ void User::set_realname(std::string realname)
 
 void User::set_hostname(std::string hostname)
 {
-	this->_hostname = hostname;
+	_hostname = hostname;
 }
 
 void User::set_modes(std::string modes)
 {
-	this->_modes = modes;
+	_modes = modes;
 }
 
-void User::set_operator_status(bool value)
+void User::is_operator(bool value)
 {
-	this->_has_operator_status = value;
+	_is_oper = value;
 }
 
-void User::set_is_away(bool value)
+void User::is_away(bool value)
 {
-	if(value == true && this->get_away_mssg().empty())
-		this->set_away_mssg("I'm away");
-	this->_is_away = value;
+	if (value == true && get_away_mssg().empty())
+		set_away_mssg("I'm away");
+	_is_away = value;
 }
 
 void User::set_away_mssg(std::string message)
 {
-	this->_away_mssg = message;
+	_away_mssg = message;
 }
 
-void User::set_registered_user(bool is_set)
+void User::is_registered(bool value)
 {
-	this->_user_is_registered = is_set;
+	_is_registered = value;
 }
 
-void User::set_operator(bool is_set)
+void User::set_request(std::string request)
 {
-	this->_has_operator_status = is_set;
-}
-
-void User::set_message_status(int status)
-{
-	this->_message_status = status;
-}
-
-void User::set_init_socket(int socket)
-{
-	this->_socket = socket;
-}
-
-void User::set_unparsed_client_command(std::string client_command)
-{
-	this->_unparsed_client_command = client_command;
+	_request = request;
 }
 
 void User::split_if_multiple_command()
 {
-
 	std::cout << RED << "ENTER SPLIT_MULTI_COMMD" << NC << std::endl;
+
 	t_cmd new_command;
-	std::string s = this->_unparsed_client_command;
+	std::string s = this->_request;
 	std::string delimiter = "\r\n";
 
 	size_t pos = 0;
@@ -115,13 +101,13 @@ void User::split_if_multiple_command()
 	int i = 0;
 	for (std::vector<t_cmd>::iterator it = _commands.begin(); it != _commands.end(); it++)
 	{
-		std::cout << "--COMMAND N° " << i++ <<  "--" << std::endl;
+		std::cout << "--COMMAND N° " << i++ << "--" << std::endl;
 		this->store_prefix(it);
 		this->store_command(it);
 		this->store_params(it);
 #if DEBUG
 		std::cout << "prefix= " << (*it)._prefix << std::endl;
-		std::cout << "command= " << (*it)._command_name << std::endl;
+		std::cout << "command= " << (*it)._command << std::endl;
 
 		int i = 0;
 		for (std::vector<std::string>::iterator itr = (*it)._params.begin(); itr != (*it)._params.end(); itr++)
@@ -160,16 +146,6 @@ std::string User::get_modes(void) const
 	return (this->_modes);
 }
 
-bool User::get_operator_status(void) const
-{
-	return (this->_has_operator_status);
-}
-
-bool User::get_is_away(void) const
-{
-	return (this->_is_away);
-}
-
 std::string User::get_away_mssg(void) const
 {
 	return (this->_away_mssg);
@@ -185,14 +161,9 @@ std::string User::get_message(void) const
 	return (this->_message);
 }
 
-int User::get_message_status(void) const
+int User::get_fd(void) const
 {
-	return (this->_message_status);
-}
-
-int User::get_socket(void) const
-{
-	return (this->_socket);
+	return _fd;
 }
 
 int User::get_channels_nb(void) const
@@ -212,45 +183,32 @@ std::string User::get_prefix(void) const
 
 std::string User::get_command_name(void) const
 {
-	std::string command_name = this->_command_name;
-	if (command_name.empty())
-		return ("");
-	return (command_name);
+	return _command.empty() ? "" : _command;
 }
 
-std::string User::get_unparsed_client_command(void) const
+std::string User::get_request(void) const
 {
-	std::string unparsed = this->_unparsed_client_command;
-	if (unparsed.empty())
-		return ("");
-	return (unparsed);
+	return _request.empty() ? "" : _request;
 }
 
-unsigned int User::get_params_size(void) const{return (this->get_params().size());}
-
-
-bool User::check_if_prefix(void) const
+unsigned int User::get_params_size(void) const
 {
-	char colon = ':';
-	std::string check = this->get_unparsed_client_command();
-	if (check.find(colon) != std::string::npos)
-		return (true);
-	return (false);
+	return this->get_params().size();
 }
 
-bool User::user_is_registered(void) const
+bool User::is_registered(void) const
 {
-	return (this->_user_is_registered);
+	return _is_registered;
 }
 
-bool User::user_is_away(void) const
+bool User::is_away(void) const
 {
-	return (this->_is_away);
+	return _is_away;
 }
 
-bool User::user_is_operator(void) const
+bool User::is_operator(void) const
 {
-	return (this->_has_operator_status);
+	return _is_oper;
 }
 
 int User::store_string_until_char(std::string *dest, std::string *src, char c, int len)
@@ -288,14 +246,14 @@ void User::store_prefix(std::vector<t_cmd>::iterator it)
 
 void User::store_prefix()
 {
-	if (this->_unparsed_client_command != "")
+	if (_request != "")
 	{
-		std::string::iterator it = this->_unparsed_client_command.begin();
+		std::string::iterator it = _request.begin();
 		int i = 0;
 		if (*it == ':')
 		{
-			i = store_string_until_char(&this->_prefix, &this->_unparsed_client_command, ' ', i);
-			this->_unparsed_client_command.replace(0, i, "");
+			i = store_string_until_char(&_prefix, &_request, ' ', i);
+			_request.replace(0, i, "");
 		}
 	}
 }
@@ -310,45 +268,41 @@ bool User::string_end_with(std::string const &fullString, std::string const &end
 
 void User::store_command(std::vector<t_cmd>::iterator it)
 {
-	std::string command;
 	if (!(*it)._unparsed.empty())
 	{
 		int i = 0;
-		i = store_string_until_char(&(*it)._command_name, &(*it)._unparsed, ' ', i);
+		i = store_string_until_char(&(*it)._command, &(*it)._unparsed, ' ', i);
 		(*it)._unparsed.replace(0, i, "");
-		if (string_end_with((*it)._command_name, "\r\n"))
-		{
-			(*it)._command_name.resize((*it)._command_name.size() - 2);
-		}
-		std::transform((*it)._command_name.begin(), (*it)._command_name.end(),(*it)._command_name.begin(), ::toupper);
+		if (string_end_with((*it)._command, "\r\n"))
+			(*it)._command.resize((*it)._command.size() - 2);
+		std::transform((*it)._command.begin(), (*it)._command.end(), (*it)._command.begin(), ::toupper);
 	}
 }
 
 void User::store_command()
 {
-	std::string command;
-	if (!this->_unparsed_client_command.empty())
+	if (!_request.empty())
 	{
 		int i = 0;
-		i = store_string_until_char(&this->_command_name, &this->_unparsed_client_command, ' ', i);
-		this->_unparsed_client_command.replace(0, i, "");
-		if (string_end_with(this->_command_name, "\r\n"))
-			this->_command_name.resize(this->_command_name.size() - 2);
+		i = store_string_until_char(&_command, &_request, ' ', i);
+		_request.replace(0, i, "");
+		if (string_end_with(_command, "\r\n"))
+			_command.resize(_command.size() - 2);
 	}
 }
 
 void User::split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c)
 {
 	size_t pos = str->find(c);
-	size_t initialPos = 0;
+	size_t init_pos = 0;
 
 	while (pos != std::string::npos)
 	{
-		vec->push_back(str->substr(initialPos, pos - initialPos));
-		initialPos = pos + 1;
-		pos = str->find(c, initialPos);
+		vec->push_back(str->substr(init_pos, pos - init_pos));
+		init_pos = pos + 1;
+		pos = str->find(c, init_pos);
 	}
-	vec->push_back(str->substr(initialPos, std::min(pos, str->size()) - initialPos + 1));
+	vec->push_back(str->substr(init_pos, std::min(pos, str->size()) - init_pos + 1));
 }
 
 void User::patch_params(std::vector<std::string> *params)
@@ -384,9 +338,9 @@ void User::store_params(std::vector<t_cmd>::iterator it)
 
 void User::store_params()
 {
-	if (this->_unparsed_client_command != "")
+	if (this->_request != "")
 	{
-		split_string_to_vector(&this->_params, &this->_unparsed_client_command, ' ');
+		split_string_to_vector(&this->_params, &this->_request, ' ');
 		patch_params(&this->_params);
 	}
 }
@@ -401,7 +355,7 @@ void User::set_prefix(std::string value)
 }
 void User::set_command(std::string value)
 {
-	this->_command_name = value;
+	this->_command = value;
 }
 
 void User::display_client_info(void)
@@ -441,7 +395,7 @@ void User::display_params(void) //const
 	return;
 }
 
-void	User::display_params_bis(void)
+void User::display_params_bis(void)
 {
 	std::vector<std::string> params = this->get_params();
 	std::vector<std::string>::iterator it = params.begin();
@@ -457,7 +411,7 @@ void	User::display_params_bis(void)
 		index++;
 		it++;
 	}
-	return ;
+	return;
 }
 
 void User::display_command(void)
@@ -467,8 +421,8 @@ void User::display_command(void)
 		std::cout << "Prefix = " << this->_prefix << std::endl;
 	else
 		std::cout << "There is no prefix" << std::endl;
-	if (!this->_command_name.empty())
-		std::cout << "Command = " << this->_command_name << std::endl;
+	if (!this->_command.empty())
+		std::cout << "Command = " << this->_command << std::endl;
 	else
 		std::cout << "No command parsed" << std::endl;
 	this->display_params();
@@ -486,15 +440,15 @@ void User::be_added_to_channel(Channel *channel)
 		//TODO Si non on va devenir operateur
 		channel->newMember(this, true);
 	}
-	#if DEBUG
-		std::cout << PURPLE << "USER: be_added_to_channel called for: " << this->get_nickname() << std::endl;
-	#endif
+#if DEBUG
+	std::cout << PURPLE << "USER: be_added_to_channel called for: " << this->get_nickname() << std::endl;
+#endif
 	return;
 }
 
-void User::set_socket(int socket)
+void User::set_fd(int fd)
 {
-	this->_socket = socket;
+	_fd = fd;
 }
 
 void User::increase_channel_nb(void)
@@ -513,16 +467,16 @@ void User::decrease_channel_nb(void)
 {
 	if (this->_channels_nb == USER_MAXCHAN)
 	{
-		#if DEBUG
-			std::cout << RED << "USER: Error with nb of channels (--)." << std::endl;
-		#endif
+#if DEBUG
+		std::cout << RED << "USER: Error with nb of channels (--)." << std::endl;
+#endif
 	}
 	this->_channels_nb--;
 }
 
 /**
  * @brief Les verifications en termes de USER_MACHAN doivent etre faites au prealable
- *
+ * TODO: si la channel existe pas on l'ajoute pas mais on increase qd meme (question baudoin)
  * @param channel
  */
 void User::add_channel_to_list(Channel *channel)
@@ -539,7 +493,7 @@ void User::add_channel_to_list(Channel *channel)
  */
 void User::remove_channel_from_list(Channel *channel)
 {
-	std::vector<Channel *> chans = this->_channels;
+	std::vector<Channel *> chans = _channels;
 	std::vector<Channel *>::iterator it = chans.begin();
 	std::vector<Channel *>::iterator ite = chans.end();
 	std::string channel_name = channel->get_name();
@@ -550,11 +504,10 @@ void User::remove_channel_from_list(Channel *channel)
 		if (channel_name.compare(check_name) == 0)
 		{
 			chans.erase(it);
-			this->decrease_channel_nb();
+			decrease_channel_nb();
 		}
 		it++;
 	}
-	return;
 }
 
 std::ostream &operator<<(std::ostream &COUT, User *user)
@@ -584,8 +537,9 @@ unsigned int User::count_commas(void) const
 		}
 		it++;
 	}
-	#if DEBUG
-		std::cout << PURPLE << "DEBUG: " << "USER: Counting " << commas << " commas in the params" << std::endl;
-	#endif
+#if DEBUG
+	std::cout << PURPLE << "DEBUG: "
+			  << "USER: Counting " << commas << " commas in the params" << std::endl;
+#endif
 	return (commas);
 }

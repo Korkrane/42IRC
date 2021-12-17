@@ -130,8 +130,8 @@ void Commands::modif_user(User *user, IRC *server, std::string modifications)
             }
             case 'a':
             {
-                (sign == true) ? user->set_is_away(true) : user->set_is_away(false);
-                std::cout << "after mode affect a user away ? " << user->user_is_away() << std::endl;
+                (sign == true) ? user->is_away(true) : user->is_away(false);
+                std::cout << "after mode affect a user away ? " << user->is_away() << std::endl;
                 continue ;
             }
             case 'i':

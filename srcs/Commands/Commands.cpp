@@ -16,8 +16,7 @@ Commands::~Commands()
 
 std::map<std::string, void (*)(User *, IRC *)> Commands::get_cmds(void) const
 {
-	std::map<std::string, void (*)(User *, IRC *)> cmds = this->_cmds;
-	return (cmds);
+	return _cmds;
 }
 
 std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
@@ -51,20 +50,6 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	return cmds;
 }
 
-std::vector<std::string> Commands::store_second_param_message(std::vector<std::string> params)
-{
-	std::vector<std::string> message;
-	std::vector<std::string>::iterator it = params.begin();
-	it++;
-	std::vector<std::string>::iterator ite = params.end();
-	while (it != ite)
-	{
-		message.push_back(*it);
-		it++;
-	}
-	return (message);
-}
-
 bool Commands::prefixed_by_colon(std::string str)
 {
 	if (str[0] == ':')
@@ -73,18 +58,20 @@ bool Commands::prefixed_by_colon(std::string str)
 }
 
 //Attention similaire a la meme sur channel
-std::string	Commands::get_channel_key(Channel *channel)
+std::string Commands::get_channel_key(Channel *channel)
 {
 	if (!channel)
 		return ("");
 	std::string key = channel->get_key();
-	#if DEBUG
-		std::cout << "DEBUG: " << "COMMAND :" << "The correct channel key is " << key << std::endl;
-	#endif
+#if DEBUG
+	std::cout << "DEBUG: "
+			  << "COMMAND :"
+			  << "The correct channel key is " << key << std::endl;
+#endif
 	return (key);
 }
 
-void	Commands::get_channel_targets(User *user, IRC *server)
+void Commands::get_channel_targets(User *user, IRC *server)
 {
 	(void)user;
 	(void)server;
@@ -93,17 +80,17 @@ void	Commands::get_channel_targets(User *user, IRC *server)
 	(void)targets;
 	unsigned int size = params.size();
 
-	#if DEBUG
-		std::cout << "Params front is " << params.front() << std::endl;
-	#endif
+#if DEBUG
+	std::cout << "Params front is " << params.front() << std::endl;
+#endif
 	std::string line = params.front();
 	if (size >= 1)
 	{
 		user->ft_split_channels(line, ',');
- 	}
+	}
 }
 
-std::string	Commands::get_bye_message(User *user, IRC *server)
+std::string Commands::get_bye_message(User *user, IRC *server)
 {
 	(void)server;
 
@@ -114,7 +101,7 @@ std::string	Commands::get_bye_message(User *user, IRC *server)
 	if (size == 0)
 		return (bye_message);
 	std::vector<std::string>::iterator it = params.begin();
-	it++;//on skippe le premier mot
+	it++; //on skippe le premier mot
 	std::vector<std::string>::iterator ite = params.end();
 	while (it != ite)
 	{
@@ -124,13 +111,13 @@ std::string	Commands::get_bye_message(User *user, IRC *server)
 		bye_message += " ";
 		it++;
 	}
-	#if DEBUG
-		std::cout << "Bye message: " << bye_message << std::endl;
-	#endif
+#if DEBUG
+	std::cout << "Bye message: " << bye_message << std::endl;
+#endif
 	return (bye_message);
 }
 
-void	Commands::get_key_targets(User *user, IRC *server)
+void Commands::get_key_targets(User *user, IRC *server)
 {
 	(void)user;
 	(void)server;
@@ -141,10 +128,10 @@ void	Commands::get_key_targets(User *user, IRC *server)
 		user->ft_split_args(params[1], ',');
 }
 
-void	Commands::return_error(std::string error_code, User *user, IRC *server, std::vector<std::string> error, std::string arg)
+void Commands::return_error(std::string error_code, User *user, IRC *server, std::vector<std::string> error, std::string arg)
 {
 	server->send_rpl(error_code, user, error, arg);
 	user->_splitted_args.clear();
 	user->_splitted_channels.clear();
-	return ;
+	return;
 }

@@ -1,6 +1,5 @@
 #pragma once
 
-#define PORT_SERVER 6667
 #include "IRC.hpp"
 
 typedef std::pair<int, std::string> t_clientCmd;
@@ -38,6 +37,7 @@ public:
     void ProcessCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
     void exec_command(User *);
 
+    /*** SETTERS ***/
     void set_name(std::string name);
     void set_version(std::string version);
     void set_creation(std::string date);
@@ -73,15 +73,15 @@ public:
     void process_command(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
 
     bool user_can_join(Channel *channel);
-    
+
     void send_rpl_display_all_users(User *user, User *target, std::string command);
     void send_rpl_display_user(User *user, std::string command);
 
     int send_rpl(std::string code, User *user, std::vector<std::string> params, std::string command);
-    int send_rpl_to_all_members(std::string code, std::vector<User* > user, std::vector<std::string> params, std::string command);
+    int send_rpl_to_all_members(std::string code, std::vector<User *> user, std::vector<std::string> params, std::string command);
 
     static std::string init_rpl(User *user);
-    std::string build_reply(std::string code, User * user, std::vector<std::string> params, std::string command);
+    std::string build_reply(std::string code, User *user, std::vector<std::string> params, std::string command);
 
     void delete_user(int fd);
 

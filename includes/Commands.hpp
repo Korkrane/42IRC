@@ -12,6 +12,7 @@ private:
 	/* Ajout des protos pour que la classe soit canonique */
 	Commands(Commands const &src);
 	Commands &operator=(Commands const &src);
+
 public:
 	Commands();
 	virtual ~Commands();
@@ -50,10 +51,9 @@ public:
 	void displayMode(void) const;
 
 	static void join(User *user, IRC *server);
-	static void	check_roles(Channel *chan, User *user, bool added);
+	static void check_roles(Channel *chan, User *user, bool added);
 	static void user_joins(User *user, IRC *server, Channel *chan, int index);
 	static void user_parts(User *user, IRC *server, Channel *chan, int index, std::string bye_message);
-
 
 	static void nick_cmd(User *user, IRC *server);
 	static bool checkNickGrammar(std::string nick, IRC *server, User *user);
@@ -93,7 +93,6 @@ public:
 
 	static void privmsg(User *user, IRC *server);
 	static std::vector<std::string> fill_recipients(std::string targets);
-	static std::vector<std::string> store_second_param_message(std::vector<std::string> params);
 	static bool prefixed_by_colon(std::string str);
 	static void send_full_privmsg(User *target, User *user, IRC *server, std::vector<std::string> message);
 	static void send_one_word_privmsg(User *target, User *user, IRC *server, std::string message);
@@ -104,5 +103,5 @@ public:
 	static void get_channel_targets(User *user, IRC *server);
 	static void get_key_targets(User *user, IRC *server);
 
-	static void	return_error(std::string error_code, User *user, IRC *server, std::vector<std::string> error, std::string arg);
+	static void return_error(std::string error_code, User *user, IRC *server, std::vector<std::string> error, std::string arg);
 };
