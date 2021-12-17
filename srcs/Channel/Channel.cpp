@@ -113,6 +113,7 @@ bool Channel::user_is_operator(User *user)
 		{
 			return (true);
 		}
+		it++;
 	}
 	return (false);
 }

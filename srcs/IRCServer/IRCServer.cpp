@@ -498,6 +498,13 @@ int IRC::send_rpl(std::string code, User *user, std::vector<std::string> params,
 
 int IRC::send_rpl_to_all_members(std::string code, std::vector<User *> users, std::vector<std::string> params, std::string command)
 {
+	/*
+	(void)us;
+	std::string channel = params[0];
+	Channel *chan = this->find_channel(channel);
+	std::vector<User *> users = chan->get_members();
+	std::vector<User *>::iterator it = users.begin();
+	*/
 	std::vector<User *>::iterator it = users.begin();
 	std::vector<User *>::iterator ite = users.end();
 	while (it != ite)
@@ -516,21 +523,17 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User *> users, st
 int IRC::send_rpl_display_user(User *user, User *target, Channel *chan, std::string command, std::string code)
 {
 	(void)command;
-	(void)target;
+	//A revoir -> doit boucler sur tous les membres
 	std::string rpl;
 	rpl += ":127.0.0.1 " + code + " ";
 	//Il faudrait qu on ait un serveur name
-	rpl += user->get_nickname() + " " + chan->get_name() + " ";
-
-	User *op = chan->get_operators().front();
-	std::string op_name = op->get_nickname();
-
-	//TODO: attention on devrait avoir le get realname mais la valeur a l air d'etre notee en dure "realname"
-	rpl += op_name + " " + "127.0.0.1 0 " + user->get_nickname() + " ";
-
-	if (chan->user_is_operator(user) == true)
-		rpl += "H";
-	rpl += "@ :0 realname\r\n";
+	//TODO: revoir si c est le nickname a chaque fois ou le realname
+	rpl += user->get_nickname() + " " + chan->get_name() + " " + target->get_nickname();
+	rpl += "127.0.0.1 0 " + target->get_nickname() + " ";
+	rpl += "H";
+	if (chan->user_is_operator(target) == true)
+		rpl += "@";
+	rpl += " :0 realname\r\n";
 #if MALATINI
 	std::cout << BLUE << "send_rpl_display_user called." << std::endl;
 	std::cout << GREEN << rpl << NC << std::endl;

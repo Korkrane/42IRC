@@ -140,6 +140,9 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     chan_vec.push_back(user->_splitted_channels[index]);
     std::vector<User *> users;
     users.push_back(user);
+#if DEBUG
+    std::cout << "USER IS " << user->get_nickname();
+#endif
     server->send_rpl_to_all_members("", users, chan_vec, "JOIN"); //user->_splitted_channels
     chan_vec.clear();
     //user->_splitted_args.clear();
@@ -149,23 +152,33 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     user->_target_channel = chan;
 
     std::string success_rpl_1;
+
+    //reponse 353 on affiche le users en indiquqnt leur role la suite
+
     success_rpl_1 = ":127.0.0.1 353 " + user->get_nickname() + " = " + chan->get_name() + " :";
-    if (chan->user_is_operator(user) == true)
-    {
-        success_rpl_1 += "@";
-        //TODO:: changer operateur pour n en avoir qu un seul? et pas un vector
-        User *ope = chan->get_operators().front();
-        std::string operator_name = ope->get_nickname();
-        success_rpl_1 += operator_name + "\r\n";
-    }
+    //On va d'abord afficher l'operateur
+    User *op = chan->get_operators().front();
+#if MALATINI
+    std::cout << RED << "The operator is " << op->get_nickname() << NC << std::endl;
+#endif
+    success_rpl_1 += "@";
+    std::string operator_name = op->get_nickname();
+    success_rpl_1 += operator_name + " ";
+
+    //On fera probablement le tour de tous les users ?
+    if (user != op)
+        success_rpl_1 += user->get_nickname();
+    success_rpl_1 += "\r\n";
 #if MALATINI
     std::cout << GREEN << success_rpl_1 << NC << std::endl;
 #endif
+    //End of names qui suit 353
     server->_response_queue.push_back(std::make_pair(user->get_fd(), success_rpl_1));
     server->send_rpl("366", user, user->get_params(), "");
     //topic(user, server);
     //names(user, server);
     user->_target_channel = chan;
-    who(user, server);
+    //352 WHO
+    //ho(user, server);
     //user->_target_channel = NULL;
 }
