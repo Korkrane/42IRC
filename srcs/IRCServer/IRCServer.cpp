@@ -9,7 +9,7 @@ IRC::IRC(void) : _socket(0),
 				 _server_creation("null"),
 				 _svPassword("null")
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << BLUE << "DEBUG: IRC default constructor called" << NC << std::endl;
 #endif
 	_commands = new Commands();
@@ -31,7 +31,7 @@ IRC::IRC(std::string const &password) : _socket(0),
 										_server_creation("null"),
 										_svPassword(password)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << BLUE << "DEBUG: IRC constructor with pass parameter called" << NC << std::endl;
 #endif
 	die = false;
@@ -44,7 +44,7 @@ IRC::IRC(std::string const &password) : _socket(0),
 IRC::~IRC()
 {
 	delete _commands;
-#if DEBUG
+#if DEBUG == 1
 	std::cout << BLUE << "DEBUG: IRC destructor called" << NC << std::endl;
 #endif
 }
@@ -105,7 +105,7 @@ User *IRC::get_user(int fd)
 
 void IRC::exec_command(User *user)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << RED << "ENTER IRC EXEC CMD" << NC << std::endl;
 #endif
 	std::map<std::string, void (*)(User *, IRC *)>::iterator itc = this->_commands->_cmds.begin();
@@ -134,7 +134,7 @@ void IRC::exec_command(User *user)
 	user->set_command("");
 	user->set_prefix("");
 	user->_params.clear();
-#if DEBUG
+#if DEBUG == 1
 	std::cout << RED << "EXIT IRC EXEC CMD" << NC << std::endl;
 #endif
 }
@@ -142,7 +142,7 @@ void IRC::exec_command(User *user)
 //when a user request a /quit, remove it from chans and delete the User instance.
 void IRC::delete_user(int fd)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << RED << "ENTER IN DELETE_USER" << NC << std::endl;
 #endif
 	User *user = this->get_user(fd);
@@ -169,14 +169,14 @@ void IRC::delete_user(int fd)
 	std::cout << "User erased in IRCserv: " << *t << std::endl;
 	users.erase(std::find(users.begin(), users.end(), user));
 	delete user;
-#if DEBUG
+#if DEBUG == 1
 	std::cout << RED << "EXIT IN DELETE_USER" << NC << std::endl;
 #endif
 }
 
 void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << BLUE << "\tDEBUG: with clientfd: " << command.first << NC << std::endl;
 	std::cout << BLUE << "\tDEBUG: with command: " << command.second << NC;
 #endif
@@ -187,7 +187,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 
 	if (!(std::find(fds.begin(), fds.end(), clientFD) == fds.end()))
 	{
-#if DEBUG
+#if DEBUG == 1
 		std::cout << BLUE << "DEBUG: Client found in the user list" << NC << std::endl;
 #endif
 		current_user = this->get_user(clientFD);
@@ -214,7 +214,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 	}
 	else //SI PREMIERE FOIS QU'IL SE CONNECTE
 	{
-#if DEBUG
+#if DEBUG == 1
 		std::cout << BLUE << "\tDEBUG: Client first connection" << NC << std::endl;
 #endif
 		this->fds.push_back(clientFD);
@@ -224,7 +224,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		current_user->set_request(cmd);
 		current_user->split_if_multiple_command();
 		this->exec_command(current_user);
-#if DEBUG
+#if DEBUG == 1
 		std::cout << BLUE << "DEBUG: Client is registered after exec?" << current_user->is_registered() << NC << std::endl;
 #endif
 		if (current_user->is_registered() == true)
@@ -298,14 +298,14 @@ bool IRC::has_channel(std::string channel_name)
 		chan_name_to_check = (*it)->get_name();
 		if (chan_name_to_check.compare(channel_name) == 0)
 		{
-#if DEBUG
+#if DEBUG == 1
 			std::cout << "has channel will return true." << std::endl;
 #endif
 			return (true);
 		}
 		it++;
 	}
-#if DEBUG
+#if DEBUG == 1
 	std::cout << "has channel will return false." << std::endl;
 #endif
 	return (false);
@@ -325,7 +325,7 @@ Channel *IRC::find_channel(std::string channel_name)
 		check_name = (*it)->get_name();
 		if (check_name.compare(channel_name) == 0)
 		{
-#if DEBUG
+#if DEBUG == 1
 			std::cout << BLUE << "DEBUG: IRC: found channel" << channel_name << ", returning ptr" << NC << std::endl;
 #endif
 			return (*it);
@@ -335,12 +335,6 @@ Channel *IRC::find_channel(std::string channel_name)
 	return (NULL);
 }
 
-/**
- * @brief
- *
- * @param to_drop
- * TODO: a tester
- */
 void IRC::drop_channel(Channel *to_drop)
 {
 	if (!to_drop)
@@ -414,11 +408,33 @@ bool IRC::find_user(std::string nickname)
 	return (res);
 }
 
+//Nickname
 User *IRC::get_user_ptr(std::string name)
 {
 	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
 	{
 		if ((*it)->get_nickname() == name)
+			return *it;
+	}
+	return (NULL);
+}
+
+//TODO: voir comment on pourrait eviter les doublons
+User *IRC::get_user_ptr_username(std::string name)
+{
+	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if ((*it)->get_username() == name)
+			return *it;
+	}
+	return (NULL);
+}
+
+User *IRC::get_user_ptr_realname(std::string name)
+{
+	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if ((*it)->get_realname() == name)
 			return *it;
 	}
 	return (NULL);
@@ -440,7 +456,7 @@ bool IRC::user_can_join(Channel *channel)
 
 	if (user_nb >= USER_MAXCHAN)
 	{
-#if DEBUG
+#if DEBUG == 1
 		std::cout << RED << "DEBUG: userCan not join new channel because he reach USER_MAXCHAN" << NC << std::endl;
 #endif
 		return (false);
@@ -448,11 +464,30 @@ bool IRC::user_can_join(Channel *channel)
 	return (true);
 }
 
+//Va permettre de retouner uen reponse avec tous les membres d'une channel
+int IRC::send_rpl_chan(std::string code, Channel *channel, IRC *server, User *user)
+{
+	(void)code;
+	(void)channel;
+	(void)server;
+	(void)user;
+
+	std::vector<User *> users = channel->get_members();
+	std::vector<User *>::iterator it = users.begin();
+	std::vector<User *>::iterator ite = users.end();
+
+	while (it != ite)
+	{
+		server->send_rpl_display_user(user, (*it), channel, "", code);
+		it++;
+	}
+	return (0);
+}
+
 int IRC::send_rpl(std::string code, User *user, std::vector<std::string> params, std::string command)
 {
 #if DEBUG
-	std::cout << PURPLE << "DEBUG: SEND REPLY: "
-			  << "RPL/ERR code is " << code << std::endl;
+	std::cout << PURPLE << "DEBUG: SEND REPLY: RPL/ERR code is " << code << std::endl;
 #endif
 	std::string rpl = this->build_reply(code, user, params, command);
 	this->_response_queue.push_back(std::make_pair(user->get_fd(), rpl));
@@ -468,8 +503,8 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User *> users, st
 	while (it != ite)
 	{
 		std::string rpl = this->build_reply(code, (*it), params, command);
-#if DEBUG
-		std::cout << GREEN << "Reply built is : " << rpl << std::endl;
+#if MALATINI
+		std::cout << GREEN << rpl << NC << std::endl;
 #endif
 		this->_response_queue.push_back(std::make_pair((*it)->get_fd(), rpl));
 		it++;
@@ -477,28 +512,57 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User *> users, st
 	return (0);
 }
 
-void send_rpl_display_user(User *user, User *target, std::string command)
+//Utilisee pojur join notamment
+int IRC::send_rpl_display_user(User *user, User *target, Channel *chan, std::string command, std::string code)
 {
-	(void)user;
 	(void)command;
 	(void)target;
+	std::string rpl;
+	rpl += ":127.0.0.1 " + code + " ";
+	//Il faudrait qu on ait un serveur name
+	rpl += user->get_nickname() + " " + chan->get_name() + " ";
+
+	User *op = chan->get_operators().front();
+	std::string op_name = op->get_nickname();
+
+	//TODO: attention on devrait avoir le get realname mais la valeur a l air d'etre notee en dure "realname"
+	rpl += op_name + " " + "127.0.0.1 0 " + user->get_nickname() + " ";
+
+	if (chan->user_is_operator(user) == true)
+		rpl += "H";
+	rpl += "@ :0 realname\r\n";
+#if MALATINI
+	std::cout << BLUE << "send_rpl_display_user called." << std::endl;
+	std::cout << GREEN << rpl << NC << std::endl;
+#endif
+	this->_response_queue.push_back(std::make_pair(user->get_fd(), rpl));
+	return (0);
 }
 
-void send_rpl_display_all_users(User *user, std::string command)
+//TODO: a tester
+int IRC::send_rpl_display_all_users(std::string code, User *user, Channel *channel, std::string command)
 {
+#if MALATINI
+	std::cout << BLUE << "send_rpl_display_all_users called" << NC << std::endl;
+#endif
 	(void)user;
 	(void)command;
-	/*
+	/* */
 	std::vector<User *> users = this->get_users();
 	std::vector<User *>::iterator it = users.begin();
 	std::vector<User *>::iterator ite = users.end();
 
 	while (it != ite)
 	{
-		this->send_rpl_display_user(user, (*it), command);
+		this->send_rpl_display_user(user, (*it), channel, command, code);
 		it++;
 	}
-	*/
+	//END OF WHO
+#if MALATINI
+	std::cout << BLUE << "END OF WHO" << NC << std::endl;
+#endif
+	this->send_rpl("315", user, user->get_params(), "");
+	return (0);
 }
 
 unsigned int IRC::get_channel_nb(void)
@@ -506,14 +570,7 @@ unsigned int IRC::get_channel_nb(void)
 	unsigned int number = 0;
 	std::vector<Channel *> chans = this->get_channels();
 	number = chans.size();
-#if DEBUG
-	if (number >= SERVER_MAXCHAN)
-	{
-		std::cout << PURPLE << "DEBUG: IRC: "
-				  << "channel nb is exceeding !" << std::endl;
-	}
-#endif
-	return number;
+	return (number);
 }
 
 std::string IRC::get_port(void)

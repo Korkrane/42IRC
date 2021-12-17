@@ -1,17 +1,9 @@
 #include <IRC.hpp>
 
-Commands::Commands() : _cmds(_initCmds())
-{
-#if DEBUG
-	std::cout << BLUE << "DEBUG: Commands constructor called" << NC << std::endl;
-#endif
-};
+Commands::Commands() : _cmds(_initCmds()){};
 
 Commands::~Commands()
 {
-#if DEBUG
-	std::cout << BLUE << "DEBUG: Command destructor called" << NC << std::endl;
-#endif
 }
 
 std::map<std::string, void (*)(User *, IRC *)> Commands::get_cmds(void) const
@@ -47,6 +39,7 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("KILL", kill));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("DIE", die));
 	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("NOTICE", notice));
+	cmds.insert(std::pair<std::string, void (*)(User *, IRC *)>("WHO", who));
 	return cmds;
 }
 
@@ -64,9 +57,7 @@ std::string Commands::get_channel_key(Channel *channel)
 		return ("");
 	std::string key = channel->get_key();
 #if DEBUG
-	std::cout << "DEBUG: "
-			  << "COMMAND :"
-			  << "The correct channel key is " << key << std::endl;
+	std::cout << "DEBUG: COMMAND : The correct channel key is " << key << std::endl;
 #endif
 	return (key);
 }
@@ -85,9 +76,7 @@ void Commands::get_channel_targets(User *user, IRC *server)
 #endif
 	std::string line = params.front();
 	if (size >= 1)
-	{
 		user->ft_split_channels(line, ',');
-	}
 }
 
 std::string Commands::get_bye_message(User *user, IRC *server)
@@ -111,7 +100,7 @@ std::string Commands::get_bye_message(User *user, IRC *server)
 		bye_message += " ";
 		it++;
 	}
-#if DEBUG
+#if DEBUG == 1
 	std::cout << "Bye message: " << bye_message << std::endl;
 #endif
 	return (bye_message);

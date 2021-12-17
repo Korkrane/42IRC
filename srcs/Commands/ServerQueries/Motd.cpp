@@ -1,17 +1,15 @@
+#include <fstream>
 #include <IRC.hpp>
-/**
- * @brief send the content of motd file located in cmd_files. send first RPL_MOTDSTARD RPL_MOTD
- * then end with RPL_ENDOFMOTD. If no file located then ERR_NOMOTD
- */
+
 void Commands::motd_cmd(User *user, IRC *server)
 {
-    #if DEBUG
-        std::cout << RED << "ENTER MOTD CMD" << NC << std::endl;
-    #endif
+#if DEBUG == 1
+    std::cout << "DEBUG: enter motd_cmd" << std::endl;
+#endif
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> reply_params;
 
-    if(!params.empty() && params[0] != server->get_name())
+    if (!params.empty() && params[0] != server->get_name())
     {
         reply_params.push_back(params[0]);
         server->send_rpl("402", user, reply_params, "");
@@ -40,7 +38,7 @@ void Commands::motd_cmd(User *user, IRC *server)
         else
             server->send_rpl("422", user, params, "");
     }
-    #if DEBUG
-        std::cout << RED << "EXIT MOTD CMD" << NC << std::endl;
-    #endif
+#if DEBUG == 1
+    std::cout << RED << "EXIT MOTD CMD" << NC << std::endl;
+#endif
 }

@@ -9,9 +9,6 @@ void    User::ft_split_channels(std::string l, char charset)
 {
     if (l.empty())
     {
-        #if DEBUG
-            std::cout << BLUE << "ERROR: line is empty" << NC << std::endl;
-        #endif
         return ;
     }
     std::string tmp;
@@ -76,9 +73,6 @@ std::vector<std::string>    ft_split(std::string line, std::string charset)
     //Si le charset est null
     if (charset.empty())
     {
-#if DEBUG
-    std::cout << BLUE << "DEBUG: " << "ft_split called but charset is null" << NC << std::endl;
-#endif
         splitted.push_back(line);
         return (splitted);
     }
@@ -98,9 +92,6 @@ std::vector<std::string>    ft_split(std::string line, std::string charset)
             }
             else
             {
-                #if DEBUG
-                    std::cout << BLUE << "DEBUG: " << "1. Splitting adding " << line.substr(pos) << std::endl;
-                #endif
                 splitted.push_back(line.substr(pos));
                 splitted.back().resize(i - pos);
             }
@@ -124,9 +115,6 @@ std::vector<std::string>    old_ft_split(std::string line, std::string charset)
     //Si le charset est null
     if (charset.empty())
     {
-#if DEBUG
-    std::cout << BLUE << "DEBUG: " << "ft_split called but charset is null" << NC << std::endl;
-#endif
         splitted.push_back(line);
         return (splitted);
     }
@@ -141,17 +129,11 @@ std::vector<std::string>    old_ft_split(std::string line, std::string charset)
             //SI on est arrive au \0
             if (i == std::string::npos)
             {
-                #if DEBUG
-                    std::cout << BLUE << "DEBUG: " << "0. Splitting adding " << line.substr(pos) << std::endl;
-                #endif
                 splitted.push_back(line.substr(pos));
                 return (splitted);
             }
             else
             {
-                #if DEBUG
-                    std::cout << BLUE << "DEBUG: " << "1. Splitting adding " << line.substr(pos) << std::endl;
-                #endif
                 splitted.push_back(line.substr(pos));
                 splitted.back().resize(i - pos);
             }

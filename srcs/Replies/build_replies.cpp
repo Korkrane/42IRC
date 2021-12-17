@@ -27,6 +27,58 @@ std::string format_code_str(int code)
     return ToString(code);
 }
 
+//TODO: encore utilise dans la premiere partie de la correction, a revoir 
+std::string build_reply(int code, User *user, std::vector<std::string> params)
+{
+    (void)code;
+    (void)user;
+    std::string code_str;
+    std::string prefix;
+
+    code_str = format_code_str(code);
+    if (user->get_nickname().empty())
+        prefix = ":" + user->get_hostname() + " " + code_str + " * ";
+    else
+        prefix = ":" + user->get_hostname() + " " + code_str + " " + user->get_nickname() + " ";
+    switch (code)
+    {
+    case 1:
+        return prefix + RPL_WELCOME(params[0], params[1], params[2]);
+    case 2:
+        return prefix + RPL_YOURHOST(params[0], "1.0");
+    case 3:
+        return prefix + RPL_CREATED(params[0]);
+    case 4: // TODO remove hardcoded version value
+        return prefix + RPL_MYINFO(params[0], "1.0", USER_VALID_MODES, CHANNEL_VALID_MODES);
+    case 305:
+        return prefix + RPL_UNAWAY();
+    case 306:
+        return prefix + RPL_NOWAWAY();
+    case 351:
+        return prefix + RPL_VERSION(params[0], params[1], params[2], params[3]);
+    case 372:
+        return prefix + RPL_MOTD(params[0]);
+    case 375:
+        return prefix + RPL_MOTDSTART(params[0]);
+    case 376:
+        return prefix + RPL_ENDOFMOTD();
+    case 391:
+        return prefix + RPL_TIME(params[0], params[1]);
+    case 402:
+        return prefix + ERR_NOSUCHSERVER(params[0]);
+    case 421:
+        return prefix + ERR_UNKNOWNCOMMAND(params[0]);
+    case 422:
+        return prefix + ERR_NOMOTD();
+    case 999:
+        return (":" + user->get_hostname() + " " + "PONG" + " " + user->get_hostname() + " :" + user->get_hostname());
+    default:
+        return std::string("");
+    }
+    return std::string("");
+}
+
+
 
 std::string IRC::build_reply(std::string code, User *user, std::vector<std::string> params, std::string command)
 {
@@ -63,8 +115,14 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                 return prefix + RPL_UNAWAY();
             case 306:
                 return prefix + RPL_NOWAWAY();
-            //case 315:
-            //    return prefix + RPL_ENDOFWHO(user->get_name());
+            case 315:
+            {
+                std::string rpl = ":";
+                Channel *channel = this->find_channel(params[0]);
+                rpl += user->get_nickname() + "!" + user->get_nickname() + "@0 315 : ";
+                rpl += channel->get_name() + " :End of WHO list \r\n";
+                return (rpl);
+            }
             case 322:
                 return prefix + RPL_LIST(this->get_name(), params[1]);
             case 323:
@@ -109,7 +167,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                 if (size > 0)
                     rpl += params[0];
                 rpl += " :End of NAMES list\r\n";
-                #if DEBUG
+                #if DEBUG == 1
                 std::cout << rpl << std::endl;
 #endif
                 return (rpl);
@@ -268,7 +326,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             default:
                 return std::string("");
             }
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << PURPLE << "BUILD : REPLY : Error, did not match any case" << std::endl;
             #endif
             return std::string("");
@@ -278,7 +336,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
     {
         if (command.compare("JOIN") == 0)
         {
-            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "0";
             rpl += " " + command + " " + params[0] + "\r\n";
             return rpl;
         }
@@ -286,7 +344,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         {
             std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
             rpl += " " + command + " " + params[0] + " " + params[1] + "\r\n";
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << "Part reply is :" << rpl << NC << std::endl;
             #endif
             return rpl;
@@ -295,7 +353,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         else if (command.compare("TOPIC") == 0)
         {
             unsigned int size = params.size();
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << BLUE << "Size is: " << size << NC << std::endl;
             #endif
             std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
@@ -307,7 +365,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             else
             {
                 rpl += " 332 : ";
-                #if DEBUG
+                #if DEBUG == 1
                     std::cout << "params0 est " << params[0] << std::endl;
                 #endif
                 Channel *chan = this->find_channel(params[0]);
@@ -315,7 +373,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                     rpl += " "+ chan->get_topic() + " ";
                 rpl += "\r\n";
             }
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << "Part reply is :" << rpl << NC << std::endl;
             #endif
             return rpl;
@@ -331,7 +389,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
                     rpl += params[0];
             }
             rpl += " :End of NAMES list\r\n";
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << "Names reply is "<< rpl << std::endl;
             #endif
             return (rpl);
@@ -364,7 +422,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             return rpl;
         }
     }
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << PURPLE << "BUILD : REPLY : Error, did not match any case" << std::endl;
     #endif
     return prefix;

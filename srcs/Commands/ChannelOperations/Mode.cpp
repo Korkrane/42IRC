@@ -146,7 +146,7 @@ void            Commands::mode_user(User *user, IRC *server)
     }
     else if(param_size == 2) //SI TARGET + MODES TO CHANGE
     {
-        #if DEBUG
+        #if DEBUG ==1
             std::cout << PURPLE << "DEBUG: MODE has user target and mode to change" << NC << std::endl;
         #endif
         if(user->get_nickname() == params[0])
@@ -225,7 +225,7 @@ void            Commands::mode_user(User *user, IRC *server)
 
 void            Commands::mode(User *user, IRC *server)
 {
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "ENTER MODE COMMAND" << NC << std::endl;
     #endif
     std::vector<std::string> params = user->get_params();
@@ -242,7 +242,7 @@ void            Commands::mode(User *user, IRC *server)
         reply_params.push_back(params[0]);
         server->send_rpl("401", user, reply_params, ""); //ERR_NOSUCHNICK
     }
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "EXIT MODE COMMAND" << NC << std::endl;
     #endif
 }

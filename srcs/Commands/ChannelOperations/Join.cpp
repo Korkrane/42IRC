@@ -2,12 +2,12 @@
 
 /**
  * @brief Permet de verifier et/ou rectifier la coherence du role d'un user
- * 
- * @param chan 
- * @param user 
- * @param added 
+ *
+ * @param chan
+ * @param user
+ * @param added
  */
-void    Commands::check_roles(Channel *chan, User *user, bool added)
+void Commands::check_roles(Channel *chan, User *user, bool added)
 {
     (void)added;
     if (chan->is_channel_owner(user) == true && chan->user_is_operator(user) == false)
@@ -15,7 +15,7 @@ void    Commands::check_roles(Channel *chan, User *user, bool added)
     //ne devrait pas arriver
     if (chan->is_channel_owner(user) == true && chan->user_is_member(user) == false)
         chan->newMember(user, false);
-    return ;
+    return;
 }
 
 bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> params)
@@ -23,7 +23,7 @@ bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> para
     bool res = true;
     int size = params.size();
     if (size < 1)
-        return (res);//Signifie qu'il n'y a pas de key
+        return (res); //Signifie qu'il n'y a pas de key
     bool has_key = channel->get_has_key();
     std::string key = channel->get_key();
     std::string candidate_key = params.front();
@@ -34,24 +34,14 @@ bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> para
 
 void Commands::join(User *user, IRC *server)
 {
-    std::vector<std::string>    params = user->get_params();
-    std::vector<std::string>    error;
-    std::string                 channel;
-    std::string                 opt_key = "";
+    std::vector<std::string> params = user->get_params();
+    std::vector<std::string> error;
+    std::string channel;
+    std::string opt_key = "";
 
     //Va permettre de gerer le cas ou il y a plusieurs channels
     get_channel_targets(user, server);
     get_key_targets(user, server);
-
-    /*
-    #if DEBUG
-        std::cout << "PRINTING SPLITTED CHANNELS" << std::endl;
-        display_vector_string(user->_splitted_channels);
-        std::cout << "PRINTING SPLITTED ARGS" << std::endl;
-        display_vector_string(user->_splitted_args);
-        std::cout << NC << std::endl;
-    #endif
-    */
 
     //Si il n'y a pas de param
     if (user->get_params_size() < 1)
@@ -71,12 +61,6 @@ void Commands::join(User *user, IRC *server)
             //Si l'element dans le vecteur a cette position n est pas nul
             if (!user->_splitted_channels.empty() && index < comp && !user->_splitted_channels[index].empty())
                 opt_key = user->_splitted_args[index];
-            /*
-            #if DEBUG
-                std::cout << BLUE << "channel " << channel << std::endl;
-                std::cout << BLUE << "opt key " << opt_key << std::endl;
-            #endif
-            */
 
             //On verifie que le parametre peut correspondre a un nom de channel valide
             if (!channel.empty() && is_correct_channel_name(channel) == false)
@@ -104,10 +88,7 @@ void Commands::join(User *user, IRC *server)
             //Cas ou on passe une cle en argument alors que le mode n est pas active
             if (should_ignore_key(chan, params) == true)
             {
-                #if DEBUG
-                    std::cout << BLUE << "Even if there is a key mentionend we should ignored it" << NC << std::endl;
-                #endif
-                //Il y a une cle mais ce n est pas la bonne 
+                //Il y a une cle mais ce n est pas la bonne
                 if (chan->is_correct_channel_key(opt_key) == false)
                 {
                     error.push_back(channel);
@@ -137,31 +118,54 @@ void Commands::join(User *user, IRC *server)
     //Clean
     user->_splitted_args.clear();
     user->_splitted_channels.clear();
-    return ;
+    return;
 }
 
-void    Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
+void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
 {
-    #if DEBUG
-        std::cout << GREEN << "user joins function called." << NC << std::endl;
-    #endif
+#if MALATINI
+    std::cout << BLUE << "user_joins called" << NC << std::endl;
+#endif
     //si oui, rajouter au channel
     user->be_added_to_channel(chan);
 
     //On l'ajoute a sa liste
     user->add_channel_to_list(chan);
-    
-    //Verification de la coherence des roles 
+
+    //Verification de la coherence des roles
     check_roles(chan, user, true);
 
     //On prepare et envoie la reponse du serveur
     std::vector<std::string> chan_vec;
     chan_vec.push_back(user->_splitted_channels[index]);
-    server->send_rpl_to_all_members("", chan->get_members(), chan_vec, "JOIN");//user->_splitted_channels
+    std::vector<User *> users;
+    users.push_back(user);
+    server->send_rpl_to_all_members("", users, chan_vec, "JOIN"); //user->_splitted_channels
     chan_vec.clear();
+    //user->_splitted_args.clear();
+    //user->_splitted_channels.clear();
 
-    //TODO: a rajouter topic
-    //server->send_rpl("", user, error, "TOPIC");
-    //TODO: a rajouer names
-    //server->send_rpl("", user, error, "NAMES");
+    //Equivalent appel de names
+    user->_target_channel = chan;
+
+    std::string success_rpl_1;
+    success_rpl_1 = ":127.0.0.1 353 " + user->get_nickname() + " = " + chan->get_name() + " :";
+    if (chan->user_is_operator(user) == true)
+    {
+        success_rpl_1 += "@";
+        //TODO:: changer operateur pour n en avoir qu un seul? et pas un vector
+        User *ope = chan->get_operators().front();
+        std::string operator_name = ope->get_nickname();
+        success_rpl_1 += operator_name + "\r\n";
+    }
+#if MALATINI
+    std::cout << GREEN << success_rpl_1 << NC << std::endl;
+#endif
+    server->_response_queue.push_back(std::make_pair(user->get_fd(), success_rpl_1));
+    server->send_rpl("366", user, user->get_params(), "");
+    //topic(user, server);
+    //names(user, server);
+    user->_target_channel = chan;
+    who(user, server);
+    //user->_target_channel = NULL;
 }

@@ -35,7 +35,10 @@ public:
 	static void version_cmd(User *user, IRC *server);
 	static void pass(User *user, IRC *server);
 	static void kill(User *user, IRC *server);
+
 	static void who(User *user, IRC *server);
+	static int who_match_user(User *user, IRC *server);
+
 	static void oper(User *user, IRC *server);
 	static void die(User *user, IRC *server);
 
@@ -47,7 +50,7 @@ public:
 	static void displayClientsFromChannel(Channel *channel, User *client);
 	static void paramsIsCorrectChannel(Commands *command, IRC *server);
 	static void paramsIsCorrectOther(Commands *command, IRC *server);
-	static std::string whoHelpParameter(void);
+	static std::string whoHelpParameter(void);//TODO: supprimer si pas utilisee ? 
 	void displayMode(void) const;
 
 	static void join(User *user, IRC *server);
@@ -88,7 +91,7 @@ public:
 	static Channel *find_target_channel(std::string target_channel, User *user, IRC *server);
 
 	static void names(User *user, IRC *server);
-	static void send_members_nick(User *user, Channel *channel, IRC *server);
+	static void send_members_nick(User *user, Channel *channel, IRC *server, std::string code);
 	//static void send_names_message(Channel *channel, User *user, IRC *server);
 
 	static void privmsg(User *user, IRC *server);

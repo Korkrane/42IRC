@@ -71,7 +71,6 @@ void Server::acceptClient()
 		return;
 	}
 	std::cout << "New client on socket #" << clientFD << '\n';
-
 	_clients.insert(std::make_pair(clientFD, new Client(clientFD)));
 	//_irc->fds.push_back(clientFD);	// FOR TESTING
 }
@@ -159,7 +158,7 @@ void Server::recvProcessCommand(int totalFD, std::vector<t_clientCmd> &responseQ
 					removeClient(s);
 				else if (!cmd.empty())
 				{
-#if DEBUG
+#if DEBUG == 1
 					std::cout << BLUE << "DEBUG: Server has to process command" << NC << std::endl;
 #endif
 					_irc->process_command(std::make_pair(s, cmd), responseQueue, disconnectList);

@@ -47,6 +47,7 @@ public:
 	virtual ~User();
 
 	/*** VARIABLES ***/
+	Channel *_target_channel;
 	std::vector<std::string> _params;
 	std::vector<std::string> _splitted_channels; //A clear a chaque commande comme le parsint
 	std::vector<std::string> _splitted_args;

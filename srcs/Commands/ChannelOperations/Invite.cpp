@@ -27,7 +27,7 @@ Channel *Commands::find_target_channel(std::string target_channel, User *user, I
             return (*it);
         it++;
     }
-#if DEBUG
+#if DEBUG == 1
     std::cout << BLUE << "DEBUG: "
               << "did not find target_nick" << std::endl;
 #endif
@@ -60,7 +60,7 @@ User *Commands::find_target_nick(std::string target_nick, User *user, IRC *serve
             return (*it);
         it++;
     }
-#if DEBUG
+#if DEBUG == 1
     std::cout << BLUE << "DEBUG: "
               << "did not find target_nick" << std::endl;
 #endif
@@ -86,7 +86,7 @@ void Commands::invite(User *user, IRC *server)
     //1. Verifier le nombre d'argument
     if (user->get_params_size() != 2)
     {
-#if DEBUG
+#if DEBUG == 1
         std::cout << BLUE << "DEBUG: "
                   << "Invite command incorrect params size" << std::endl;
 #endif

@@ -2,7 +2,7 @@
 
 Channel::Channel(std::string name, User *user) : _name(name), _prefix(name[0]), _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _channel_owner(user), _key(""), _has_key(false), _members_nb(0), _operators_nb(0) //Attention a incrementer les deux derniers
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << "Channel constructor called" << std::endl;
 #endif
 	this->set_owner(user);
@@ -38,7 +38,7 @@ void Channel::set_mode_sign(char c)
 
 Channel::~Channel(void)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << "Channel desconstructor called" << std::endl;
 #endif
 	///TODO: Attention verifier pas de leaks
@@ -49,7 +49,7 @@ Channel::~Channel(void)
 void Channel::set_name(std::string name)
 {
 	this->_name = name;
-#if DEBUG
+#if DEBUG == 1
 	std::cout << "name has been set to " << name << std::endl;
 #endif
 }
@@ -58,17 +58,11 @@ void Channel::set_topic(std::string topic)
 {
 	this->_topic = topic;
 	this->_has_topic = true;
-#if DEBUG
-	std::cout << "topic has been set to " << topic << std::endl;
-#endif
 }
 
 void Channel::set_modes(std::string modes)
 {
 	this->_modes = modes;
-#if DEBUG
-	std::cout << "modes has been set to " << modes << std::endl;
-#endif
 }
 
 /*** GETTERS ***/
@@ -117,15 +111,9 @@ bool Channel::user_is_operator(User *user)
 		nick_name = (*it)->get_nickname();
 		if (nick_name == user->get_nickname())
 		{
-#if DEBUG
-			std::cout << "user " << nick_name << " is operator" << std::endl;
-#endif
 			return (true);
 		}
 	}
-#if DEBUG
-	std::cout << "user " << nick_name << "isn't operator" << std::endl;
-#endif
 	return (false);
 }
 
@@ -140,22 +128,15 @@ bool Channel::user_is_member(User *user)
 		nick_name = (*it)->get_nickname();
 		if (nick_name == user->get_nickname())
 		{
-#if DEBUG
-			std::cout << "user " << nick_name << " is member of the channel" << std::endl;
-#endif
 			return (true);
 		}
 		it++;
 	}
-#if DEBUG
-	std::cout << "user " << nick_name << "isn't member of the channel" << std::endl;
-#endif
 	return (false);
 }
 
 bool Channel::user_is_owner(User *user)
 {
-	std::cout << "ENTER IN USER IS OWNER" << std::endl;
 	if (user->get_nickname().compare(this->_channel_owner->get_nickname()) == 0)
 	{
 #if DEBUG
@@ -163,37 +144,8 @@ bool Channel::user_is_owner(User *user)
 #endif
 		return (true);
 	}
-#if DEBUG
-	std::cout << "The user " << user->get_nickname() << "isn't owner of the channel" << std::endl;
-#endif
 	return (false);
 }
-
-/*
-bool Channel::isNicknameUnique(User *user)
-{
-	if (!user)
-		return (false);
-	std::vector<User *>::iterator it = this->_users.begin();
-	std::vector<User *>::iterator ite = this->_users.end();
-	std::string nickName;
-
-	while (it != ite)
-	{
-		if ((*it)->get_nickname() == (*ite)->get_nickname())
-		{
-#if DEBUG
-			std::cout << "Nickname is already being used" << std::endl;
-#endif
-			return (false);
-		}
-	}
-#if DEBUG
-	std::cout << "isNicknameUnique is returning true" << std::endl;
-#endif
-	return (true);
-}
-*/
 
 void Channel::newMember(User *user, bool user_operator)
 {
@@ -211,9 +163,6 @@ void Channel::newMember(User *user, bool user_operator)
 	this->_members_nb++;
 	if (user_operator == true)
 		newOperator(user);
-#if DEBUG
-	std::cout << "new Member function ok " << NC << std::endl;
-#endif
 	return;
 }
 
@@ -251,9 +200,6 @@ void Channel::delete_operator(User *user)
 		}
 		it++;
 	}
-#if DEBUG
-	std::cout << "member was not succesfully deleted from operators." << std::endl;
-#endif
 }
 
 void Channel::deleteMember(User *user)
@@ -265,16 +211,15 @@ void Channel::deleteMember(User *user)
 	{
 		if ((*it)->get_nickname() == user->get_nickname())
 		{
+#if DEBUG == 1
 			std::cout << "test" << std::endl;
+#endif
 			this->_users.erase(it);
 			this->_members_nb--;
 			return;
 		}
 		it++;
 	}
-#if DEBUG
-	std::cout << "Users was not found, enable to delete the Users passed in argument" << std::endl;
-#endif
 }
 
 void Channel::removeFromOperators(User *user)
@@ -295,15 +240,9 @@ void Channel::removeFromOperators(User *user)
 		if ((*it)->get_nickname() == (*ite)->get_nickname())
 		{
 			this->_operators.erase(it);
-#if DEBUG
-			std::cout << (*it)->get_nickname() << " has been successfully removed from operators." << std::endl;
 			return;
-#endif
 		}
 	}
-#if DEBUG
-	std::cout << "user wad not successfully removed from operators" << std::endl;
-#endif
 	return;
 }
 
@@ -327,9 +266,6 @@ bool Channel::channelHasUsers(void)
 	std::vector<User *>::iterator it = this->_users.begin();
 	if (!(*it))
 		return (false);
-#if debug
-	std::cout << "Channel has " << this->get_members_nb() << " members" << std::endl;
-#endif
 	return (true);
 }
 
@@ -414,26 +350,15 @@ bool is_correct_channel_name(std::string target_name)
 	while (i < length)
 	{
 		if (forbidden.find(target_name[1]) != std::string::npos)
-		{
-#if DEBUG
-			std::cout << "is correct channel name will return false." << std::endl;
-#endif
 			return (false);
-		}
 		i++;
 	}
-#if DEBUG
-	std::cout << "is correct channel name will return true." << std::endl;
-#endif
 	return (true);
 }
 
 bool Channel::get_handle_modes(void)
 {
 	bool res = this->_handle_modes;
-#if DEBUG
-	std::cout << BLUE << "DEBUG: CHANNEL: does the channel handle modes ? " << res << NC << std::endl;
-#endif
 	return (res);
 }
 
@@ -503,9 +428,6 @@ void Channel::set_channel_prefix(void)
 	std::string name = this->get_name();
 	char prefix = name[0];
 	this->_prefix = prefix;
-#if DEBUG
-	std::cout << BLUE << "DEBUG: CHANNEL: Prefix has been set to " << prefix << NC << std::endl;
-#endif
 	return;
 }
 
@@ -513,9 +435,6 @@ char Channel::get_channel_prefix(void) const
 {
 	std::string name = this->get_name();
 	char prefix = name[0];
-#if DEBUG
-	std::cout << BLUE << "DEBUG: CHANNEL: Prefix is " << prefix << std::endl;
-#endif
 	return (prefix);
 }
 
@@ -536,12 +455,7 @@ bool Channel::check_channel_modes(std::string target_modes)
 	while (i < len)
 	{
 		if (allowed.find(target_modes[i]) == std::string::npos)
-		{
-#if DEBUG
-			std::cout << BLUE << "DEBUG: CHANNEL: Find invalid char when checking modes string: " << target_modes[i] << NC << std::endl;
-#endif
 			return (false);
-		}
 		i++;
 	}
 	return (true);
@@ -559,9 +473,6 @@ std::string Channel::get_unknown_mode(std::string target_modes)
 	{
 		if (allowed.find(target_modes[i]) == std::string::npos)
 		{
-#if DEBUG
-			std::cout << BLUE << "DEBUG: CHANNEL: Invalid char mode: " << target_modes[i] << NC << std::endl;
-#endif
 			error = target_modes[i];
 			return (error);
 		}
@@ -629,9 +540,6 @@ void Channel::unset_has_key(void)
 void Channel::set_key(std::string key)
 {
 	this->_key = key;
-#if DEBUG
-	std::cout << BLUE << "DEBUG: key has been set to " << key << std::endl;
-#endif
 }
 
 void Channel::drop_key(void)
@@ -658,9 +566,6 @@ void Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
 		it++;
 	}
 	this->_topic = str_topic;
-#if DEBUG
-	std::cout << "Topic has been set to set: " << this->_topic << std::endl;
-#endif
 }
 
 void Channel::clear_topic(User *user, IRC *server, std::vector<std::string> topic)
@@ -695,8 +600,5 @@ void Channel::displayMode(void)
 std::string Channel::get_key(void)
 {
 	std::string key = this->_key;
-#if DEBUG
-	std::cout << PURPLE << "DEBUG : CHANNEL: the correct key is " << key << NC << std::endl;
-#endif
 	return (key);
 }

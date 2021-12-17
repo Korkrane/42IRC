@@ -26,7 +26,7 @@ void Commands::send_kick_message(Channel *channel, User *user, IRC *server, std:
         it++;
     }
     rpl += "\r\n";
-#if DEBUG
+#if DEBUG == 1
     std::cout << BLUE << "DEBUG: "
               << "KICK: message will be " << rpl << std::endl;
 #endif

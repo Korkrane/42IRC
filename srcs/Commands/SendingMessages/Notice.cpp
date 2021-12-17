@@ -2,7 +2,7 @@
 
 void Commands::notice(User *user, IRC *server)
 {
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "ENTER NOTICE CMD" << NC << std::endl;
     #endif
     std::vector<std::string> params = user->get_params();
@@ -30,7 +30,7 @@ void Commands::notice(User *user, IRC *server)
         Channel *targetchannel = server->get_channel_ptr((*it));
         if(!targetuser && !targetchannel) //si il n'existe pas de channel ou d'user à ce nom
         {
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << PURPLE << "DEBUG: Target doesnt exist" << NC << std::endl;
             #endif
             std::vector<std::string> reply_params;
@@ -39,7 +39,7 @@ void Commands::notice(User *user, IRC *server)
         }
         else if(targetuser && !targetchannel) //si le recipient est un user
         {
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << PURPLE << "DEBUG: Target is a user" << NC << std::endl;
             #endif
             std::vector<std::string> reply_params;
@@ -53,7 +53,7 @@ void Commands::notice(User *user, IRC *server)
         }
         else if(!targetuser && targetchannel) //si le recipient est un channel
         {
-            #if DEBUG
+            #if DEBUG == 1
                 std::cout << BLUE << "DEBUG: Target is a channel" << NC << std::endl;
             #endif
             std::vector<std::string> reply_params;
@@ -80,7 +80,7 @@ void Commands::notice(User *user, IRC *server)
             server->send_rpl_to_all_members("1001", users_execept_sender, reply_params, "NOTICE");
         }
     }
-    #if DEBUG
+    #if DEBUG == 1
         std::cout << RED << "EXIT NOTICE CMD" << NC << std::endl;
     #endif
 }

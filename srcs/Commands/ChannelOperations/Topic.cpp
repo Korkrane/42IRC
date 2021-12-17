@@ -48,22 +48,15 @@ void Commands::topic(User *user, IRC *server)
     else if (size > 1 && params[1].compare(":") == false)
     {
         chan->clear_topic(user, server, topic);
-        #if DEBUG
-            std::cout << "TOPIC has been cleared." << std::endl;
-        #endif
     }
     else if (size > 1)
     {
         chan->set_topic(user, server, params);
-         #if DEBUG
-            std::cout << "TOPIC has been set to " << chan->get_topic() << std::endl;
-        #endif
     }
     else
     {
-        #if DEBUG
-            std::cout << PURPLE << "Topic is not going to be edited." << std::endl;
-        #endif
+        //TODO: voir quoi faire ?
+        ;
     }
     server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
     return;
