@@ -1,6 +1,6 @@
 #include <IRC.hpp>
 
-//TODO: a revoir (segfault) + codes a implementer
+//TODO: a revoir ou supprimer
 int    Commands::who_match_user(User *user, IRC *server)
 {
     (void)user;
@@ -69,7 +69,10 @@ void    Commands::who(User *user, IRC *server)
         //Ajouter la string end of who au vecteur
         //On va devoir envoyer toutes les string du vecteur
         //Je vais implementer la 315 directement ici, a supprimer de server->build_rpl
-        tmp += user->get_nickname() + "!" + user->get_username() + "@0";
+        tmp += user->get_nickname() + "!" + user->get_username() + "@0 315 : ";
+        tmp += channel->get_name() + " :End of WHO list";
+        //Je reboucle pour les envoyer une par une
+        it = users.begin();
     }
     else
     {
