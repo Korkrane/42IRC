@@ -1,41 +1,48 @@
 #include <IRC.hpp>
 
-//TODO: A remettre dans build_rpl ?
-//On va afficher tous les users sauf lui
-void Commands::send_members_nick(User *user, Channel *channel, IRC *server, std::string code)
+/**
+ * @brief Va servir notamment (voir exclusivement) A NAMES pour envoyer la liste
+ * des utilisteurs en indiquant leurs roles. La commande names constitue une seule 
+ * ligne contrairement a la commande WHO. 
+ * @param user 
+ * @param channel 
+ * @param server 
+ * @param code 
+ */
+void Commands::send_members_nick(User *user, Channel *channel, IRC *server)
 {
-    (void)user;
-    (void)server;
-
+    //On va boucler sur tous les membres de la channel 
     std::vector<User *> members = channel->get_members();
     std::vector<User *>::iterator it = members.begin();
     std::vector<User *>::iterator ite = members.end();
 
     std::string rpl;
+    User *oper = channel->get_operators().front();
 
-    rpl = ":127.0.0.1 " + code + " " + user->get_nickname();
+    rpl = ":127.0.0.1 353 " + user->get_nickname();
     rpl += " = " + channel->get_name() + " :";
+    rpl += "@"+ oper->get_nickname() + " ";
+
     while (it != ite)
     {
-        /*
-        if ((*it)->get_nickname() == user->get_nickname())
+        //Pour l'instant on ne gere qu'un seul operateur
+        if ((*it) != oper)
         {
-            it++;
-            continue;
+            rpl += (*it)->get_nickname() + " ";
         }
-        */
-        if (channel->user_is_operator(*it) == true)
-        {
-            rpl += "@";
-        }
-        rpl += (*it)->get_nickname() + " ";
         it++;
     }
     rpl += "\r\n";
-#if MALATINI == 1
-    std::cout << GREEN << "response will be : " << rpl << std::endl;
-#endif
     server->_response_queue.push_back(std::make_pair(user->get_fd(), rpl));
+#if MALATINI
+    std::cout << GREEN << rpl<< NC << std::endl;
+    std::cout << GREEN << "Join rpl sent to socket : " << user->get_fd() << std::endl;
+#endif
+    server->send_rpl("366", user, user->get_params(), "");//ENDOFNAMES
+#if MALATINI
+    std::cout << GREEN << rpl << NC << std::endl;
+    std::cout << GREEN << "Join rpl sent to socket : " << user->get_fd() << std::endl;
+#endif 
     return;
 }
 
@@ -44,52 +51,38 @@ void Commands::send_members_nick(User *user, Channel *channel, IRC *server, std:
  *
  * @param client
  * @param server
+ * TODO: a revoir, tester
  */
 void Commands::names(User *user, IRC *server)
 {
-    //Names appele automatiquement par les autres commandes fructueuses
-    if (!user->_target_channel)
-    {
-        send_members_nick(user, user->_target_channel, server, "353");
-        server->send_rpl("366", user, user->get_params(), "");
-        user->_target_channel = NULL;
-        return;
-    }
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
     unsigned int size = params.size();
-    std::string channel;
-
-    if (size > 0)
-        channel = params[0];
-    else
+    if (size == 0)
     {
         error.push_back(user->get_command_name());
         return (return_error("461", user, server, error, NULL)); //NEED MORE PARAMS
     }
-    Channel *chan = NULL;
-    //On va juste retourner rpl mais pas d'erreur
     get_channel_targets(user, server);
-    std::vector<std::string>::iterator it = user->_splitted_channels.begin();
-    std::vector<std::string>::iterator ite = user->_splitted_channels.end();
-    int pos = 0;
-    while (it != ite)
+    if (channel)
     {
-        chan = server->find_channel((*it));
-        if (chan)
-        {
-            //TODO: verifier le code
-            send_members_nick(user, chan, server, "353");
-            server->send_rpl("366", user, params, "");
-        }
-        else
-        {
-            //server->send_rpl("366", user, params, (*it));//End of names
-            ;
-        }
-        pos++;
-        it++;
+        #if MALATINI == 1 
+            std::cout << YELLOW << "Success ! Names will send the names of the users in the channel." << NC << std::endl;
+        #endif
+        send_members_nick(user, channel, server);
     }
-    user->_splitted_channels.clear();
+    //TODO: revoir les autres cas de NAMES si il ne s agit pas d'une CHANNEL
+    else
+    {
+        /*
+        #if MALATINI == 1
+            std::cout << RED << "Error: the target channel seems to be wrong." << NC << std::endl;
+        #endif
+        std::string chan;
+        if (size > 0)
+            chan = params[0];
+        */
+        return ;
+    }
     return;
 }

@@ -145,20 +145,13 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
 #endif
     server->send_rpl_to_all_members("", users, chan_vec, "JOIN"); //user->_splitted_channels
     chan_vec.clear();
-
+    
     //Equivalent NAMES (comme si on avait passe la channel en parametre)
     user->_target_channel = chan;
-
     std::string success_rpl_1;
-
-    //reponse 353 on affiche le users en indiquqnt leur role la suite
-
     success_rpl_1 = ":127.0.0.1 353 " + user->get_nickname() + " = " + chan->get_name() + " :";
     //On va d'abord afficher l'operateur
     User *op = chan->get_operators().front();
-#if MALATINI
-    std::cout << RED << "The operator is " << op->get_nickname() << NC << std::endl;
-#endif
     success_rpl_1 += "@";
     std::string operator_name = op->get_nickname();
     success_rpl_1 += operator_name + " ";
@@ -167,13 +160,8 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     if (user != op)
         success_rpl_1 += user->get_nickname();
     success_rpl_1 += "\r\n";
-#if MALATINI
-    std::cout << GREEN << success_rpl_1 << NC << std::endl;
-    std::cout << GREEN << "Join rpl sent to socket : " << user->get_fd() << std::endl;
-#endif
-    server->_response_queue.push_back(std::make_pair(user->get_fd(), success_rpl_1));
+    names(user, server, chan);
     server->send_rpl("366", user, user->get_params(), "");//ENDOFNAMES 
-
     //352 WHO - appelee par le client 
 }
 
