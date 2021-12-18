@@ -417,6 +417,15 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             rpl += " " + command + " " + params[3] + " " + params[4] + "\r\n";
             return rpl;
         }
+        else if (command == "KICK")
+        {
+            std::cout << GREEN << "build kick reply" << NC << std::endl;
+            std::string rpl;
+
+            rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
+            rpl += " " + command + " " + params[3] + " " + params[4] + " " + params[5] + "\r\n";
+            return rpl;
+        }
         else if (command == "MODE_USER")
         {
             std::cout << GREEN << "build mode reply" << NC << std::endl;

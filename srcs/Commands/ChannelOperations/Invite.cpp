@@ -44,7 +44,7 @@ void Commands::invite(User *user, IRC *server)
 			reply_params.push_back(params[1]);
 			server->send_rpl("443", user, reply_params, "");
 		}
-		else
+		else //VALID REQUEST
 		{
 			reply_params.push_back(target_user->get_nickname());
 			reply_params.push_back(chan->get_name());
