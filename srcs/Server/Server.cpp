@@ -37,9 +37,11 @@ void Server::SetUp(IRC *irc)
 
 	// Set options for socket
 	int opt = 1;
+	(void)opt;
+	#ifdef __linux__
 	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int)) == -1)
 		SERVER_ERR("setsockopt");
-
+	#endif
 	// Bind socket to port
 	sockaddr_in sin;
 	sin.sin_family = AF_INET;
