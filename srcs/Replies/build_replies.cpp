@@ -422,8 +422,5 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             return rpl;
         }
     }
-    #if DEBUG == 1
-        std::cout << PURPLE << "BUILD : REPLY : Error, did not match any case" << std::endl;
-    #endif
     return prefix;
 }

@@ -145,10 +145,8 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
 #endif
     server->send_rpl_to_all_members("", users, chan_vec, "JOIN"); //user->_splitted_channels
     chan_vec.clear();
-    //user->_splitted_args.clear();
-    //user->_splitted_channels.clear();
 
-    //Equivalent appel de names
+    //Equivalent NAMES (comme si on avait passe la channel en parametre)
     user->_target_channel = chan;
 
     std::string success_rpl_1;
@@ -171,14 +169,18 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     success_rpl_1 += "\r\n";
 #if MALATINI
     std::cout << GREEN << success_rpl_1 << NC << std::endl;
+    std::cout << GREEN << "Join rpl sent to socket : " << user->get_fd() << std::endl;
 #endif
-    //End of names qui suit 353
     server->_response_queue.push_back(std::make_pair(user->get_fd(), success_rpl_1));
-    server->send_rpl("366", user, user->get_params(), "");
-    //topic(user, server);
-    //names(user, server);
-    user->_target_channel = chan;
-    //352 WHO
-    //ho(user, server);
-    //user->_target_channel = NULL;
+    server->send_rpl("366", user, user->get_params(), "");//ENDOFNAMES 
+
+    //352 WHO - appelee par le client 
+}
+
+//Trash pour join mais names devrait fonctionner comme ca de toute facon
+void    Commands::trash_names(User *user, IRC *server)
+{
+    (void)user;
+    (void)server;
+    return ;
 }

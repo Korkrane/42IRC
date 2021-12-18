@@ -71,7 +71,7 @@ CC			= clang++
 
 FLAGS		= -D DEBUG=0 -Wall -Wextra -Werror -std=c++98 -g3 #-fsanitize=address -DDEBUG
 
-EXTRA_MA 	= -DMALATINI
+EXTRA_MA 	= -D MALATINI=1
 
 RM			= rm -f
 
