@@ -41,13 +41,14 @@ private:
 	std::string _prefix;
 	std::string _command;
 
+	Channel *_target_channel;
+
 public:
 	User(void);
 	User(int fd);
 	virtual ~User();
 
 	/*** VARIABLES ***/
-	Channel *_target_channel;
 	std::vector<std::string> _params;
 	std::vector<std::string> _splitted_channels; //A clear a chaque commande comme le parsint
 	std::vector<std::string> _splitted_args;
@@ -55,6 +56,7 @@ public:
 	bool _to_delete;
 
 	/*** GETTERS ***/
+	Channel *get_target_channel(void) const;
 	std::string get_nickname(void) const;
 	std::string get_username(void) const;
 	std::string get_realname(void) const;
@@ -80,6 +82,7 @@ public:
 	std::vector<std::string> user_commands(void) const;
 
 	/*** SETTERS ***/
+	void set_target_channel(Channel *channel);
 	void set_fd(int fd);
 	void set_nickname(std::string nickname);
 	void set_username(std::string username);

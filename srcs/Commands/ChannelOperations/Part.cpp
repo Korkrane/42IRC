@@ -1,5 +1,7 @@
 #include <IRC.hpp>
 
+//TODO: attention dans part si l operateur part il faut qu un autre user soit nomme operateur
+
 void Commands::part(User *user, IRC *server)
 {
   //Preparation du serveur d'arguments en cas d'ereur

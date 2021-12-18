@@ -98,26 +98,12 @@ public:
 
     void                delete_operator(User *user);
     void                delete_owner();
-    //TODO
-    //Ajouter une fonction qui permet d'ajouter un mode
-    //Ajouter une fonction qui permet d'enlever un mode
-    //verifier si j incremente bien le nombre d operateurs
-    //TODO: verifier que j ai bien enregistre le prefix via tous les constructeurs
-    //ajouter des sous fonctions dans le destructeur pour vider les vecteurs
-    //TODO: revoir la notion de channel owner ?
-    //TODO: verifier a chaque fois qu'on appel mode que la fonction peut handler des modes
-    //TODO: verifier quelles sont les particularites des channels en fonction des prefix
-    //TODO: verifier que le get members fd est correcte ?
-    //TODO: Attention si l operateur et/ou channel owner par il faut qu une autre personne soit designee
-    //TODO: ameliorer le destructeur pour etre sur qu on oublie rien (pas de leaks)
-    //TODO:
-    void    set_owner(User *user);
-    User    *get_owner(void);
+    void                set_owner(User *user);
+    User                *get_owner(void);
     //void    addChannelOwner(User *user);
-    bool    is_channel_owner(User *user);
+    bool                is_channel_owner(User *user);
 };
 
-//Utils to display - overloading
 std::ostream &operator<<(std::ostream COUT, Channel *channel);
-//TODO: A remettre en membre
+//TODO: A remettre en membre ?
 bool                    is_correct_channel_name(std::string target_name);
