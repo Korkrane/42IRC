@@ -28,7 +28,6 @@ NAMES		=	main.cpp \
 				Commands/ServerQueries/Time.cpp \
 				Commands/ServerQueries/Kill.cpp \
 				Commands/Other/Unknown.cpp \
-				Commands/OptionalFeatures/Users.cpp \
 				Commands/OptionalFeatures/Away.cpp \
 				Commands/OptionalFeatures/Die.cpp \
 				Commands/ServerQueries/Version.cpp \

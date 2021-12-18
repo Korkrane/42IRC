@@ -11,6 +11,9 @@
  */
 void Commands::send_members_nick(User *user, IRC *server)
 {
+#if MALATINI == 1
+    std::cout << RED << "SEND MEMBERS NICK CALLED " << std::endl;
+#endif
     Channel *channel = user->get_target_channel();
     //On va boucler sur tous les membres de la channel 
     std::vector<User *> members = channel->get_members();
@@ -24,7 +27,7 @@ void Commands::send_members_nick(User *user, IRC *server)
     rpl += " = " + channel->get_name() + " :";
     rpl += "@"+ oper->get_nickname() + " ";
 
-    
+    //unsigned int i = 0;
     while (it != ite)
     {
         //Pour l'instant on ne gere qu'un seul operateur
@@ -40,9 +43,14 @@ void Commands::send_members_nick(User *user, IRC *server)
     std::cout << GREEN << rpl<< NC << std::endl;
     std::cout << GREEN << "Join rpl sent to socket : " << user->get_fd() << std::endl;
 #endif
-    server->send_rpl("366", user, user->get_params(), "");//ENDOFNAMES
+    //server->send_rpl("366", user, user->get_params(), "");//ENDOFNAMES
+
+    //ENDOFNAMES
+    std::string end;
+    end = ":127.0.0.1 366 " + user->get_nickname() + " " + channel->get_name() + " :End of NAMES list\r\n";
+    server->_response_queue.push_back(std::make_pair(user->get_fd(), end));
 #if MALATINI
-    std::cout << GREEN << rpl << NC << std::endl;
+    std::cout << GREEN << end << NC << std::endl;
     std::cout << GREEN << "Join rpl sent to socket : " << user->get_fd() << std::endl;
 #endif
     return;
@@ -57,6 +65,9 @@ void Commands::send_members_nick(User *user, IRC *server)
  */
 void Commands::names(User *user, IRC *server)
 {
+#if MALATINI == 1
+    std::cout << RED << "Names command invoked." << std::endl;
+#endif
     Channel *channel = user->get_target_channel();
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
@@ -77,14 +88,10 @@ void Commands::names(User *user, IRC *server)
     //TODO: revoir les autres cas de NAMES si il ne s agit pas d'une CHANNEL
     else
     {
-        /*
+        /* */
         #if MALATINI == 1
-            std::cout << RED << "Error: the target channel seems to be wrong." << NC << std::endl;
+            std::cout << RED << "Error names: the target channel seems to be wrong." << NC << std::endl;
         #endif
-        std::string chan;
-        if (size > 0)
-            chan = params[0];
-        */
         return ;
     }
     return;

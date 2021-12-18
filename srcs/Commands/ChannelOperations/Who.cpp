@@ -32,9 +32,6 @@ void    Commands::who(User *user, IRC *server)
     std::string tmp = "";
     Channel *channel = user->get_target_channel();
     std::string channel_name = channel->get_name();
-    #if MALATINI
-        std::cout << RED << "HERE" << NC << std::endl;
-    #endif
     std::vector<User *> users;
 
     if (channel)
@@ -44,41 +41,63 @@ void    Commands::who(User *user, IRC *server)
             std::cout << BLUE << "The number of members is " << nb << NC << std::endl; 
         #endif
         //On va toujours noter l user qui a fait la requete ici
-        prefix = "127.0.0.1 352 " + user->get_nickname();
+        prefix = ":127.0.0.1 352 " + user->get_nickname();
         channel_name = channel->get_name();
         
+        /*
         users = channel->get_members();
         //Pour chaque user je vais creer la reponse
         std::vector<User *>::iterator it = users.begin();
         std::vector<User *>::iterator ite = users.end();
 
         while (it != ite)
-        {
+        {*/
             tmp = prefix;
             tmp += " " + channel_name + " ";
-            //Le 0 correspond a notre domaine name pas defini
-            tmp += (*it)->get_nickname() + " 127.0.0.1 0";
-            tmp += (*it)->get_realname() + "H ";
-            if (channel->user_is_operator(*it) == true)
+            //TODO: reprendre le domain name defini ici
+            tmp += user->get_nickname() + " 127.0.0.1 irc.irc42.com ";
+            //TODO: pb pour baudoin = realname = "realname", donc j ai mis nickname en attendant
+            tmp += user->get_nickname() + " H";
+            if (channel->user_is_operator(user) == true)
             {
                 tmp += "@";
             }
             //TODO: il y a un char special pour les user away
-            tmp += " :0 realname";
+            tmp += " :0 realname\r\n";
             reps.push_back(tmp);
-            it++;
+            //it++;
             tmp = "";
-        }
-        #if MALATINI
-            std::cout << PURPLE << "First step of WHO ok." << NC << std::endl;
-        #endif
+       // }
         //Ajouter la string end of who au vecteur
         //On va devoir envoyer toutes les string du vecteur
         //Je vais implementer la 315 directement ici, a supprimer de server->build_rpl
-        tmp += user->get_nickname() + "!" + user->get_username() + "@0 315 : ";
-        tmp += channel->get_name() + " :End of WHO list";
+        tmp += ":" + user->get_nickname() + "!" + user->get_username() + "@irc.irc42.com 315 : ";
+        tmp += channel->get_name() + " :End of WHO list \r\n";
+        reps.push_back(tmp);
         //Je reboucle pour les envoyer une par une
+        /*
         it = users.begin();
+        
+        
+        while (it != ite)
+        {
+            its = reps.begin();
+            */
+            std::vector<std::string>::iterator its = reps.begin();
+            std::vector<std::string>::iterator itse = reps.end();
+            while (its != itse)
+            {
+
+#if MALATINI == 1
+                std::cout << GREEN << (*its) << NC << std::endl;
+                std::cout << BLUE << "was sent to" << user->get_fd() << NC << std::endl;
+#endif
+                server->_response_queue.push_back(std::make_pair(user->get_fd(), (*its)));
+                its++;
+            }
+            /*
+            it++;
+        }*/
     }
     else
     {
