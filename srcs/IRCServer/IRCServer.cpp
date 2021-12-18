@@ -498,6 +498,7 @@ int IRC::send_rpl(std::string code, User *user, std::vector<std::string> params,
 	return (0);
 }
 
+
 int IRC::send_rpl_to_all_members(std::string code, std::vector<User *> users, std::vector<std::string> params, std::string command)
 {
 	/*
@@ -507,6 +508,7 @@ int IRC::send_rpl_to_all_members(std::string code, std::vector<User *> users, st
 	std::vector<User *> users = chan->get_members();
 	std::vector<User *>::iterator it = users.begin();
 	*/
+
 	std::vector<User *>::iterator it = users.begin();
 	std::vector<User *>::iterator ite = users.end();
 	while (it != ite)

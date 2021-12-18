@@ -136,6 +136,7 @@ void Commands::join(User *user, IRC *server)
 
 void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
 {
+    (void)index;
     user->set_target_channel(chan);
 
 #if MALATINI
@@ -151,15 +152,23 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     check_roles(chan, user, true);
 
     //On prepare et envoie la reponse du serveur
-    std::vector<std::string> chan_vec;
-    chan_vec.push_back(user->_splitted_channels[index]);
-    std::vector<User *> users;
-    users.push_back(user);
+    //std::vector<std::string> chan_vec;
+    //chan_vec.push_back(user->_splitted_channels[index]);
+    std::vector<User *> users = chan->get_members();
+    //users.push_back(user);
 #if MALATINI ==  1
     std::cout << BLUE << "send_rpl_to_all_members called" << NC << std::endl;
 #endif
-    server->send_rpl_to_all_members("", users, chan_vec, "JOIN"); //user->_splitted_channels
-    chan_vec.clear();
+    std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@0 JOIN " + chan->get_name() + "\r\n";
+    std::vector<User *>::iterator it = users.begin();
+    std::vector<User *>::iterator ite = users.end();
+    while (it != ite)
+    {
+        server->_response_queue.push_back(std::make_pair((*it)->get_fd(), rpl));
+        it++;
+    }
+    //server->send_rpl_to_all_members("", users, chan_vec, "JOIN"); //user->_splitted_channels
+    //chan_vec.clear();
 
     names(user, server);
     //Equivalent NAMES (comme si on avait passe la channel en parametre)
