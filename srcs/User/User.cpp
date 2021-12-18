@@ -1,6 +1,7 @@
 #include <IRC.hpp>
 #include <User.hpp>
 
+//TODO: revoir l init list de user !
 User::User(void)
 /*
 : _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _is_oper(false), _is_away(false), _away_mssg("null"), _password("null"), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_has_registered_pass(0), _user_has_registered_nick(0), is_registered(0) */
@@ -8,6 +9,7 @@ User::User(void)
 #if USERDEBUG == 1
 	std::cout << "User default constructor called" << std::endl;
 #endif
+	this->_target_channel = NULL;
 }
 
 User::User(int fd) : _fd(fd)
@@ -549,4 +551,16 @@ unsigned int User::count_commas(void) const
 	std::cout << PURPLE << "DEBUG: USER: Counting " << commas << " commas in the params" << std::endl;
 #endif
 	return (commas);
+}
+
+Channel	*User::get_target_channel(void) const
+{
+	return (this->_target_channel);
+}
+
+
+void	User::set_target_channel(Channel *channel)
+{
+	this->_target_channel = channel;
+	return ;
 }

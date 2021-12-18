@@ -147,7 +147,7 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     chan_vec.clear();
     
     //Equivalent NAMES (comme si on avait passe la channel en parametre)
-    user->_target_channel = chan;
+    user->set_target_channel(chan);
     std::string success_rpl_1;
     success_rpl_1 = ":127.0.0.1 353 " + user->get_nickname() + " = " + chan->get_name() + " :";
     //On va d'abord afficher l'operateur
@@ -160,9 +160,10 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     if (user != op)
         success_rpl_1 += user->get_nickname();
     success_rpl_1 += "\r\n";
-    names(user, server, chan);
+    names(user, server);
     server->send_rpl("366", user, user->get_params(), "");//ENDOFNAMES 
     //352 WHO - appelee par le client 
+    user->set_target_channel(NULL);//On remet la target channel a null pour que ce soit bien propre
 }
 
 //Trash pour join mais names devrait fonctionner comme ca de toute facon

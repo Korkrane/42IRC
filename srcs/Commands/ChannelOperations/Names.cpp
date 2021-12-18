@@ -9,8 +9,9 @@
  * @param server 
  * @param code 
  */
-void Commands::send_members_nick(User *user, Channel *channel, IRC *server)
+void Commands::send_members_nick(User *user, IRC *server)
 {
+    Channel *channel = user->get_target_channel();
     //On va boucler sur tous les membres de la channel 
     std::vector<User *> members = channel->get_members();
     std::vector<User *>::iterator it = members.begin();
@@ -23,6 +24,7 @@ void Commands::send_members_nick(User *user, Channel *channel, IRC *server)
     rpl += " = " + channel->get_name() + " :";
     rpl += "@"+ oper->get_nickname() + " ";
 
+    
     while (it != ite)
     {
         //Pour l'instant on ne gere qu'un seul operateur
@@ -42,7 +44,7 @@ void Commands::send_members_nick(User *user, Channel *channel, IRC *server)
 #if MALATINI
     std::cout << GREEN << rpl << NC << std::endl;
     std::cout << GREEN << "Join rpl sent to socket : " << user->get_fd() << std::endl;
-#endif 
+#endif
     return;
 }
 
@@ -51,10 +53,11 @@ void Commands::send_members_nick(User *user, Channel *channel, IRC *server)
  *
  * @param client
  * @param server
- * TODO: a revoir, tester
+ * TODO: a revoir, tester (je ne gere que pour une channel et pas tous les cas de NAMES)
  */
 void Commands::names(User *user, IRC *server)
 {
+    Channel *channel = user->get_target_channel();
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
     unsigned int size = params.size();
@@ -63,13 +66,13 @@ void Commands::names(User *user, IRC *server)
         error.push_back(user->get_command_name());
         return (return_error("461", user, server, error, NULL)); //NEED MORE PARAMS
     }
-    get_channel_targets(user, server);
+    //get_channel_targets(user, server);
     if (channel)
     {
         #if MALATINI == 1 
             std::cout << YELLOW << "Success ! Names will send the names of the users in the channel." << NC << std::endl;
         #endif
-        send_members_nick(user, channel, server);
+        send_members_nick(user, server);
     }
     //TODO: revoir les autres cas de NAMES si il ne s agit pas d'une CHANNEL
     else
