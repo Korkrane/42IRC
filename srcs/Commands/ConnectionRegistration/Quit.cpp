@@ -1,5 +1,6 @@
 #include <IRC.hpp>
 
+//TODO: changer les codes de retour
 void Commands::quit_cmd(User *user, IRC *server)
 {
 #if DEBUG == 1
