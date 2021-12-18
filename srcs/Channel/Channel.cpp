@@ -223,6 +223,8 @@ void Channel::deleteMember(User *user)
 	}
 }
 
+//Ne marche pas, pas d'iteration dans la loop + user jamais utilisé
+/*
 void Channel::removeFromOperators(User *user)
 {
 	//Chercher si le Users  est dans la liste
@@ -235,17 +237,18 @@ void Channel::removeFromOperators(User *user)
 
 	(void)it;
 	(void)ite;
-	/* */
-	while (it != ite)
+
+while (it != ite)
+{
+	if ((*it)->get_nickname() == (*ite)->get_nickname())
 	{
-		if ((*it)->get_nickname() == (*ite)->get_nickname())
-		{
-			this->_operators.erase(it);
-			return;
-		}
+		this->_operators.erase(it);
+		return;
 	}
-	return;
 }
+return;
+}
+*/
 
 //TODO à tester
 bool Channel::channelHasOperator(void)

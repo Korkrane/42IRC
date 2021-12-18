@@ -1,112 +1,114 @@
 
 #include <IRC.hpp>
 
-//TODO: a tester
-/*
-void Commands::send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment)
-{
-    (void)channel;
-    (void)user;
-    (void)server;
-    (void)comment;
-
-    std::string rpl = server->init_rpl(user);
-    rpl += " KICK ";
-    rpl += channel->get_name() + " ";
-    rpl += user->get_nickname() + " ";
-
-    std::vector<std::string>::iterator it = comment.begin();
-    std::vector<std::string>::iterator ite = comment.end();
-    while (it != ite)
-    {
-        rpl += (*it);
-        if (it + 1 == ite)
-            break;
-        rpl += " ";
-        it++;
-    }
-    rpl += "\r\n";
-#if DEBUG == 1
-    std::cout << BLUE << "DEBUG: "
-              << "KICK: message will be " << rpl << std::endl;
-#endif
-    server->send_rpl_to_all_members(channel, rpl);
-    return;
-}
-*/
-
 void Commands::kick(User *user, IRC *server)
 {
-    (void)user;
-    (void)server;
-    int size = user->get_params_size();
-    std::vector<std::string> error;
-    std::vector<std::string> param = user->get_params();
+	std::vector<std::string> params;
+	std::vector<std::string> reply_params;
 
-    //on verifie le nombres de parametre
-    if (size <= 2)
-    {
-        //TODO: build reply
-        /*
-        error.push_back(user->get_command_name());
-        error_handler("461", user, NULL, error);
-        */
-        return;
-    }
+	params = user->get_params();
 
-    //TODO: a tester
-    std::string channel = param[0];
-    std::string target = param[1];
+	if (params.size() <= 2)
+	{
+		reply_params.push_back(user->get_command_name());
+		server->send_rpl("461", user, reply_params, "");
+		return;
+	}
 
-    Channel *chan = server->find_channel(channel);
-    //on prepare la string comment si il y en a
-    if (is_correct_channel_name(channel) || server->has_channel(channel) == false)
-    {
-        //NOTONCHANNEL
-        //TODO: build reply
-        /*
-        error.push_back(channel);
-        error_handler("442", user, chan, error);
-        */
-    }
-    //on check si l'user existe et fait partie du channel
-    if (server->find_user(target) == false)
-    {
-        //TODO: build reply
-        /*
-        error.push_back(target);
-        error_handler("401", user, chan, error);
-        */
-        return;
-    }
-    User *target_user = server->get_user_ptr(target);
-    if (chan->user_is_member(target_user) == false)
-    {
-        //TODO: build reply
-        /*
-        error.push_back(target);
-        error_handler("401", user, chan, error);
-        */
-        return;
-    }
-    //sinon renvoyer une erreur
-    std::vector<std::string> comment;
-    if (size >= 3)
-    {
-        std::vector<std::string>::iterator itc = param.begin();
-        std::vector<std::string>::iterator ite = param.end();
-        itc += 2;
-        while (itc != ite)
-        {
-            comment.push_back(*itc);
-            itc++;
-        }
-    }
-    //on kick out du channel
-    chan->deleteMember(target_user);
-    user->remove_channel_from_list(chan);
-    //on genere la reponse avec comment ou pas
-    //TODO: ajouter appel au nouveau build reply
-    //send_kick_message(chan, target_user, server, comment);
-    return;
+	//1. fills vector of chans to affect and users to kick
+	std::vector<std::string> chans_name = old_ft_split(params[0], ",");
+	std::vector<std::string> targets_name = old_ft_split(params[1], ",");
+	std::vector<Channel *> chans;
+	std::vector<User *> targets;
+
+	for (std::vector<std::string>::iterator it = chans_name.begin(); it != chans_name.end(); it++)
+		chans.push_back(server->get_channel_ptr((*it)));
+	for (std::vector<std::string>::iterator it = targets_name.begin(); it != targets_name.end(); it++)
+		targets.push_back(server->get_user_ptr((*it)));
+	int chans_i = 0;
+
+	for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++)
+	{
+		if ((*it))
+		{
+			if ((*it)->user_is_member(user) == false) //ERR_NOTONCHANNEL
+			{
+				reply_params.push_back((*it)->get_name());
+				server->send_rpl("442", user, reply_params, "");
+				reply_params.clear();
+				chans_i++;
+				continue;
+			}
+			else if ((*it)->user_is_member(user) == true && (*it)->user_is_operator(user) == false) //ERR_CHANOPRIVSNEEDED
+			{
+				reply_params.push_back((*it)->get_name());
+				server->send_rpl("482", user, reply_params, "");
+				reply_params.clear();
+				chans_i++;
+				continue;
+			}
+			int user_i = 0;
+			for (std::vector<User *>::iterator it2 = targets.begin(); it2 != targets.end(); it2++)
+			{
+				if (!(*it2)) //ERR_NOSUCHNICK
+				{
+					reply_params.push_back(targets_name[user_i]);
+					server->send_rpl("401", user, reply_params, "");
+					reply_params.clear();
+				}
+				else if ((*it)->user_is_member((*it2)) == false) //ERR_USERNOTINCHANNEL
+				{
+					reply_params.push_back((*it2)->get_nickname());
+					reply_params.push_back((*it)->get_name());
+					server->send_rpl("441", user, reply_params, "");
+					reply_params.clear();
+				}
+				else //VALID REQUEST
+				{
+					//has duplicate code in IRC l.155
+					//query modif results
+					//delete in members vector channel
+					(*it)->deleteMember(user);
+					//delete in operators vector channel
+					if ((*it)->user_is_operator(user))
+					{
+						(*it)->delete_operator(user);
+						// TODO add new operator randomly if it was the only operator in the chan
+					}
+					//delete in owner if he it was him
+					if ((*it)->user_is_owner(user))
+						(*it)->delete_owner();
+					(*it2)->remove_channel_from_list((*it));
+
+					//reply
+					reply_params.push_back(user->get_nickname());
+					reply_params.push_back(user->get_username());
+					reply_params.push_back(user->get_hostname());
+					reply_params.push_back((*it)->get_name());
+					reply_params.push_back((*it2)->get_nickname());
+					if (params.size() == 3)
+						reply_params.push_back(params[2]);
+					else
+						reply_params.push_back(":" + user->get_nickname());
+					server->send_rpl_to_all_members("", (*it)->get_members(), reply_params, "KICK");
+					reply_params.clear();
+
+					//TODO if channel become empty delete it (chanop kick himself)
+					/*
+					if ((*it)->get_members_nb() == 0)
+						server->drop_channel((*it));
+					*/
+				}
+				user_i++;
+			}
+		}
+		else //ERR_NOSUCHCHANNEL
+		{
+			reply_params.push_back(chans_name[chans_i]);
+			server->send_rpl("403", user, reply_params, "");
+			reply_params.clear();
+			chans_i++;
+			continue;
+		}
+	}
 }
