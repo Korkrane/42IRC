@@ -555,12 +555,27 @@ unsigned int User::count_commas(void) const
 
 Channel	*User::get_target_channel(void) const
 {
-	return (this->_target_channel);
+	Channel *chan = this->_target_channel;
+	#if MALATINI == 1
+		std::cout << PURPLE << chan->get_name() << NC << std::endl;
+	#endif
+	return (chan);
 }
 
 
 void	User::set_target_channel(Channel *channel)
 {
 	this->_target_channel = channel;
+	#if MALATINI == 1
+
+		if (!channel)
+		{
+			std::cout << RED << "Error : set a target channel that is NULL!"<< NC << std::endl;
+		}
+		else 
+		{
+			std::cout << PURPLE << "Channel has been set to" << channel->get_name() << NC << std::endl;
+		}
+	#endif
 	return ;
 }

@@ -104,6 +104,15 @@ void Commands::join(User *user, IRC *server)
                 //Erreur too many channels
                 else if (user->get_channels_nb() >= USER_MAXCHAN)
                     return (return_error("405", user, server, error, ""));
+                //chan = server->find_channel(channel);
+
+                user->set_target_channel(chan);
+                #if MALATINI == 1
+                    if (!user->get_target_channel())
+                        std::cout << RED << "Yes, the chan is null. " << NC << std::endl;
+                    else 
+                        std::cout << GREEN << "No the chan is not null." << NC << std::endl;
+                #endif
                 user_joins(user, server, chan, index);
             }
             //Erreur to many channels car l user fait partie de trop de channels
@@ -112,17 +121,23 @@ void Commands::join(User *user, IRC *server)
                 error.push_back(channel);
                 return (return_error("405", user, server, error, ""));
             }
+            #if MALATINI == 1
+                std::cout << BLUE << "Index is " << index << NC << std::endl;
+            #endif
             index++;
         }
     }
     //Clean
     user->_splitted_args.clear();
     user->_splitted_channels.clear();
-    return;
+    //user->set_target_channel(NULL);
+    return ;
 }
 
 void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
 {
+    user->set_target_channel(chan);
+
 #if MALATINI
     std::cout << BLUE << "user_joins called" << NC << std::endl;
 #endif

@@ -22,15 +22,21 @@ int    Commands::who_match_user(User *user, IRC *server)
 //TODO: a finir, valider et refactor
 void    Commands::who(User *user, IRC *server)
 {
-    (void)user;
-    (void)server;
-
     #if MALATINI
         std::cout << RED << "Who command invoked !" << NC << std::endl;
     #endif
-    //who_match_user(user, server);
-    Channel *channel = NULL;
-    channel = user->get_target_channel();
+    (void)server;
+
+    std::string prefix = "";
+    std::vector<std::string> reps;
+    std::string tmp = "";
+    Channel *channel = user->get_target_channel();
+    std::string channel_name = channel->get_name();
+    #if MALATINI
+        std::cout << RED << "HERE" << NC << std::endl;
+    #endif
+    std::vector<User *> users;
+
     if (channel)
     {
         unsigned int nb = channel->get_members_nb();
@@ -38,13 +44,10 @@ void    Commands::who(User *user, IRC *server)
             std::cout << BLUE << "The number of members is " << nb << NC << std::endl; 
         #endif
         //On va toujours noter l user qui a fait la requete ici
-        std::string prefix = "127.0.0.1 352 " + user->get_nickname();
-        std::vector<std::string> reps;
-        std::string tmp;
-        std::string channel_name = channel->get_name();
-        //int i = 0;
+        prefix = "127.0.0.1 352 " + user->get_nickname();
+        channel_name = channel->get_name();
         
-        std::vector<User *> users = channel->get_members();
+        users = channel->get_members();
         //Pour chaque user je vais creer la reponse
         std::vector<User *>::iterator it = users.begin();
         std::vector<User *>::iterator ite = users.end();
@@ -66,6 +69,9 @@ void    Commands::who(User *user, IRC *server)
             it++;
             tmp = "";
         }
+        #if MALATINI
+            std::cout << PURPLE << "First step of WHO ok." << NC << std::endl;
+        #endif
         //Ajouter la string end of who au vecteur
         //On va devoir envoyer toutes les string du vecteur
         //Je vais implementer la 315 directement ici, a supprimer de server->build_rpl
