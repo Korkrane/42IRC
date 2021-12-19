@@ -559,11 +559,21 @@ void Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
 	this->set_has_topic();
 	std::string str_topic;
 	std::vector<std::string>::iterator it = topic.begin();
+	it++;
 	std::vector<std::string>::iterator ite = topic.end();
-
+	unsigned int size = topic.size();
+	#if MALATINI == 1 
+		std::cout << PURPLE << "The size is " << size << NC<< std::endl;
+	#endif
+	std::string tmp;
 	while (it != ite)
 	{
-		str_topic += (*it);
+		tmp = (*it);
+		if (tmp[0] == ':')
+		{
+			tmp.erase(0,1);
+		}
+		str_topic += tmp;
 		if (it + 1 == ite)
 			break;
 		str_topic += " ";
