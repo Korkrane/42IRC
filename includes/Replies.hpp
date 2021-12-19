@@ -126,17 +126,18 @@
 #define C_RPL_WHOISUSER "311"
 #define RPL_WHOISSERVER(nick, server, server_info) (nick + " " + server + " :" + server_info + "\r\n"); // 312
 #define C_RPL_WHOISSERVER "312"
-#define RPL_WHOISOPERATOR (nick)(nick + " :is an IRC operator\r\n"); // 313
+#define RPL_WHOISOPERATOR(nick) (nick + " :is an IRC operator\r\n"); // 313
 #define C_RPL_WHOISOPERATOR "313"
 #define RPL_WHOISIDLE(nick, integer) (nick + " " + integer + " :secons idle\r\n"); // 317
 #define C_RPL_WHOISIDLE "317"
 #define RPL_ENDOFWHOIS(nick) (nick + " :End of WHOIS list\r\n"); // 318
 #define C_RPL_ENDOFWHOIS "318"
-#define RPL_WHOISCHANNELS                                                                   // 319 weird one, not sure of the output
-#define C_RPL_WHOISCHANNELS "319"                                                           // 321 obsolete. Not used
-#define RPL_LIST(server_name, channel_topic) (server_name + " :" + channel_topic + "\r\n"); // 322 weird one, not sure of the output
+#define RPL_WHOISCHANNELS // 319 weird one, not sure of the output
+#define C_RPL_WHOISCHANNELS "319"
+#define RPL_LISTSTART() (":Start of LIST\r\n")                                                     // 321
+#define RPL_LIST(channel, members_nb, topic) (channel + " " + members_nb + " :" + topic + "\r\n"); // 322 weird one, not sure of the output
 #define C_RPL_LIST "322"
-#define RPL_LISTEND() (+":End of LIST\r\n") // 323
+#define RPL_LISTEND() (":End of LIST\r\n") // 323
 #define C_RPL_LISTEND "323"
 #define RPL_UNIQOPIS(channel, nickname) (channel + " " + nickname + "\r\n"); // 325
 #define C_RPL_UNIQOPIS "325"

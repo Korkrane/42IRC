@@ -2,10 +2,10 @@
 
 void Commands::topic(User *user, IRC *server)
 {
-    unsigned int                size = user->get_params_size();
-    std::vector<std::string>    params = user->get_params();
-    std::vector<std::string>    error;
-    std::string                 channel = params[0];
+    unsigned int size = user->get_params_size();
+    std::vector<std::string> params = user->get_params();
+    std::vector<std::string> error;
+    std::string channel = params[0];
 
     if (size == 0)
     {
@@ -42,7 +42,7 @@ void Commands::topic(User *user, IRC *server)
     }
     //Si la channel porte le mode "t", seuls les operateurs peuvent set le topic
     if (chan->has_mode('t') == true && !chan->user_is_operator(user))
-        return ;
+        return;
     //Si la chaine est une chaine vide (comprendre contient uniquement :), ca unset les topic (clear)
     //Si il n y a pas de chaine, alors fait permet de checker quel est le topic
     else if (size > 1 && params[1].compare(":") == false)
@@ -51,7 +51,9 @@ void Commands::topic(User *user, IRC *server)
     }
     else if (size > 1)
     {
-        chan->set_topic(user, server, params);
+        //chan->set_topic(user, server, params);
+        //modif baudoin
+        chan->set_topic(params[1]);
     }
     else
     {

@@ -1,11 +1,7 @@
 #include <IRC.hpp>
-#include <string>
-
-#include <string>
-#include <sstream>
 
 template <typename T>
-std::string ToString(T val)
+std::string to_string(T val)
 {
     std::stringstream stream;
     stream << val;
@@ -21,10 +17,10 @@ std::string ToString(T val)
 std::string format_code_str(int code)
 {
     if (code < 10)
-        return "00" + ToString(code);
+        return "00" + to_string(code);
     else if (code < 100)
-        return "0" + ToString(code);
-    return ToString(code);
+        return "0" + to_string(code);
+    return to_string(code);
 }
 
 //TODO: encore utilise dans la premiere partie de la correction, a revoir
@@ -115,8 +111,10 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             rpl += channel->get_name() + " :End of WHO list \r\n";
             return (rpl);
         }
+        case 321:
+            return prefix + RPL_LISTSTART();
         case 322:
-            return prefix + RPL_LIST(this->get_name(), params[1]);
+            return prefix + RPL_LIST(params[0], params[1], params[2]);
         case 323:
             return prefix + RPL_LISTEND();
         case 351:
