@@ -223,32 +223,15 @@ void Channel::deleteMember(User *user)
 	}
 }
 
-//Ne marche pas, pas d'iteration dans la loop + user jamais utilisé
-/*
 void Channel::removeFromOperators(User *user)
 {
-	//Chercher si le Users  est dans la liste
-	//si oui, le retirer
-	if (!user)
-		return;
-
-	std::vector<User *>::iterator it = this->_operators.begin();
-	std::vector<User *>::iterator ite = this->_operators.end();
-
-	(void)it;
-	(void)ite;
-
-while (it != ite)
-{
-	if ((*it)->get_nickname() == (*ite)->get_nickname())
+	for (std::vector<User *>::iterator it = _operators.begin(); it != _operators.end(); it++)
 	{
-		this->_operators.erase(it);
-		return;
+		if ((*it)->get_nickname() == user->get_nickname())
+			_operators.erase(it);
 	}
+	return;
 }
-return;
-}
-*/
 
 //TODO à tester
 bool Channel::channelHasOperator(void)

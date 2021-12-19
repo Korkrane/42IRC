@@ -1,6 +1,6 @@
 #include <IRC.hpp>
 
-void        Commands::oper(User *user, IRC *server)
+void Commands::oper(User *user, IRC *server)
 {
     std::vector<std::string> user_params = user->get_params();
     std::vector<std::string> reply_params;
@@ -14,11 +14,9 @@ void        Commands::oper(User *user, IRC *server)
     {
         std::string name = user_params[0];
         std::string password = user_params[1];
-        if(name == OPER_NAME && password == OPER_PASS) //RPL_YOUROPER 381
+        if (name == OPER_NAME && password == OPER_PASS) //RPL_YOUROPER 381
         {
             server->send_rpl("381", user, reply_params, "");
-
-            //then add mode to user
             std::vector<std::string> tmp;
             tmp.push_back(user->get_nickname());
             tmp.push_back("+o");

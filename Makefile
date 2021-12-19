@@ -75,7 +75,7 @@ EXTRA_MA 	= -D MALATINI=1
 RM			= rm -f
 
 .cpp.o:
-			@$(CC) ${FLAGS} ${EXTRA_MA} -I$(INC_DIR) -c $< -o $(<:.cpp=.o) 
+			@$(CC) ${FLAGS} ${EXTRA_MA} -I$(INC_DIR) -c $< -o $(<:.cpp=.o)
 
 $(NAME):	$(OBJS)
 			@echo "Object files compiled"

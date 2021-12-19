@@ -1,42 +1,29 @@
 #include "Server.hpp"
 
 // Global pointers (only accessible from this source file)
-Server	*gServer = NULL;
-IRC		*gIRC = NULL;
+Server *gServer = NULL;
+IRC *gIRC = NULL;
 
-void	exitProperly()
+void exitProperly()
 {
+	if (gIRC)
+		delete gIRC;
 	if (gServer)
 		delete gServer;
-	if (gIRC)
-	{
-		std::vector<User *> users = gIRC->get_users();
-		users.clear();
-		/*
-		std::vector<User *> users = gIRC->get_users();
-		std::vector<Channel *> channels = gIRC->get_channels();
-
-		for(std::vector<User *>::iterator it = users.begin(); it != users.end(); it++)
-			delete (*it);
-		for(std::vector<Channel *>::iterator it2 = channels.begin(); it2 != channels.end(); it2++)
-			delete (*it2);
-		*/
-		delete gIRC;
-	}
 }
 
-static void	handleSignal(int signum)
+static void handleSignal(int signum)
 {
 	if (signum == SIGINT || signum == SIGQUIT || signum == SIGKILL)
-		std::cout	<< GREEN
-					<< "\b\bServer is stopped. Good bye!\n"
-					<< NC;
+		std::cout << GREEN
+				  << "\b\bServer is stopped. Good bye!\n"
+				  << NC;
 	exit(0);
 }
 
-static bool	checkArgs(int ac, char **av, int &port, std::string &password)
+static bool checkArgs(int ac, char **av, int &port, std::string &password)
 {
-	int	iPort, iPassword;
+	int iPort, iPassword;
 
 	switch (ac)
 	{
@@ -64,7 +51,7 @@ static bool	checkArgs(int ac, char **av, int &port, std::string &password)
 	return true;
 }
 
-int	main(int ac, char **av)
+int main(int ac, char **av)
 {
 	// Register clean up function at exit
 	atexit(exitProperly);
@@ -75,8 +62,8 @@ int	main(int ac, char **av)
 	signal(SIGKILL, handleSignal);
 
 	// Check and obtain information from arguments
-	int			port;
-	std::string	password;
+	int port;
+	std::string password;
 	if (!checkArgs(ac, av, port, password))
 		exit(1);
 
