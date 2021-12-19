@@ -1,5 +1,6 @@
 #include <IRC.hpp>
 
+//TODO: gerer le cas ou on voudrait creer un topic pour plsieurs channels 
 void Commands::topic(User *user, IRC *server)
 {
     unsigned int size = user->get_params_size();
@@ -61,6 +62,10 @@ void Commands::topic(User *user, IRC *server)
         ;
     }
     server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
+    #if MALATINI == 1
+        std::cout << PURPLE << "Get topic returns : " << std::endl;
+        std::cout << chan->get_topic() << NC << std::endl;
+    #endif
     return;
 }
 
