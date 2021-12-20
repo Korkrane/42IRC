@@ -22,6 +22,8 @@ int Commands::who_match_user(User *user, IRC *server)
 //TODO: a finir, valider et refactor
 void Commands::who(User *user, IRC *server)
 {
+    (void)user;
+    (void)server;
     return;
     /*
 #if MALATINI
