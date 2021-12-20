@@ -4,12 +4,59 @@
 Server *gServer = NULL;
 IRC *gIRC = NULL;
 
+//TODO: fonction Mahaut - a verifier + deplacer ? Faire un fichier dedie a l exit et aux delete ? IRC Server et pas gServer
+void	delete_server_allocated_memory(void)
+{
+	//Faire le tour de toutes les channels pour les delete
+	std::vector<Channel *> chans = gIRC->get_channels();
+
+	std::vector<Channel *>::iterator it = chans.begin();
+	std::vector<Channel *>::iterator ite = chans.end();
+
+	while (it != ite)
+	{
+		delete (*it);
+		it ++;
+	}
+	#if MALATINI == 1
+		std::cout << PURPLE << "Deleted all channels" << NC << std::endl;
+	#endif
+	//faire le tour de tous les users pour les delete
+
+	/*
+	std::vector<User *> users = gIRC->get_users();
+
+	std::vector<User *>::iterator itb = users.begin();
+	std::vector<User *>::iterator itbe = users.end();
+
+	while (itb != itbe)
+	{
+		delete (*itb);
+		itb ++;
+	}
+	#if MALATINI == 1
+		std::cout << PURPLE << "Deleted all users" << NC << std::endl;
+	#endif
+	*/
+	return ;
+}
+
 void exitProperly()
 {
+	#if MALATINI == 1
+		std::cout << RED << "Exit properly called." << NC << std::endl;
+	#endif
 	if (gIRC)
+	{
+		delete_server_allocated_memory();
 		delete gIRC;
+	}
+		
 	if (gServer)
+	{	
 		delete gServer;
+	}
+		
 }
 
 static void handleSignal(int signum)

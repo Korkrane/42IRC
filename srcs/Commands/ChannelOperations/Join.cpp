@@ -65,6 +65,9 @@ void Commands::join(User *user, IRC *server)
             //On verifie que le parametre peut correspondre a un nom de channel valide
             if (!channel.empty() && is_correct_channel_name(channel) == false)
             {
+                #if MALATINI == 1
+                    std::cout << RED << "Error : JOIN: Invalid channel name" NC << std::endl;
+                #endif
                 error.push_back(channel);
                 return (return_error("403", user, server, error, ""));
             }

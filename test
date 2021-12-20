@@ -1,0 +1,186 @@
+[0;34mDEBUG: IRC constructor with pass parameter called[0m
+[0;32mIRC Server now active on 0.0.0.0:6667[0m
+New client on socket #4
+[0;34mDEBUG: Server has to process command[0m
+[0;34m	DEBUG: with clientfd: 4[0m
+[0;34m	DEBUG: with command: CAP LS 302
+[0m[0;34m	DEBUG: Client first connection[0m
+[0;34mDEBUG: User constructor called with fd param[0m
+[0;31mENTER SPLIT_MULTI_COMMD[0m
+unparsed command pushed to vector:CAP LS 302
+--COMMAND N° 0--
+prefix= 
+command= CAP
+param(0)= LS
+param(1)= 302
+
+[0;31mEXIT SPLIT_MULTI_COMMD[0m
+[0;31mENTER IRC EXEC CMD[0m
+[0;31mENTER CAP CMD[0m
+[0;31mEXIT CAP CMD[0m
+[0;31mEXIT IRC EXEC CMD[0m
+[0;34mDEBUG: Client is registered after exec?0[0m
+[0;34mDEBUG: Server has to process command[0m
+[0;34m	DEBUG: with clientfd: 4[0m
+[0;34m	DEBUG: with command: PASS pass
+[0m[0;34mDEBUG: Client found in the user list[0m
+[0;31mENTER SPLIT_MULTI_COMMD[0m
+unparsed command pushed to vector:PASS pass
+--COMMAND N° 0--
+prefix= 
+command= PASS
+param(0)= pass
+
+[0;31mEXIT SPLIT_MULTI_COMMD[0m
+[0;31mENTER IRC EXEC CMD[0m
+[0;31mENTER PASS CMD[0m
+[0;31mEXIT PASS CMD[0m
+[0;31mEXIT IRC EXEC CMD[0m
+[0;34mDEBUG: Server has to process command[0m
+[0;34m	DEBUG: with clientfd: 4[0m
+[0;34m	DEBUG: with command: NICK user4
+USER user4 user4 127.0.0.1 :realname
+[0m[0;34mDEBUG: Client found in the user list[0m
+[0;31mENTER SPLIT_MULTI_COMMD[0m
+unparsed command pushed to vector:NICK user4
+unparsed command pushed to vector:USER user4 user4 127.0.0.1 :realname
+--COMMAND N° 0--
+prefix= 
+command= NICK
+param(0)= user4
+
+--COMMAND N° 1--
+prefix= 
+command= USER
+param(0)= user4
+param(1)= user4
+param(2)= 127.0.0.1
+param(3)= :realname
+
+[0;31mEXIT SPLIT_MULTI_COMMD[0m
+[0;31mENTER IRC EXEC CMD[0m
+[0;31mENTER NICK CMD [0m
+[0;31mEXIT NICK CMD [0m
+[0;31mENTER ENTER USER CMD[0m
+[0;35mDEBUG: SUCCESS USER COMMAND[0m
+[0;31mEXIT USER CMD [0m
+[0;31mEXIT IRC EXEC CMD[0m
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 001
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 002
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 003
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 004
+DEBUG: enter motd_cmd
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 375
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 372
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 376
+[0;31mEXIT MOTD CMD[0m
+[0;34mDEBUG: Server has to process command[0m
+[0;34m	DEBUG: with clientfd: 4[0m
+[0;34m	DEBUG: with command: JOIN #channel
+[0m[0;34mDEBUG: Client found in the user list[0m
+[0;31mENTER SPLIT_MULTI_COMMD[0m
+unparsed command pushed to vector:JOIN #channel
+--COMMAND N° 0--
+prefix= 
+command= JOIN
+param(0)= #channel
+
+[0;31mEXIT SPLIT_MULTI_COMMD[0m
+[0;31mENTER IRC EXEC CMD[0m
+Params front is #channel
+has channel will return false.
+Channel constructor called
+[0;35mChannel has been set to#channel[0m
+[0;35m#channel[0m
+[0;32mNo the chan is not null.[0m
+[0;35mChannel has been set to#channel[0m
+[0;34muser_joins called[0m
+[0;35mUSER: be_added_to_channel called for: user4
+[0;34msend_rpl_to_all_members called[0m
+[0;31mNames command invoked.
+[0;35m#channel[0m
+[33mSuccess ! Names will send the names of the users in the channel.[0m
+[0;31mSEND MEMBERS NICK CALLED 
+[0;35m#channel[0m
+[0;32m:127.0.0.1 353 user4 = #channel :@user4 
+[0m
+[0;32mJoin rpl sent to socket : 4
+[0;32m:127.0.0.1 366 user4 #channel :End of NAMES list
+[0m
+[0;32mJoin rpl sent to socket : 4
+[0;34mIndex is 0[0m
+[0;31mEXIT IRC EXEC CMD[0m
+[0;34mDEBUG: Server has to process command[0m
+[0;34m	DEBUG: with clientfd: 4[0m
+[0;34m	DEBUG: with command: MODE #channel
+[0m[0;34mDEBUG: Client found in the user list[0m
+[0;31mENTER SPLIT_MULTI_COMMD[0m
+unparsed command pushed to vector:MODE #channel
+--COMMAND N° 0--
+prefix= 
+command= MODE
+param(0)= #channel
+
+[0;31mEXIT SPLIT_MULTI_COMMD[0m
+[0;31mENTER IRC EXEC CMD[0m
+[0;31mENTER MODE COMMAND[0m
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 324
+[0;31mEXIT MODE COMMAND[0m
+[0;31mEXIT IRC EXEC CMD[0m
+[0;34mDEBUG: Server has to process command[0m
+[0;34m	DEBUG: with clientfd: 4[0m
+[0;34m	DEBUG: with command: WHO #channel
+[0m[0;34mDEBUG: Client found in the user list[0m
+[0;31mENTER SPLIT_MULTI_COMMD[0m
+unparsed command pushed to vector:WHO #channel
+--COMMAND N° 0--
+prefix= 
+command= WHO
+param(0)= #channel
+
+[0;31mEXIT SPLIT_MULTI_COMMD[0m
+[0;31mENTER IRC EXEC CMD[0m
+[0;31mWho command invoked ![0m
+[0;35m#channel[0m
+[0;34mThe number of members is 1[0m
+[0;32m:127.0.0.1 352 user4 #channel user4 127.0.0.1 irc.irc42.com user4 H@ :0 realname
+[0m
+[0;34mwas sent to4[0m
+[0;32m:user4!user4@irc.irc42.com 315 : #channel :End of WHO list 
+[0m
+[0;34mwas sent to4[0m
+[0;31mEXIT IRC EXEC CMD[0m
+[0;34mDEBUG: Server has to process command[0m
+[0;34m	DEBUG: with clientfd: 4[0m
+[0;34m	DEBUG: with command: QUIT :Leaving
+[0m[0;34mDEBUG: Client found in the user list[0m
+[0;31mENTER SPLIT_MULTI_COMMD[0m
+unparsed command pushed to vector:QUIT :Leaving
+--COMMAND N° 0--
+prefix= 
+command= QUIT
+param(0)= :Leaving
+
+[0;31mEXIT SPLIT_MULTI_COMMD[0m
+[0;31mENTER IRC EXEC CMD[0m
+[0;31mENTER QUIT CMD
+[0;35mDEBUG: SEND REPLY: RPL/ERR code is 998
+[0;31mEXIT QUIT CMD
+[0;31mEXIT IRC EXEC CMD[0m
+[0;32mServer is stopped. Good bye!
+[0m[0;34mDEBUG: IRC destructor called[0m

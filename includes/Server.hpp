@@ -43,3 +43,4 @@ public:
 };
 
 void	exitProperly();
+void	delete_server_allocated_memory();
