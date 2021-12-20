@@ -59,14 +59,32 @@ void Commands::send_topic_message(User *user, Channel *chan, IRC *server)
     //+chan->get_name() + "\r\n";
     std::vector<User *>::iterator it = users.begin();
     std::vector<User *>::iterator ite = users.end();
-    if (size > 1 && params[1].compare(":No topic is set"))
+    bool info = false;
+    if (!chan->user_is_operator(user))
+    {
+        rpl += " 332 : ";
+        info = true;
+    }
+
+    else if (size > 1 && params[1].compare(":No topic is set"))
         rpl += " TOPIC ";
     else
         rpl += " 331 : ";
     if (size >= 1)
         rpl += params[0] + " ";
     if (size >= 2)
-        rpl += params[1];
+    {
+        if (info == true)
+        {
+            rpl += chan->get_topic();
+            rpl += "\r\n";
+            //si c est une info je ne l'envoie qu a une personne
+            server->_response_queue.push_back(std::make_pair(user->get_fd(), rpl));
+            return;
+        }
+        else
+            rpl += params[1];
+    }
     rpl += "\r\n";
     while (it != ite)
     {
@@ -144,7 +162,7 @@ void Commands::topic(User *user, IRC *server)
     if (size >= 2)
         user->add_topic_params(params[1]);
     //Si la channel porte le mode "t", seuls les operateurs peuvent set le topic
-    if (chan->has_mode('t') == true && !chan->user_is_operator(user) && !same_arg)
+    if (chan->has_mode('t') == true && !chan->user_is_operator(user) && !same_arg) //
     {
 #if MALATINI == 1
         std::cout << BLUE << "TOPIC must not be set." << NC << std::endl;
@@ -185,6 +203,7 @@ void Commands::topic(User *user, IRC *server)
         //params.push_back(chan->get_topic());
     }
     send_topic_message(user, chan, server);
+    user->clear_topic_params(); //ca fait un peu doublon
     //server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
     return;
 }
