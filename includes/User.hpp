@@ -36,6 +36,7 @@ private:
 	bool _user_has_registered_pass;
 	bool _user_has_registered_nick;
 	bool _is_registered;
+	bool _display_who;
 
 	std::string _request;
 	std::string _prefix;
@@ -65,6 +66,7 @@ public:
 	std::string get_away_mssg(void) const;
 	std::string get_password(void) const;
 	std::string get_message(void) const;
+	bool get_display_who(void) const;
 	int get_channels_nb(void) const;
 	int get_fd(void) const;
 
@@ -89,6 +91,7 @@ public:
 	void set_realname(std::string realname);
 	void set_hostname(std::string hostname);
 	void set_modes(std::string modes);
+	void set_display_who(bool display);
 
 	void is_registered(bool value);
 	void is_operator(bool value);

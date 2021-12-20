@@ -65,15 +65,16 @@ void Commands::join(User *user, IRC *server)
             //On verifie que le parametre peut correspondre a un nom de channel valide
             if (!channel.empty() && is_correct_channel_name(channel) == false)
             {
-                #if MALATINI == 1
-                    std::cout << RED << "Error : JOIN: Invalid channel name" NC << std::endl;
-                #endif
+#if MALATINI == 1
+                std::cout << RED << "Error : JOIN: Invalid channel name" NC << std::endl;
+#endif
                 error.push_back(channel);
                 return (return_error("403", user, server, error, ""));
             }
 
             //On verifie si la channel existe, sinon on va la creer (par defaut il n y a pas de cle quand on la cree)
             Channel *chan = NULL;
+            user->set_target_channel(chan);
             if (!channel.empty() && server->has_channel(channel) == false)
                 chan = server->add_channel(channel, user);
 
@@ -101,16 +102,21 @@ void Commands::join(User *user, IRC *server)
             //on verifie si le user n'a pas atteint son quota max de channel
             if (server->user_can_join(chan) == true && !chan->user_is_member(user)) // || pas deja membre a ajouter
             {
-                #if MALATINI
-                    std::cout << BLUE << "The user is in " << user->get_channels_nb() <<"channels." << NC << std::endl;
-                #endif
+#if MALATINI
+                std::cout << BLUE << "The user is in " << user->get_channels_nb() << "channels." << NC << std::endl;
+#endif
                 //On verifie si le user ne listen pas deja sur trop de channels
                 if (chan->get_members_nb() > CHAN_MAXCAPACITY - 1)
+                {
+                    error.push_back(channel);
+                    user->set_target_channel(NULL);
                     return (return_error("471", user, server, error, ""));
+                }
                 //Erreur too many channels
                 else if (user->get_channels_nb() > USER_MAXCHAN - 1)
                 {
-                    //TODO: the chan must be deleted if it has been created with this user
+                    error.push_back(channel);
+                    user->set_target_channel(NULL);
                     return (return_error("405", user, server, error, ""));
                 }
                 //chan = server->find_channel(channel);
@@ -124,17 +130,19 @@ void Commands::join(User *user, IRC *server)
                 error.push_back(channel);
                 return (return_error("405", user, server, error, ""));
             }
-            #if MALATINI == 1
-                std::cout << BLUE << "Index is " << index << NC << std::endl;
-            #endif
+#if MALATINI == 1
+            std::cout << BLUE << "Index is " << index << NC << std::endl;
+#endif
             index++;
+            user->set_display_who(true);
+            who(user, server);
         }
     }
     //Clean
     user->_splitted_args.clear();
     user->_splitted_channels.clear();
     //user->set_target_channel(NULL);
-    return ;
+    return;
 }
 
 void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
@@ -159,7 +167,7 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     //chan_vec.push_back(user->_splitted_channels[index]);
     std::vector<User *> users = chan->get_members();
     //users.push_back(user);
-#if MALATINI ==  1
+#if MALATINI == 1
     std::cout << BLUE << "send_rpl_to_all_members called" << NC << std::endl;
 #endif
     std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@0 JOIN " + chan->get_name() + "\r\n";
@@ -194,12 +202,13 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     //352 WHO - appelee par le client 
     user->set_target_channel(NULL);//On remet la target channel a null pour que ce soit bien propre
     */
+    //user->set_target_channel(NULL);
 }
 
 //Trash pour join mais names devrait fonctionner comme ca de toute facon
-void    Commands::trash_names(User *user, IRC *server)
+void Commands::trash_names(User *user, IRC *server)
 {
     (void)user;
     (void)server;
-    return ;
+    return;
 }

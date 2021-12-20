@@ -185,7 +185,9 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         case 404:
             return prefix + ERR_CANNOTSENDTOCHAN(params[0]);
         case 405:
+        {
             return prefix + ERR_TOOMANYCHANNELS(params[0]);
+        }
         case 406:
             return prefix + ERR_WASNOSUCHNICK(params[0]);
         case 407:

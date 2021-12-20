@@ -553,29 +553,38 @@ unsigned int User::count_commas(void) const
 	return (commas);
 }
 
-Channel	*User::get_target_channel(void) const
+Channel *User::get_target_channel(void) const
 {
 	Channel *chan = this->_target_channel;
-	#if MALATINI == 1
-		std::cout << PURPLE << chan->get_name() << NC << std::endl;
-	#endif
+#if MALATINI == 1
+	std::cout << PURPLE << chan->get_name() << NC << std::endl;
+#endif
 	return (chan);
 }
 
-
-void	User::set_target_channel(Channel *channel)
+void User::set_target_channel(Channel *channel)
 {
 	this->_target_channel = channel;
-	#if MALATINI == 1
+#if MALATINI == 1
 
-		if (!channel)
-		{
-			std::cout << RED << "Error : set a target channel that is NULL!"<< NC << std::endl;
-		}
-		else 
-		{
-			std::cout << PURPLE << "Channel has been set to" << channel->get_name() << NC << std::endl;
-		}
-	#endif
-	return ;
+	if (!channel)
+	{
+		std::cout << RED << "Error : set a target channel that is NULL!" << NC << std::endl;
+	}
+	else
+	{
+		std::cout << PURPLE << "Channel has been set to" << channel->get_name() << NC << std::endl;
+	}
+#endif
+	return;
+}
+
+bool User::get_display_who(void) const
+{
+	return (this->_display_who);
+}
+
+void User::set_display_who(bool display)
+{
+	this->_display_who = display;
 }

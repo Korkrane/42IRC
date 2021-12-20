@@ -1,7 +1,7 @@
 #include <IRC.hpp>
 
 //TODO: a revoir ou supprimer
-int    Commands::who_match_user(User *user, IRC *server)
+int Commands::who_match_user(User *user, IRC *server)
 {
     (void)user;
     (void)server;
@@ -12,7 +12,7 @@ int    Commands::who_match_user(User *user, IRC *server)
     std::vector<std::string> params = user->get_params();
     server->send_rpl_display_all_users("352", user, user->get_target_channel(), "JOIN");
     */
-    return  (0);
+    return (0);
 }
 
 /**
@@ -20,38 +20,31 @@ int    Commands::who_match_user(User *user, IRC *server)
  * puis un 315 pour finir
  */
 //TODO: a finir, valider et refactor
-void    Commands::who(User *user, IRC *server)
+void Commands::who(User *user, IRC *server)
 {
-    #if MALATINI
-        std::cout << RED << "Who command invoked !" << NC << std::endl;
-    #endif
+#if MALATINI
+    std::cout << RED << "Who command invoked !" << NC << std::endl;
+#endif
     (void)server;
 
-    std::string prefix = "";
-    std::vector<std::string> reps;
-    std::string tmp = "";
-    Channel *channel = user->get_target_channel();
-    std::string channel_name = channel->get_name();
-    std::vector<User *> users;
-
-    if (channel)
+    if (user->get_display_who() == true)
     {
-        unsigned int nb = channel->get_members_nb();
-        #if MALATINI == 1
-            std::cout << BLUE << "The number of members is " << nb << NC << std::endl; 
-        #endif
-        //On va toujours noter l user qui a fait la requete ici
-        prefix = ":127.0.0.1 352 " + user->get_nickname();
-        channel_name = channel->get_name();
-        
-        /*
-        users = channel->get_members();
-        //Pour chaque user je vais creer la reponse
-        std::vector<User *>::iterator it = users.begin();
-        std::vector<User *>::iterator ite = users.end();
+        std::string prefix = "";
+        std::vector<std::string> reps;
+        std::string tmp = "";
+        Channel *channel = user->get_target_channel();
+        if (channel)
+        {
+            std::string channel_name = channel->get_name();
+            std::vector<User *> users;
+            unsigned int nb = channel->get_members_nb();
+#if MALATINI == 1
+            std::cout << BLUE << "The number of members is " << nb << NC << std::endl;
+#endif
+            //On va toujours noter l user qui a fait la requete ici
+            prefix = ":127.0.0.1 352 " + user->get_nickname();
+            channel_name = channel->get_name();
 
-        while (it != ite)
-        {*/
             tmp = prefix;
             tmp += " " + channel_name + " ";
             //TODO: reprendre le domain name defini ici
@@ -65,24 +58,10 @@ void    Commands::who(User *user, IRC *server)
             //TODO: il y a un char special pour les user away
             tmp += " :0 realname\r\n";
             reps.push_back(tmp);
-            //it++;
             tmp = "";
-       // }
-        //Ajouter la string end of who au vecteur
-        //On va devoir envoyer toutes les string du vecteur
-        //Je vais implementer la 315 directement ici, a supprimer de server->build_rpl
-        tmp += ":" + user->get_nickname() + "!" + user->get_username() + "@irc.irc42.com 315 : ";
-        tmp += channel->get_name() + " :End of WHO list \r\n";
-        reps.push_back(tmp);
-        //Je reboucle pour les envoyer une par une
-        /*
-        it = users.begin();
-        
-        
-        while (it != ite)
-        {
-            its = reps.begin();
-            */
+            tmp += ":" + user->get_nickname() + "!" + user->get_username() + "@irc.irc42.com 315 : ";
+            tmp += channel->get_name() + " :End of WHO list \r\n";
+            reps.push_back(tmp);
             std::vector<std::string>::iterator its = reps.begin();
             std::vector<std::string>::iterator itse = reps.end();
             while (its != itse)
@@ -95,15 +74,14 @@ void    Commands::who(User *user, IRC *server)
                 server->_response_queue.push_back(std::make_pair(user->get_fd(), (*its)));
                 its++;
             }
-            /*
-            it++;
-        }*/
-    }
-    else
-    {
-        #if MALATINI == 1
+            user->set_display_who(false);
+        }
+        else
+        {
+#if MALATINI == 1
             std::cout << RED << "Error : called WHO but there is no channel target !" << NC << std::endl;
-        #endif
+#endif
+        }
     }
     return;
 }
