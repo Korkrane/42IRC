@@ -34,11 +34,27 @@ void Commands::topic(User *user, IRC *server)
     }
     //et que le client y est registered
     Channel *chan = server->find_channel(channel);
+
+    if (!chan)
+    {
+#if MALATINI == 1
+        std::cout << RED << "TOPIC, the channel is invalid." << NC << std::endl;
+#endif
+        error.push_back(channel);
+        return (return_error("403", user, server, error, ""));
+    }
+    else
+    {
+#if MALATINI == 1
+        std::cout << RED << "TOPIC : THE CHAN IS NOT NULL" << NC << std::endl;
+#endif
+        ;
+    }
     //si il n est pas membre on retourne une erreur
     if (chan->user_is_member(user) == false)
     {
         error.push_back(channel);
-        return (return_error("442", user, server, error, ""));
+        return (return_error("442", user, server, error, "")); //You're not on that channel
     }
     if (size > 1 && params[1].empty())
     {
@@ -46,10 +62,22 @@ void Commands::topic(User *user, IRC *server)
     }
     //Si la channel porte le mode "t", seuls les operateurs peuvent set le topic
     if (chan->has_mode('t') == true && !chan->user_is_operator(user))
+    {
+#if MALATINI == 1
+        std::cout << BLUE << "TOPIC must not be set." << NC << std::endl;
+#endif
         return;
+    }
+    else
+    {
+        error.push_back(channel);
+        //Erreur not operateur
+        return (return_error("482", user, server, error, ""));
+    }
+
     //Si la chaine est une chaine vide (comprendre contient uniquement :), ca unset les topic (clear)
     //Si il n y a pas de chaine, alors fait permet de checker quel est le topic
-    else if (size > 1 && params[1].compare(":") == false)
+    if (size > 1 && params[1].compare(":") == false)
     {
         chan->clear_topic(user, server, topic);
     }
@@ -58,6 +86,10 @@ void Commands::topic(User *user, IRC *server)
         //chan->set_topic(user, server, params);
         //modif baudoin
         chan->set_topic(params[1]);
+    }
+    else if (size == 1)
+    {
+        params.push_back(":No topic is set");
     }
     server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
     return;

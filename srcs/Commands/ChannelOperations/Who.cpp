@@ -22,6 +22,8 @@ int Commands::who_match_user(User *user, IRC *server)
 //TODO: a finir, valider et refactor
 void Commands::who(User *user, IRC *server)
 {
+    return;
+    /*
 #if MALATINI
     std::cout << RED << "Who command invoked !" << NC << std::endl;
 #endif
@@ -48,7 +50,7 @@ void Commands::who(User *user, IRC *server)
             tmp = prefix;
             tmp += " " + channel_name + " ";
             //TODO: reprendre le domain name defini ici
-            tmp += user->get_nickname() + " 127.0.0.1 irc.irc42.com ";
+            tmp += user->get_nickname() + " 127.0.0.1 0 ";
             //TODO: pb pour baudoin = realname = "realname", donc j ai mis nickname en attendant
             tmp += user->get_nickname() + " H";
             if (channel->user_is_operator(user) == true)
@@ -59,7 +61,7 @@ void Commands::who(User *user, IRC *server)
             tmp += " :0 realname\r\n";
             reps.push_back(tmp);
             tmp = "";
-            tmp += ":" + user->get_nickname() + "!" + user->get_username() + "@irc.irc42.com 315 : ";
+            tmp += ":" + user->get_nickname() + "!" + user->get_username() + "@0 315 : ";
             tmp += channel->get_name() + " :End of WHO list \r\n";
             reps.push_back(tmp);
             std::vector<std::string>::iterator its = reps.begin();
@@ -84,4 +86,5 @@ void Commands::who(User *user, IRC *server)
         }
     }
     return;
+    */
 }
