@@ -487,7 +487,7 @@ int IRC::send_rpl_chan(std::string code, Channel *channel, IRC *server, User *us
 int IRC::send_rpl(std::string code, User *user, std::vector<std::string> params, std::string command)
 {
 #if DEBUG
-	std::cout << PURPLE << "DEBUG: SEND REPLY: RPL/ERR code is " << code << std::endl;
+	std::cout << PURPLE << "DEBUG: SEND REPLY: RPL/ERR code is " << code << NC << std::endl;
 #endif
 	std::string rpl = this->build_reply(code, user, params, command);
 #if malatini == 1
@@ -500,14 +500,6 @@ int IRC::send_rpl(std::string code, User *user, std::vector<std::string> params,
 
 int IRC::send_rpl_to_all_members(std::string code, std::vector<User *> users, std::vector<std::string> params, std::string command)
 {
-	/*
-	(void)us;
-	std::string channel = params[0];
-	Channel *chan = this->find_channel(channel);
-	std::vector<User *> users = chan->get_members();
-	std::vector<User *>::iterator it = users.begin();
-	*/
-
 	std::vector<User *>::iterator it = users.begin();
 	std::vector<User *>::iterator ite = users.end();
 	while (it != ite)

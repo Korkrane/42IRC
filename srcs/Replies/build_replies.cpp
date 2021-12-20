@@ -333,8 +333,8 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         }
         else if (command.compare("PART") == 0)
         {
-            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
-            rpl += " " + command + " " + params[0] + " " + params[1] + "\r\n";
+            std::string rpl = ":" + params[0] + "!" + params[1] + "@" + "127.0.0.1";
+            rpl += " " + command + " " + params[2] + " " + params[3] + "\r\n";
 #if DEBUG == 1
             std::cout << "Part reply is :" << rpl << NC << std::endl;
 #endif

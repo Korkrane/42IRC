@@ -68,7 +68,7 @@ void delete_server_allocated_memory(void)
 		{
 			delete_channels((*itb));
 			//(*itb)->_channels.erase();
-			delete (*itb);
+			//delete (*itb);
 		}
 		itb++;
 	}
