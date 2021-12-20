@@ -344,29 +344,22 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         else if (command.compare("TOPIC") == 0)
         {
             unsigned int size = params.size();
-#if DEBUG == 1
-            std::cout << BLUE << "Size is: " << size << NC << std::endl;
-#endif
-            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "127.0.0.1";
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "0 TOPIC ";
             if (size > 1)
             {
-                rpl += " " + command + " " + params[0];
-                rpl += " " + params[1] + "\r\n";
+                rpl += params[0] + " ";
+                rpl += params[1] + "\r\n";
             }
+            /*
             else
             {
                 rpl += " 332 : ";
-#if DEBUG == 1
-                std::cout << "params0 est " << params[0] << std::endl;
-#endif
                 Channel *chan = this->find_channel(params[0]);
                 if (chan)
                     rpl += " " + chan->get_topic() + " ";
                 rpl += "\r\n";
             }
-#if DEBUG == 1
-            std::cout << "Part reply is :" << rpl << NC << std::endl;
-#endif
+            */
             return rpl;
         }
         /*
