@@ -31,8 +31,6 @@ void delete_channels(User *user)
 		chans.erase();
 		*/
 	}
-	//TODO: faire un get_channel?
-	//std::vector<Channel *> chans = ;
 	return;
 }
 
@@ -68,7 +66,7 @@ void delete_server_allocated_memory(void)
 		{
 			delete_channels((*itb));
 			//(*itb)->_channels.erase();
-			//delete (*itb);
+			delete (*itb);
 		}
 		itb++;
 	}

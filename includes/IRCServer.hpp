@@ -67,6 +67,7 @@ public:
     void drop_channel(Channel *to_drop);
     bool find_channel(Channel *to_find);
     bool find_user(std::string nickname);
+    void add_chan(Channel *chan);
 
     std::vector<Channel *>::iterator get_channel_it(Channel *to_find);
 

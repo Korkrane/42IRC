@@ -337,6 +337,9 @@ Channel *IRC::find_channel(std::string channel_name)
 
 void IRC::drop_channel(Channel *to_drop)
 {
+#if MALATINI
+	std::cout << BLUE << "Drop channel function called" << NC << std::endl;
+#endif
 	if (!to_drop)
 		return;
 	//On cherche si le channel fait partie du vecteur
@@ -346,8 +349,9 @@ void IRC::drop_channel(Channel *to_drop)
 	//Si on le trouve, on l enleve du vecteur
 	if (res == true)
 	{
-		std::vector<Channel *>::iterator it = this->get_channel_it(to_drop);
-		chan.erase(it);
+
+		//std::vector<Channel *>::iterator it = this->get_channel_it(to_drop);
+		//chan.erase(it);
 	}
 }
 
@@ -368,6 +372,7 @@ bool IRC::find_channel(Channel *to_find)
 	return (false);
 }
 
+//TODO: a supprimer ?
 std::vector<Channel *>::iterator IRC::get_channel_it(Channel *to_find)
 {
 	std::vector<Channel *> chan = this->get_channels();
@@ -379,12 +384,14 @@ std::vector<Channel *>::iterator IRC::get_channel_it(Channel *to_find)
 	{
 		check_name = (*it)->get_name();
 		if (to_find_name.compare(check_name) == 0)
+		{
 			return (it);
+		}
 		it++;
 	}
 	//Sera superieur a end si il n est pas trouve ?
-	it++;
-	return (it);
+	//it++;
+	return (ite);
 }
 
 bool IRC::find_user(std::string nickname)
@@ -583,4 +590,9 @@ std::string IRC::get_port(void)
 void IRC::set_port(std::string port)
 {
 	_port = port;
+}
+
+void IRC::add_chan(Channel *chan)
+{
+	this->_channels.push_back(chan);
 }
