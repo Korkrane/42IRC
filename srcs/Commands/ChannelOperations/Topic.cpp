@@ -1,19 +1,22 @@
 #include <IRC.hpp>
 
-//TODO: gerer le cas ou on voudrait creer un topic pour plsieurs channels 
+//TODO: gerer le cas ou on voudrait creer un topic pour plsieurs channels
 void Commands::topic(User *user, IRC *server)
 {
     unsigned int size = user->get_params_size();
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
-    std::string channel = params[0];
 
     if (size == 0)
     {
         error.push_back(user->get_command_name());
         return (return_error("461", user, server, error, ""));
     }
+    std::string channel = user->_splitted_channels[0];
 
+#if MALATINI == 1
+    std::cout << GREEN << "Channels is : " << channel << NC << std::endl;
+#endif
     //verifier que la channel passe en parametre existe
     if (is_correct_channel_name(channel) == false || server->has_channel(channel) == false)
     {
@@ -56,16 +59,7 @@ void Commands::topic(User *user, IRC *server)
         //modif baudoin
         chan->set_topic(params[1]);
     }
-    else
-    {
-        //TODO: voir quoi faire ?
-        ;
-    }
     server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
-    #if MALATINI == 1
-        std::cout << PURPLE << "Get topic returns : " << std::endl;
-        std::cout << chan->get_topic() << NC << std::endl;
-    #endif
     return;
 }
 

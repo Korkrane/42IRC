@@ -1,15 +1,44 @@
 #include <IRC.hpp>
+void Commands::loop_part(User *user, IRC *server, std::string bye_message, unsigned int index)
+{
+  (void)user;
+  (void)server;
 
-//TODO: attention dans part si l operateur part il faut qu un autre user soit nomme operateur
+  std::vector<std::string> error;
+  std::vector<std::string> params = user->get_params();
+  std::string channel;
+  //std::string bye_message;
+  //unsigned int size = params.size();
+
+  channel = user->_splitted_channels[index];
+  //On verifie que la channel existe bien le nom doit etre correct et la channel doit exister
+  if (is_correct_channel_name(channel) == false || server->has_channel(channel) == false)
+  {
+    error.push_back(channel);
+    return (return_error("403", user, server, error, ""));
+  }
+  //On rececupere le pointeur sur la channel
+  Channel *chan = server->find_channel(channel);
+
+  //si il n est pas membre on retourne une erreur
+  if (chan->user_is_member(user) == false)
+  {
+    error.push_back(channel);
+    return (return_error("442", user, server, error, ""));
+  }
+  user_parts(user, server, chan, index, bye_message);
+
+  return;
+}
 
 void Commands::part(User *user, IRC *server)
 {
   //Preparation du serveur d'arguments en cas d'ereur
   std::vector<std::string> error;
   std::vector<std::string> params = user->get_params();
-  std::string              channel;
-  std::string              bye_message;
-  unsigned int            size = params.size();
+  std::string channel;
+  std::string bye_message;
+  unsigned int size = params.size();
 
   //Preparation du bye message
   get_channel_targets(user, server);
@@ -29,6 +58,8 @@ void Commands::part(User *user, IRC *server)
 
   while (index < max)
   {
+    loop_part(user, server, bye_message, index);
+    /*
     channel = user->_splitted_channels[index];
     //On verifie que la channel existe bien le nom doit etre correct et la channel doit exister
     if (is_correct_channel_name(channel) == false || server->has_channel(channel) == false)
@@ -46,13 +77,14 @@ void Commands::part(User *user, IRC *server)
       return (return_error("442", user, server, error, ""));
     }
     user_parts(user, server, chan, index, bye_message);
+    */
     index++;
   }
   user->_splitted_channels.clear();
   return;
 }
 
-void  Commands::user_parts(User *user, IRC *server, Channel *chan, int index, std::string bye_message)
+void Commands::user_parts(User *user, IRC *server, Channel *chan, int index, std::string bye_message)
 {
   //si il est membre on quitte le channel
   std::vector<std::string> chan_vec;
@@ -63,5 +95,5 @@ void  Commands::user_parts(User *user, IRC *server, Channel *chan, int index, st
   chan->deleteMember(user);
   //On enleve la cannel de sa liste;
   user->remove_channel_from_list(chan);
-  return ;
+  return;
 }

@@ -64,6 +64,7 @@ public:
 	static bool nickIsAvailable(std::string nick, IRC *server, User *user);
 
 	static void part(User *user, IRC *server);
+	static void loop_part(User *user, IRC *server, std::string bye_message, unsigned int index);
 	static void send_part_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server);
 	static std::string get_bye_message(User *user, IRC *server);
 
