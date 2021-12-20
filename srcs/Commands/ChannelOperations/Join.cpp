@@ -101,21 +101,21 @@ void Commands::join(User *user, IRC *server)
             //on verifie si le user n'a pas atteint son quota max de channel
             if (server->user_can_join(chan) == true && !chan->user_is_member(user)) // || pas deja membre a ajouter
             {
+                #if MALATINI
+                    std::cout << BLUE << "The user is in " << user->get_channels_nb() <<"channels." << NC << std::endl;
+                #endif
                 //On verifie si le user ne listen pas deja sur trop de channels
-                if (chan->get_members_nb() >= CHAN_MAXCAPACITY)
+                if (chan->get_members_nb() > CHAN_MAXCAPACITY - 1)
                     return (return_error("471", user, server, error, ""));
                 //Erreur too many channels
-                else if (user->get_channels_nb() >= USER_MAXCHAN)
+                else if (user->get_channels_nb() > USER_MAXCHAN - 1)
+                {
+                    //TODO: the chan must be deleted if it has been created with this user
                     return (return_error("405", user, server, error, ""));
+                }
                 //chan = server->find_channel(channel);
 
                 user->set_target_channel(chan);
-                #if MALATINI == 1
-                    if (!user->get_target_channel())
-                        std::cout << RED << "Yes, the chan is null. " << NC << std::endl;
-                    else 
-                        std::cout << GREEN << "No the chan is not null." << NC << std::endl;
-                #endif
                 user_joins(user, server, chan, index);
             }
             //Erreur to many channels car l user fait partie de trop de channels
