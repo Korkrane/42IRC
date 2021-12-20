@@ -163,12 +163,13 @@ void IRC::delete_user(int fd)
 		if ((*it)->user_is_owner(user))
 			(*it)->delete_owner();
 	}
-	std::vector<User *> users = this->get_users();
+	// std::vector<User *> users = this->get_users();
 
-	std::vector<User *>::iterator t = std::find(users.begin(), users.end(), user);
+	std::vector<User *>::iterator t = std::find(_users.begin(), _users.end(), user);
 	std::cout << "User erased in IRCserv: " << *t << std::endl;
-	users.erase(std::find(users.begin(), users.end(), user));
+	_users.erase(t);
 	delete user;
+	fds.erase(fd);
 #if DEBUG == 1
 	std::cout << RED << "EXIT IN DELETE_USER" << NC << std::endl;
 #endif
@@ -217,7 +218,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 #if DEBUG == 1
 		std::cout << BLUE << "\tDEBUG: Client first connection" << NC << std::endl;
 #endif
-		this->fds.push_back(clientFD);
+		this->fds.insert(clientFD);
 		this->_users.push_back(new User(clientFD));
 		current_user = _users.back();
 

@@ -1,5 +1,4 @@
-#ifndef CLIENT_HPP
-#define CLIENT_HPP
+#pragma once
 
 #include "IRC.hpp"
 
@@ -14,6 +13,8 @@ private:
 	char		_buffer[BUFFER_SIZE + 1];
 	int const	_fd;
 	std::string	_cmdBuilder;
+	bool		_isGhost;
+	std::time_t	_connTime;
 
 	Client();		// default constructor is not allowed
 	Client(int fd);
@@ -32,5 +33,3 @@ public:
 
 	friend class Server;	// only lets server handle clients
 };
-
-#endif

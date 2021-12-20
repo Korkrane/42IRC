@@ -29,7 +29,7 @@ public:
 
     bool die;
     std::vector<User *> _users;
-    std::vector<int> fds;
+    std::set<int> fds;
     Commands *_commands;
     std::vector<t_clientCmd> _response_queue;
     std::vector<int> _disconnect_list;

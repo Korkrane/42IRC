@@ -9,12 +9,12 @@
  * @param server 
  * @param code 
  */
-void Commands::send_members_nick(User *user, IRC *server)
+void Commands::send_members_nick(User *user, IRC *server, Channel *channel)
 {
 #if MALATINI == 1
     std::cout << RED << "SEND MEMBERS NICK CALLED " << std::endl;
 #endif
-    Channel *channel = user->get_target_channel();
+    // Channel *channel = user->get_target_channel();
     //On va boucler sur tous les membres de la channel 
     std::vector<User *> members = channel->get_members();
     std::vector<User *>::iterator it = members.begin();
@@ -68,7 +68,8 @@ void Commands::names(User *user, IRC *server)
 #if MALATINI == 1
     std::cout << RED << "Names command invoked." << std::endl;
 #endif
-    Channel *channel = user->get_target_channel();
+    // Channel *channel = user->get_target_channel();
+	Channel *channel = NULL;
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
     unsigned int size = params.size();
@@ -77,13 +78,19 @@ void Commands::names(User *user, IRC *server)
         error.push_back(user->get_command_name());
         return (return_error("461", user, server, error, NULL)); //NEED MORE PARAMS
     }
+
+	std::vector<Channel *> chans = server->get_channels();
+	for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); ++it)
+		if ((*it)->get_name() == params[0])
+			channel = *it;
+
     //get_channel_targets(user, server);
     if (channel)
     {
         #if MALATINI == 1 
             std::cout << YELLOW << "Success ! Names will send the names of the users in the channel." << NC << std::endl;
         #endif
-        send_members_nick(user, server);
+        send_members_nick(user, server, channel);
     }
     //TODO: revoir les autres cas de NAMES si il ne s agit pas d'une CHANNEL
     else

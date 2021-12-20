@@ -17,6 +17,7 @@
 #include <list>
 #include <map>
 #include <vector>
+#include <set>
 
 #include <arpa/inet.h>
 #include <fcntl.h>
