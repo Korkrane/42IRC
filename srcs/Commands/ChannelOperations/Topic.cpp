@@ -12,7 +12,7 @@ void Commands::topic(User *user, IRC *server)
         error.push_back(user->get_command_name());
         return (return_error("461", user, server, error, ""));
     }
-    std::string channel = user->_splitted_channels[0];
+    std::string channel = params[0];
 
 #if MALATINI == 1
     std::cout << GREEN << "Channels is : " << channel << NC << std::endl;
@@ -23,7 +23,6 @@ void Commands::topic(User *user, IRC *server)
         error.push_back(channel);
         return (return_error("403", user, server, error, ""));
     }
-
     //On va sauvegarder les string qui constituent le topic
     std::vector<std::string> topic;
     unsigned int i = 1;
@@ -66,10 +65,6 @@ void Commands::topic(User *user, IRC *server)
 #if MALATINI == 1
         std::cout << BLUE << "TOPIC must not be set." << NC << std::endl;
 #endif
-        return;
-    }
-    else
-    {
         error.push_back(channel);
         //Erreur not operateur
         return (return_error("482", user, server, error, ""));
@@ -83,13 +78,17 @@ void Commands::topic(User *user, IRC *server)
     }
     else if (size > 1)
     {
-        //chan->set_topic(user, server, params);
-        //modif baudoin
+#if MALATINI == 1
+        std::cout << GREEN << "TOPIC : setting topic to " << params[1] << NC << std::endl;
+#endif
         chan->set_topic(params[1]);
     }
     else if (size == 1)
     {
-        params.push_back(":No topic is set");
+        if (!chan->get_has_topic())
+            params.push_back(":No topic is set");
+        else
+            params.push_back(chan->get_topic());
     }
     server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
     return;
