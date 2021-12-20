@@ -92,7 +92,6 @@ void Commands::loop_join(User *user, IRC *server, unsigned int index)
             return (return_error("405", user, server, error, ""));
         }
         //chan = server->find_channel(channel);
-
         user->set_target_channel(chan);
         user_joins(user, server, chan, index);
     }
@@ -125,10 +124,7 @@ bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> para
 
 void Commands::join(User *user, IRC *server)
 {
-    //std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
-    //std::string channel;
-    // std::string opt_key = "";
 
     //Va permettre de gerer le cas ou il y a plusieurs channels
     get_channel_targets(user, server);
@@ -157,7 +153,6 @@ void Commands::join(User *user, IRC *server)
     //Clean
     user->_splitted_args.clear();
     user->_splitted_channels.clear();
-    //user->set_target_channel(NULL);
     return;
 }
 
@@ -178,11 +173,7 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     //Verification de la coherence des roles
     check_roles(chan, user, true);
 
-    //On prepare et envoie la reponse du serveur
-    //std::vector<std::string> chan_vec;
-    //chan_vec.push_back(user->_splitted_channels[index]);
     std::vector<User *> users = chan->get_members();
-    //users.push_back(user);
 #if MALATINI == 1
     std::cout << BLUE << "send_rpl_to_all_members called" << NC << std::endl;
 #endif
@@ -194,37 +185,5 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
         server->_response_queue.push_back(std::make_pair((*it)->get_fd(), rpl));
         it++;
     }
-    //server->send_rpl_to_all_members("", users, chan_vec, "JOIN"); //user->_splitted_channels
-    //chan_vec.clear();
-
     names(user, server);
-    //Equivalent NAMES (comme si on avait passe la channel en parametre)
-    /*
-    user->set_target_channel(chan);
-    std::string success_rpl_1;
-    success_rpl_1 = ":127.0.0.1 353 " + user->get_nickname() + " = " + chan->get_name() + " :";
-    //On va d'abord afficher l'operateur
-    User *op = chan->get_operators().front();
-    success_rpl_1 += "@";
-    std::string operator_name = op->get_nickname();
-    success_rpl_1 += operator_name + " ";
-
-    //On fera probablement le tour de tous les users ?
-    if (user != op)
-        success_rpl_1 += user->get_nickname();
-    success_rpl_1 += "\r\n";
-    names(user, server);
-    server->send_rpl("366", user, user->get_params(), "");//ENDOFNAMES 
-    //352 WHO - appelee par le client 
-    user->set_target_channel(NULL);//On remet la target channel a null pour que ce soit bien propre
-    */
-    //user->set_target_channel(NULL);
-}
-
-//Trash pour join mais names devrait fonctionner comme ca de toute facon
-void Commands::trash_names(User *user, IRC *server)
-{
-    (void)user;
-    (void)server;
-    return;
 }

@@ -588,3 +588,8 @@ void User::set_display_who(bool display)
 {
 	this->_display_who = display;
 }
+
+std::vector<Channel *> User::get_channels(void) const
+{
+	return (this->_channels);
+}

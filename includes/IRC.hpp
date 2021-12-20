@@ -64,3 +64,4 @@ std::vector<std::string> old_ft_split(std::string line, std::string charset);
 
 template <typename T>
 std::string to_string(T val);
+void delete_channels(User *user);

@@ -262,7 +262,7 @@ std::vector<User *> IRC::get_users(void)
 
 std::vector<Channel *> IRC::get_channels(void)
 {
-	return _channels;
+	return (this->_channels);
 }
 
 void IRC::displayServerChannels(void)
@@ -490,14 +490,13 @@ int IRC::send_rpl(std::string code, User *user, std::vector<std::string> params,
 	std::cout << PURPLE << "DEBUG: SEND REPLY: RPL/ERR code is " << code << std::endl;
 #endif
 	std::string rpl = this->build_reply(code, user, params, command);
-	#if malatini == 1 
-		std::cout << PURPLE << "Send reply rpl is: " << NC << std::endl;
-		std::cout << GREEN << "Rpl sent to socket: " << user->get_fd() << std::endl;
-	#endif
+#if malatini == 1
+	std::cout << PURPLE << "Send reply rpl is: " << NC << std::endl;
+	std::cout << GREEN << "Rpl sent to socket: " << user->get_fd() << std::endl;
+#endif
 	this->_response_queue.push_back(std::make_pair(user->get_fd(), rpl));
 	return (0);
 }
-
 
 int IRC::send_rpl_to_all_members(std::string code, std::vector<User *> users, std::vector<std::string> params, std::string command)
 {
@@ -533,7 +532,7 @@ int IRC::send_rpl_display_user(User *user, User *target, Channel *chan, std::str
 	rpl += ":127.0.0.1 " + code + " ";
 
 	//TODO: revoir si c est le nickname a chaque fois ou le realname
-	//Va permettre d afficher les informations relatives aux users et notamment son statut 
+	//Va permettre d afficher les informations relatives aux users et notamment son statut
 	rpl += user->get_nickname() + " " + chan->get_name() + " " + target->get_nickname();
 	rpl += "127.0.0.1 0 " + target->get_nickname() + " ";
 	rpl += "H";

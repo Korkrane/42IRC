@@ -69,6 +69,7 @@ public:
 	bool get_display_who(void) const;
 	int get_channels_nb(void) const;
 	int get_fd(void) const;
+	std::vector<Channel *> get_channels(void) const;
 
 	std::string get_request(void) const;
 	std::vector<std::string> get_params(void) const;

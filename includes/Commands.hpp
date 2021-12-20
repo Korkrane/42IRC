@@ -58,7 +58,6 @@ public:
 	static void check_roles(Channel *chan, User *user, bool added);
 	static void user_joins(User *user, IRC *server, Channel *chan, int index);
 	static void user_parts(User *user, IRC *server, Channel *chan, int index, std::string bye_message);
-	static void trash_names(User *user, IRC *Server);
 	static void nick_cmd(User *user, IRC *server);
 	static bool checkNickGrammar(std::string nick, IRC *server, User *user);
 	static bool nickIsAvailable(std::string nick, IRC *server, User *user);
@@ -69,7 +68,7 @@ public:
 	static std::string get_bye_message(User *user, IRC *server);
 
 	static void mode(User *user, IRC *server);
-	static void mode_channel(User *user, IRC *server);
+	static void mode_channel(User *user, IRC *s_messerver);
 	static void modif_user(User *user, IRC *server, std::string modifications);
 	static void mode_user(User *user, IRC *server);
 	static void edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server);
