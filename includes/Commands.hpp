@@ -50,10 +50,11 @@ public:
 	static void displayClientsFromChannel(Channel *channel, User *client);
 	static void paramsIsCorrectChannel(Commands *command, IRC *server);
 	static void paramsIsCorrectOther(Commands *command, IRC *server);
-	static std::string whoHelpParameter(void);//TODO: supprimer si pas utilisee ? 
+	static std::string whoHelpParameter(void); //TODO: supprimer si pas utilisee ?
 	void displayMode(void) const;
 
 	static void join(User *user, IRC *server);
+	static void loop_join(User *user, IRC *server, unsigned int index);
 	static void check_roles(Channel *chan, User *user, bool added);
 	static void user_joins(User *user, IRC *server, Channel *chan, int index);
 	static void user_parts(User *user, IRC *server, Channel *chan, int index, std::string bye_message);
