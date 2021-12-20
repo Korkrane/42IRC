@@ -38,6 +38,9 @@ private:
 	bool _is_registered;
 	bool _display_who;
 
+	//solution dirty Mahaut
+	std::vector<std::string> _topic_params;
+
 	std::string _request;
 	std::string _prefix;
 	std::string _command;
@@ -131,6 +134,10 @@ public:
 
 	void ft_split_channels(std::string line, char charset);
 	void ft_split_args(std::string line, char charset);
+
+	std::vector<std::string> get_topic_params(void) const;
+	void add_topic_params(std::string str);
+	void clear_topic_params(void);
 
 	/*** DEBUG ***/
 	void display_client_info(void);

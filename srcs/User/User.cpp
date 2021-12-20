@@ -593,3 +593,18 @@ std::vector<Channel *> User::get_channels(void) const
 {
 	return (this->_channels);
 }
+
+std::vector<std::string> User::get_topic_params(void) const
+{
+	return (this->_topic_params);
+}
+
+void User::add_topic_params(std::string str)
+{
+	this->_topic_params.push_back(str);
+}
+
+void User::clear_topic_params(void)
+{
+	this->_topic_params.clear();
+}

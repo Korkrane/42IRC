@@ -1,5 +1,85 @@
 #include <IRC.hpp>
 
+bool Commands::same_args(User *user, IRC *server)
+{
+    (void)user;
+    (void)server;
+    std::vector<std::string> params = user->get_params();
+    int size = params.size();
+    std::string param_one = "";
+    std::string param_two = "";
+    std::string tmp = "";
+    std::string tmp2 = "";
+
+    if (size > 1)
+        param_one = params[0];
+    if (size > 2)
+        param_two = params[1];
+
+    if (param_one.length() > 1)
+        std::string tmp(param_one.substr(1));
+    if (param_two.length() > 1)
+        std::string tmp2(param_two.substr(1));
+    if (tmp.compare(tmp2) == 0)
+    {
+#if MALATINI == 1
+        std::cout << GREEN << "TOPIC : same arg true" << NC << std::endl;
+#endif
+        return (true);
+    }
+
+    return (false);
+}
+
+//obligee de refaire la fonction car le send to all convient pas
+void Commands::send_topic_message(User *user, Channel *chan, IRC *server)
+{
+#if MALATINI == 1
+    std::cout << RED << "SEND TOPIC MESSAGE CALLED" << NC << std::endl;
+#endif
+    (void)user;
+    (void)chan;
+    //(void)params;
+    (void)server;
+    std::vector<std::string> params = user->get_topic_params();
+    int size = params.size();
+
+#if MALATINI == 1
+    if (size == 0)
+    {
+        std::cout << PURPLE << "The given params vector is empty." << NC << std::endl;
+    }
+    else
+    {
+        std::cout << PURPLE << "The size is " << size << std::endl;
+    }
+#endif
+    std::vector<User *> users = chan->get_members();
+    std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@0";
+    //+chan->get_name() + "\r\n";
+    std::vector<User *>::iterator it = users.begin();
+    std::vector<User *>::iterator ite = users.end();
+    if (size > 1 && params[1].compare(":No topic is set"))
+        rpl += " TOPIC ";
+    else
+        rpl += " 331 : ";
+    if (size >= 1)
+        rpl += params[0] + " ";
+    if (size >= 2)
+        rpl += params[1];
+    rpl += "\r\n";
+    while (it != ite)
+    {
+#if MALATINI == 1
+        std::cout << GREEN << rpl << NC << std::endl;
+#endif
+        server->_response_queue.push_back(std::make_pair((*it)->get_fd(), rpl));
+        it++;
+    }
+    user->clear_topic_params();
+    return;
+}
+
 //TODO: gerer le cas ou on voudrait creer un topic pour plsieurs channels
 void Commands::topic(User *user, IRC *server)
 {
@@ -33,7 +113,7 @@ void Commands::topic(User *user, IRC *server)
     }
     //et que le client y est registered
     Channel *chan = server->find_channel(channel);
-
+    bool same_arg = same_args(user, server);
     if (!chan)
     {
 #if MALATINI == 1
@@ -59,8 +139,12 @@ void Commands::topic(User *user, IRC *server)
     {
         check_topic(chan, user, server);
     }
+    if (size >= 1)
+        user->add_topic_params(params[0]);
+    if (size >= 2)
+        user->add_topic_params(params[1]);
     //Si la channel porte le mode "t", seuls les operateurs peuvent set le topic
-    if (chan->has_mode('t') == true && !chan->user_is_operator(user))
+    if (chan->has_mode('t') == true && !chan->user_is_operator(user) && !same_arg)
     {
 #if MALATINI == 1
         std::cout << BLUE << "TOPIC must not be set." << NC << std::endl;
@@ -69,7 +153,16 @@ void Commands::topic(User *user, IRC *server)
         //Erreur not operateur
         return (return_error("482", user, server, error, ""));
     }
-
+    else if (same_arg && !chan->user_is_operator(user) && chan->has_mode('t') == true) //Si je ne suis pas operator et qu il y a le mode et que je veux voir le topic
+    {
+        if (!chan->get_has_topic())
+            user->add_topic_params(":No topic is set");
+        else
+            user->add_topic_params(chan->get_topic());
+        send_topic_message(user, chan, server);
+        //server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
+        return;
+    }
     //Si la chaine est une chaine vide (comprendre contient uniquement :), ca unset les topic (clear)
     //Si il n y a pas de chaine, alors fait permet de checker quel est le topic
     if (size > 1 && params[1].compare(":") == false)
@@ -86,11 +179,13 @@ void Commands::topic(User *user, IRC *server)
     else if (size == 1)
     {
         if (!chan->get_has_topic())
-            params.push_back(":No topic is set");
+            user->add_topic_params(":No topic is set");
         else
-            params.push_back(chan->get_topic());
+            user->add_topic_params(chan->get_topic());
+        //params.push_back(chan->get_topic());
     }
-    server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
+    send_topic_message(user, chan, server);
+    //server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
     return;
 }
 

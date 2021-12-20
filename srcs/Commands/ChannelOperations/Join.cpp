@@ -173,6 +173,7 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     //Verification de la coherence des roles
     check_roles(chan, user, true);
 
+    //Faire une sous fonction speciale ou remettre dans le send rpl
     std::vector<User *> users = chan->get_members();
 #if MALATINI == 1
     std::cout << BLUE << "send_rpl_to_all_members called" << NC << std::endl;
