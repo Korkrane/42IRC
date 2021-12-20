@@ -344,22 +344,18 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         else if (command.compare("TOPIC") == 0)
         {
             unsigned int size = params.size();
-            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "0 TOPIC ";
-            if (size > 1)
-            {
-                rpl += params[0] + " ";
-                rpl += params[1] + "\r\n";
-            }
-            /*
+            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "0";
+#if MALATINI == 1
+            std::cout << PURPLE << "Topic size is " << size << NC << std::endl;
+            std::cout << PURPLE << params[0] << std::endl;
+            std::cout << params[1] << NC << std::endl;
+#endif
+            if (size > 1 && params[1].compare(":No topic is set"))
+                rpl += " TOPIC ";
             else
-            {
-                rpl += " 332 : ";
-                Channel *chan = this->find_channel(params[0]);
-                if (chan)
-                    rpl += " " + chan->get_topic() + " ";
-                rpl += "\r\n";
-            }
-            */
+                rpl += " 331 : ";
+            rpl += params[0] + " ";
+            rpl += params[1] + "\r\n";
             return rpl;
         }
         /*
