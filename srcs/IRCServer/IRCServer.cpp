@@ -164,7 +164,7 @@ void IRC::delete_user(int fd)
 			(*it)->delete_owner();
 	}
 	_users.erase(std::find(_users.begin(), _users.end(), user));
-	//delete user;
+	delete user;
 #if DEBUG == 1
 	std::cout << RED << "EXIT IN DELETE_USER" << NC << std::endl;
 #endif
