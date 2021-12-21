@@ -163,12 +163,8 @@ void IRC::delete_user(int fd)
 		if ((*it)->user_is_owner(user))
 			(*it)->delete_owner();
 	}
-	std::vector<User *> users = this->get_users();
-
-	std::vector<User *>::iterator t = std::find(users.begin(), users.end(), user);
-	std::cout << "User erased in IRCserv: " << *t << std::endl;
-	users.erase(std::find(users.begin(), users.end(), user));
-	delete user;
+	_users.erase(std::find(_users.begin(), _users.end(), user));
+	//delete user;
 #if DEBUG == 1
 	std::cout << RED << "EXIT IN DELETE_USER" << NC << std::endl;
 #endif

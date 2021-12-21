@@ -26,7 +26,7 @@ void Commands::privmsg(User *user, IRC *server)
         server->send_rpl("411", user, reply_params, "");
         return;
     }
-    else if (user->get_params_size() < 2) //s'il n'y a pas de message à envoyer
+    else if (user->get_params_size() < 2 || params[1].empty()) //s'il n'y a pas de message à envoyer
     {
         std::vector<std::string> reply_params;
         server->send_rpl("412", user, reply_params, "");

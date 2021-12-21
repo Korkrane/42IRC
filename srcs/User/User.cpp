@@ -21,6 +21,8 @@ User::User(int fd) : _fd(fd)
 	_is_registered = false;
 	_is_oper = false;
 	_is_away = false;
+
+	_channels_nb = 0;
 }
 
 User::~User(void)
@@ -503,20 +505,17 @@ void User::add_channel_to_list(Channel *channel)
  */
 void User::remove_channel_from_list(Channel *channel)
 {
-	std::vector<Channel *> chans = _channels;
-	std::vector<Channel *>::iterator it = chans.begin();
-	std::vector<Channel *>::iterator ite = chans.end();
 	std::string channel_name = channel->get_name();
 	std::string check_name;
-	while (it != ite)
+	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 	{
 		check_name = (*it)->get_name();
 		if (channel_name.compare(check_name) == 0)
 		{
-			chans.erase(it);
+			_channels.erase(it);
 			decrease_channel_nb();
+			break;
 		}
-		it++;
 	}
 }
 
