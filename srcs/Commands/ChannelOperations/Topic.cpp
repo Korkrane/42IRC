@@ -16,26 +16,31 @@ bool Commands::same_arguments(User *user, IRC *server)
     if (size >= 2)
         param_two = params[1];
 #if MALATINI == 1
-    std::cout << "SAME ARG : comparing " << param_one << " and " << param_two << NC << std::endl;
+    std::cout << BLUE << "SAME ARG SIZE IS " << size << NC << std::endl;
 #endif
-    if (param_one.length() >= 1)
+    //attenton risque segfault ?
+    if (!param_one.empty() && !param_two.empty())
+    {
         std::string tmp(param_one.substr(1));
-    if (param_two.length() >= 2)
         std::string tmp2(param_two.substr(1));
+    }
+    
 #if MALATINI == 1
-    std::cout << "SAME ARG : comparing " << param_one << " and " << param_two << NC << std::endl;
+    std::cout << "SAME ARG : comparing " << tmp << " and " << tmp2 << NC << std::endl;
 #endif
-    if (size >= 2 && tmp.compare(tmp2) == 0)
+    if (size >= 2 && tmp.compare(tmp2))
     {
 #if MALATINI == 1
         std::cout << GREEN << "TOPIC : same arg true" << NC << std::endl;
+        std::cout << GREEN << "1 first condition" << NC << std::endl;
 #endif
         return (true);
     }
-    else if (tmp2.empty())
+    else if (size < 2 && tmp2.empty())
     {
         #if MALATINI == 1
             std::cout << GREEN << "TOPIC: the second param is empty, returning true" << NC << std::endl;
+            std::cout << GREEN << "2nd first condition" << NC << std::endl;
         #endif
         return (true);
     }
@@ -46,9 +51,9 @@ bool Commands::same_arguments(User *user, IRC *server)
 }
 
 //obligee de refaire la fonction car le send to all convient pas
-void Commands::send_topic_message(User *user, Channel *chan, IRC *server, bool same_args)
+void Commands::send_topic_message(User *user, Channel *chan, IRC *server, bool same_arg)
 {
-    (void)same_args;//same args devrait deja etre gere dans la fonction precedente
+    (void)same_arg;//same args devrait deja etre gere dans la fonction precedente
 #if MALATINI == 1
     std::cout << RED << "SEND TOPIC MESSAGE CALLED" << NC << std::endl;
 #endif
@@ -75,7 +80,7 @@ void Commands::send_topic_message(User *user, Channel *chan, IRC *server, bool s
     std::vector<User *>::iterator it = users.begin();
     std::vector<User *>::iterator ite = users.end();
     bool info = false;
-    if (!chan->user_is_operator(user) && same_args == true)
+    if (!chan->user_is_operator(user) && same_arg == true)
     {
         rpl += " 332 : ";
         info = true;
