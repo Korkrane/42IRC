@@ -1,11 +1,11 @@
-#include <IRC.hpp>
+#include "IRC.hpp"
 
-void Commands::away_cmd(User *user, IRC *server) // 305 & 306 reply
+void Commands::away_cmd(User *user, IRC *server)
 {
     std::vector<std::string> reply_params;
-    std::vector<std::string> user_params = user->get_params();
+    std::vector<std::string> params = user->get_params();
 
-    if (user->is_away() && user_params.empty()) // s'il est deja afk mais pas de param on le marque non afk
+    if (user->is_away() && params.empty())
     {
         user->is_away(false);
         user->set_away_mssg("");
@@ -14,8 +14,8 @@ void Commands::away_cmd(User *user, IRC *server) // 305 & 306 reply
     else
     {
         user->is_away(true);
-        if(!user_params.empty())
-            user->set_away_mssg(user_params[0]);
+        if (!params.empty())
+            user->set_away_mssg(params[0]);
         server->send_rpl("306", user, reply_params, "");
     }
 }

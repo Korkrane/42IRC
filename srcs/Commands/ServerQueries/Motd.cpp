@@ -1,5 +1,4 @@
-#include <fstream>
-#include <IRC.hpp>
+#include "IRC.hpp"
 
 void Commands::motd_cmd(User *user, IRC *server)
 {
@@ -22,8 +21,6 @@ void Commands::motd_cmd(User *user, IRC *server)
             reply_params.push_back(user->get_hostname());
             server->send_rpl("375", user, reply_params, "");
             reply_params.clear();
-
-            std::string buff;
             for (std::string line; getline(infile, line);)
             {
                 line = "- " + line + "\r\n";
@@ -31,9 +28,7 @@ void Commands::motd_cmd(User *user, IRC *server)
                 server->send_rpl("372", user, reply_params, "");
                 reply_params.clear();
             }
-
             server->send_rpl("376", user, reply_params, "");
-            reply_params.clear();
         }
         else
             server->send_rpl("422", user, params, "");

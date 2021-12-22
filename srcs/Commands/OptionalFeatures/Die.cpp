@@ -1,4 +1,4 @@
-#include <IRC.hpp>
+#include "IRC.hpp"
 
 void Commands::die(User *user, IRC *server)
 {
@@ -6,10 +6,10 @@ void Commands::die(User *user, IRC *server)
     std::cout << RED << "ENTER DIE CMD" << NC << std::endl;
 #endif
     std::vector<std::string> params = user->get_params();
-    std::vector<std::string> params_reply;
+    std::vector<std::string> reply_params;
 
-    if (user->is_operator() == false)
-        server->send_rpl("481", user, params_reply, "");
+    if (!user->is_operator())
+        server->send_rpl("481", user, reply_params, "");
     else
     {
         server->die = true;
