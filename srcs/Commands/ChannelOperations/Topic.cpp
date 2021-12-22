@@ -1,6 +1,6 @@
 #include <IRC.hpp>
 
-bool Commands::same_args(User *user, IRC *server)
+bool Commands::same_arguments(User *user, IRC *server)
 {
     (void)user;
     (void)server;
@@ -11,29 +11,49 @@ bool Commands::same_args(User *user, IRC *server)
     std::string tmp = "";
     std::string tmp2 = "";
 
-    if (size > 1)
+    if (size >= 1)
         param_one = params[0];
-    if (size > 2)
+    if (size >= 2)
         param_two = params[1];
-
-    if (param_one.length() > 1)
+#if MALATINI == 1
+    std::cout << BLUE << "SAME ARG SIZE IS " << size << NC << std::endl;
+#endif
+    //attenton risque segfault ?
+    if (!param_one.empty() && !param_two.empty())
+    {
         std::string tmp(param_one.substr(1));
-    if (param_two.length() > 1)
         std::string tmp2(param_two.substr(1));
-    if (tmp.compare(tmp2) == 0)
+    }
+    
+#if MALATINI == 1
+    std::cout << "SAME ARG : comparing " << tmp << " and " << tmp2 << NC << std::endl;
+#endif
+    if (size >= 2 && tmp.compare(tmp2))
     {
 #if MALATINI == 1
         std::cout << GREEN << "TOPIC : same arg true" << NC << std::endl;
+        std::cout << GREEN << "1 first condition" << NC << std::endl;
 #endif
         return (true);
     }
-
+    else if (size < 2 && tmp2.empty())
+    {
+        #if MALATINI == 1
+            std::cout << GREEN << "TOPIC: the second param is empty, returning true" << NC << std::endl;
+            std::cout << GREEN << "2nd first condition" << NC << std::endl;
+        #endif
+        return (true);
+    }
+#if MALATINI == 1
+        std::cout << RED << "TOPIC : SAME ARG FALSE" << NC << std::endl;
+#endif
     return (false);
 }
 
 //obligee de refaire la fonction car le send to all convient pas
-void Commands::send_topic_message(User *user, Channel *chan, IRC *server)
+void Commands::send_topic_message(User *user, Channel *chan, IRC *server, bool same_arg)
 {
+    (void)same_arg;//same args devrait deja etre gere dans la fonction precedente
 #if MALATINI == 1
     std::cout << RED << "SEND TOPIC MESSAGE CALLED" << NC << std::endl;
 #endif
@@ -60,11 +80,16 @@ void Commands::send_topic_message(User *user, Channel *chan, IRC *server)
     std::vector<User *>::iterator it = users.begin();
     std::vector<User *>::iterator ite = users.end();
     bool info = false;
-    if (!chan->user_is_operator(user))
+    if (!chan->user_is_operator(user) && same_arg == true)
     {
         rpl += " 332 : ";
         info = true;
     }
+    /*
+    else if (!chan->user_is_operator(user))
+    {
+        //reponse you re not channel operator 442
+    }*/
 
     else if (size > 1 && params[1].compare(":No topic is set"))
         rpl += " TOPIC ";
@@ -137,7 +162,7 @@ void Commands::topic(User *user, IRC *server)
     }
     //et que le client y est registered
     Channel *chan = server->find_channel(channel);
-    bool same_arg = same_args(user, server);
+    bool same_arg = same_arguments(user, server);
     if (!chan)
     {
 #if MALATINI == 1
@@ -171,7 +196,7 @@ void Commands::topic(User *user, IRC *server)
     if (chan->has_mode('t') == true && !chan->user_is_operator(user) && !same_arg) //
     {
 #if MALATINI == 1
-        std::cout << BLUE << "TOPIC must not be set." << NC << std::endl;
+        std::cout << RED << "!!TOPIC must not be set." << NC << std::endl;
 #endif
         error.push_back(channel);
         //Erreur not operateur
@@ -183,7 +208,7 @@ void Commands::topic(User *user, IRC *server)
             user->add_topic_params(":No topic is set");
         else
             user->add_topic_params(chan->get_topic());
-        send_topic_message(user, chan, server);
+        send_topic_message(user, chan, server, same_arg);
         //server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
         return;
     }
@@ -208,7 +233,7 @@ void Commands::topic(User *user, IRC *server)
             user->add_topic_params(chan->get_topic());
         //params.push_back(chan->get_topic());
     }
-    send_topic_message(user, chan, server);
+    send_topic_message(user, chan, server, false);
     user->clear_topic_params(); //ca fait un peu doublon
     //server->send_rpl_to_all_members("", chan->get_members(), params, "TOPIC");
     return;

@@ -81,12 +81,12 @@ public:
 	static void kick(User *client, IRC *server);
 	static void send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment);
 
-	static void send_topic_message(User *user, Channel *chan, IRC *server);
+	static void send_topic_message(User *user, Channel *chan, IRC *server, bool same_args);
 	static void topic(User *client, IRC *server);
-	static bool same_args(User *user, IRC *server);
+	static bool same_arguments(User *user, IRC *server);
 
 	static void check_topic(Channel *channel, User *user, IRC *server);
-	static void send_topic_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server);
+	//static void send_topic_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server);
 
 	static void list(User *client, IRC *server);
 
