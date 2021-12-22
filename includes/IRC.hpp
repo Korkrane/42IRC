@@ -37,6 +37,7 @@
 #include "Commands.hpp"
 #include "IRCServer.hpp"
 #include "User.hpp"
+#include "ft.hpp"
 
 #define NICK_VALID_CHARS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-^_[]{}\\|"
 #define CHANNEL_VALID_CHARS "#&!+"
@@ -54,14 +55,6 @@
 #define OPER_NAME "admin"
 class User;
 
-std::string build_reply(int code, User *server, std::vector<std::string> params);
 void error_handler(std::string error_code, User *user, Channel *channel, std::vector<std::string> parameter);
-void send_reply(std::string reply);
 std::vector<std::string> ft_split(std::string line, std::string charset);
-void display_vector_string(std::vector<std::string> vector);
-
-std::vector<std::string> old_ft_split(std::string line, std::string charset);
-
-template <typename T>
-std::string to_string(T val);
 void delete_channels(User *user);

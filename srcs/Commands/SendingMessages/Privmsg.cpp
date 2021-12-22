@@ -5,7 +5,7 @@ std::vector<std::string> Commands::fill_recipients(std::string target)
 #if DEBUG == 1
     std::cout << PURPLE << "ENTER IN FILL RECIPIENTS FOR PRIVMSG" << NC << std::endl;
 #endif
-    std::vector<std::string> recipients = old_ft_split(target, ",");
+    std::vector<std::string> recipients = ft::old_ft_split(target, ",");
 #if DEBUG == 1
     for (std::vector<std::string>::iterator it = recipients.begin(); it != recipients.end(); it++)
         std::cout << PURPLE << "Target for privmsg: " << (*it) << std::endl;

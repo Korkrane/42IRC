@@ -1,88 +1,15 @@
 #include <IRC.hpp>
 
-template <typename T>
-std::string to_string(T val)
-{
-    std::stringstream stream;
-    stream << val;
-    return stream.str();
-}
-
-/**
- * @brief format the code into a valid string for the server reply (ex: int 1 --> str 001)
- *
- * @param code
- * @return std::string
- */
-std::string format_code_str(int code)
-{
-    if (code < 10)
-        return "00" + to_string(code);
-    else if (code < 100)
-        return "0" + to_string(code);
-    return to_string(code);
-}
-
-//TODO: encore utilise dans la premiere partie de la correction, a revoir
-std::string build_reply(int code, User *user, std::vector<std::string> params)
-{
-    std::string code_str;
-    std::string prefix;
-
-    code_str = format_code_str(code);
-    if (user->get_nickname().empty())
-        prefix = ":" + user->get_hostname() + " " + code_str + " * ";
-    else
-        prefix = ":" + user->get_hostname() + " " + code_str + " " + user->get_nickname() + " ";
-    switch (code)
-    {
-    case 1:
-        return prefix + RPL_WELCOME(params[0], params[1], params[2]);
-    case 2:
-        return prefix + RPL_YOURHOST(params[0], "1.0");
-    case 3:
-        return prefix + RPL_CREATED(params[0]);
-    case 4: // TODO remove hardcoded version value
-        return prefix + RPL_MYINFO(params[0], "1.0", USER_VALID_MODES, CHANNEL_VALID_MODES);
-    case 305:
-        return prefix + RPL_UNAWAY();
-    case 306:
-        return prefix + RPL_NOWAWAY();
-    case 351:
-        return prefix + RPL_VERSION(params[0], params[1], params[2], params[3]);
-    case 372:
-        return prefix + RPL_MOTD(params[0]);
-    case 375:
-        return prefix + RPL_MOTDSTART(params[0]);
-    case 376:
-        return prefix + RPL_ENDOFMOTD();
-    case 391:
-        return prefix + RPL_TIME(params[0], params[1]);
-    case 402:
-        return prefix + ERR_NOSUCHSERVER(params[0]);
-    case 421:
-        return prefix + ERR_UNKNOWNCOMMAND(params[0]);
-    case 422:
-        return prefix + ERR_NOMOTD();
-    case 999:
-        return (":" + user->get_hostname() + " " + "PONG" + " " + user->get_hostname() + " :" + user->get_hostname());
-    default:
-        return std::string("");
-    }
-    return std::string("");
-}
-
 std::string IRC::build_reply(std::string code, User *user, std::vector<std::string> params, std::string command)
 {
-    std::string prefix;
-
     int int_code = atoi(code.c_str());
 
+    std::string prefix;
     if (user->get_nickname().empty())
         prefix = ":" + user->get_hostname() + " " + code + " * ";
     else
         prefix = ":" + user->get_hostname() + " " + code + " " + user->get_nickname() + " ";
-    //Si la commande est emptuy c'est qu'il s'agit d'un message d erreur classique
+
     if (command.empty())
     {
         switch (int_code)
@@ -93,7 +20,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             return prefix + RPL_YOURHOST(params[0], "1.0");
         case 3:
             return prefix + RPL_CREATED(params[0]);
-        case 4: // TODO remove hardcoded version value
+        case 4:
             return prefix + RPL_MYINFO(params[0], "1.0", USER_VALID_MODES, CHANNEL_VALID_MODES);
         case 221:
             return prefix + RPL_UMODEIS(user->get_modes());
@@ -187,9 +114,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         case 404:
             return prefix + ERR_CANNOTSENDTOCHAN(params[0]);
         case 405:
-        {
             return prefix + ERR_TOOMANYCHANNELS(params[0]);
-        }
         case 406:
             return prefix + ERR_WASNOSUCHNICK(params[0]);
         case 407:
@@ -306,35 +231,20 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         case 502:
             return prefix + ERR_USERSDONTMATCH();
         case 999:
-            //return (":127.0.0.1 PONG 127.0.0.1 :127.0.0.1\r\n"); //À CHOISIR SI ON VEUT AVOIR LE MSSG PONG VISIBLE OU NON
             return (":127.0.0.1 PONG\r\n");
         case 998:
             return prefix + "ERROR\r\n";
         default:
             return std::string("");
         }
-#if DEBUG == 1
-        std::cout << PURPLE << "BUILD : REPLY : Error, did not match any case" << std::endl;
-#endif
-        return std::string("");
     }
-    //TODO: coder la partie pour les commandes + gerer le cas d'envoir a tout une channel
     else
     {
         if (command.compare("JOIN") == 0)
-        {
-            std::string rpl = ":" + user->get_nickname() + "!" + user->get_username() + "@" + "0";
-            rpl += " " + command + " " + params[0] + "\r\n";
-            return rpl;
-        }
+            return (":" + user->get_nickname() + "!" + user->get_username() + "@" + "0 " + command + " " + params[0] + "\r\n");
         else if (command.compare("PART") == 0)
         {
-            std::string rpl = ":" + params[0] + "!" + params[1] + "@" + "127.0.0.1";
-            rpl += " " + command + " " + params[2] + " " + params[3] + "\r\n";
-#if DEBUG == 1
-            std::cout << "Part reply is :" << rpl << NC << std::endl;
-#endif
-            return rpl;
+            return (":" + params[0] + "!" + params[1] + "@" + "127.0.0.1 " + command + " " + params[2] + " " + params[3] + "\r\n");
         }
         //Attention comportement differents en fontion du nombre de params
         //J ai repris send topic message
@@ -375,62 +285,22 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         }
         */
         if (command == "PRIVMSG")
-        {
-            std::cout << GREEN << "build privmsg reply" << NC << std::endl;
-            std::string rpl;
-
-            rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
-            rpl += " " + command + " " + params[3] + " " + params[4] + "\r\n";
-            return rpl;
-        }
+            return (":" + params[0] + "!" + params[1] + "@" + params[2] + " " + command + " " + params[3] + " " + params[4] + "\r\n");
         else if (command == "NOTICE")
         {
-            std::cout << GREEN << "build notice reply" << NC << std::endl;
-            std::string rpl;
             if (code == "server")
-                rpl = ":" + params[0] + " " + command + " " + params[1] + " " + params[2] + "\r\n";
+                return (":" + params[0] + " " + command + " " + params[1] + " " + params[2] + "\r\n");
             else
-            {
-                rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
-                rpl += " " + command + " " + params[3] + " " + params[4] + "\r\n";
-            }
-            return rpl;
+                return (":" + params[0] + "!" + params[1] + "@" + params[2] + " " + command + " " + params[3] + " " + params[4] + "\r\n");
         }
         else if (command == "INVITE")
-        {
-            std::cout << GREEN << "build invite reply" << NC << std::endl;
-            std::string rpl;
-
-            rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
-            rpl += " " + command + " " + params[3] + " " + params[4] + "\r\n";
-            return rpl;
-        }
+            return (":" + params[0] + "!" + params[1] + "@" + params[2] + " " + command + " " + params[3] + " " + params[4] + "\r\n");
         else if (command == "KICK")
-        {
-            std::cout << GREEN << "build kick reply" << NC << std::endl;
-            std::string rpl;
-
-            rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
-            rpl += " " + command + " " + params[3] + " " + params[4] + " " + params[5] + "\r\n";
-            return rpl;
-        }
+            return (":" + params[0] + "!" + params[1] + "@" + params[2] + " " + command + " " + params[3] + " " + params[4] + " " + params[5] + "\r\n");
         else if (command == "MODE_USER")
-        {
-            std::cout << GREEN << "build mode reply" << NC << std::endl;
-            std::string rpl;
-
-            rpl = ":" + user->get_nickname() + " MODE " + user->get_nickname() + " :" + params[0] + "\r\n";
-            return rpl;
-        }
+            return (":" + user->get_nickname() + " MODE " + user->get_nickname() + " :" + params[0] + "\r\n");
         else if (command == "MODE_CHANNEL")
-        {
-            std::cout << GREEN << "build channel reply" << NC << std::endl;
-            std::string rpl;
-
-            rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
-            rpl += " MODE " + params[3] + " " + params[4] + " " + params[5] + "\r\n";
-            return rpl;
-        }
+            return (":" + params[0] + "!" + params[1] + "@" + params[2] + " MODE " + params[3] + " " + params[4] + " " + params[5] + "\r\n");
     }
 #if DEBUG == 1
     std::cout << PURPLE << "BUILD : REPLY : Error, did not match any case" << std::endl;

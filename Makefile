@@ -38,7 +38,6 @@ NAMES		=	main.cpp \
 				Server/Server.cpp \
 				User/User.cpp \
 				Utils/ft_split.cpp \
-				Utils/tmp_utils.cpp \
 
 
 INCLUDES	=	./includes/Channel.hpp \
@@ -51,6 +50,7 @@ INCLUDES	=	./includes/Channel.hpp \
 				./includes/ClientUtils.hpp \
 				./includes/IRCServer.hpp \
 				./includes/User.hpp \
+				./includes/ft.hpp \
 
 TEST_SRCS	=	./test/cmd_tests/admin.cpp \
 				./test/cmd_tests/away.cpp \

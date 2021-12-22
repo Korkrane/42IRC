@@ -19,8 +19,8 @@ void Commands::kick(User *user, IRC *server)
 	}
 
 	//1. fills vector of chans to affect and users to kick
-	std::vector<std::string> chans_name = old_ft_split(params[0], ",");
-	std::vector<std::string> targets_name = old_ft_split(params[1], ",");
+	std::vector<std::string> chans_name = ft::old_ft_split(params[0], ",");
+	std::vector<std::string> targets_name = ft::old_ft_split(params[1], ",");
 	std::vector<Channel *> chans;
 	std::vector<User *> targets;
 

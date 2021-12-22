@@ -111,10 +111,8 @@ public:
 	void set_away_mssg(std::string message);
 
 	/*** METHODS ***/
-	int store_string_until_char(std::string *dest, std::string *src, char c, int len); //TODO faire un namespace utils
+	int store_string_until_char(std::string *dest, std::string *src, char c, int len);
 	void patch_params(std::vector<std::string> *params);
-	void split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c); //TODO faire un namespace utils
-	bool string_end_with(std::string const &fullString, std::string const &ending);		  //TODO faire un namespace
 
 	void store_prefix(void);
 	void store_command(void);

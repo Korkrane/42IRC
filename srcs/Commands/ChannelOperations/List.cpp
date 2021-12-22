@@ -34,7 +34,7 @@ void Commands::list(User *user, IRC *server)
     else
     {
         std::cout << BLUE << "DEBUG: has params in list" << NC << std::endl;
-        std::vector<std::string> channels_name = old_ft_split(params[0], ",");
+        std::vector<std::string> channels_name = ft::old_ft_split(params[0], ",");
         server->send_rpl("321", user, reply_params, "");
         if (channels_name.size() > 0)
         {

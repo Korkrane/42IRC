@@ -270,14 +270,6 @@ void User::store_prefix()
 	}
 }
 
-bool User::string_end_with(std::string const &fullString, std::string const &ending)
-{
-	if (fullString.length() >= ending.length())
-		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
-	else
-		return false;
-}
-
 void User::store_command(std::vector<t_cmd>::iterator it)
 {
 	if (!(*it)._unparsed.empty())
@@ -285,7 +277,7 @@ void User::store_command(std::vector<t_cmd>::iterator it)
 		int i = 0;
 		i = store_string_until_char(&(*it)._command, &(*it)._unparsed, ' ', i);
 		(*it)._unparsed.replace(0, i, "");
-		if (string_end_with((*it)._command, "\r\n"))
+		if (ft::string_end_with((*it)._command, "\r\n"))
 			(*it)._command.resize((*it)._command.size() - 2);
 		std::transform((*it)._command.begin(), (*it)._command.end(), (*it)._command.begin(), ::toupper);
 	}
@@ -298,23 +290,9 @@ void User::store_command()
 		int i = 0;
 		i = store_string_until_char(&_command, &_request, ' ', i);
 		_request.replace(0, i, "");
-		if (string_end_with(_command, "\r\n"))
+		if (ft::string_end_with(_command, "\r\n"))
 			_command.resize(_command.size() - 2);
 	}
-}
-
-void User::split_string_to_vector(std::vector<std::string> *vec, std::string *str, char c)
-{
-	size_t pos = str->find(c);
-	size_t init_pos = 0;
-
-	while (pos != std::string::npos)
-	{
-		vec->push_back(str->substr(init_pos, pos - init_pos));
-		init_pos = pos + 1;
-		pos = str->find(c, init_pos);
-	}
-	vec->push_back(str->substr(init_pos, std::min(pos, str->size()) - init_pos + 1));
 }
 
 void User::patch_params(std::vector<std::string> *params)
@@ -343,7 +321,7 @@ void User::store_params(std::vector<t_cmd>::iterator it)
 	{
 		size_t rn = (*it)._unparsed.find("\r\n");
 		(*it)._unparsed = (*it)._unparsed.substr(0, rn);
-		split_string_to_vector(&(*it)._params, &(*it)._unparsed, ' ');
+		ft::split_string_to_vector(&(*it)._params, &(*it)._unparsed, ' ');
 		patch_params(&(*it)._params);
 	}
 }
@@ -352,7 +330,7 @@ void User::store_params()
 {
 	if (this->_request != "")
 	{
-		split_string_to_vector(&this->_params, &this->_request, ' ');
+		ft::split_string_to_vector(&this->_params, &this->_request, ' ');
 		patch_params(&this->_params);
 	}
 }
