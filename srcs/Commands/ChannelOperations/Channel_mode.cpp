@@ -1,182 +1,10 @@
 #include <IRC.hpp>
 
-/*
-bool            Commands::should_remove_mode(std::string modes)
-{
-    bool res = false;
-    if (modes[0] == '-')
-        res = true;
-    return (res);
-}
-
-//TODO: voir comment gerer le cas ou il n y aurait ni + ni - //par defaut irssi et hex considere un + si pas de signe :)
-bool            Commands::should_add_mode(std::string modes)
-{
-    //si on trouve un +, oui
-    bool res = false;
-    if (modes[0] == '+')
-        res = true;
-    return (res);
-}
-
-//Fonction simplifiee Mahaut
-char    Commands::get_mode_sign(std::string str, int pos)
-{
-    int i = pos;
-    char c;
-    int len = str.length();
-    while (!isalpha(str[i]) && i < len)
-    {
-        c = str[i];
-        i++;
-    }
-    return (c);
-}
-
-int     Commands::pos_next_mode(std::string str, int prev_pos)
-{
-    int pos = prev_pos;
-    int len = str.length();
-    while (!isalpha(str[pos]) && pos < len)
-    {
-        pos++;
-    }
-    pos++;//posistion du mode et pas du sign
-    if (pos >= len)
-        pos = -1;
-    return (pos);
-}
-
 void Commands::mode_channel(User *user, IRC *server)
 {
-    std::string                 modes;
-    std::string                 channel;
-    int                         param_size = user->get_params_size();
-    std::vector<std::string>    params = user->get_params();
-    std::vector<std::string>    error;
-    std::string                 key;
-
-    if (param_size == 0)
-    {
-        #if DEBUG == 1
-            std::cout << "ERROR ! Param size is " << 0 << std::endl;
-        #endif
-        return ;
-    }
-    if (param_size < 2)
-    {
-        error.push_back(user->get_command_name());
-        return (return_error("461", user, server, error, ""));
-    }
-    else
-    {
-        channel = params[0];
-        modes = params[1];
-        if (param_size > 2)
-            key = params[2];
-        if (is_correct_channel_name(channel) == false)
-        {
-            error.push_back(channel);
-            return (return_error("403", user, server, error, ""));
-        }
-        Channel *chan = NULL;
-        if (server->has_channel(channel) == false)
-        {
-            error.push_back(channel);
-            return (return_error("403", user, server, error, ""));//NOSUCHCHANNEL
-        }
-        chan = server->find_channel(channel);
-        //On check si l'user est membre de la channel
-        if (chan->user_is_member(user) == false)
-        {
-            error.push_back(user->get_nickname());
-            error.push_back(channel);
-            return (return_error("441", user, server, error, ""));
-        }
-        //On doit checker les modes
-        bool check = chan->check_channel_modes(modes);
-        if (check == false)//ERR_UNKNOWN MODE
-        {
-            //Attention je vais generer plus d erreurs puisque nous ne gerons pas tous les modes
-            std::string incorrect = chan->get_unknown_mode(channel);
-            error.push_back(incorrect);
-            error.push_back(channel);
-            return (return_error("472", user, server, error, ""));
-        }
-        //SOus fonction qui va permettre l execution
-        edit_modes(chan, user, modes, key, server);
-    }
-}
-
-//Va permettre d'ajouter une cle
-void            Commands::handle_key(Channel *channel, User *user, std::string modes, std::string key, bool add)
-{
-    (void)user;
-    (void)modes;
-    if (add == true)
-    {
-       if (channel->get_has_key() == true)
-           return ;
-       if (!key.empty())
-       {
-           channel->set_has_key();
-           channel->set_key(key);
-       }
-       else
-           return ;
-    }
-    else
-    {
-        if (channel->get_has_key() == false)
-            return ;
-        else
-        {
-            channel->unset_has_key();
-            channel->drop_key();
-        }
-    }
-    return ;
-}
-
-void            Commands::edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server)
-{
-    (void)server;
-    int len = modes.length();
-    int i = 0;
-    char sign;
-    char m = '\0';
-    while (i != -1 && i < len)
-    {
-        sign = get_mode_sign(modes, i);
-        #if DEBUG == 1
-            std::cout << GREEN << "Sign is " << sign << NC << std::endl;
-        #endif
-        i = pos_next_mode(modes, i);
-        if (i != -1)
-        {
-             m = modes[i];
-            #if DEBUG == 1
-                std::cout << GREEN << "pos is is " << i << NC << std::endl;
-                std::cout << PURPLE << "corresponging char is " << modes[i] << NC << std::endl;
-            #endif
-            if (m == 'k' && sign == '+')
-            {
-                #if DEBUG == 1
-                    std::cout << "WILL CALL HANDLE KEY." << std::endl;
-                #endif
-                handle_key(channel, user, modes, key, true);
-                //TODO: ajouter le message
-            }
-        }
-    }
-    #if DEBUG == 1
-        std::cout << PURPLE << "END EDIT MODES" << NC << std::endl;
-    #endif
-}
-*/
-
-void Commands::mode_channel(User *user, IRC *server)
-{
+#if DEBUG == 1
+    std::cout << RED << "ENTER IN MODE CHANNEL" << NC << std::endl;
+#endif
     int param_size = user->get_params_size();
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> reply_params;
@@ -230,40 +58,75 @@ void Commands::mode_channel(User *user, IRC *server)
                 else
                 {
                     std::string chan_modes = chan->get_modes();
-                    if (sign == true) //add mode to user
+                    if (sign == true) //add mode
                     {
                         std::cout << "add mode t" << std::endl;
                         chan->set_channel_modes(chan->get_modes() + "t");
                         modes_changed.push_back((*it));
+                        reply_params.push_back(user->get_nickname());
+                        reply_params.push_back(user->get_username());
+                        reply_params.push_back(user->get_hostname());
+                        reply_params.push_back(chan->get_name());
+                        reply_params.push_back("+t");
+                        reply_params.push_back("");
+                        server->send_rpl_to_all_members("", chan->get_members(), reply_params, "MODE_CHANNEL");
+                        reply_params.clear();
                     }
-                    else if (sign == false && (chan_modes.find((*it)) != std::string::npos)) //remove mode to user
+                    else if (sign == false) //remove mode
                     {
                         std::cout << "remove mode t" << std::endl;
                         chan_modes.erase(std::remove(chan_modes.begin(), chan_modes.end(), (*it)), chan_modes.end());
                         chan->set_modes(chan_modes);
                         modes_changed.push_back((*it));
+                        reply_params.push_back(user->get_nickname());
+                        reply_params.push_back(user->get_username());
+                        reply_params.push_back(user->get_hostname());
+                        reply_params.push_back(chan->get_name());
+                        reply_params.push_back("-t");
+                        reply_params.push_back("");
+                        server->send_rpl_to_all_members("", chan->get_members(), reply_params, "MODE_CHANNEL");
+                        reply_params.clear();
                     }
                 }
             }
             else if (modes.find((*it)) != std::string::npos && (*it) != 't')
             {
-                reply_params.push_back(user->get_command_name());
-                server->send_rpl("461", user, reply_params, "");
-                reply_params.clear();
+                if (sign == false && (*it) == 'k') //drop key without arg
+                {
+                    std::string key = chan->get_key();
+                    chan->unset_has_key();
+                    chan->drop_key();
+                    reply_params.push_back(user->get_nickname());
+                    reply_params.push_back(user->get_username());
+                    reply_params.push_back(user->get_hostname());
+                    reply_params.push_back(chan->get_name());
+                    reply_params.push_back("-k");
+                    reply_params.push_back(key);
+                    server->send_rpl_to_all_members("", chan->get_members(), reply_params, "MODE_CHANNEL");
+                    reply_params.clear();
+                }
+                else
+                {
+                    reply_params.push_back(user->get_command_name());
+                    server->send_rpl("461", user, reply_params, "");
+                    reply_params.clear();
+                }
             }
             else //unknown mode
-            {
-                std::string char_mode(1, (*it));
-                reply_params.push_back(char_mode);
-                reply_params.push_back(chan->get_name());
-                server->send_rpl("472", user, reply_params, "");
-                reply_params.clear();
+            {    //TO TEST
+                if ((*it) != 'o')
+                {
+                    std::string char_mode(1, (*it));
+                    reply_params.push_back(char_mode);
+                    reply_params.push_back(chan->get_name());
+                    server->send_rpl("472", user, reply_params, "");
+                    reply_params.clear();
+                }
             }
         }
-        //TODO FORMAT REPLY FOR SUCCESFULL ADD/RMV OF T
         return;
     }
-    else if (param_size == 3)
+    else if (param_size >= 3)
     {
         bool sign = true;
         std::string modes(CHANNEL_VALID_MODES);
@@ -292,8 +155,8 @@ void Commands::mode_channel(User *user, IRC *server)
             }
             if (modes.find((*it)) != std::string::npos)
             {
-                std::string chan_modes = user->get_modes();
-                if (sign == true && (chan_modes.find((*it)) == std::string::npos)) //add mode to user
+                std::string chan_modes = chan->get_modes();
+                if (sign == true) //add mode to user
                 {
                     std::cout << "add mode" << std::endl;
                     modes_changed.push_back((*it));
@@ -317,7 +180,14 @@ void Commands::mode_channel(User *user, IRC *server)
                             else
                             {
                                 chan->newOperator(target);
-                                //TODO SEND RPLY
+                                reply_params.push_back(user->get_nickname());
+                                reply_params.push_back(user->get_username());
+                                reply_params.push_back(user->get_hostname());
+                                reply_params.push_back(chan->get_name());
+                                reply_params.push_back("+o");
+                                reply_params.push_back(target->get_nickname());
+                                server->send_rpl_to_all_members("", chan->get_members(), reply_params, "MODE_CHANNEL");
+                                reply_params.clear();
                             }
                         }
                         else
@@ -334,13 +204,23 @@ void Commands::mode_channel(User *user, IRC *server)
                         chan->set_has_key();
                         chan->set_key(key);
                         //TODO SEND REPLY
+                        reply_params.push_back(user->get_nickname());
+                        reply_params.push_back(user->get_username());
+                        reply_params.push_back(user->get_hostname());
+                        reply_params.push_back(chan->get_name());
+                        reply_params.push_back("+k");
+                        reply_params.push_back(key);
+                        server->send_rpl_to_all_members("", chan->get_members(), reply_params, "MODE_CHANNEL");
+                        reply_params.clear();
+                        chan->set_channel_modes(chan->get_modes() + "k");
+                        modes_changed.push_back((*it));
                         break; //STOP LA SUITE DES MODES A AJOUTER
                     }
                     default:
                         continue;
                     }
                 }
-                else if (sign == false && (chan_modes.find((*it)) != std::string::npos)) //remove mode to user
+                else if (sign == false) //remove mode to user
                 {
                     std::cout << "remove mode" << std::endl;
                     modes_changed.push_back((*it));
@@ -361,6 +241,14 @@ void Commands::mode_channel(User *user, IRC *server)
                             else
                             {
                                 chan->removeFromOperators(target);
+                                reply_params.push_back(user->get_nickname());
+                                reply_params.push_back(user->get_username());
+                                reply_params.push_back(user->get_hostname());
+                                reply_params.push_back(chan->get_name());
+                                reply_params.push_back("-o");
+                                reply_params.push_back(target->get_nickname());
+                                server->send_rpl_to_all_members("", chan->get_members(), reply_params, "MODE_CHANNEL");
+                                reply_params.clear();
                                 //TODO SEND RPLY
                             }
                         }
@@ -374,10 +262,20 @@ void Commands::mode_channel(User *user, IRC *server)
                     }
                     case 'k':
                     {
-                        std::string key = params[2];
+                        std::string key = chan->get_key();
                         chan->unset_has_key();
                         chan->drop_key();
-                        //TODO SEND REPLY
+                        reply_params.push_back(user->get_nickname());
+                        reply_params.push_back(user->get_username());
+                        reply_params.push_back(user->get_hostname());
+                        reply_params.push_back(chan->get_name());
+                        reply_params.push_back("-k");
+                        reply_params.push_back(key);
+                        server->send_rpl_to_all_members("", chan->get_members(), reply_params, "MODE_CHANNEL");
+                        reply_params.clear();
+                        std::string changed_modes = chan->get_modes();
+                        changed_modes.erase(std::remove(changed_modes.begin(), changed_modes.end(), (*it)), changed_modes.end());
+                        chan->set_channel_modes(changed_modes);
                         break;
                     }
                     default:

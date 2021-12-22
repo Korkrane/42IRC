@@ -270,13 +270,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
         case 471:
             return prefix + ERR_CHANNELISFULL(params[0]);
         case 472:
-        {
-            std::vector<std::string>::iterator it = params.begin();
-            std::vector<std::string>::iterator it2 = it++;
-            std::string val1 = (*it);
-            std::string val2 = (*it2);
-            return prefix + ERR_UNKNOWNMODE(val1, val2);
-        }
+            return prefix + ERR_UNKNOWNMODE(params[0], params[1]);
         case 473:
             return prefix + ERR_INVITEONLYCHAN(params[0]);
         case 474:
@@ -424,6 +418,15 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             std::string rpl;
 
             rpl = ":" + user->get_nickname() + " MODE " + user->get_nickname() + " :" + params[0] + "\r\n";
+            return rpl;
+        }
+        else if (command == "MODE_CHANNEL")
+        {
+            std::cout << GREEN << "build channel reply" << NC << std::endl;
+            std::string rpl;
+
+            rpl = ":" + params[0] + "!" + params[1] + "@" + params[2];
+            rpl += " MODE " + params[3] + " " + params[4] + " " + params[5] + "\r\n";
             return rpl;
         }
     }

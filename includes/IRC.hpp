@@ -41,9 +41,9 @@
 #define NICK_VALID_CHARS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-^_[]{}\\|"
 #define CHANNEL_VALID_CHARS "#&!+"
 #define USER_VALID_MODES "aiwroOs"
-#define CHANNEL_VALID_MODES "+=tk" //On ne gere que ces modes mais il en existe davantage
+#define CHANNEL_VALID_MODES "+=tko" //On ne gere que ces modes mais il en existe davantage
 #define CHANNEL_FORBIDDEN_CHARS " ,:"
-#define CHANNEL_MODES "t"
+#define CHANNEL_MODES "to"
 
 #define MAX_CHAR 4096
 #define CHAN_MAXCAPACITY 10

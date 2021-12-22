@@ -72,7 +72,7 @@
 #define C_ERR_KEYSET "467"
 #define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)\r\n"); // 471
 #define C_ERR_CHANNELISFULL "471"
-#define ERR_UNKNOWNMODE(char, channel) (char + " :is unknown mode char to me for" + channel + "\r\n"); // 472
+#define ERR_UNKNOWNMODE(char, channel) (char + " :is unknown mode char to me for " + channel + "\r\n"); // 472
 #define C_ERR_UNKNOWNMODE "472"
 #define ERR_INVITEONLYCHAN(channel) (channel + " :Cannot join channel (+i)\r\n"); // 473
 #define C_ERR_INVITEONLYCHAN "473"
