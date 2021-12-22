@@ -108,14 +108,13 @@ void IRC::exec_command(User *user)
 #if DEBUG == 1
 	std::cout << RED << "ENTER IRC EXEC CMD" << NC << std::endl;
 #endif
-	std::map<std::string, void (*)(User *, IRC *)>::iterator itc = this->_commands->_cmds.begin();
-
+	int known_command = 0;
 	for (std::vector<t_cmd>::iterator it = user->_commands.begin(); it != user->_commands.end(); it++)
 	{
-		int known_command = 0;
 		user->set_command((*it)._command);
 		user->set_params((*it)._params);
 		user->set_prefix((*it)._prefix);
+		std::map<std::string, void (*)(User *, IRC *)>::iterator itc = this->_commands->_cmds.begin();
 		while (itc != this->_commands->_cmds.end())
 		{
 			if (itc->first == (*it)._command)
