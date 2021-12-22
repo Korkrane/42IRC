@@ -43,13 +43,6 @@ std::map<std::string, void (*)(User *, IRC *)> Commands::_initCmds()
 	return cmds;
 }
 
-bool Commands::prefixed_by_colon(std::string str)
-{
-	if (str[0] == ':')
-		return (true);
-	return (false);
-}
-
 //Attention similaire a la meme sur channel
 std::string Commands::get_channel_key(Channel *channel)
 {
@@ -64,21 +57,17 @@ std::string Commands::get_channel_key(Channel *channel)
 
 void Commands::get_channel_targets(User *user, IRC *server)
 {
-	(void)user;
 	(void)server;
 	std::vector<std::string> params = user->get_params();
-	std::vector<std::string> targets;
-	(void)targets;
-	unsigned int size = params.size();
 
-#if DEBUG
+	if (params.size() >= 1)
+		user->ft_split_channels(params.front(), ',');
+#if DEBUG == 1
 	std::cout << "Params front is " << params.front() << std::endl;
 #endif
-	std::string line = params.front();
-	if (size >= 1)
-		user->ft_split_channels(line, ',');
 }
 
+//TODO remove server from proto
 std::string Commands::get_bye_message(User *user, IRC *server)
 {
 	(void)server;
@@ -106,14 +95,13 @@ std::string Commands::get_bye_message(User *user, IRC *server)
 	return (bye_message);
 }
 
+//TODO remove server from proto
 void Commands::get_key_targets(User *user, IRC *server)
 {
-	(void)user;
 	(void)server;
 	std::vector<std::string> params = user->get_params();
-	unsigned int size = params.size();
 
-	if (size > 1)
+	if (params.size() > 1)
 		user->ft_split_args(params[1], ',');
 }
 

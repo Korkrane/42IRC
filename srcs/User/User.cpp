@@ -124,7 +124,7 @@ void User::set_request(std::string request)
 void User::fill_commands_vector()
 {
 	t_cmd new_command;
-	std::string s = this->_request;
+	std::string s = _request;
 	std::string delimiter = "\r\n";
 	size_t pos = 0;
 	std::string token;
@@ -136,7 +136,7 @@ void User::fill_commands_vector()
 		std::cout << "unparsed command pushed to vector:" << token << std::endl;
 #endif
 		new_command._unparsed = s;
-		this->_commands.push_back(new_command);
+		_commands.push_back(new_command);
 		s.erase(0, pos + delimiter.length());
 	}
 	int i = 0;
@@ -145,9 +145,9 @@ void User::fill_commands_vector()
 #if DEBUG == 1
 		std::cout << "--COMMAND N° " << i++ << "--" << std::endl;
 #endif
-		this->store_prefix(it);
-		this->store_command(it);
-		this->store_params(it);
+		store_prefix(it);
+		store_command(it);
+		store_params(it);
 #if DEBUG == 1
 		std::cout << "prefix= " << (*it)._prefix << std::endl;
 		std::cout << "command= " << (*it)._command << std::endl;

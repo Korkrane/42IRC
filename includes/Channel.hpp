@@ -43,8 +43,6 @@ public:
     void set_key(std::string key);
     void unset_has_key();
     void drop_key();
-    char get_mode_sign(void);
-    void set_mode_sign(char c);
 
     std::string get_name(void) const;
     std::string get_topic(void) const;
@@ -54,7 +52,7 @@ public:
     unsigned int get_operators_nb(void) const;
     std::vector<User *> get_members(void) const;
     std::vector<User *> get_operators(void) const;
-    std::vector<int> get_members_fd(void) const;
+    std::vector<int> get_members_fd(void);
     bool get_has_key(void);
     std::string get_key(void);
 

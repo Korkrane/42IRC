@@ -9,14 +9,12 @@ class IRC;
 class Commands
 {
 private:
-	/* Ajout des protos pour que la classe soit canonique */
 	Commands(Commands const &src);
 	Commands &operator=(Commands const &src);
 
 public:
 	Commands();
 	virtual ~Commands();
-	//TODO: a mettre en prive et faire un getter setter
 	std::map<std::string, void (*)(User *, IRC *)> _cmds;
 
 	/*** FUNCTIONS ***/
@@ -57,6 +55,7 @@ public:
 	static void check_roles(Channel *chan, User *user, bool added);
 	static void user_joins(User *user, IRC *server, Channel *chan, int index);
 	static void user_parts(User *user, IRC *server, Channel *chan, int index, std::string bye_message);
+
 	static void nick_cmd(User *user, IRC *server);
 	static bool checkNickGrammar(std::string nick, IRC *server, User *user);
 	static bool nickIsAvailable(std::string nick, IRC *server, User *user);
@@ -68,24 +67,18 @@ public:
 
 	static void mode(User *user, IRC *server);
 	static void mode_channel(User *user, IRC *s_messerver);
-	static void modif_user(User *user, IRC *server, std::string modifications);
 	static void mode_user(User *user, IRC *server);
-	static void edit_modes(Channel *channel, User *user, std::string modes, std::string key, IRC *server);
-	static bool should_add_mode(std::string modes);
-	static bool should_remove_mode(std::string modes);
+	static void modif_user(User *user, IRC *server, std::string modifications);
+
 	static void handle_key(Channel *channel, User *user, std::string modes, std::string key, bool add);
-	static char get_mode_sign(std::string str, int pos);
-	static int pos_next_mode(std::string str, int prev_pos);
 
 	static void kick(User *client, IRC *server);
-	static void send_kick_message(Channel *channel, User *user, IRC *server, std::vector<std::string> comment);
 
 	static void send_topic_message(User *user, Channel *chan, IRC *server, bool same_args);
 	static void topic(User *client, IRC *server);
 	static bool same_arguments(User *user, IRC *server);
 
 	static void check_topic(Channel *channel, User *user, IRC *server);
-	//static void send_topic_message(Channel *channel, User *user, std::vector<std::string> message, IRC *server);
 
 	static void list(User *client, IRC *server);
 
@@ -95,15 +88,11 @@ public:
 
 	static void names(User *user, IRC *server);
 	static void send_members_nick(User *user, IRC *server);
-	//static void send_names_message(Channel *channel, User *user, IRC *server);
 
 	static void privmsg(User *user, IRC *server);
 	static std::vector<std::string> fill_recipients(std::string targets);
-	static bool prefixed_by_colon(std::string str);
-	static void send_full_privmsg(User *target, User *user, IRC *server, std::vector<std::string> message);
-	static void send_one_word_privmsg(User *target, User *user, IRC *server, std::string message);
-	static bool should_ignore_key(Channel *channel, std::vector<std::string> params);
 
+	static bool should_ignore_key(Channel *channel, std::vector<std::string> params);
 	static std::string get_channel_key(Channel *channel);
 
 	static void get_channel_targets(User *user, IRC *server);
