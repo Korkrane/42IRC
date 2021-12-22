@@ -20,10 +20,7 @@ void Commands::check_roles(Channel *chan, User *user, bool added)
 
 void Commands::loop_join(User *user, IRC *server, unsigned int index)
 {
-    (void)user;
-    (void)server;
     std::string channel;
-    //Channel *chan;
     std::string opt_key = "";
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
@@ -61,16 +58,43 @@ void Commands::loop_join(User *user, IRC *server, unsigned int index)
             return (return_error("471", user, server, error, ""));
         }
     }
-    //Cas ou on passe une cle en argument alors que le mode n est pas active
-    if (should_ignore_key(chan, params) == true)
+    //si il y devrait y avoir une cle mais que le nombre d args n est pas bons
+    int size = params.size();
+#if MALATINI
+    std::cout << "JOIN : size is " << size << " and has key  is : " << chan->get_has_key() << BLUE << NC << std::endl;
+#endif
+    if (size < 2 && chan->get_has_key() == true)
     {
-        //Il y a une cle mais ce n est pas la bonne
-        if (chan->is_correct_channel_key(opt_key) == false)
-        {
-            error.push_back(channel);
-            return (return_error("475", user, server, error, ""));
-        }
+        error.push_back(channel);
+        return (return_error("475", user, server, error, ""));
     }
+    std::string key = "";
+    std::string real_key = "";
+    if (size >= 2)
+        key = params[1];
+    if (chan->get_has_key() == true)
+    {
+        real_key = chan->get_key();
+    }
+#if MALATINI == 1
+    std::cout << GREEN << "Real key : " << real_key << " and key is " << key << NC << std::endl;
+#endif
+    if (!key.empty() && !real_key.empty() && real_key.compare(key) != 0)//Ssi je dois avoir une key et que ce n est pas la bonne
+    {
+#if MALATINI == 1
+        std::cout << BLUE << "JOIN : We should check the key." << NC << std::endl;
+        error.push_back(channel);
+        return (return_error("475", user, server, error, ""));
+#endif
+    }
+    else
+    {
+#if MALATINI == 1
+        std::cout << BLUE << "JOIN : The ignore key return true" << NC << std::endl;
+#endif
+        ;
+    }
+
     //on verifie si le user n'a pas atteint son quota max de channel
     if (server->user_can_join(chan) == true && !chan->user_is_member(user)) // || pas deja membre a ajouter
     {
@@ -108,6 +132,7 @@ void Commands::loop_join(User *user, IRC *server, unsigned int index)
     return;
 }
 
+/* 
 bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> params)
 {
     bool res = true;
@@ -121,6 +146,7 @@ bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> para
         res = false;
     return (res);
 }
+*/
 
 void Commands::join(User *user, IRC *server)
 {

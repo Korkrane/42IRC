@@ -213,6 +213,7 @@ void Commands::mode_channel(User *user, IRC *server)
                         server->send_rpl_to_all_members("", chan->get_members(), reply_params, "MODE_CHANNEL");
                         reply_params.clear();
                         chan->set_channel_modes(chan->get_modes() + "k");
+                        chan->set_has_key();
                         modes_changed.push_back((*it));
                         break; //STOP LA SUITE DES MODES A AJOUTER
                     }
@@ -276,6 +277,7 @@ void Commands::mode_channel(User *user, IRC *server)
                         std::string changed_modes = chan->get_modes();
                         changed_modes.erase(std::remove(changed_modes.begin(), changed_modes.end(), (*it)), changed_modes.end());
                         chan->set_channel_modes(changed_modes);
+                        chan->unset_has_key();
                         break;
                     }
                     default:
