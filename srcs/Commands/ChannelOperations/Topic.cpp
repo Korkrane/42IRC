@@ -85,11 +85,6 @@ void Commands::send_topic_message(User *user, Channel *chan, IRC *server, bool s
         rpl += " 332 : ";
         info = true;
     }
-    /*
-    else if (!chan->user_is_operator(user))
-    {
-        //reponse you re not channel operator 442
-    }*/
 
     else if (size > 1 && params[1].compare(":No topic is set"))
         rpl += " TOPIC ";
@@ -142,7 +137,15 @@ void Commands::topic(User *user, IRC *server)
         return (return_error("461", user, server, error, ""));
     }
     std::string channel = params[0];
-
+    std::string first_arg = "";
+    if (size >= 1)
+    {
+        first_arg = params[1]; 
+    }
+    #if MALATINI == 1
+        std::cout << RED << "TOPIC size is " << size << NC << std::endl;
+        std::cout << RED << "TOPIC first param is " << first_arg << NC << std::endl;
+    #endif
 #if MALATINI == 1
     std::cout << GREEN << "Channels is : " << channel << NC << std::endl;
 #endif
@@ -173,10 +176,25 @@ void Commands::topic(User *user, IRC *server)
     }
     else
     {
-#if MALATINI == 1
-        std::cout << RED << "TOPIC : THE CHAN IS NOT NULL" << NC << std::endl;
-#endif
-        ;
+        if (size == 1)
+        {
+            #if MALATINI == 1
+                std::cout << RED << "TOPIC : Handling 332 rep" << NC << std::endl;
+            #endif
+            /*
+            std::vector<std::string> topic_params;
+            topic_params.push_back(user->get_nickname());
+            topic_params.push_back(chan->get_name());
+            topic_params.push_back(chan->get_topic());//On va mettre no topic set par defaut
+            */
+           std::string top = ":0 332 " + user->get_nickname() + " " + chan->get_name()+ " " + chan->get_topic() + "\r\n";
+           #if MALATINI == 1
+                std::cout << GREEN << top << NC << std::endl;
+           #endif 
+           server->_response_queue.push_back(std::make_pair(user->get_fd(), top));
+            //server->send_rpl("332", user, topic_params, "");
+            return ;
+        }
     }
     //si il n est pas membre on retourne une erreur
     if (chan->user_is_member(user) == false)
@@ -192,6 +210,9 @@ void Commands::topic(User *user, IRC *server)
         user->add_topic_params(params[0]);
     if (size >= 2)
         user->add_topic_params(params[1]);
+    #if MALATINI == 1
+        std::cout << BLUE << "CHAN->HAS_MODE(-t) is " << chan->has_mode('t') << NC << std::endl;
+    #endif
     //Si la channel porte le mode "t", seuls les operateurs peuvent set le topic
     if (chan->has_mode('t') == true && !chan->user_is_operator(user) && !same_arg) //
     {

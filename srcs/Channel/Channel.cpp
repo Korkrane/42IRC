@@ -1,6 +1,6 @@
 #include <IRC.hpp>
 
-Channel::Channel(std::string name, User *user) : _name(name), _prefix(name[0]), _topic(""), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _channel_owner(user), _key(""), _has_key(false), _members_nb(0), _operators_nb(0) //Attention a incrementer les deux derniers
+Channel::Channel(std::string name, User *user) : _name(name), _prefix(name[0]), _topic("No topic is set"), _has_topic(false), _modes(CHANNEL_MODES), _handle_modes(true), _channel_owner(user), _key(""), _has_key(false), _members_nb(0), _operators_nb(0) //Attention a incrementer les deux derniers
 {
 #if DEBUG == 1
 	std::cout << "Channel constructor called" << std::endl;
