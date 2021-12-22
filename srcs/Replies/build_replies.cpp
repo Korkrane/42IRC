@@ -117,6 +117,8 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             return prefix + RPL_LIST(params[0], params[1], params[2]);
         case 323:
             return prefix + RPL_LISTEND();
+        case 324:
+            return prefix + RPL_CHANNELMODEIS(params[0], params[1], params[2]);
         case 351:
             return prefix + RPL_VERSION(params[0], params[1], params[2], params[3]);
         case 331:

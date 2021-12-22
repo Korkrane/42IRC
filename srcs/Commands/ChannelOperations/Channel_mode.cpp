@@ -9,14 +9,18 @@ void Commands::mode_channel(User *user, IRC *server)
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> reply_params;
     Channel *chan = server->get_channel_ptr(params[0]);
-    if (param_size == 1) //SI JUSTE LA CHANNEL
+    if (param_size == 2 && params[1].empty() == true) //SI JUSTE LA CHANNEL
     {
+        std::cout << "will display chan modes :) " << std::endl;
         if (chan->get_name()[0] != '!')
         {
             //RPL_CHANNELMODEIS
             reply_params.push_back(chan->get_name());
             reply_params.push_back(chan->get_modes());
-            //reply_params.push_back(chan->get_name()); //TODO
+            if (chan->get_modes().find('k') == true)
+                reply_params.push_back(chan->get_key());
+            else
+                reply_params.push_back("");
             server->send_rpl("324", user, reply_params, "");
         }
         else if (chan->get_name()[0] == '!')
@@ -203,7 +207,6 @@ void Commands::mode_channel(User *user, IRC *server)
                         std::string key = params[2];
                         chan->set_has_key();
                         chan->set_key(key);
-                        //TODO SEND REPLY
                         reply_params.push_back(user->get_nickname());
                         reply_params.push_back(user->get_username());
                         reply_params.push_back(user->get_hostname());
@@ -249,7 +252,6 @@ void Commands::mode_channel(User *user, IRC *server)
                                 reply_params.push_back(target->get_nickname());
                                 server->send_rpl_to_all_members("", chan->get_members(), reply_params, "MODE_CHANNEL");
                                 reply_params.clear();
-                                //TODO SEND RPLY
                             }
                         }
                         else
