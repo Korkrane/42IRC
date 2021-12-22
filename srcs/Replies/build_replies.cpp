@@ -341,6 +341,8 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             return rpl;
         }
         //Attention comportement differents en fontion du nombre de params
+        //J ai repris send topic message
+        /*
         else if (command.compare("TOPIC") == 0)
         {
             unsigned int size = params.size();
@@ -358,6 +360,7 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             rpl += params[1] + "\r\n";
             return rpl;
         }
+        */
         /*
         else if (command.compare("NAMES") == 0)
         {

@@ -160,6 +160,19 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
 {
     (void)index;
     user->set_target_channel(chan);
+    std::string topic = "";
+
+    if (chan->get_has_topic() == true)
+    {
+        topic = ":127.0.0.1 332 " + user->get_nickname() + " " + chan->get_name() + " ";
+        topic += chan->get_topic();
+        topic += "\r\n";
+        #if MALATINI == 1
+            std::cout << GREEN << "topic is : " << NC << std::endl;
+            std::cout << GREEN << topic << NC << std::endl;
+        #endif
+         //server->_response_queue.push_back(std::make_pair(user->get_fd(), topic));
+    }
 
 #if MALATINI
     std::cout << BLUE << "user_joins called" << NC << std::endl;
@@ -182,8 +195,12 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     std::vector<User *>::iterator it = users.begin();
     std::vector<User *>::iterator ite = users.end();
     while (it != ite)
-    {
+    {  
         server->_response_queue.push_back(std::make_pair((*it)->get_fd(), rpl));
+        if ((*it)->get_nickname() == user->get_nickname())
+        {
+            server->_response_queue.push_back(std::make_pair((*it)->get_fd(), topic));
+        }
         it++;
     }
     names(user, server);

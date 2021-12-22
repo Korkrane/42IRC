@@ -72,10 +72,16 @@ void Commands::send_topic_message(User *user, Channel *chan, IRC *server)
         rpl += " 331 : ";
     if (size >= 1)
         rpl += params[0] + " ";
+    #if MALATINI == 1
+        std::cout << BLUE << "JOIN : the size is " << size << NC << std::endl;
+    #endif
     if (size >= 2)
     {
         if (info == true)
         {
+            #if MALATINI == 1
+                std::cout << PURPLE "JOIN : getting the topic" << NC << std::endl;
+            #endif
             rpl += chan->get_topic();
             rpl += "\r\n";
             //si c est une info je ne l'envoie qu a une personne
