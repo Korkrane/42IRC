@@ -54,8 +54,6 @@ public:
     std::vector<User *> get_users(void);
     User *get_user(int fd);
     User *get_user_ptr(std::string name);
-    User *get_user_ptr_username(std::string username);
-    User *get_user_ptr_realname(std::string realname);
     Channel *get_channel_ptr(std::string name);
     unsigned int get_channel_nb(void);
     std::string get_port(void);
@@ -63,7 +61,6 @@ public:
 
     /*** METHODS ****/
     Channel *add_channel(std::string name, User *user);
-    Channel *add_channel(std::string name, std::string opt_key, User *user);
     void drop_channel(Channel *to_drop);
     bool find_channel(Channel *to_find);
     bool find_user(std::string nickname);

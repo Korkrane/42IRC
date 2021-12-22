@@ -114,19 +114,19 @@ void IRC::exec_command(User *user)
 		user->set_command((*it)._command);
 		user->set_params((*it)._params);
 		user->set_prefix((*it)._prefix);
-		std::map<std::string, void (*)(User *, IRC *)>::iterator itc = this->_commands->_cmds.begin();
-		while (itc != this->_commands->_cmds.end())
+		std::map<std::string, void (*)(User *, IRC *)>::iterator itc = _commands->_cmds.begin();
+		while (itc != _commands->_cmds.end())
 		{
 			if (itc->first == (*it)._command)
 			{
 				(*itc->second)(user, this);
-				known_command += 1;
+				known_command++;
 				break;
 			}
 			itc++;
 		}
 		if (known_command == 0)
-			this->_commands->unknown_cmd(user, this);
+			_commands->unknown_cmd(user, this);
 		user->get_params().clear();
 	}
 	user->_commands.clear();
@@ -138,7 +138,6 @@ void IRC::exec_command(User *user)
 #endif
 }
 
-//when a user request a /quit, remove it from chans and delete the User instance.
 void IRC::delete_user(int fd)
 {
 #if DEBUG == 1
@@ -149,16 +148,10 @@ void IRC::delete_user(int fd)
 	std::vector<Channel *> chans = this->get_channels();
 	for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++)
 	{
-		//delete in members vector channel
 		if ((*it)->user_is_member(user))
 			(*it)->deleteMember(user);
-		//delete in operators vector channel
 		if ((*it)->user_is_operator(user))
-		{
 			(*it)->delete_operator(user);
-			// TODO add new operator randomly if it was the only operator in the chan
-		}
-		//delete in owner if he it was him
 		if ((*it)->user_is_owner(user))
 			(*it)->delete_owner();
 	}
@@ -178,32 +171,31 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 
 	int clientFD = command.first;
 	std::string const &cmd = command.second;
-	User *current_user;
+	User *user;
 
 	if (!(std::find(fds.begin(), fds.end(), clientFD) == fds.end()))
 	{
 #if DEBUG == 1
 		std::cout << BLUE << "DEBUG: Client found in the user list" << NC << std::endl;
 #endif
-		current_user = this->get_user(clientFD);
-		current_user->set_request(cmd);
-		current_user->fill_commands_vector();
+		user = this->get_user(clientFD);
+		user->set_request(cmd);
+		user->fill_commands_vector();
 		//SI CLIENT CONNECTE MAIS PAS ENCORE REGISTER CONTINUE FONCTION DE REGISTRATION
-		if ((current_user->_commands[0]._command == "NICK" || current_user->_commands[0]._command == "PASS" || current_user->_commands[0]._command == "USER") && !current_user->is_registered())
+		if ((user->_commands[0]._command == "NICK" || user->_commands[0]._command == "PASS" || user->_commands[0]._command == "USER") && !user->is_registered())
 		{
-			this->exec_command(current_user);
-			if (current_user->is_registered() == true)
-				this->_commands->welcome_cmd(current_user, this);
-			responseQueue = this->_response_queue;
-			this->_response_queue.clear();
+			exec_command(user);
+			if (user->is_registered() == true)
+				_commands->welcome_cmd(user, this);
+			responseQueue = _response_queue;
+			_response_queue.clear();
 		} //SI DEJA CO ET REGISTER ALORS EXEC LA COMMANDE
-		else if (current_user->is_registered() == true)
+		else if (user->is_registered() == true)
 		{
-			this->exec_command(current_user);
-			responseQueue = this->_response_queue;
-			this->_response_queue.clear();
-			//Si on a eu une commande quit
-			if (current_user->_to_delete == true)
+			exec_command(user);
+			responseQueue = _response_queue;
+			_response_queue.clear();
+			if (user->_to_delete == true)
 				disconnectList.push_back(clientFD);
 		}
 	}
@@ -212,42 +204,28 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 #if DEBUG == 1
 		std::cout << BLUE << "\tDEBUG: Client first connection" << NC << std::endl;
 #endif
-		this->fds.push_back(clientFD);
-		this->_users.push_back(new User(clientFD));
-		current_user = _users.back();
+		fds.push_back(clientFD);
+		_users.push_back(new User(clientFD));
+		user = _users.back();
 
-		current_user->set_request(cmd);
-		current_user->fill_commands_vector();
-		this->exec_command(current_user);
-#if DEBUG == 1
-		std::cout << BLUE << "DEBUG: Client is registered after exec?" << current_user->is_registered() << NC << std::endl;
-#endif
-		if (current_user->is_registered() == true)
-			this->_commands->welcome_cmd(current_user, this);
-		responseQueue = this->_response_queue; //leaks ici
-		this->_response_queue.clear();
+		user->set_request(cmd);
+		user->fill_commands_vector();
+		exec_command(user);
+
+		if (user->is_registered() == true)
+			_commands->welcome_cmd(user, this);
+		responseQueue = _response_queue;
+		_response_queue.clear();
 	}
-	disconnectList = this->_disconnect_list;
+	disconnectList = _disconnect_list;
 }
 
-//TODO: a supprimer ?
 Channel *IRC::add_channel(std::string channel, User *user)
 {
 	Channel *chan = new Channel(channel, user);
-	this->_channels.push_back(chan);
-	this->_totChannels++;
+	_channels.push_back(chan);
+	_totChannels++;
 	return chan;
-}
-
-//TODO: A supprimer ?
-Channel *IRC::add_channel(std::string channel, std::string opt_key, User *user)
-{
-	(void)opt_key;
-	Channel *chan = new Channel(channel, user);
-	/* */
-	this->_channels.push_back(chan);
-	this->_totChannels++; //TODO: attention verifier qu on le decremente pas
-	return chan;		  //TODO: attention a le free a la fin
 }
 
 std::vector<User *> IRC::get_users(void)
@@ -257,7 +235,7 @@ std::vector<User *> IRC::get_users(void)
 
 std::vector<Channel *> IRC::get_channels(void)
 {
-	return (this->_channels);
+	return _channels;
 }
 
 void IRC::displayServerChannels(void)
@@ -284,77 +262,50 @@ void IRC::displayServerUsers(void)
 
 bool IRC::has_channel(std::string channel_name)
 {
-	std::vector<Channel *> chans = this->get_channels();
-	std::vector<Channel *>::iterator it = chans.begin();
-	std::vector<Channel *>::iterator ite = chans.end();
-	std::string chan_name_to_check;
-	while (it != ite)
+	std::vector<Channel *> chans = get_channels();
+
+	for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++)
 	{
-		chan_name_to_check = (*it)->get_name();
-		if (chan_name_to_check.compare(channel_name) == 0)
-		{
-#if DEBUG == 1
-			std::cout << "has channel will return true." << std::endl;
-#endif
+		if ((*it)->get_name().compare(channel_name) == 0)
 			return (true);
-		}
-		it++;
 	}
-#if DEBUG == 1
-	std::cout << "has channel will return false." << std::endl;
-#endif
 	return (false);
 }
 
 Channel *IRC::find_channel(std::string channel_name)
 {
-	if (channel_name.empty())
-		return (NULL);
+	std::vector<Channel *> chans = get_channels();
 
-	std::vector<Channel *> chans = this->get_channels();
-	std::vector<Channel *>::iterator it = chans.begin();
-	std::vector<Channel *>::iterator ite = chans.end();
-	std::string check_name;
-	while (it != ite)
+	for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++)
 	{
-		check_name = (*it)->get_name();
-		if (check_name.compare(channel_name) == 0)
-		{
-#if DEBUG == 1
-			std::cout << BLUE << "DEBUG: IRC: found channel" << channel_name << ", returning ptr" << NC << std::endl;
-#endif
+		if ((*it)->get_name().compare(channel_name) == 0)
 			return (*it);
-		}
-		it++;
 	}
 	return (NULL);
 }
 
+//TODO check if used cuz it does nothing atm
 void IRC::drop_channel(Channel *to_drop)
 {
 #if MALATINI
 	std::cout << BLUE << "Drop channel function called" << NC << std::endl;
 #endif
-	if (!to_drop)
-		return;
 	//On cherche si le channel fait partie du vecteur
-	std::vector<Channel *> chan = this->get_channels();
+	std::vector<Channel *> chans = get_channels();
 
-	bool res = find_channel(to_drop);
 	//Si on le trouve, on l enleve du vecteur
-	if (res == true)
+	if (find_channel(to_drop) == true)
 	{
-
-		//std::vector<Channel *>::iterator it = this->get_channel_it(to_drop);
+		//std::vector<Channel *>::iterator it = get_channel_it(to_drop);
 		//chan.erase(it);
 	}
 }
 
 bool IRC::find_channel(Channel *to_find)
 {
-	std::vector<Channel *> chan = this->get_channels();
-	std::vector<Channel *>::iterator it = chan.begin();
-	std::vector<Channel *>::iterator ite = chan.end();
+	std::vector<Channel *> chans = get_channels();
+	std::vector<Channel *>::iterator it = chans.begin();
+	std::vector<Channel *>::iterator ite = chans.end();
 	std::string check_name;
 	std::string to_find_name = to_find->get_name();
 	while (it != ite)
@@ -370,9 +321,9 @@ bool IRC::find_channel(Channel *to_find)
 //TODO: a supprimer ?
 std::vector<Channel *>::iterator IRC::get_channel_it(Channel *to_find)
 {
-	std::vector<Channel *> chan = this->get_channels();
-	std::vector<Channel *>::iterator it = chan.begin();
-	std::vector<Channel *>::iterator ite = chan.end();
+	std::vector<Channel *> chans = get_channels();
+	std::vector<Channel *>::iterator it = chans.begin();
+	std::vector<Channel *>::iterator ite = chans.end();
 	std::string check_name;
 	std::string to_find_name = to_find->get_name();
 	while (it != ite)
@@ -391,64 +342,26 @@ std::vector<Channel *>::iterator IRC::get_channel_it(Channel *to_find)
 
 bool IRC::find_user(std::string nickname)
 {
-	bool res = false;
-	std::vector<User *> users;
-	users = this->get_users();
-	std::vector<User *>::iterator it = users.begin();
-	std::vector<User *>::iterator ite = users.end();
-	std::string tmp;
-	while (it != ite)
-	{
-		tmp = (*it)->get_nickname();
-		if (nickname.compare(tmp) == false)
-		{
-			res = true;
-			break;
-		}
-		it++;
-	}
-	return (res);
+	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
+		if (nickname.compare((*it)->get_nickname()) == false)
+			return (true);
+	return (false);
 }
 
 //Nickname
 User *IRC::get_user_ptr(std::string name)
 {
 	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
-	{
 		if ((*it)->get_nickname() == name)
 			return *it;
-	}
-	return (NULL);
-}
-
-//TODO: voir comment on pourrait eviter les doublons
-User *IRC::get_user_ptr_username(std::string name)
-{
-	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
-	{
-		if ((*it)->get_username() == name)
-			return *it;
-	}
-	return (NULL);
-}
-
-User *IRC::get_user_ptr_realname(std::string name)
-{
-	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
-	{
-		if ((*it)->get_realname() == name)
-			return *it;
-	}
 	return (NULL);
 }
 
 Channel *IRC::get_channel_ptr(std::string name)
 {
 	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-	{
 		if ((*it)->get_name() == name)
 			return *it;
-	}
 	return (NULL);
 }
 
@@ -459,7 +372,7 @@ bool IRC::user_can_join(Channel *channel)
 	if (user_nb >= USER_MAXCHAN)
 	{
 #if DEBUG == 1
-		std::cout << RED << "DEBUG: userCan not join new channel because he reach USER_MAXCHAN" << NC << std::endl;
+		std::cout << RED << "DEBUG: user can't join new channel because he reach USER_MAXCHAN" << NC << std::endl;
 #endif
 		return (false);
 	}
@@ -572,7 +485,7 @@ int IRC::send_rpl_display_all_users(std::string code, User *user, Channel *chann
 unsigned int IRC::get_channel_nb(void)
 {
 	unsigned int number = 0;
-	std::vector<Channel *> chans = this->get_channels();
+	std::vector<Channel *> chans = get_channels();
 	number = chans.size();
 	return (number);
 }
@@ -589,5 +502,5 @@ void IRC::set_port(std::string port)
 
 void IRC::add_chan(Channel *chan)
 {
-	this->_channels.push_back(chan);
+	_channels.push_back(chan);
 }
