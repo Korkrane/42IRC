@@ -27,7 +27,6 @@ private:
 	std::string _modes;
 	std::string _away_mssg;
 	std::string _password;
-	std::string _message;
 	std::vector<Channel *> _channels;
 	unsigned int _channels_nb;
 
@@ -68,7 +67,6 @@ public:
 	std::string get_modes(void) const;
 	std::string get_away_mssg(void) const;
 	std::string get_password(void) const;
-	std::string get_message(void) const;
 	bool get_display_who(void) const;
 	int get_channels_nb(void) const;
 	int get_fd(void) const;
@@ -127,8 +125,7 @@ public:
 	void add_channel_to_list(Channel *channel);
 	void remove_channel_from_list(Channel *channel);
 
-	void split_if_multiple_command();
-	unsigned int count_commas(void) const;
+	void fill_commands_vector();
 
 	void ft_split_channels(std::string line, char charset);
 	void ft_split_args(std::string line, char charset);

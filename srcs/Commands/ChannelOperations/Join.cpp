@@ -11,10 +11,9 @@ void Commands::check_roles(Channel *chan, User *user, bool added)
 {
     (void)added;
     if (chan->is_channel_owner(user) == true && chan->user_is_operator(user) == false)
-        chan->newOperator(user);
-    //ne devrait pas arriver
+        chan->new_operator(user);
     if (chan->is_channel_owner(user) == true && chan->user_is_member(user) == false)
-        chan->newMember(user, false);
+        chan->new_member(user, false);
     return;
 }
 
@@ -23,7 +22,6 @@ void Commands::loop_join(User *user, IRC *server, unsigned int index)
     (void)user;
     (void)server;
     std::string channel;
-    //Channel *chan;
     std::string opt_key = "";
     std::vector<std::string> params = user->get_params();
     std::vector<std::string> error;
@@ -49,7 +47,6 @@ void Commands::loop_join(User *user, IRC *server, unsigned int index)
     user->set_target_channel(chan);
     if (!channel.empty() && server->has_channel(channel) == false)
         chan = server->add_channel(channel, user);
-
     else if (!channel.empty())
     {
         //Fonction qui permet de recuperer le pointeur de la channel correspondante
@@ -104,22 +101,19 @@ void Commands::loop_join(User *user, IRC *server, unsigned int index)
 #if MALATINI == 1
     std::cout << BLUE << "Index is " << index << NC << std::endl;
 #endif
-
-    return;
 }
 
 bool Commands::should_ignore_key(Channel *channel, std::vector<std::string> params)
 {
-    bool res = true;
-    int size = params.size();
-    if (size < 1)
-        return (res); //Signifie qu'il n'y a pas de key
-    bool has_key = channel->get_has_key();
+    if (params.size() < 1)
+        return (true); //Signifie qu'il n'y a pas de key
+
     std::string key = channel->get_key();
     std::string candidate_key = params.front();
-    if (has_key && key.compare(candidate_key) == 0)
-        res = false;
-    return (res);
+
+    if (channel->get_has_key() && key.compare(candidate_key) == 0)
+        return (false);
+    return (true);
 }
 
 void Commands::join(User *user, IRC *server)
@@ -139,13 +133,13 @@ void Commands::join(User *user, IRC *server)
     else
     {
         unsigned int max = user->_splitted_channels.size();
-        unsigned int index = 0;
+        unsigned int i = 0;
         // unsigned int comp = user->_splitted_args.size();
-        while (index < max)
+        while (i < max)
         {
             //on update nos variables
-            loop_join(user, server, index);
-            index++;
+            loop_join(user, server, i);
+            i++;
             user->set_display_who(true);
             who(user, server);
         }
@@ -167,11 +161,11 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
         topic = ":127.0.0.1 332 " + user->get_nickname() + " " + chan->get_name() + " ";
         topic += chan->get_topic();
         topic += "\r\n";
-        #if MALATINI == 1
-            std::cout << GREEN << "topic is : " << NC << std::endl;
-            std::cout << GREEN << topic << NC << std::endl;
-        #endif
-         //server->_response_queue.push_back(std::make_pair(user->get_fd(), topic));
+#if MALATINI == 1
+        std::cout << GREEN << "topic is : " << NC << std::endl;
+        std::cout << GREEN << topic << NC << std::endl;
+#endif
+        //server->_response_queue.push_back(std::make_pair(user->get_fd(), topic));
     }
 
 #if MALATINI
@@ -195,7 +189,7 @@ void Commands::user_joins(User *user, IRC *server, Channel *chan, int index)
     std::vector<User *>::iterator it = users.begin();
     std::vector<User *>::iterator ite = users.end();
     while (it != ite)
-    {  
+    {
         server->_response_queue.push_back(std::make_pair((*it)->get_fd(), rpl));
         if ((*it)->get_nickname() == user->get_nickname())
         {

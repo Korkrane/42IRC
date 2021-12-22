@@ -1,32 +1,69 @@
 #include <IRC.hpp>
 #include <User.hpp>
 
-//TODO: revoir l init list de user !
-User::User(void)
-/*
-: _nickname("null"), _username("null"), _hostname("null"), _realname("null"), _modes("null"), _is_oper(false), _is_away(false), _away_mssg("null"), _password("null"), _message("null"), _server_name("null"), _server_ip("null"), _server_creation("null"), _channels(0), _port("null"), _user_has_registered_pass(0), _user_has_registered_nick(0), is_registered(0) */
+User::User(void) : _nickname(0),
+				   _username(0),
+				   _hostname(0),
+				   _realname(0),
+				   _modes(0),
+				   _away_mssg(0),
+				   _password(0),
+				   _channels(0),
+				   _channels_nb(0),
+				   _is_oper(false),
+				   _is_away(false),
+				   _user_has_registered_pass(false),
+				   _user_has_registered_nick(false),
+				   _is_registered(false),
+				   _display_who(false),
+				   _topic_params(0),
+				   _request(0),
+				   _prefix(0),
+				   _command(0),
+				   _target_channel(0),
+				   _params(0),
+				   _splitted_channels(0),
+				   _splitted_args(0),
+				   _commands(0),
+				   _to_delete(false)
 {
-#if USERDEBUG == 1
-	std::cout << "User default constructor called" << std::endl;
-#endif
-	this->_target_channel = NULL;
 }
 
-User::User(int fd) : _fd(fd)
+User::User(int fd) : _fd(fd),
+					 _nickname(0),
+					 _username(0),
+					 _hostname(0),
+					 _realname(0),
+					 _modes(0),
+					 _away_mssg(0),
+					 _password(0),
+					 _channels(0),
+					 _channels_nb(0),
+					 _is_oper(false),
+					 _is_away(false),
+					 _user_has_registered_pass(false),
+					 _user_has_registered_nick(false),
+					 _is_registered(false),
+					 _display_who(false),
+					 _topic_params(0),
+					 _request(0),
+					 _prefix(0),
+					 _command(0),
+					 _target_channel(0),
+					 _params(0),
+					 _splitted_channels(0),
+					 _splitted_args(0),
+					 _commands(0),
+					 _to_delete(false)
 {
 #if DEBUG == 1
 	std::cout << BLUE << "DEBUG: User constructor called with fd param" << NC << std::endl;
 #endif
-	_to_delete = false;
-	_is_registered = false;
-	_is_oper = false;
-	_is_away = false;
-
-	_channels_nb = 0;
 }
 
 User::~User(void)
 {
+	//TODO delete tout ce qui a été alloué par des new
 #if DEBUG == 1
 	std::cout << BLUE << "DEBUG: User destructor" << NC << std::endl;
 #endif
@@ -34,17 +71,17 @@ User::~User(void)
 
 void User::set_nickname(std::string nickname)
 {
-	this->_nickname = nickname;
+	_nickname = nickname;
 }
 
 void User::set_username(std::string username)
 {
-	this->_username = username;
+	_username = username;
 }
 
 void User::set_realname(std::string realname)
 {
-	this->_realname = realname;
+	_realname = realname;
 }
 
 void User::set_hostname(std::string hostname)
@@ -84,17 +121,14 @@ void User::set_request(std::string request)
 	_request = request;
 }
 
-void User::split_if_multiple_command()
+void User::fill_commands_vector()
 {
-#if DEBUG == 1
-	std::cout << RED << "ENTER SPLIT_MULTI_COMMD" << NC << std::endl;
-#endif
 	t_cmd new_command;
 	std::string s = this->_request;
 	std::string delimiter = "\r\n";
-
 	size_t pos = 0;
 	std::string token;
+
 	while ((pos = s.find(delimiter)) != std::string::npos)
 	{
 		token = s.substr(0, pos);
@@ -106,7 +140,6 @@ void User::split_if_multiple_command()
 		s.erase(0, pos + delimiter.length());
 	}
 	int i = 0;
-	(void)i;
 	for (std::vector<t_cmd>::iterator it = _commands.begin(); it != _commands.end(); it++)
 	{
 #if DEBUG == 1
@@ -128,49 +161,41 @@ void User::split_if_multiple_command()
 		std::cout << std::endl;
 #endif
 	}
-#if DEBUG == 1
-	std::cout << RED << "EXIT SPLIT_MULTI_COMMD" << NC << std::endl;
-#endif
 }
 
 std::string User::get_nickname(void) const
 {
-	return (this->_nickname);
+	return _nickname;
 }
 
 std::string User::get_username(void) const
 {
-	return (this->_username);
+	return _username;
 }
 
 std::string User::get_realname(void) const
 {
-	return (this->_realname);
+	return _realname;
 }
 
 std::string User::get_hostname(void) const
 {
-	return (this->_hostname);
+	return _hostname;
 }
 
 std::string User::get_modes(void) const
 {
-	return (this->_modes);
+	return _modes;
 }
 
 std::string User::get_away_mssg(void) const
 {
-	return (this->_away_mssg);
+	return _away_mssg;
 }
 
 std::string User::get_password(void) const
 {
-	return (this->_password);
-}
-
-std::string User::get_message(void) const
-{
-	return (this->_message);
+	return _password;
 }
 
 int User::get_fd(void) const
@@ -180,17 +205,17 @@ int User::get_fd(void) const
 
 int User::get_channels_nb(void) const
 {
-	return (this->_channels.size());
+	return _channels.size();
 }
 
 std::vector<std::string> User::get_params(void) const
 {
-	return (this->_params);
+	return _params;
 }
 
 std::string User::get_prefix(void) const
 {
-	return (this->_prefix);
+	return _prefix;
 }
 
 std::string User::get_command_name(void) const
@@ -205,7 +230,7 @@ std::string User::get_request(void) const
 
 unsigned int User::get_params_size(void) const
 {
-	return this->get_params().size();
+	return _params.size();
 }
 
 bool User::is_registered(void) const
@@ -328,24 +353,136 @@ void User::store_params(std::vector<t_cmd>::iterator it)
 
 void User::store_params()
 {
-	if (this->_request != "")
+	if (_request != "")
 	{
-		ft::split_string_to_vector(&this->_params, &this->_request, ' ');
-		patch_params(&this->_params);
+		ft::split_string_to_vector(&_params, &_request, ' ');
+		patch_params(&_params);
 	}
 }
 
-void User::set_params(std::vector<std::string> value)
+void User::set_params(std::vector<std::string> params)
 {
-	this->_params = value;
+	_params = params;
 }
-void User::set_prefix(std::string value)
+void User::set_prefix(std::string prefix)
 {
-	this->_prefix = value;
+	_prefix = prefix;
 }
-void User::set_command(std::string value)
+void User::set_command(std::string command)
 {
-	this->_command = value;
+	_command = command;
+}
+
+void User::be_added_to_channel(Channel *channel)
+{
+	if (channel->get_members_nb() >= 1)
+		channel->new_member(this, false);
+	else
+	{
+		//TODO Si non on va devenir operateur
+		channel->new_member(this, true);
+	}
+}
+
+void User::set_fd(int fd)
+{
+	_fd = fd;
+}
+
+void User::increase_channel_nb(void)
+{
+	if (_channels_nb >= 0)
+		_channels_nb++;
+	else
+	{
+#if DEBUG == 1
+		std::cout << RED << "USER: Error with nb of channels (++)." << std::endl;
+#endif
+	}
+}
+
+void User::decrease_channel_nb(void)
+{
+	if (_channels_nb == USER_MAXCHAN)
+	{
+#if DEBUG == 1
+		std::cout << RED << "USER: Error with nb of channels (--)." << std::endl;
+#endif
+	}
+	_channels_nb--;
+}
+
+//Les verifications en termes de USER_MACHAN doivent etre faites au prealable
+//TODO: si la channel existe pas on l'ajoute pas mais on increase qd meme (question baudoin)
+void User::add_channel_to_list(Channel *channel)
+{
+	if (channel)
+		_channels.push_back(channel);
+	increase_channel_nb();
+}
+
+void User::remove_channel_from_list(Channel *channel)
+{
+	std::string targeted_chan = channel->get_name();
+
+	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
+	{
+		if (targeted_chan.compare((*it)->get_name()) == 0)
+		{
+			_channels.erase(it);
+			decrease_channel_nb();
+			break;
+		}
+	}
+}
+
+Channel *User::get_target_channel(void) const
+{
+#if MALATINI == 1
+	std::cout << PURPLE << _target_channel->get_name() << NC << std::endl;
+#endif
+	return _target_channel;
+}
+
+void User::set_target_channel(Channel *channel)
+{
+	_target_channel = channel;
+#if MALATINI == 1
+	if (!channel)
+		std::cout << RED << "Error : set a target channel that is NULL!" << NC << std::endl;
+	else
+		std::cout << PURPLE << "Channel has been set to" << channel->get_name() << NC << std::endl;
+#endif
+}
+
+bool User::get_display_who(void) const
+{
+	return _display_who;
+}
+
+std::vector<Channel *> User::get_channels(void) const
+{
+	return _channels;
+}
+
+std::vector<std::string> User::get_topic_params(void) const
+{
+	return _topic_params;
+}
+
+void User::set_display_who(bool display)
+{
+	_display_who = display;
+}
+
+void User::add_topic_params(std::string str)
+{
+	_topic_params.push_back(str);
+}
+
+void User::clear_topic_params(void)
+{
+	_topic_params.clear();
 }
 
 void User::display_client_info(void)
@@ -369,7 +506,7 @@ void User::display_channels(void)
 	std::cout << "------------------------" << std::endl;
 }
 
-void User::display_params(void) //const
+void User::display_params(void)
 {
 	int i = 0;
 	if (this->_params.size() >= 1)
@@ -418,170 +555,8 @@ void User::display_command(void)
 	this->display_params();
 }
 
-void User::be_added_to_channel(Channel *channel)
-{
-	if (!channel)
-		return;
-	unsigned int member = channel->get_members_nb();
-	if (member >= 1)
-		channel->newMember(this, false);
-	else
-	{
-		//TODO Si non on va devenir operateur
-		channel->newMember(this, true);
-	}
-#if DEBUG == 1
-	std::cout << PURPLE << "USER: be_added_to_channel called for: " << this->get_nickname() << std::endl;
-#endif
-	return;
-}
-
-void User::set_fd(int fd)
-{
-	_fd = fd;
-}
-
-void User::increase_channel_nb(void)
-{
-	if (this->_channels_nb > 0)
-		this->_channels_nb++;
-	else
-	{
-#if DEBUG == 1
-		std::cout << RED << "USER: Error with nb of channels (++)." << std::endl;
-#endif
-	}
-}
-
-void User::decrease_channel_nb(void)
-{
-	if (this->_channels_nb == USER_MAXCHAN)
-	{
-#if DEBUG == 1
-		std::cout << RED << "USER: Error with nb of channels (--)." << std::endl;
-#endif
-	}
-	this->_channels_nb--;
-}
-
-/**
- * @brief Les verifications en termes de USER_MACHAN doivent etre faites au prealable
- * TODO: si la channel existe pas on l'ajoute pas mais on increase qd meme (question baudoin)
- * @param channel
- */
-void User::add_channel_to_list(Channel *channel)
-{
-	if (channel)
-		this->_channels.push_back(channel);
-	this->increase_channel_nb();
-}
-
-/**
- * @brief On doit avoir verifie au prealable que le user etait bien membre
- *
- * @param channel
- */
-void User::remove_channel_from_list(Channel *channel)
-{
-	std::string channel_name = channel->get_name();
-	std::string check_name;
-	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
-	{
-		check_name = (*it)->get_name();
-		if (channel_name.compare(check_name) == 0)
-		{
-			_channels.erase(it);
-			decrease_channel_nb();
-			break;
-		}
-	}
-}
-
 std::ostream &operator<<(std::ostream &COUT, User *user)
 {
 	COUT << user->get_nickname();
 	return (COUT);
-}
-
-//Va permettre de boucler quand il y a plusieurs users ou channel passes en parametres
-unsigned int User::count_commas(void) const
-{
-	unsigned int commas = 0;
-	std::vector<std::string> params = this->get_params();
-	std::vector<std::string>::iterator it = params.begin();
-	std::vector<std::string>::iterator ite = params.end();
-
-	std::string tmp;
-	//int pos = 0;
-	while (it != ite)
-	{
-		tmp = (*it);
-		//pos = tmp.find(' ');
-		if (tmp.find(' ') == std::string::npos)
-		{
-			//On a pas trouve d'espace
-			commas++;
-		}
-		it++;
-	}
-#if DEBUG == 1
-	std::cout << PURPLE << "DEBUG: USER: Counting " << commas << " commas in the params" << std::endl;
-#endif
-	return (commas);
-}
-
-Channel *User::get_target_channel(void) const
-{
-	Channel *chan = this->_target_channel;
-#if MALATINI == 1
-	std::cout << PURPLE << chan->get_name() << NC << std::endl;
-#endif
-	return (chan);
-}
-
-void User::set_target_channel(Channel *channel)
-{
-	this->_target_channel = channel;
-#if MALATINI == 1
-
-	if (!channel)
-	{
-		std::cout << RED << "Error : set a target channel that is NULL!" << NC << std::endl;
-	}
-	else
-	{
-		std::cout << PURPLE << "Channel has been set to" << channel->get_name() << NC << std::endl;
-	}
-#endif
-	return;
-}
-
-bool User::get_display_who(void) const
-{
-	return (this->_display_who);
-}
-
-void User::set_display_who(bool display)
-{
-	this->_display_who = display;
-}
-
-std::vector<Channel *> User::get_channels(void) const
-{
-	return (this->_channels);
-}
-
-std::vector<std::string> User::get_topic_params(void) const
-{
-	return (this->_topic_params);
-}
-
-void User::add_topic_params(std::string str)
-{
-	this->_topic_params.push_back(str);
-}
-
-void User::clear_topic_params(void)
-{
-	this->_topic_params.clear();
 }

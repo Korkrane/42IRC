@@ -187,7 +187,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 #endif
 		current_user = this->get_user(clientFD);
 		current_user->set_request(cmd);
-		current_user->split_if_multiple_command();
+		current_user->fill_commands_vector();
 		//SI CLIENT CONNECTE MAIS PAS ENCORE REGISTER CONTINUE FONCTION DE REGISTRATION
 		if ((current_user->_commands[0]._command == "NICK" || current_user->_commands[0]._command == "PASS" || current_user->_commands[0]._command == "USER") && !current_user->is_registered())
 		{
@@ -217,7 +217,7 @@ void IRC::process_command(t_clientCmd const &command, std::vector<t_clientCmd> &
 		current_user = _users.back();
 
 		current_user->set_request(cmd);
-		current_user->split_if_multiple_command();
+		current_user->fill_commands_vector();
 		this->exec_command(current_user);
 #if DEBUG == 1
 		std::cout << BLUE << "DEBUG: Client is registered after exec?" << current_user->is_registered() << NC << std::endl;

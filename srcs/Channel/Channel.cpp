@@ -148,26 +148,19 @@ bool Channel::user_is_owner(User *user)
 	return (false);
 }
 
-void Channel::newMember(User *user, bool user_operator)
+void Channel::new_member(User *user, bool user_operator)
 {
 	//TODO: Attention si c'est egal a true et qu il n y a pas d'owner le user devient channel owner
-	(void)user;
-	(void)user_operator;
 	if (!user)
-	{
-		//	std::cout << "ERROR ! User is NULL" << std::endl;
 		return;
-	}
-	/* */
-	this->_users.push_back(user);
-	//std::cout << "ICI" << std::endl;
-	this->_members_nb++;
+	_users.push_back(user);
+	_members_nb++;
 	if (user_operator == true)
-		newOperator(user);
+		new_operator(user);
 	return;
 }
 
-void Channel::newOperator(User *user)
+void Channel::new_operator(User *user)
 {
 	if (!user)
 	{
@@ -545,16 +538,16 @@ void Channel::set_topic(User *user, IRC *server, std::vector<std::string> topic)
 	it++;
 	std::vector<std::string>::iterator ite = topic.end();
 	unsigned int size = topic.size();
-	#if MALATINI == 1 
-		std::cout << PURPLE << "The size is " << size << NC<< std::endl;
-	#endif
+#if MALATINI == 1
+	std::cout << PURPLE << "The size is " << size << NC << std::endl;
+#endif
 	std::string tmp;
 	while (it != ite)
 	{
 		tmp = (*it);
 		if (tmp[0] == ':')
 		{
-			tmp.erase(0,1);
+			tmp.erase(0, 1);
 		}
 		str_topic += tmp;
 		if (it + 1 == ite)

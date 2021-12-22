@@ -183,7 +183,7 @@ void Commands::mode_channel(User *user, IRC *server)
                             }
                             else
                             {
-                                chan->newOperator(target);
+                                chan->new_operator(target);
                                 reply_params.push_back(user->get_nickname());
                                 reply_params.push_back(user->get_username());
                                 reply_params.push_back(user->get_hostname());
