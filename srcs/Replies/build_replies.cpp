@@ -121,8 +121,9 @@ std::string IRC::build_reply(std::string code, User *user, std::vector<std::stri
             return prefix + RPL_VERSION(params[0], params[1], params[2], params[3]);
         case 331:
             return prefix + RPL_NOTOPIC(params[0]);
-        case 332:
-            return prefix + RPL_TOPIC(params[0], params[1]);
+        //TODO: a supprimer
+        //case 332:
+        //    return prefix + RPL_TOPIC(params[0], params[1], params[2]);
         case 341:
             return prefix + RPL_INVITING(params[0], params[1]);
             /*
