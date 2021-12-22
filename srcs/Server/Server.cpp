@@ -12,6 +12,8 @@ Server::~Server()
 	std::map<int, Client *>::iterator clientIter;
 	for (clientIter = _clients.begin(); clientIter != _clients.end(); ++clientIter)
 		delete clientIter->second;
+	disconnectList.clear();
+	responseQueue.clear();
 	close(_fd);
 }
 
@@ -38,10 +40,10 @@ void Server::SetUp(IRC *irc)
 	// Set options for socket
 	int opt = 1;
 	(void)opt;
-	#ifdef __linux__
+#ifdef __linux__
 	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int)) == -1)
 		SERVER_ERR("setsockopt");
-	#endif
+#endif
 	// Bind socket to port
 	sockaddr_in sin;
 	sin.sin_family = AF_INET;
@@ -91,8 +93,8 @@ void Server::removeClient(int fd)
 
 void Server::Run()
 {
-	std::vector<t_clientCmd> responseQueue;
-	std::vector<int> disconnectList;
+	//std::vector<t_clientCmd> responseQueue;
+	//std::vector<int> disconnectList;
 
 	while (true)
 	{
