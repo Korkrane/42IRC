@@ -83,7 +83,7 @@ bool Commands::checkNickGrammar(std::string nickname, IRC *server, User *user)
 
 void Commands::nick_cmd(User *user, IRC *server)
 {
-#if DEBUG
+#if DEBUG == 1
 	std::cout << RED << "ENTER NICK CMD " << NC << std::endl;
 #endif
 

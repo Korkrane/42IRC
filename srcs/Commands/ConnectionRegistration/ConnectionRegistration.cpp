@@ -11,10 +11,10 @@ void Commands::welcome_cmd(User *user, IRC *server)
     server->send_rpl("001", user, params, "");
     params.clear();
 
-    //reply 2 - PATH A revoir
-   // params.push_back(user->get_hostname());
-    //server->send_rpl("002", user, params, "");
-    //params.clear();
+    //reply 2 - PASS A revoir
+    params.push_back(user->get_hostname());
+    server->send_rpl("002", user, params, "");
+    params.clear();
 
     //reply 3
     params.push_back(server->get_server_creation());
@@ -26,5 +26,5 @@ void Commands::welcome_cmd(User *user, IRC *server)
     server->send_rpl("004", user, params, "");
     params.clear();
 
-   server->_commands->motd_cmd(user, server);
+    server->_commands->motd_cmd(user, server);
 }

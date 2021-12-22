@@ -30,7 +30,7 @@ void Commands::user_cmd(User *user, IRC *server)
 		user->set_username(user->get_params()[0]);
 		user->set_hostname(user->get_params()[2]);
 		user->set_realname(user->get_params()[3]);
-		if (!user->get_nickname().empty()) //TODO dans le cas ou pas de nick a la connection il devra refaire un /nick valide
+		if (!user->get_nickname().empty()) //dans le cas ou pas de nick a la connection il devra refaire un /nick valide
 			user->is_registered(true);
 	}
 #if DEBUG
