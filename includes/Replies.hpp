@@ -145,7 +145,7 @@
 #define C_RPL_CHANNELMODEIS "324"
 #define RPL_NOTOPIC(channel) (channel + " :No topic is set\r\n"); // 331
 #define C_RPL_NOTOPIC "331"
-#define RPL_TOPIC(channel, topic) (channel + " :" + topic + "\r\n"); // 332
+#define RPL_TOPIC(username, channel, topic) ("0 332 " + username + " " + channel + " :" + topic + "\r\n"); // 332
 #define C_RPL_TOPIC "332"
 #define RPL_INVITING(channel, nick) (channel + " " + nick + "\r\n"); // 341
 #define C_RPL_INVITING "341"
