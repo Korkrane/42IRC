@@ -5,7 +5,7 @@ void	IRC::execUSER(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	User	*user(cmd._user);
 	string	resp;
 
-	if (user->_uname != DEFAULT_NAME)
+	if (!user->IsUsernameDefault())
 	{
 		resp = getResponseFromCode(user, ERR_ALREADYREGISTRED, NULL);
 		responseQueue.push_back(std::make_pair(user->_fd, resp));

@@ -35,7 +35,7 @@ void	IRC::execJOIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		Channel	*chan = (_channels.find(name) == _channels.end()) 
 					  ? newChannel(name, user)
 					  : _channels[name];
-		int	ret(user->JoinChannel(chan, key));
+		int	ret(user->TryJoin(chan, key));
 		if (ret)
 		{
 			resp = getResponseFromCode(user, ret, (string[]){ name });

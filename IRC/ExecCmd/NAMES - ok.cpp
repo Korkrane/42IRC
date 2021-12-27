@@ -9,7 +9,7 @@ void	IRC::execNAMES(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 				  ? _channels[chanName]
 				  : NULL;
 	string	resp;
-	if (chan && (!chan->_secret || (chan->_users.find(user) != chan->_users.end())))
+	if (chan && chan->IsVisible(user))
 	{
 		// If channel exists and not secret, or if user is in the secret channel,
 		// query is valid and processed
@@ -19,7 +19,7 @@ void	IRC::execNAMES(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		std::set<User *>::iterator it;
 		for (it = chan->_users.begin(); it != chan->_users.end(); ++it)
 		{
-			if (chan->_operators.find(*it) != chan->_operators.end())	// If operator
+			if (chan->IsOperator(user))
 				names += "@";
 			names += (*it)->_nick;
 			if (std::distance(it, chan->_users.end()) > 1)

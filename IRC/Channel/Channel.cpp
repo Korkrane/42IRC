@@ -33,9 +33,9 @@ Channel::~Channel()
 
 // Attempt to add user to the channel using key. Return 0 if user
 // is added successfully, or a numeric representation of error if fails
-int	Channel::AddUser(User *user, string const &key)
+int	Channel::TryAddUser(User *user, string const &key)
 {
-	if (_users.find(user) != _users.end())
+	if (IsJoined(user))
 		return 0;
 
 	if (!_key.empty() && key != _key)
@@ -51,3 +51,12 @@ int	Channel::RemoveUser(User *user)
 	_operators.erase(user);
 	return _users.size();
 }
+
+// Check if user has joined channel
+bool	Channel::IsJoined(User *user)	{ return (_users.find(user) != _users.end()); }
+
+// Check if user can look up info of channel
+bool	Channel::IsVisible(User *user)	{ return (!_secret || IsJoined(user)); }
+
+// Check if user is operator of channel
+bool	Channel::IsOperator(User *user)	{ return (_operators.find(user) != _operators.end()); }

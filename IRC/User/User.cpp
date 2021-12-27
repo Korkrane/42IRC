@@ -21,6 +21,13 @@ void	User::registrationOK()
 	_prefix = string(":") + _nick + '!' + _uname + '@' + USR_HOST;
 }
 
+// Check if user's username is default value
+bool	User::IsUsernameDefault()
+{
+	return (_uname == DEFAULT_NAME);
+}
+
+// Set user's nickname. If user can be registered, register
 void	User::SetNick(string const &nick)
 {
 	_nick = nick;
@@ -28,6 +35,7 @@ void	User::SetNick(string const &nick)
 		registrationOK();
 }
 
+// Set user's username. If user can be registered, register
 void	User::SetUsername(string const &uname)
 {
 	_uname = uname;
@@ -35,6 +43,7 @@ void	User::SetUsername(string const &uname)
 		registrationOK();
 }
 
+// [INCOMPLETE] Set user's mode based on mode string
 void	User::SetMode(string const &modes)
 {
 	bool	plus = (modes[0] != '-');
@@ -62,12 +71,12 @@ void	User::SetMode(string const &modes)
 
 // Attempt to join channel. Return 0 if joined successfully, otherwise a
 // numeric representation of error if fails
-int	User::JoinChannel(Channel *chan, string const &key)
+int	User::TryJoin(Channel *chan, string const &key)
 {
 	if (_channelsJoined.find(chan) != _channelsJoined.end())
 		return 0;
 
-	int	ret(chan->AddUser(this, key));
+	int	ret(chan->TryAddUser(this, key));
 	if (!ret)
 		_channelsJoined.insert(chan);
 	return ret;

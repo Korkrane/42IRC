@@ -24,9 +24,9 @@ void	IRC::execPART(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		return;
 	}
 
-	if (chan->_users.find(user) == chan->_users.end())
+	if (!chan->IsJoined(user))
 	{
-		// User not found in channel
+		// User not joined channel
 		resp = getResponseFromCode(user, ERR_NOTONCHANNEL, (string[]){ chanName });
 		responseQueue.push_back(std::make_pair(user->_fd, resp));
 		return;

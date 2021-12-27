@@ -40,7 +40,7 @@ void	IRC::execNICK(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		resp = getResponseFromCode(user, ERR_NICKNAMEINUSE, (string[]){ nick });
 	else
 	{
-		newUser = (user->_nick == DEFAULT_NAME);
+		newUser = !user->_registered;
 		// Inform everyone in common channels that user has just changed nickname
 		if (!newUser)
 			resp = appendUserNotif(

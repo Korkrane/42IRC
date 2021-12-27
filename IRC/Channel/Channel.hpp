@@ -29,8 +29,12 @@ public:
 	Channel(string const &name, User *creator);
 	virtual ~Channel();
 
-	int	AddUser(User *user, string const &key);
+	int	TryAddUser(User *user, string const &key);
 	int	RemoveUser(User *user);
+
+	bool	IsJoined(User *user);
+	bool	IsOperator(User *user);
+	bool	IsVisible(User *user);
 
 	friend class IRC;
 };

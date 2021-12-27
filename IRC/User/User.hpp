@@ -41,10 +41,13 @@ public:
 	User(int fd);
 	virtual ~User();
 
+	bool	IsUsernameDefault();
+
 	void	SetNick(string const &nick);
 	void	SetUsername(string const &uname);
 	void	SetMode(string const &modes);
-	int		JoinChannel(Channel *chan, string const &key);
+
+	int		TryJoin(Channel *chan, string const &key);
 
 	friend class IRC;
 };
