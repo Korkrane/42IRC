@@ -3,6 +3,7 @@
 
 User::User(int fd) :
 	_fd(fd),
+	_oper(false),
 	_passwordOK(false),
 	_registered(false),
 	_nick(DEFAULT_NAME),

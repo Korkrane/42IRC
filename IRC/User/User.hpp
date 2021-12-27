@@ -25,6 +25,7 @@ class	User
 
 private:
 	int		_fd;			// fd of user's network client, used for unique identifier
+	bool	_oper;			// Is user server operator
 	bool	_passwordOK;	// Has user entered good password ?
 	bool	_registered;	// Is user registered ?
 	string	_nick;			// Nickname

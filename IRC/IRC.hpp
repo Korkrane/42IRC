@@ -44,7 +44,7 @@ private:
 
 	//// Command executor ////
 
-	void	execCmd(Command const &cmd, std::vector<t_clientCmd> &responseQueue);
+	void	execCmd			(Command const &cmd, std::vector<t_clientCmd> &responseQueue);
 
 	void	execADMIN		(Command const &cmd, std::vector<t_clientCmd> &responseQueue);
 	void	execAWAY		(Command const &cmd, std::vector<t_clientCmd> &responseQueue);

@@ -54,6 +54,8 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << ": " << params[0]; break;
 		case RPL_ENDOFMOTD:
 			ss << ":End of message of the day."; break;
+		case RPL_YOUREOPER:
+			ss << ":You are now an IRC operator"; break;
 		case RPL_TIME:
 			ss << IRC_HOST << " :" << params[0]; break;
 		
@@ -77,10 +79,14 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << params[0] << " :Not enough parameters"; break;
 		case ERR_ALREADYREGISTRED:
 			ss << ":You may not reregister"; break;
+		case ERR_PASSWDMISMATCH:
+			ss << ":Password incorrect"; break;
 		case ERR_BADCHANNELKEY:
 			ss << params[0] << " :Cannot join channel (incorrect channel key)"; break;
 		case ERR_BADCHANMASK:
 			ss << params[0] << " :Invalid channel name"; break;
+		case ERR_NOPRIVILEGES:
+			ss << ":Permission Denied - You're not an IRC operator"; break;
 		case ERR_CHANOPRIVSNEEDED:
 			ss << params[0] << " :You're not channel operator"; break;
 		default: break;

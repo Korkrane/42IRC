@@ -15,10 +15,10 @@ void	IRC::execTOPIC(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	}
 
 	string const	&chanName(cmd._params[0]);
-	Channel	*chan = (_channels.find(chanName) != _channels.end())
+	Channel	*chan =	(_channels.find(chanName) != _channels.end())
 				  ? _channels[chanName]
 				  : NULL;
-	if (!chan || (chan->_secret && (chan->_users.find(user) == chan->_users.end())))
+	if (!chan || !chan->IsVisible(user))
 	{
 		// Channel not found or not visible to user
 		if (cmd._params.size() == 1)
@@ -34,7 +34,7 @@ void	IRC::execTOPIC(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		else
 			resp = getResponseFromCode(user, RPL_TOPIC, (string[]){ chanName, chan->_topic });
 	}
-	else if (chan->_operators.find(user) == chan->_operators.end())
+	else if (!chan->IsOperator(user))
 		// User trying to change topic is not operator of channel
 		resp = getResponseFromCode(user, ERR_CHANOPRIVSNEEDED, (string[]){ chanName });
 	else

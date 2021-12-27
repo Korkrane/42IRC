@@ -19,7 +19,7 @@ void	IRC::execNAMES(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		std::set<User *>::iterator it;
 		for (it = chan->_users.begin(); it != chan->_users.end(); ++it)
 		{
-			if (chan->IsOperator(user))
+			if (chan->IsOperator(*it))
 				names += "@";
 			names += (*it)->_nick;
 			if (std::distance(it, chan->_users.end()) > 1)
