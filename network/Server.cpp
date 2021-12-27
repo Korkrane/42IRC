@@ -82,9 +82,9 @@ void	Server::Run()
 {
 	int	totalFD;
 	std::vector<t_clientCmd>	responseQueue;
-	std::vector<int>			disconnectList;
+	std::set<int>				disconnectList;
 	std::vector<t_clientCmd>::iterator	rIt;
-	std::vector<int>::iterator			dIt;
+	std::set<int>::iterator				dIt;
 
 	while (true)
 	{
@@ -128,7 +128,7 @@ int	Server::setFDForReading()
 }
 
 void	Server::recvProcessCommand
-	(int totalFD, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList)
+	(int totalFD, std::vector<t_clientCmd> &responseQueue, std::set<int> &disconnectList)
 {
 	string	cmd;
 
@@ -139,7 +139,7 @@ void	Server::recvProcessCommand
 		{
 			if (fd == _fd)
 				acceptClient();
-			else
+			else if (disconnectList.find(fd) == disconnectList.end())
 			{
 				cmd.clear();
 				// Receive a full command, with delimiter, then send it to program to process,
@@ -149,8 +149,13 @@ void	Server::recvProcessCommand
 					_irc.ClientDisconnect(fd);	// Tell the program that client is disconnected
 					removeClient(fd);
 				}
+				// else if (!cmd.empty() && (disconnectList.find(fd) == disconnectList.end()) && _irc.ProcessClientCommand(std::make_pair(fd, cmd), responseQueue))
 				else if (!cmd.empty() && _irc.ProcessClientCommand(std::make_pair(fd, cmd), responseQueue))
-					disconnectList.push_back(fd);
+					disconnectList.insert(fd);
+				// Victim is the one being killed by an operator
+				int	victimFD = _irc.GetVictim();
+				if (victimFD != -1)
+					disconnectList.insert(victimFD);
 			}
 			--totalFD;
 		}

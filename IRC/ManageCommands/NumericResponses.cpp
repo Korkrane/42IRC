@@ -89,6 +89,8 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << ":Permission Denied - You're not an IRC operator"; break;
 		case ERR_CHANOPRIVSNEEDED:
 			ss << params[0] << " :You're not channel operator"; break;
+		case ERR_CANTKILLSERVER:
+			ss << ":You can't kill the server!"; break;
 		default: break;
 	}
 

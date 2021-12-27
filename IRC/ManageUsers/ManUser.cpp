@@ -23,10 +23,10 @@ void	IRC::sendNotice(User *user, std::vector<t_clientCmd> &responseQueue, string
 // Delete user from a channel when he leaves
 void	IRC::userLeaveChannel(User *user, Channel *chan)
 {
+	user->_channelsJoined.erase(chan);
 	if (chan->RemoveUser(user) == 0)
 	{
 		_channels.erase(chan->_name);
-		user->_channelsJoined.erase(chan);
 		delete chan;
 	}
 }

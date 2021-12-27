@@ -3,7 +3,8 @@
 IRC::IRC(string const &password) :
 	_startupTime(time(NULL)),
 	_svPassword(password),
-	_prefix(string(":") + IRC_HOST)
+	_prefix(string(":") + IRC_HOST),
+	_killing(-1)
 {
 	Command::InitCommandList();
 }
@@ -101,4 +102,12 @@ void	IRC::ClientDisconnect(int fd)
 		delete _users[fd];
 		_users.erase(fd);
 	}
+}
+
+// Get the fd of user being killed by a server operator
+int	IRC::GetVictim()
+{
+	int	res = _killing;
+	_killing = -1;
+	return res;
 }

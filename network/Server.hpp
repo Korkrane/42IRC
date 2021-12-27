@@ -32,7 +32,7 @@ private:
 	int		setFDForReading();
 
 	// Read from fd to get client commands then forward it to the IRC program
-	void	recvProcessCommand(int totalFD, std::vector<t_clientCmd> &responseQueue, std::vector<int> &disconnectList);
+	void	recvProcessCommand(int totalFD, std::vector<t_clientCmd> &responseQueue, std::set<int> &disconnectList);
 
 public:
 	Server(int port, string const &password, IRC &irc);

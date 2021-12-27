@@ -20,6 +20,7 @@ private:
 	string const	_prefix;				// Server's prefix in responses
 	std::map<int, User *>		_users;		// Users list
 	std::map<string, Channel *>	_channels;	// Channels list
+	int	_killing;							// FD of user being killed by an operator 
 
 	//// Manage users ////
 
@@ -79,6 +80,7 @@ public:
 
 	bool	ProcessClientCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue);
 	void	ClientDisconnect(int fd);
+	int		GetVictim();
 
 };
 
