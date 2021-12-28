@@ -3,16 +3,45 @@
 void	IRC::sendPRIVMSGtoChan
 	(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const
 {
-	string	resp;
 	Channel	*chan(getChannelByName(name));
+
 	if (!chan || !chan->IsJoined(user))
-		resp = getResponseFromCode(user, ERR_CANNOTSENDTOCHAN, (string[]){ name });
+	{
+		string	resp(getResponseFromCode(user, ERR_CANNOTSENDTOCHAN, (string[]){ name }));
+		responseQueue.push_back(std::make_pair(user->_fd, resp));
+	}
+	else
+		appendUserNotif(
+			user,
+			(string[]){ "PRIVMSG", name, ":" + msg, "" },
+			chan->_users, responseQueue,
+			true
+		);
 }
 
 void	IRC::sendPRIVMSGtoUser
 	(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const
 {
+	User	*target(getUserByNick(name));
+	int		fd;
+	string	resp;
 
+	if (!target)
+	{
+		resp = getResponseFromCode(user, ERR_NOSUCHNICK, (string[]){ name });
+		fd = user->_fd;
+	}
+	else
+	{
+		if (target->IsAway())
+		{
+			resp = getResponseFromCode(user, RPL_AWAY, (string[]){ name, target->_awayMsg });
+			responseQueue.push_back(std::make_pair(user->_fd, resp));
+		}
+		resp = user->_prefix + " PRIVMSG " + name + " :" + msg + CMD_DELIM;
+		fd = target->_fd;
+	}
+	responseQueue.push_back(std::make_pair(fd, resp));
 }
 
 void	IRC::execPRIVMSG(Command const &cmd, std::vector<t_clientCmd> &responseQueue)

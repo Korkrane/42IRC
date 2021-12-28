@@ -42,7 +42,7 @@ private:
 	string	getNoticeMsg(string const &senderPrefix, User *user, string const &msg) const;
 	string	getErrorResponse(User *user, string const &msg) const;
 	string	getResponseFromCode(User *user, int code, string params[]) const;
-	string	appendUserNotif(User *user, string params[], std::set<User *> const &dest, std::vector<t_clientCmd> &responseQueue) const;
+	string	appendUserNotif(User *user, string params[], std::set<User *> const &dest, std::vector<t_clientCmd> &responseQueue, bool excludeUser=false) const;
 
 	//// Command executor ////
 
@@ -75,6 +75,8 @@ private:
 
 	void	sendPRIVMSGtoChan(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
 	void	sendPRIVMSGtoUser(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
+
+	string	kickTarget(User *user, string const &nick, Channel *chan, string const &comment, std::vector<t_clientCmd> &responseQueue);
 
 public:
 	IRC(string const &password);

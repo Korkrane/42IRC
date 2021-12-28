@@ -91,7 +91,8 @@ class Client:
 
 	def print(self, text: str):
 		"""Print to the screen"""
-		print(f"{self.color}{text}{ENDC}")
+		if "PING" not in text and "PONG" not in text:
+			print(f"{self.color}{text}{ENDC}")
 
 
 if __name__ == '__main__':

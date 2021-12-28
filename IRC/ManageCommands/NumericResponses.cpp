@@ -38,12 +38,14 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 		case RPL_ADMINEMAIL:
 			ss << ":Email: " << params[0]; break;
 		
+		case RPL_AWAY:
+			ss << params[0] << " :" << params[1]; break;
 		case RPL_UNAWAY:
 			ss << ":You are no longer marked as being away"; break;
 		case RPL_NOWAWAY:
 			ss << ":You have been marked as being away"; break;
 		case RPL_NOTOPIC:
-			ss << params[0] << " :No topic is set" ; break;
+			ss << params[0] << " :No topic is set"; break;
 		case RPL_TOPIC:
 			ss << params[0] << " :" << params[1]; break;
 		case RPL_VERSION:
@@ -83,6 +85,8 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << params[0] << " :Erroneous nickname"; break;
 		case ERR_NICKNAMEINUSE:
 			ss << params[0] << " :Nickname is already in use"; break;
+		case ERR_USERNOTINCHANNEL:
+			ss << params[0] << " " << params[1] << " :They aren't on that channel"; break;
 		case ERR_NOTONCHANNEL:
 			ss << params[0] << " :You're not on that channel"; break;
 		case ERR_NEEDMOREPARAMS:

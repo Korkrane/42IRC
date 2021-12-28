@@ -44,7 +44,7 @@ string	IRC::getErrorResponse(User *user, string const &msg) const
 // prefixed with user's prefix, then append the message to the set of
 // recipients in dest to response queue. Return the built message
 string	IRC::appendUserNotif
-	(User *user, string params[], std::set<User *> const &dest, std::vector<t_clientCmd> &responseQueue) const
+	(User *user, string params[], std::set<User *> const &dest, std::vector<t_clientCmd> &responseQueue, bool excludeUser) const
 {
 	string	msg(user->_prefix);
 	for (int i = 0; !params[i].empty(); ++i)
@@ -55,6 +55,7 @@ string	IRC::appendUserNotif
 
 	std::set<User *>::iterator	it;
 	for (it = dest.begin(); it != dest.end(); ++it)
-		responseQueue.push_back(std::make_pair((*it)->_fd, msg));
+		if (*it != user || !excludeUser)
+			responseQueue.push_back(std::make_pair((*it)->_fd, msg));
 	return msg;
 }

@@ -5,8 +5,6 @@ void	IRC::execTOPIC(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	User	*user(cmd._user);
 	string	resp;
 
-	// cmd.Print();
-
 	if (cmd._params.empty())
 	{
 		resp = getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ cmd._type });
