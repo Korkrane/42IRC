@@ -5,7 +5,7 @@
 #include "../User/User.hpp"
 
 #define CHAN_MODES	"bklo"	// biklmnopstv
-#define CHAN_PREFIX	'#'
+#define CHAN_PREFIX	"#"
 
 #define CHAN_ILLEGAL_CHARS	"\a,: "
 
@@ -24,6 +24,7 @@ private:
 	string	_topic;				// Channel's topic
 
 public:
+	static bool	IsPrefix(char c);
 	static bool	NameLegal(string const &name);
 
 	Channel(string const &name, User *creator);
@@ -32,9 +33,9 @@ public:
 	int	TryAddUser(User *user, string const &key);
 	int	RemoveUser(User *user);
 
-	bool	IsJoined(User *user);
-	bool	IsOperator(User *user);
-	bool	IsVisible(User *user);
+	bool	IsJoined(User *user) const;
+	bool	IsOperator(User *user) const;
+	bool	IsVisible(User *user) const;
 
 	friend class IRC;
 };

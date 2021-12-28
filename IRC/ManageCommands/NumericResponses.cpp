@@ -38,6 +38,10 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 		case RPL_ADMINEMAIL:
 			ss << ":Email: " << params[0]; break;
 		
+		case RPL_UNAWAY:
+			ss << ":You are no longer marked as being away"; break;
+		case RPL_NOWAWAY:
+			ss << ":You have been marked as being away"; break;
 		case RPL_NOTOPIC:
 			ss << params[0] << " :No topic is set" ; break;
 		case RPL_TOPIC:
@@ -63,6 +67,12 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << params[0] << " :No such nick"; break;
 		case ERR_NOSUCHCHANNEL:
 			ss << params[0] << " :No such channel"; break;
+		case ERR_CANNOTSENDTOCHAN:
+			ss << params[0] << " :Cannot send to channel"; break;
+		case ERR_NORECIPIENT:
+			ss << ":No recipient given (" << params[0] << ")"; break;
+		case ERR_NOTEXTTOSEND:
+			ss << ":No text to send"; break;
 		case ERR_UNKNOWNCOMMAND:
 			ss << params[0] << " :Unknown command"; break;
 		case ERR_NOMOTD:

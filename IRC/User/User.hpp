@@ -34,6 +34,7 @@ private:
 	string	_prefix;		// User's prefix in network messages
 	bool	_mode[8];		// User's modes
 
+	string	_awayMsg;		// Away message
 	std::set<Channel *>	_channelsJoined;	// List of channels user has joined
 
 	void	registrationOK();
@@ -42,7 +43,8 @@ public:
 	User(int fd);
 	virtual ~User();
 
-	bool	IsUsernameDefault();
+	bool	IsUsernameDefault() const;
+	bool	IsAway() const;
 
 	void	SetNick(string const &nick);
 	void	SetUsername(string const &uname);

@@ -24,21 +24,22 @@ private:
 
 	//// Manage users ////
 
-	bool	checkNickInUse(string const &nick) const;
-	void	sendNotice(User *user, std::vector<t_clientCmd> &responseQueue, string msg) const;
+	User	*getUserByNick(string const &nick) const;
 	void	userLeaveChannel(User *user, Channel *chan);
 	void	removeFromAllChannel(User *user);
-	void	sendWelcomeMessage(User *user, std::vector<t_clientCmd> &responseQueue) const;
+	void	sendWelcomeMessage(User *user, std::vector<t_clientCmd> &responseQueue);
 
 	//// Manage channels ////
 
 	Channel	*newChannel(string const &name, User *creator);
+	Channel	*getChannelByName(string const &name) const;
 	std::set<User *>	getCommonUsers(User *user) const;
 
 	//// Manage commands ////
 
 	void	unknownCmd(Command const &cmd, std::vector<t_clientCmd> &responseQueue) const;
 	bool	passwordNotOK(User *user, std::vector<t_clientCmd> &responseQueue);
+	string	getNoticeMsg(string const &senderPrefix, User *user, string const &msg) const;
 	string	getErrorResponse(User *user, string const &msg) const;
 	string	getResponseFromCode(User *user, int code, string params[]) const;
 	string	appendUserNotif(User *user, string params[], std::set<User *> const &dest, std::vector<t_clientCmd> &responseQueue) const;
@@ -72,7 +73,8 @@ private:
 	void	execVERSION		(Command const &cmd, std::vector<t_clientCmd> &responseQueue);
 	void	execWHO			(Command const &cmd, std::vector<t_clientCmd> &responseQueue);
 
-	void	appendMOTDToQueue(User *user, std::vector<t_clientCmd> &responseQueue) const;
+	void	sendPRIVMSGtoChan(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
+	void	sendPRIVMSGtoUser(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
 
 public:
 	IRC(string const &password);

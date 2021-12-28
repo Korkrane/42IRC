@@ -12,22 +12,32 @@ void	IRC::unknownCmd(Command const &cmd, std::vector<t_clientCmd> &responseQueue
 // Handle password not valid. Always return true
 bool	IRC::passwordNotOK(User *user, std::vector<t_clientCmd> &responseQueue)
 {
-	string	resp(
-		getErrorResponse(user, "Access denied by configuration")
-	);
+	string	resp(getErrorResponse(user, "Access denied by configuration"));
 	responseQueue.push_back(std::make_pair(user->_fd, resp));
 	ClientDisconnect(user->_fd);
 	return true;
 }
 
+// Get a full NOTICE message to be sent to user
+string	IRC::getNoticeMsg
+	(string const &senderPrefix, User *user, string const &msg) const
+{
+	return string(
+		senderPrefix + " NOTICE "
+		+ user->_nick + " :" + msg
+		+ CMD_DELIM
+	); 
+}
+
 // Return a response with ERROR and a message
 string	IRC::getErrorResponse(User *user, string const &msg) const
 {
-	stringstream	ss;
-	ss	<< "ERROR :Closing link: ("
-		<< user->_uname << "@" << USR_HOST << ") ["
-		<< msg << "]" << CMD_DELIM;
-	return ss.str();
+	return string(
+		"ERROR :Closing link: ("
+		+ user->_uname + "@" + USR_HOST + ") ["
+		+ msg + "]"
+		+ CMD_DELIM
+	);
 }
 
 // Build a notification message from empty-terminated string array params,

@@ -26,15 +26,15 @@ void	IRC::execJOIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		string const	&key = (i < chanKeys.size())
 							 ? chanKeys[i]
 							 : "";
-		if (name[0] != CHAN_PREFIX || !Channel::NameLegal(name))
+		if (!Channel::NameLegal(name))
 		{
 			resp = getResponseFromCode(user, ERR_BADCHANMASK, (string[]){ name });
 			responseQueue.push_back(std::make_pair(user->_fd, resp));
 			continue;
 		}
-		Channel	*chan = (_channels.find(name) == _channels.end()) 
-					  ? newChannel(name, user)
-					  : _channels[name];
+		Channel	*chan(getChannelByName(name));
+		if (!chan)
+			chan = newChannel(name, user);
 		int	ret(user->TryJoin(chan, key));
 		if (ret)
 		{

@@ -38,7 +38,7 @@ void	IRC::execNICK(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		resp = getResponseFromCode(user, ERR_ERRONEUSNICKNAME, (string[]){ nick });
 	else if (nick == user->_nick)
 		return;
-	else if (checkNickInUse(nick))
+	else if (getUserByNick(nick))
 		resp = getResponseFromCode(user, ERR_NICKNAMEINUSE, (string[]){ nick });
 	else
 	{

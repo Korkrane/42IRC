@@ -5,10 +5,9 @@ void	IRC::execNAMES(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	string const	&chanName = (cmd._params.empty())
 							  ? "*" : cmd._params[0];
 	User	*user(cmd._user);
-	Channel	*chan = (_channels.find(chanName) != _channels.end())
-				  ? _channels[chanName]
-				  : NULL;
+	Channel	*chan(getChannelByName(chanName));
 	string	resp;
+
 	if (chan && chan->IsVisible(user))
 	{
 		// If channel exists and not secret, or if user is in the secret channel,

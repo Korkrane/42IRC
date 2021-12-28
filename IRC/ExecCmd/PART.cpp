@@ -17,9 +17,7 @@ void	IRC::execPART(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	for (std::vector<string>::iterator it(names.begin()); it != names.end(); ++it)
 	{
 		string const	&chanName(*it);
-		Channel	*chan = (_channels.find(chanName) != _channels.end())
-					? _channels[chanName]
-					: NULL;
+		Channel	*chan(getChannelByName(chanName));
 		if (!chan)
 		{
 			// Channel not found

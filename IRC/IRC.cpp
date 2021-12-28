@@ -32,9 +32,9 @@ bool	IRC::ProcessClientCommand(t_clientCmd const &command, std::vector<t_clientC
 		if (_svPassword.empty())
 			user->_passwordOK = true;
 		stringstream	ss;
-		ss	<< "*** Your host name is set to " << USR_HOST 
+		ss	<< "*** Your hostname is set to " << USR_HOST 
 			<< " like everybody else.";
-		sendNotice(user, responseQueue, ss.str());
+		responseQueue.push_back(std::make_pair(fd, getNoticeMsg(_prefix, user, ss.str())));
 	}
 	else
 		user = _users[fd];

@@ -27,12 +27,16 @@ void	Server::SetUp()
 		SERVER_ERR("socket");
 
 #ifdef __APPLE__
-	fcntl(fd, F_SETFL, O_NONBLOCK);
+	fcntl(_fd, F_SETFL, O_NONBLOCK);
 #endif
 
 	// Set options for socket
 	int	opt(1);
+#ifdef __APPLE__
+	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(int)) == -1)
+#else
 	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int)) == -1)
+#endif
 		SERVER_ERR("setsockopt");
 
 	// Bind socket to port
