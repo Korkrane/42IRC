@@ -10,7 +10,7 @@ string	IRC::kickTarget
 
 	if (!target)
 		resp = getResponseFromCode(user, ERR_NOSUCHNICK, (string[]){ nick });
-	else if (!chan->IsJoined(target))
+	else if (!chan->HasJoined(target))
 		resp = getResponseFromCode(user, ERR_USERNOTINCHANNEL, (string[]){ nick, chan->_name });
 	if (!resp.empty())
 	{
@@ -18,7 +18,7 @@ string	IRC::kickTarget
 		return "";
 	}
 
-	target->_channelsJoined.erase(chan);
+	target->_joined.erase(chan);
 	chan->RemoveUser(target);
 	resp = user->_prefix
 		 + " KICK "
@@ -45,7 +45,7 @@ void	IRC::execKICK(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	Channel			*chan(getChannelByName(chanName));
 	if (!chan)
 		resp = getResponseFromCode(user, ERR_NOSUCHCHANNEL, (string[]){ chanName });
-	else if (!chan->IsJoined(user))
+	else if (!chan->HasJoined(user))
 		resp = getResponseFromCode(user, ERR_NOTONCHANNEL, (string[]){ chanName });
 	else if (!chan->IsOperator(user))
 		resp = getResponseFromCode(user, ERR_CHANOPRIVSNEEDED, (string[]){ chanName });

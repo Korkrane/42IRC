@@ -13,7 +13,7 @@ User	*IRC::getUserByNick(string const &nick) const
 // Delete user from a channel when he leaves
 void	IRC::userLeaveChannel(User *user, Channel *chan)
 {
-	user->_channelsJoined.erase(chan);
+	user->_joined.erase(chan);
 	if (chan->RemoveUser(user) == 0)
 	{
 		_channels.erase(chan->_name);
@@ -24,8 +24,8 @@ void	IRC::userLeaveChannel(User *user, Channel *chan)
 // Delete user from every channel he is in
 void	IRC::removeFromAllChannel(User *user)
 {
-	while (!user->_channelsJoined.empty())
-		userLeaveChannel(user, *(user->_channelsJoined.begin()));
+	while (!user->_joined.empty())
+		userLeaveChannel(user, *(user->_joined.begin()));
 }
 
 // Send new user welcome messages with useful information about server

@@ -73,8 +73,11 @@ private:
 	void	execVERSION		(Command const &cmd, std::vector<t_clientCmd> &responseQueue);
 	void	execWHO			(Command const &cmd, std::vector<t_clientCmd> &responseQueue);
 
-	void	sendPRIVMSGtoChan(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
-	void	sendPRIVMSGtoUser(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
+	void	chanPRIVMSG(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
+	void	userPRIVMSG(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
+
+	void	chanMODE(User *user, string const &chanName, string const &modes, std::vector<t_clientCmd> &responseQueue);
+	void	userMODE(User *user, string const &nick, string const &modes, std::vector<t_clientCmd> &responseQueue);
 
 	string	kickTarget(User *user, string const &nick, Channel *chan, string const &comment, std::vector<t_clientCmd> &responseQueue);
 

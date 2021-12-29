@@ -14,9 +14,9 @@ void	IRC::execTOPIC(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 
 	string const	&chanName(cmd._params[0]);
 	Channel	*chan(getChannelByName(chanName));
-	if (!chan || !chan->IsVisible(user))
+	if (!chan || !chan->HasJoined(user))
 	{
-		// Channel not found or not visible to user
+		// Channel not found or user not joined
 		if (cmd._params.size() == 1)
 			resp = getResponseFromCode(user, ERR_NOSUCHCHANNEL, (string[]){ chanName });
 		else

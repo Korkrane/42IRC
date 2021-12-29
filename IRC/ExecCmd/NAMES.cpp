@@ -8,10 +8,9 @@ void	IRC::execNAMES(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	Channel	*chan(getChannelByName(chanName));
 	string	resp;
 
-	if (chan && chan->IsJoined(user))
+	if (chan && chan->HasJoined(user))
 	{
 		// If channel exists and user has joined channel, query is valid
-		string const	chanType = (chan->_secret) ? "@ " : "= ";
 		string	names;
 		names.reserve(1024);
 		std::set<User *>::iterator it;
@@ -26,7 +25,7 @@ void	IRC::execNAMES(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		resp = getResponseFromCode(
 			user,
 			RPL_NAMREPLY,
-			(string[]){ chanType + chanName, names }
+			(string[]){ "= " + chanName, names }
 		);
 	}
 	resp += getResponseFromCode(user, RPL_ENDOFNAMES, (string[]){ chanName });

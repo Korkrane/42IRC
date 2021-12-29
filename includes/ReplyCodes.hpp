@@ -8,6 +8,7 @@
 #define RPL_CREATED		3
 #define RPL_MYINFO		4
 
+#define RPL_UMODEIS		221
 #define RPL_ADMINME		256
 #define RPL_ADMINLOC1	257
 #define RPL_ADMINLOC2	258
@@ -16,6 +17,9 @@
 #define RPL_AWAY		301
 #define RPL_UNAWAY		305
 #define RPL_NOWAWAY		306
+#define RPL_LISTSTART	321
+#define RPL_LIST		322
+#define RPL_LISTEND		323
 #define RPL_NOTOPIC		331
 #define RPL_TOPIC		332
 #define RPL_VERSION		351
@@ -26,6 +30,7 @@
 #define RPL_ENDOFMOTD	376
 #define RPL_YOUREOPER	381
 #define RPL_TIME		391
+
 
 //// NUM ERRORS ////
 
@@ -49,5 +54,8 @@
 #define ERR_NOPRIVILEGES		481
 #define ERR_CHANOPRIVSNEEDED	482
 #define ERR_CANTKILLSERVER		483
+
+#define ERR_UMODEUNKNOWNFLAG	501
+#define ERR_USERSDONTMATCH		502
 
 #endif

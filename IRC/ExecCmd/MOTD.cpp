@@ -4,6 +4,7 @@
 #define MOTD_FILE	"config/motd"
 
 static std::vector<string>	MOTDLines;
+static bool		motdInit(false);
 
 // Initialize message of the day from file
 static void	initMOTD()
@@ -26,8 +27,7 @@ static void	initMOTD()
 
 void	IRC::execMOTD(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 {
-	static string	motd;
-	static bool		motdInit(false);
+	string	motd;
 	User	*user(cmd._user);
 
 	if (!motdInit)
@@ -35,23 +35,20 @@ void	IRC::execMOTD(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		initMOTD();
 		motdInit = true;
 	}	
-	if (motd.empty())
+	if (MOTDLines.empty())
+		motd = getResponseFromCode(user, ERR_NOMOTD, NULL);
+	else
 	{
-		if (MOTDLines.empty())
-			motd = getResponseFromCode(user, ERR_NOMOTD, NULL);
-		else
+		motd = getResponseFromCode(user, RPL_MOTDSTART, NULL);
+		for (std::vector<string>::iterator it(MOTDLines.begin());
+			it != MOTDLines.end(); ++it)
 		{
-			motd = getResponseFromCode(user, RPL_MOTDSTART, NULL);
-			for (std::vector<string>::iterator it(MOTDLines.begin());
-				it != MOTDLines.end(); ++it)
-			{
-				motd += getResponseFromCode(
-					user, RPL_MOTD,
-					(string[]){ *it }	
-				);
-			}
-			motd += getResponseFromCode(user, RPL_ENDOFMOTD, NULL);
+			motd += getResponseFromCode(
+				user, RPL_MOTD,
+				(string[]){ *it }	
+			);
 		}
+		motd += getResponseFromCode(user, RPL_ENDOFMOTD, NULL);
 	}
 	responseQueue.push_back(std::make_pair(user->_fd, motd));
 }

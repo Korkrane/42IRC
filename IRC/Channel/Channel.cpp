@@ -30,8 +30,7 @@ bool	Channel::NameLegal(string const &name)
 
 Channel::Channel(string const &name, User *creator) :
 	_name(name),
-	_limitNumUsers(-1),
-	_secret(false)
+	_invitationOnly(false)
 {
 	_operators.insert(creator);
 	_users.insert(creator);
@@ -44,7 +43,7 @@ Channel::~Channel()
 // is added successfully, or a numeric representation of error if fails
 int	Channel::TryAddUser(User *user, string const &key)
 {
-	if (IsJoined(user))
+	if (HasJoined(user))
 		return 0;
 
 	if (!_key.empty() && key != _key)
@@ -62,12 +61,8 @@ int	Channel::RemoveUser(User *user)
 }
 
 // Check if user has joined channel
-bool	Channel::IsJoined(User *user) const
+bool	Channel::HasJoined(User *user) const
 { return (_users.find(user) != _users.end()); }
-
-// Check if user can look up info of channel
-bool	Channel::IsVisible(User *user) const
-{ return (!_secret || IsJoined(user)); }
 
 // Check if user is operator of channel
 bool	Channel::IsOperator(User *user)	const

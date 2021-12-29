@@ -3,39 +3,30 @@
 
 #include "../../includes/Headers.hpp"
 
-#define USR_HOST	"user.ft-irc.42.fr"
-#define USR_MODES	"ios"
+#define USR_HOST		"user.ft-irc.42.fr"
+#define USR_VALID_MODES	"aio"
+#define USR_ALL_MODES	"aiorwsO"
 
 #define DEFAULT_NAME	"*"
-
-enum	UserMode
-{
-	MODE_A,		//	away			(no)
-	MODE_I,		//	invisible
-	MODE_O,		//	operator
-	MODE_R,		//	restricted		(no)
-	MODE_W,		//	wallops			(no)
-	MODE_S,		//	receive NOTICE
-	MODE_BO,	//	local operator	(no)
-	MODE_BB		//	bot				(no)
-};
 
 class	User
 {
 
 private:
 	int		_fd;			// fd of user's network client, used for unique identifier
-	bool	_oper;			// Is user server operator
 	bool	_passwordOK;	// Has user entered good password ?
 	bool	_registered;	// Is user registered ?
 	string	_nick;			// Nickname
 	string	_uname;			// Username
 	string	_rname;			// Real name
 	string	_prefix;		// User's prefix in network messages
-	bool	_mode[8];		// User's modes
+	std::set<Channel *>	_joined;	// List of channels user has joined
+
+	// User's modes
 
 	string	_awayMsg;		// Away message
-	std::set<Channel *>	_channelsJoined;	// List of channels user has joined
+	bool	_invisible;		// Is invisible
+	bool	_oper;			// Is server operator
 
 	void	registrationOK();
 
@@ -48,9 +39,10 @@ public:
 
 	void	SetNick(string const &nick);
 	void	SetUsername(string const &uname);
-	void	SetMode(string const &modes);
+	string	GetMode();
 
 	int		TryJoin(Channel *chan, string const &key);
+	int		TrySetMode(bool plus, char mode);
 
 	friend class IRC;
 };

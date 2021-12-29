@@ -29,6 +29,8 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 		case RPL_MYINFO:
 			ss << IRC_HOST << ' ' << IRC_VER << ' ' << "biklmnopstv :" << CHAN_MODES; break;
 		
+		case RPL_UMODEIS:
+			ss << ":" << params[0]; break;
 		case RPL_ADMINME:
 			ss << IRC_HOST << " :Administrative info"; break;
 		case RPL_ADMINLOC1:
@@ -44,6 +46,12 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << ":You are no longer marked as being away"; break;
 		case RPL_NOWAWAY:
 			ss << ":You have been marked as being away"; break;
+		case RPL_LISTSTART:
+			ss << ":Start of LIST"; break;
+		case RPL_LIST:
+			ss  << ":" << params[0]; break;
+		case RPL_LISTEND:
+			ss  << ":End of LIST"; break;
 		case RPL_NOTOPIC:
 			ss << params[0] << " :No topic is set"; break;
 		case RPL_TOPIC:
@@ -105,6 +113,13 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << params[0] << " :You're not channel operator"; break;
 		case ERR_CANTKILLSERVER:
 			ss << ":You can't kill the server!"; break;
+
+		case ERR_UMODEUNKNOWNFLAG:
+			ss << params[0] << " :Unknown MODE flag"; break;
+		case ERR_USERSDONTMATCH:
+			ss << ":Cannot change mode for other users"; break;
+
+
 		default: break;
 	}
 

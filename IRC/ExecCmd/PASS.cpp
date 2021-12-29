@@ -3,14 +3,14 @@
 void	IRC::execPASS(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 {
 	User	*user(cmd._user);
+	string	resp;
 
 	if (user->_passwordOK)
-		return;
+		resp = getResponseFromCode(user, ERR_ALREADYREGISTRED, (string[]){ user->_nick });
 	if (cmd._params.empty())
-	{
-		string	resp(getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ cmd._type }));
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
-	}
+		resp = getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ cmd._type });
 	else if (cmd._params[0] == _svPassword)
 		user->_passwordOK = true;
+	if (!resp.empty())
+		responseQueue.push_back(std::make_pair(user->_fd, resp));
 }
