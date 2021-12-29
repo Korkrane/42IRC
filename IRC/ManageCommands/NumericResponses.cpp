@@ -28,7 +28,7 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss.seekp(-1, std::ios_base::end); break;
 		case RPL_MYINFO:
 			ss << IRC_HOST << ' ' << IRC_VER << ' ' << "biklmnopstv :" << CHAN_MODES; break;
-		
+
 		case RPL_ADMINME:
 			ss << IRC_HOST << " :Administrative info"; break;
 		case RPL_ADMINLOC1:
@@ -37,7 +37,7 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << ":Location: " << params[0]; break;
 		case RPL_ADMINEMAIL:
 			ss << ":Email: " << params[0]; break;
-		
+
 		case RPL_AWAY:
 			ss << params[0] << " :" << params[1]; break;
 		case RPL_UNAWAY:
@@ -64,7 +64,14 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << ":You are now an IRC operator"; break;
 		case RPL_TIME:
 			ss << IRC_HOST << " :" << params[0]; break;
-		
+		case RPL_LISTSTART:
+            ss << ":Start of LIST"; break;
+        case RPL_LIST:
+            ss  << ":" << params[0]; break;
+        case RPL_LISTEND:
+            ss  << ":End of LIST"; break;
+
+
 		case ERR_NOSUCHNICK:
 			ss << params[0] << " :No such nick"; break;
 		case ERR_NOSUCHCHANNEL:

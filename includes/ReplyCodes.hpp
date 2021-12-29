@@ -26,7 +26,9 @@
 #define RPL_ENDOFMOTD	376
 #define RPL_YOUREOPER	381
 #define RPL_TIME		391
-
+#define RPL_LISTSTART    321
+#define RPL_LIST        322
+#define RPL_LISTEND        323
 //// NUM ERRORS ////
 
 #define ERR_NOSUCHNICK			401
