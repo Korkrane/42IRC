@@ -1,43 +1,5 @@
 #include "../IRC.hpp"
 
-// Execute MODE for a channel
-void	IRC::chanMODE(User *user, string const &chanName, string const &modes, std::vector<t_clientCmd> &responseQueue)
-{
-	
-}
-
-// Execute MODE for a user
-void	IRC::userMODE(User *user, string const &nick, string const &modes, std::vector<t_clientCmd> &responseQueue)
-{
-	string	resp;
-
-	if (nick != user->_nick)
-		resp = getResponseFromCode(user, ERR_USERSDONTMATCH, NULL);
-	else if (modes.empty())
-		resp = getResponseFromCode(user, RPL_UMODEIS, (string[]){ user->GetMode() });
-	if (!resp.empty())
-	{
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
-		return;
-	}
-
-	bool	plus(modes[0] != '-');
-	size_t	i = ((plus && modes[0] == '+') || !plus);	// if first char is +/-, start at second char
-	string	succeeded = plus ? "+" : "-";
-
-	for (; i < modes.size(); ++i)
-	{
-		int	res(user->TrySetMode(plus, modes[i]));
-		if (!res)
-			succeeded += modes[i];
-		else if (res > 0)
-			resp += getResponseFromCode(user, res, (string[]){ modes.substr(i,1) });
-	}
-	resp += _prefix + " MODE " + nick + " :" + succeeded + CMD_DELIM;
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
-}
-
-
 void	IRC::execMODE(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 {
 	User	*user(cmd._user);
@@ -50,10 +12,150 @@ void	IRC::execMODE(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	}
 
 	string const	&name(cmd._params[0]);
-	string const	&mode = (cmd._params.size() == 1)
-						  ? "" : cmd._params[1];
+	string const	&modes = (cmd._params.size() == 1)
+						   ? "" : cmd._params[1];
+	string const	&params = (cmd._params.size() == 2)
+						   ? "" : cmd._params[2];
 	if (Channel::IsPrefix(name[0]))
-		chanMODE(user, name, mode, responseQueue);
+		chanMODE(user, name, modes, params, responseQueue);
 	else
-		userMODE(user, name, mode, responseQueue);
+		userMODE(user, name, modes, responseQueue);
+}
+
+// Execute MODE targeting a channel
+void	IRC::chanMODE
+	(User *user, string const &chanName, string const &modes, string const &params, std::vector<t_clientCmd> &responseQueue)
+{
+	string	resp;
+	Channel	*chan(getChannelByName(chanName));
+
+	if (!chan)
+		resp = getResponseFromCode(user, ERR_NOSUCHCHANNEL, (string[]){ chanName });
+	else if (modes.empty())
+	{
+		// Querying channel's mode
+		string	chanKey;
+		if (chan->HasKey())
+			chanKey = (chan->HasJoined(user))
+					? chan->_key
+					: "<key>";
+		resp = getResponseFromCode(
+			user, RPL_CHANNELMODEIS,
+			(string[]){ chanName, chan->GetModes(), chanKey }
+		);
+	}
+	else if (!chan->IsOperator(user))
+		resp = getResponseFromCode(user, ERR_CHANOPRIVSNEEDED, (string[]){ chanName });
+	if (!resp.empty())
+	{
+		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		return;
+	}
+	
+	std::vector<string>	paramsList;
+	::splitStr(paramsList, params, " ");
+	size_t	paramIdx(0);
+
+	bool	plus(modes[0] != '-');
+	size_t	i((plus && modes[0] == '+') || !plus);	// if first char is +/-, start at second char
+	string	modeChanges;
+	std::vector<string>	paramChanges;
+
+	for (; i < modes.size(); ++i)
+	{
+		// Looping over each character
+		string param, errorName;
+		if (Channel::ModeNeedsParam(modes[i], errorName) && paramIdx < paramsList.size())
+			param = paramsList[paramIdx++];
+		if (param.empty() && !errorName.empty())
+		{
+			// If mode requires parameter and param is empty, then error
+			resp += getResponseFromCode(
+				user, ERR_CUST_CMODEPARAM,
+				(string[]){ chanName, modes.substr(i, 1), errorName }
+			);
+			continue;
+		}
+
+		int	res(chan->TrySetMode(this, plus, modes[i], param));
+		if (res > 0)
+			resp += getResponseFromCode(
+				user, res,
+				(string[]){ param, modes.substr(i, 1), chanName, errorName }
+			);
+		else if (!res)
+		{
+			modeChanges += modes[i];
+			if (!param.empty())
+				paramChanges.push_back(param);
+		}
+	}
+	if (!resp.empty())
+		responseQueue.push_back(std::make_pair(user->_fd, resp));
+
+	if (!modeChanges.empty())
+	{
+		// If there is some valid changes, notify everyone in channel
+		modeChanges = plus
+					? "+" + modeChanges
+					: "-" + modeChanges;
+		string	msgToAll;
+		if (paramChanges.empty())
+			msgToAll += ":" + modeChanges;
+		else
+		{
+			msgToAll += modeChanges;
+			paramChanges.back() = ":" + paramChanges.back();	// Add ':' to the beginning of the last string
+			for (std::vector<string>::iterator it(paramChanges.begin());
+				it != paramChanges.end(); ++it)
+				msgToAll += " " + (*it);
+		}
+		appendUserNotif(
+			user,
+			(string[]){ "MODE", chanName, msgToAll, "" },
+			chan->_users, responseQueue
+		);
+	}
+}
+
+// Execute MODE targeting a user
+void	IRC::userMODE
+	(User *user, string const &nick, string const &modes, std::vector<t_clientCmd> &responseQueue)
+{
+	string	resp;
+
+	if (nick != user->_nick)
+		// User should only be able to set their own mode
+		resp = getResponseFromCode(user, ERR_USERSDONTMATCH, NULL);
+	else if (modes.empty())
+		// Query user's own mode
+		resp = getResponseFromCode(user, RPL_UMODEIS, (string[]){ user->GetModes() });
+	if (!resp.empty())
+	{
+		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		return;
+	}
+
+	bool	plus(modes[0] != '-');
+	size_t	i((plus && modes[0] == '+') || !plus);	// if first char is +/-, start at second char
+	string	modeChanges;
+
+	for (; i < modes.size(); ++i)
+	{
+		// Try setting each mode by iterating each character
+		int	res(user->TrySetMode(plus, modes[i]));
+		if (!res)
+			modeChanges += modes[i];
+		else if (res > 0)
+			resp += getResponseFromCode(user, res, (string[]){ modes.substr(i,1) });
+	}
+	if (!modeChanges.empty())
+	{
+		// If there is some valid changes, response effective changes to user
+		modeChanges = plus
+					? "+" + modeChanges
+					: "-" + modeChanges;
+		resp += user->_prefix + " MODE " + nick + " :" + modeChanges + CMD_DELIM;
+		responseQueue.push_back(std::make_pair(user->_fd, resp));
+	}
 }

@@ -2,12 +2,11 @@
 
 // #include "IRC/IRC.hpp"
 
-// int main(int ac, char **av)
+// int main()
 // {
-// 	if (ac != 2)
-// 		return 0;
-// 	Command::InitCommandList();
-// 	User u(1);
-// 	Command c(&u, av[1]);
-// 	c.Print();
+// 	std::vector<string>	paramsList;
+// 	::splitStr(paramsList, "", ",");
+// 	for (std::vector<string>::iterator it(paramsList.begin()); it != paramsList.end(); ++it)
+// 		std::cout << *it << '\n';
+// 	std::cout << paramsList.size() << '\n';
 // }

@@ -11,7 +11,10 @@ class	Command
 
 	void	deduceType(string &cmd);
 	void	buildParams(string const &strParams);
+	
 	void	treatTOPIC(string const &rawCmd);
+	void	treatMODE();
+	void	treatPRIVMSG_NOTICE();
 
 public:
 	static void	InitCommandList();

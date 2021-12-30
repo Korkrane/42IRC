@@ -33,15 +33,17 @@ void	IRC::execJOIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 			continue;
 		}
 		Channel	*chan(getChannelByName(name));
+		int	res(0);
 		if (!chan)
 			chan = newChannel(name, user);
-		int	ret(user->TryJoin(chan, key));
-		if (ret)
+		else
+			res = user->TryJoin(chan, key);
+		if (res > 0)
 		{
-			resp = getResponseFromCode(user, ret, (string[]){ name });
+			resp = getResponseFromCode(user, res, (string[]){ name });
 			responseQueue.push_back(std::make_pair(user->_fd, resp));
 		}
-		else
+		else if (!res)
 		{
 			// Inform everyone in the channel that user has just joined
 			resp = appendUserNotif(

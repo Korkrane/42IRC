@@ -51,7 +51,7 @@ void	User::SetUsername(string const &uname)
 }
 
 // Get string representation of user's modes
-string	User::GetMode()
+string	User::GetModes() const
 {
 	string	mode("+");
 	if (IsAway())
@@ -63,12 +63,13 @@ string	User::GetMode()
 	return mode;
 }
 
-// Attempt to join channel. Return 0 if joined successfully, otherwise a
-// numeric representation of error if fails
+// Attempt to join channel. Return 0 if joined successfully, -1 if ignored,
+// a positive numeric representation of error if fails
 int	User::TryJoin(Channel *chan, string const &key)
 {
 	if (_joined.find(chan) != _joined.end())
-		return 0;
+		// Ignore command if already joined
+		return -1;
 
 	int	ret(chan->TryAddUser(this, key));
 	if (!ret)
@@ -86,21 +87,17 @@ int	User::TrySetMode(bool plus, char mode)
 	if (allModes.find(mode) == string::npos)
 		// Mode not found
 		return ERR_UMODEUNKNOWNFLAG;
-	if (validModes.find(mode) == string::npos)
-		// Mode ignored by server
-		return -1;
-
 	if (mode == 'a' && !plus && IsAway())
 	{
 		_awayMsg = "";
 		return 0;
 	}
-	else if (mode == 'i' && plus != _invisible)
+	if (mode == 'i' && plus != _invisible)
 	{
 		_invisible = !_invisible;
 		return 0;
 	}
-	else if (!plus && _oper)	// mode o
+	if (mode == 'o' && !plus && _oper)
 	{
 		_oper = false;
 		return 0;

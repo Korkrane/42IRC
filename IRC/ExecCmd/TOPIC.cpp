@@ -14,35 +14,29 @@ void	IRC::execTOPIC(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 
 	string const	&chanName(cmd._params[0]);
 	Channel	*chan(getChannelByName(chanName));
-	if (!chan || !chan->HasJoined(user))
-	{
-		// Channel not found or user not joined
-		if (cmd._params.size() == 1)
-			resp = getResponseFromCode(user, ERR_NOSUCHCHANNEL, (string[]){ chanName });
-		else
-			resp = getResponseFromCode(user, ERR_NOTONCHANNEL, (string[]){ chanName });
-	}
+	if (!chan)
+		// Channel not exist
+		resp = getResponseFromCode(user, ERR_NOSUCHCHANNEL, (string[]){ chanName });
 	else if (cmd._params.size() == 1)
-	{
-		// Query channel's topic
-		if (chan->_topic.empty())
-			resp = getResponseFromCode(user, RPL_NOTOPIC, (string[]){ chanName });
-		else
-			resp = getResponseFromCode(user, RPL_TOPIC, (string[]){ chanName, chan->_topic });
-	}
-	else if (!chan->IsOperator(user))
-		// User trying to change topic is not operator of channel
+		// Querying channel's topic
+		resp = (chan->_topic.empty())
+			 ? getResponseFromCode(user, RPL_NOTOPIC, (string[]){ chanName })
+			 : getResponseFromCode(user, RPL_TOPIC, (string[]){ chanName, chan->_topic });
+	else if (!chan->HasJoined(user))
+		// User not joined channel
+		resp = getResponseFromCode(user, ERR_NOTONCHANNEL, (string[]){ chanName });
+	else if (!chan->IsOperator(user) && !chan->_anyoneCanSetTopic)
+		// User trying to change topic is not operator of channel with mode +t
 		resp = getResponseFromCode(user, ERR_CHANOPRIVSNEEDED, (string[]){ chanName });
 	else
 	{
-		// Operator changed topic of channel, inform everyone
+		// User changed channel's topic, inform everyone
 		chan->_topic = cmd._params[1];
-		appendUserNotif(
+		resp = appendUserNotif(
 			user,
 			(string[]){ "TOPIC", chanName, ":" + chan->_topic, "" },
-			chan->_users, responseQueue
+			chan->_users, responseQueue, true
 		);
 	}
-	if (!resp.empty())
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+	responseQueue.push_back(std::make_pair(user->_fd, resp));
 }

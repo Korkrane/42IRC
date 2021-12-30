@@ -24,7 +24,6 @@ private:
 
 	//// Manage users ////
 
-	User	*getUserByNick(string const &nick) const;
 	void	userLeaveChannel(User *user, Channel *chan);
 	void	removeFromAllChannel(User *user);
 	void	sendWelcomeMessage(User *user, std::vector<t_clientCmd> &responseQueue);
@@ -32,7 +31,6 @@ private:
 	//// Manage channels ////
 
 	Channel	*newChannel(string const &name, User *creator);
-	Channel	*getChannelByName(string const &name) const;
 	std::set<User *>	getCommonUsers(User *user) const;
 
 	//// Manage commands ////
@@ -76,7 +74,7 @@ private:
 	void	chanPRIVMSG(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
 	void	userPRIVMSG(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
 
-	void	chanMODE(User *user, string const &chanName, string const &modes, std::vector<t_clientCmd> &responseQueue);
+	void	chanMODE(User *user, string const &chanName, string const &modes, string const &params, std::vector<t_clientCmd> &responseQueue);
 	void	userMODE(User *user, string const &nick, string const &modes, std::vector<t_clientCmd> &responseQueue);
 
 	string	kickTarget(User *user, string const &nick, Channel *chan, string const &comment, std::vector<t_clientCmd> &responseQueue);
@@ -85,9 +83,13 @@ public:
 	IRC(string const &password);
 	virtual ~IRC();
 
+	User	*getUserByNick(string const &nick) const;
+	Channel	*getChannelByName(string const &name) const;
+
 	bool	ProcessClientCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue);
 	void	ClientDisconnect(int fd);
 	int		GetVictim();
+
 
 };
 

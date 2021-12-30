@@ -89,6 +89,10 @@ Command::Command(User *user, string const &cmd) :
 		buildParams(cmdCopy);
 		if (_type == "TOPIC")
 			treatTOPIC(cmd);
+		else if (_type == "MODE")
+			treatMODE();
+		else if (_type == "PRIVMSG" || _type == "NOTICE")
+			treatPRIVMSG_NOTICE();
 	}
 }
 
@@ -136,6 +140,30 @@ void	Command::treatTOPIC(string const &rawCmd)
 		else if (_params.size() == 1)
 			_params.push_back("");
 	}
+}
+
+// Special treatment for MODE
+void	Command::treatMODE()
+{
+	if (_params.size() < 3)
+		return;
+	string res(_params[2]);
+	for (size_t i(3); i < _params.size(); ++i)
+		res += " " + _params[i];
+	_params.erase(_params.begin() + 2, _params.end());
+	_params.push_back(res);
+}
+
+// Special treatment for PRIVMSG and NOTICE
+void	Command::treatPRIVMSG_NOTICE()
+{
+	if (_params.size() < 2)
+		return;
+	string res(_params[1]);
+	for (size_t i(2); i < _params.size(); ++i)
+		res += " " + _params[i];
+	_params.erase(_params.begin() + 1, _params.end());
+	_params.push_back(res);
 }
 
 // Check if command is supported by server (including ignored)

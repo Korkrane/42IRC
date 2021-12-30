@@ -16,17 +16,34 @@ void	IRC::execNOTICE(Command const &cmd, std::vector<t_clientCmd> &responseQueue
 		return;
 	}
 
-	User	*target;
+	// User	*target;
 	string const	&name(cmd._params[0]);
 	string const	&msg(cmd._params[1]);
 	if (Channel::IsPrefix(name[0]))
-		resp = getResponseFromCode(user, ERR_CANNOTSENDTOCHAN, (string[]){ name });
-	else if (!(target = getUserByNick(name)))
-		resp = getResponseFromCode(user, ERR_NOSUCHNICK, (string[]){ name });
+	{
+		// Send notice to a channel user has joined
+		Channel	*chan(getChannelByName(name));
+		if (!chan || !chan->HasJoined(user))
+			resp = getResponseFromCode(user, ERR_CANNOTSENDTOCHAN, (string[]){ name });
+		else
+			appendUserNotif(
+				user,
+				(string[]){ "NOTICE", name, ":" + msg, "" },
+				chan->_users, responseQueue, true
+			);
+	}
 	else
 	{
-		resp = getNoticeMsg(user->_prefix, target, msg);
-		fd = target->_fd;
+		// Send notice to a user
+		User	*target(getUserByNick(name));
+		if (!(target = getUserByNick(name)))
+			resp = getResponseFromCode(user, ERR_NOSUCHNICK, (string[]){ name });
+		else
+		{
+			resp = getNoticeMsg(user->_prefix, target, msg);
+			fd = target->_fd;
+		}
 	}
-	responseQueue.push_back(std::make_pair(fd, resp));
+	if (!resp.empty())
+		responseQueue.push_back(std::make_pair(fd, resp));
 }

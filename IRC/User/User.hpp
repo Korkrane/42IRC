@@ -24,9 +24,9 @@ private:
 
 	// User's modes
 
-	string	_awayMsg;		// Away message
-	bool	_invisible;		// Is invisible
-	bool	_oper;			// Is server operator
+	string	_awayMsg;		// (a) Away message
+	bool	_invisible;		// (i) Is invisible
+	bool	_oper;			// (o) Is server operator
 
 	void	registrationOK();
 
@@ -39,7 +39,7 @@ public:
 
 	void	SetNick(string const &nick);
 	void	SetUsername(string const &uname);
-	string	GetMode();
+	string	GetModes() const;
 
 	int		TryJoin(Channel *chan, string const &key);
 	int		TrySetMode(bool plus, char mode);

@@ -5,28 +5,34 @@ void	IRC::execNAMES(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	string const	&chanName = (cmd._params.empty())
 							  ? "*" : cmd._params[0];
 	User	*user(cmd._user);
-	Channel	*chan(getChannelByName(chanName));
 	string	resp;
 
-	if (chan && chan->HasJoined(user))
+	Channel	*chan(getChannelByName(chanName));
+	if (chan)
 	{
-		// If channel exists and user has joined channel, query is valid
+		bool	joined(chan->HasJoined(user));
 		string	names;
 		names.reserve(1024);
 		std::set<User *>::iterator it;
 		for (it = chan->_users.begin(); it != chan->_users.end(); ++it)
 		{
+			if (!joined && (*it)->_invisible)	// not showing invisible users
+				continue;
 			if (chan->IsOperator(*it))
 				names += "@";
-			names += (*it)->_nick;
-			if (std::distance(it, chan->_users.end()) > 1)
-				names += " ";
+			names += (*it)->_nick + " ";
 		}
-		resp = getResponseFromCode(
-			user,
-			RPL_NAMREPLY,
-			(string[]){ "= " + chanName, names }
-		);
+		if (!names.empty())
+		{
+			if (names[names.size() - 1] == ' ')
+				// Remove last character if it's a space
+				names.erase(names.size() - 1, 1);
+			resp = getResponseFromCode(
+				user,
+				RPL_NAMREPLY,
+				(string[]){ "= " + chanName, names }
+			);
+		}
 	}
 	resp += getResponseFromCode(user, RPL_ENDOFNAMES, (string[]){ chanName });
 	responseQueue.push_back(std::make_pair(user->_fd, resp));

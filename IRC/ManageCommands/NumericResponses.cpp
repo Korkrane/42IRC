@@ -27,7 +27,7 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << ":This server was created " << ctime(&_startupTime);
 			ss.seekp(-1, std::ios_base::end); break;
 		case RPL_MYINFO:
-			ss << IRC_HOST << ' ' << IRC_VER << ' ' << "biklmnopstv :" << CHAN_MODES; break;
+			ss << IRC_HOST << ' ' << IRC_VER << ' ' << "biklmnopstv :" << CHAN_VALID_MODES; break;
 		
 		case RPL_UMODEIS:
 			ss << ":" << params[0]; break;
@@ -52,6 +52,13 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss  << ":" << params[0]; break;
 		case RPL_LISTEND:
 			ss  << ":End of LIST"; break;
+		case RPL_CHANNELMODEIS:
+			ss  << params[0] << " ";
+			if (params[2].empty())
+				ss << ":" << params[1];
+			else
+				ss << params[1] << " :" << params[2];
+			break;
 		case RPL_NOTOPIC:
 			ss << params[0] << " :No topic is set"; break;
 		case RPL_TOPIC:
@@ -103,8 +110,14 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << ":You may not reregister"; break;
 		case ERR_PASSWDMISMATCH:
 			ss << ":Password incorrect"; break;
+		case ERR_KEYSET:
+			ss << params[2] << " :Channel key already set"; break;
+		case ERR_UNKNOWNMODE:
+			ss << params[1] << " :is unknown mode char to me for " << params[2]; break;
+		case ERR_INVITEONLYCHAN:
+			ss << params[0] << " :Cannot join channel (+i)"; break;
 		case ERR_BADCHANNELKEY:
-			ss << params[0] << " :Cannot join channel (incorrect channel key)"; break;
+			ss << params[0] << " :Cannot join channel (+k)"; break;
 		case ERR_BADCHANMASK:
 			ss << params[0] << " :Invalid channel name"; break;
 		case ERR_NOPRIVILEGES:
@@ -118,6 +131,9 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss << params[0] << " :Unknown MODE flag"; break;
 		case ERR_USERSDONTMATCH:
 			ss << ":Cannot change mode for other users"; break;
+
+		case ERR_CUST_CMODEPARAM:
+			ss << params[0] << " " << params[1] << " * :You must specify a parameter for the " << params[2] << " mode. Syntax: <" << params[2] << ">."; break;
 
 
 		default: break;

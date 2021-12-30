@@ -14,8 +14,7 @@ void	IRC::chanPRIVMSG
 		appendUserNotif(
 			user,
 			(string[]){ "PRIVMSG", name, ":" + msg, "" },
-			chan->_users, responseQueue,
-			true
+			chan->_users, responseQueue, true
 		);
 }
 
