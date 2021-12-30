@@ -8,6 +8,7 @@
 #define USR_ALL_MODES	"aiorwsO"
 
 #define DEFAULT_NAME	"*"
+#define VALID_CHARS		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-^_[]{}\\|"
 
 class	User
 {
@@ -31,6 +32,8 @@ private:
 	void	registrationOK();
 
 public:
+	static bool	CheckNickValidChars(string const &nick);
+
 	User(int fd);
 	virtual ~User();
 

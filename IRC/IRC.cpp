@@ -97,9 +97,10 @@ void	IRC::ClientDisconnect(int fd)
 {
 	if (_users.find(fd) != _users.end())
 	{
-		if (_users[fd]->_registered)
-			removeFromAllChannel(_users[fd]);
-		delete _users[fd];
+		User	*user(_users[fd]);
+		if (user->_registered)
+			removeFromAllChannel(user);
+		delete user;
 		_users.erase(fd);
 	}
 }

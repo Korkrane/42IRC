@@ -71,6 +71,8 @@ private:
 	void	execVERSION		(Command const &cmd, std::vector<t_clientCmd> &responseQueue);
 	void	execWHO			(Command const &cmd, std::vector<t_clientCmd> &responseQueue);
 
+	// Methods specific to some commands
+
 	void	chanPRIVMSG(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
 	void	userPRIVMSG(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
 
@@ -78,6 +80,9 @@ private:
 	void	userMODE(User *user, string const &nick, string const &modes, std::vector<t_clientCmd> &responseQueue);
 
 	string	kickTarget(User *user, string const &nick, Channel *chan, string const &comment, std::vector<t_clientCmd> &responseQueue);
+
+	void	ChannelWHO(User *user, string const &mask, bool o, std::vector<t_clientCmd> &responseQueue) const;
+	void	UserWHO(User *user, string const &mask, bool o, std::vector<t_clientCmd> &responseQueue) const;
 
 public:
 	IRC(string const &password);
@@ -89,7 +94,6 @@ public:
 	bool	ProcessClientCommand(t_clientCmd const &command, std::vector<t_clientCmd> &responseQueue);
 	void	ClientDisconnect(int fd);
 	int		GetVictim();
-
 
 };
 

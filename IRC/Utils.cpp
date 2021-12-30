@@ -17,3 +17,9 @@ void	splitStr
 		i = delimIdx + delim.size();
 	}
 }
+
+// Return true if a mask (may contains wildcard character *) matches str
+bool	maskMatchesStr(std::string const &mask, std::string const &str)
+{
+
+}

@@ -15,5 +15,6 @@ class	User;
 class	Command;
 
 void	splitStr(std::vector<string> &results, string const &str, string const &delim);
+bool	maskMatchesStr(string const &mask, string const &str);
 
 #endif

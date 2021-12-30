@@ -45,11 +45,16 @@ bool	Channel::NameLegal(string const &name)
 bool	Channel::ModeNeedsParam(char mode, string &errorName)
 {
 	string	name;
-	if (mode == 'k')		name = "key";
-	else if (mode == 'o')	name = "op";
+	if (mode == 'k')
+		name = "key";
+	else if (mode == 'o')
+		name = "op";
 	if (!name.empty())
+	{
 		errorName = name;
-	return (!name.empty());
+		return true;
+	}
+	return false;
 }
 
 // Attempt to add user to the channel using key. Return 0 if user
@@ -58,11 +63,12 @@ int	Channel::TryAddUser(User *user, string const &key)
 {
 	if (HasJoined(user))
 		return -1;
-	if (_invitationOnly)
+	if (_invitationOnly && !IsInvited(user))
 		return ERR_INVITEONLYCHAN;
 	if (HasKey() && key != _key)
 		return ERR_BADCHANNELKEY;
 	_users.insert(user);
+	_invitations.erase(user);
 	return 0;
 }
 
@@ -136,8 +142,13 @@ bool	Channel::HasJoined(User *user) const
 bool	Channel::IsOperator(User *user)	const
 { return (_operators.find(user) != _operators.end()); }
 
+// Check if channel key is set
 bool	Channel::HasKey() const
 { return !_key.empty(); }
+
+// Check if a user is in the invitation list
+bool	Channel::IsInvited(User *user) const
+{ return (_invitations.find(user) != _invitations.end()); }
 
 // Get string representation of channel's modes
 string	Channel::GetModes() const

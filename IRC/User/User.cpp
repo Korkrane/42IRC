@@ -15,6 +15,24 @@ User::User(int fd) :
 User::~User()
 {}
 
+bool	User::CheckNickValidChars(string const &nick)
+{
+	static string const	validChars(VALID_CHARS);
+	static std::set<char> const	validChatSet(validChars.begin(), validChars.end());
+
+	std::set<char>		nickCharSet(nick.begin(), nick.end());
+	std::vector<char>	diff(nickCharSet.size());
+
+	std::vector<char>::iterator	it(
+		std::set_difference(
+			nickCharSet.begin(), nickCharSet.end(),
+			validChatSet.begin(), validChatSet.end(),
+			diff.begin()
+		)
+	);
+	return std::distance(diff.begin(), it) == 0;
+}
+
 // Flag user as registered
 void	User::registrationOK()
 {

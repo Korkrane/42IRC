@@ -11,9 +11,6 @@ void	IRC::execJOIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		responseQueue.push_back(std::make_pair(user->_fd, resp));
 		return;
 	}
-	// Make a new command NAMES
-	Command	cmdNAMES(cmd);
-	cmdNAMES._type = "NAMES";
 
 	std::vector<string>	chanNames, chanKeys;
 	::splitStr(chanNames, cmd._params[0], ",");
@@ -52,9 +49,10 @@ void	IRC::execJOIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 				chan->_users,
 				responseQueue
 			);
-			// Execute command NAMES because we want the same response here
-			cmdNAMES._params[0] = name;
-			execNAMES(cmdNAMES, responseQueue);
+			// Create and execute TOPIC and NAMES
+			if (!chan->_topic.empty())
+				execTOPIC(Command(user, "TOPIC " + name), responseQueue);
+			execNAMES(Command(user, "NAMES " + name), responseQueue);
 		}
 	}
 }

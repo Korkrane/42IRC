@@ -26,6 +26,8 @@ private:
 	std::set<User *>	_operators;	// (o) List of operators
 	bool	_anyoneCanSetTopic;		// (t) Anyone can set topic
 
+	std::set<User *>	_invitations;	// List of users being invited
+
 public:
 	static bool	IsPrefix(char c);
 	static bool	NameLegal(string const &name);
@@ -38,9 +40,10 @@ public:
 	int	RemoveUser(User *user);
 	int	TrySetMode(IRC *irc, bool plus, char mode, string const &param);
 
-	bool	HasJoined(User *user) const;
 	bool	IsOperator(User *user) const;
+	bool	HasJoined(User *user) const;
 	bool	HasKey() const;
+	bool	IsInvited(User *user) const;
 	string	GetModes() const;
 
 	friend class IRC;
