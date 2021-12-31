@@ -1,14 +1,13 @@
 #include "../IRC.hpp"
 #include <fstream>
 
-#define MOTD_FILE	"config/motd"
-
 static std::vector<string>	MOTDLines;
 static bool		motdInit(false);
 
 // Initialize message of the day from file
 static void	initMOTD()
 {
+	motdInit = true;
 	std::ifstream	motdFile(MOTD_FILE);
 	if (!motdFile.is_open())
 	{
@@ -31,10 +30,7 @@ void	IRC::execMOTD(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	User	*user(cmd._user);
 
 	if (!motdInit)
-	{
 		initMOTD();
-		motdInit = true;
-	}	
 	if (MOTDLines.empty())
 		motd = getResponseFromCode(user, ERR_NOMOTD, NULL);
 	else

@@ -6,11 +6,6 @@
 #include "Channel/Channel.hpp"
 #include "Command/Command.hpp"
 
-#define IRC_HOST	"ft-irc.42.fr"
-#define IRC_VER		"ft_irc v1.0"
-
-typedef std::pair<int, string>	t_clientCmd;
-
 class	IRC
 {
 
@@ -81,8 +76,8 @@ private:
 
 	string	kickTarget(User *user, string const &nick, Channel *chan, string const &comment, std::vector<t_clientCmd> &responseQueue);
 
-	void	ChannelWHO(User *user, string const &mask, bool o, std::vector<t_clientCmd> &responseQueue) const;
-	void	UserWHO(User *user, string const &mask, bool o, std::vector<t_clientCmd> &responseQueue) const;
+	void	chanWHO(User *user, string const &mask, bool o, std::vector<t_clientCmd> &responseQueue) const;
+	void	userWHO(User *user, string mask, bool o, std::vector<t_clientCmd> &responseQueue) const;
 
 public:
 	IRC(string const &password);

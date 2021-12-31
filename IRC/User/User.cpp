@@ -42,15 +42,11 @@ void	User::registrationOK()
 
 // Check if user's username is default value
 bool	User::IsUsernameDefault() const
-{
-	return (_uname == DEFAULT_NAME);
-}
+{ return (_uname == DEFAULT_NAME); }
 
 // Check if user is currently idling away
 bool	User::IsAway() const
-{
-	return (!_awayMsg.empty());
-}
+{ return (!_awayMsg.empty()); }
 
 // Set user's nickname. If user can be registered, register
 void	User::SetNick(string const &nick)

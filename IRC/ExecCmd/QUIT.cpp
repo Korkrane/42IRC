@@ -7,12 +7,10 @@ void	IRC::execQUIT(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 					? "Client exited"
 					: ("Quit: " + cmd._params[0]);
 	// Inform everyone user is leaving
-	std::set<User *> const	list(getCommonUsers(user));
 	appendUserNotif(
 		user,
 		(string[]){ "QUIT", ":" + msg, "" },
-		list,
-		responseQueue
+		getCommonUsers(user), responseQueue
 	);
 	string	resp(getErrorResponse(user, msg));
 	responseQueue.push_back(std::make_pair(user->_fd, resp));

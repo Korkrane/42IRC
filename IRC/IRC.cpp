@@ -40,7 +40,7 @@ bool	IRC::ProcessClientCommand(t_clientCmd const &command, std::vector<t_clientC
 		user = _users[fd];
 
 	std::vector<string> subCmds;
-	::splitStr(subCmds, command.second, CMD_DELIM);
+	::StrSplit(subCmds, command.second, CMD_DELIM);
 	for (std::vector<string>::iterator it(subCmds.begin());
 		it != subCmds.end(); ++it)
 	{
@@ -61,6 +61,27 @@ bool	IRC::ProcessClientCommand(t_clientCmd const &command, std::vector<t_clientC
 		}
 	}
 	return false;
+}
+
+// Callable by the server to indicate that a client has disconnected
+void	IRC::ClientDisconnect(int fd)
+{
+	if (_users.find(fd) != _users.end())
+	{
+		User	*user(_users[fd]);
+		if (user->_registered)
+			removeFromAllChannel(user);
+		delete user;
+		_users.erase(fd);
+	}
+}
+
+// Get the fd of user being killed by a server operator
+int	IRC::GetVictim()
+{
+	int	res = _killing;
+	_killing = -1;
+	return res;
 }
 
 // Execute a valid command by user
@@ -90,25 +111,4 @@ void	IRC::execCmd(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	else if (cmd._type == "USER")		execUSER		(cmd, responseQueue);
 	else if (cmd._type == "VERSION")	execVERSION		(cmd, responseQueue);
 	else if (cmd._type == "WHO")		execWHO			(cmd, responseQueue);
-}
-
-// Callable by the server to indicate that a client has disconnected
-void	IRC::ClientDisconnect(int fd)
-{
-	if (_users.find(fd) != _users.end())
-	{
-		User	*user(_users[fd]);
-		if (user->_registered)
-			removeFromAllChannel(user);
-		delete user;
-		_users.erase(fd);
-	}
-}
-
-// Get the fd of user being killed by a server operator
-int	IRC::GetVictim()
-{
-	int	res = _killing;
-	_killing = -1;
-	return res;
 }

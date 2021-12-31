@@ -3,7 +3,6 @@
 
 #include "../../includes/Headers.hpp"
 
-#define USR_HOST		"user.ft-irc.42.fr"
 #define USR_VALID_MODES	"aio"
 #define USR_ALL_MODES	"aiorwsO"
 

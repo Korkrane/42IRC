@@ -2,8 +2,6 @@
 
 void	IRC::execPING(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 {
-	// 	>>>> PING LAG3775662729\r\n
-	//    << :irc.42.fr PONG irc.42.fr :LAG3775662729\r\n
 	stringstream	ss;
 	string	param	= cmd._params.empty()
 						? ""

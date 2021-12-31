@@ -15,14 +15,14 @@ void	IRC::execWHO(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	string const	&mask(cmd._params[0]);
 	bool	o(cmd._params.size() > 1 && cmd._params[1].find('o') != string::npos);
 	if (Channel::IsPrefix(mask[0]))
-		ChannelWHO(user, mask, o, responseQueue);
+		chanWHO(user, mask, o, responseQueue);
 	else
-		UserWHO(user, mask, o, responseQueue);
-	resp = getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ mask });
+		userWHO(user, mask, o, responseQueue);
+	resp = getResponseFromCode(user, RPL_ENDOFWHO, (string[]){ mask });
 	responseQueue.push_back(std::make_pair(user->_fd, resp));
 }
 
-void	IRC::ChannelWHO(User *user, string const &mask, bool o, std::vector<t_clientCmd> &responseQueue) const
+void	IRC::chanWHO(User *user, string const &mask, bool o, std::vector<t_clientCmd> &responseQueue) const
 {
 	Channel	*chan(getChannelByName(mask));
 	if (!chan)
@@ -34,7 +34,8 @@ void	IRC::ChannelWHO(User *user, string const &mask, bool o, std::vector<t_clien
 		it != chan->_users.end(); ++it)
 	{
 		u = (*it);
-		if ((user != u && u->_invisible) || (o && !u->_oper))
+		if ((!chan->HasJoined(user) && user != u && u->_invisible)
+			|| (o && !u->_oper))
 			// Do not include non-self invisible users or non-op in 'o' request
 			continue;
 		string	flag = (u->IsAway()) ? "G" : "H";
@@ -50,21 +51,15 @@ void	IRC::ChannelWHO(User *user, string const &mask, bool o, std::vector<t_clien
 	responseQueue.push_back(std::make_pair(user->_fd, resp));
 }
 
-//bool	maskMatchesStr(string const &mask, string const &str);
-
-void	IRC::UserWHO(User *user, string const &mask, bool o, std::vector<t_clientCmd> &responseQueue) const
+void	IRC::userWHO(User *user, string mask, bool o, std::vector<t_clientCmd> &responseQueue) const
 {
-	// :irc.42.fr 352 nick21 #lol userooooo 127.0.0.1 irc.42.fr nick23 H :0 realname\r\n
-	// Search in : hostname, server name, nickname, real name. De-invisible by realname and nickname
+	// Search in : hostname, server name, nickname, real name.
 	
-	// Check if mask contains illegal characters and star
-	string	maskWithoutStar;
-	for (string::const_iterator it(mask.begin()); it != mask.end(); ++it)
-		if (*it != '*')
-			maskWithoutStar += (*it);
-	if (!User::CheckNickValidChars(maskWithoutStar))
-		return;	// Do nothing if mask contains illegal character
-	
+	// Transfrom mask by reducing multiple consecutive stars to only one
+	size_t	multiStarIdx;
+	while ((multiStarIdx = mask.find("**")) != string::npos)
+		mask.replace(multiStarIdx, 2, "*");
+
 	string	resp;
 	User	*u;
 	for (std::map<int, User *>::const_iterator it(_users.begin());
@@ -76,15 +71,15 @@ void	IRC::UserWHO(User *user, string const &mask, bool o, std::vector<t_clientCm
 			// Do not include non-op in 'o' request
 			continue;
 		if (u->_nick == mask || u->_rname == mask)
-			// Show user if nick or real name is exact match (even invisible)
+			// Show invisible users if exact match in realname or nickname
 			showUser = true;
 		else if (u == user || !u->_invisible)
 			// Show user if one of the patterns matches (for themselves
 			// or another non-invisible user)
-			showUser = (::maskMatchesStr(mask, USR_HOST)
-				|| ::maskMatchesStr(mask, IRC_HOST)
-				|| ::maskMatchesStr(mask, u->_nick)
-				|| ::maskMatchesStr(mask, u->_rname));
+			showUser = (::StrMatch(mask.c_str(), USR_HOST)
+				|| ::StrMatch(mask.c_str(), IRC_HOST)
+				|| ::StrMatch(mask.c_str(), u->_nick.c_str())
+				|| ::StrMatch(mask.c_str(), u->_rname.c_str()));
 		if (showUser)
 		{
 			string	flag = (u->IsAway()) ? "G" : "H";

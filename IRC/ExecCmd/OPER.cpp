@@ -1,8 +1,5 @@
 #include "../IRC.hpp"
 
-#define OPER_USERNAME	"admin"
-#define OPER_PASSWORD	"ftirc"
-
 void	IRC::execOPER(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 {
 	User	*user(cmd._user);

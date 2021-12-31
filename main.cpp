@@ -5,7 +5,7 @@
 IRC		*gIRC = NULL;
 Server	*gServer = NULL;
 
-static void	cleanupBeforeExit()
+static void	cleanup()
 {
 	if (gIRC)
 		delete gIRC;
@@ -16,9 +16,7 @@ static void	cleanupBeforeExit()
 static void	handleSignal(int signum)
 {
 	if (signum == SIGINT || signum == SIGQUIT)
-		std::cout	<< GREEN
-					<< "\b\bServer is stopped. Good bye!\n"
-					<< NC;
+		std::cout << GREEN << "\b\bServer stopped. Good bye!\n" << NC;
 	exit(0);
 }
 
@@ -52,19 +50,19 @@ static bool	checkArgs(int ac, char **av, int &port, string &password)
 int	main(int ac, char **av)
 {
 	// Register clean up function at exit
-	atexit(cleanupBeforeExit);
+	atexit(cleanup);
 
 	// Register signals to end program
 	signal(SIGINT, handleSignal);
 	signal(SIGQUIT, handleSignal);
 
 	// Check and obtain information from arguments
-	int			port;
+	int		port;
 	string	password;
 	if (!checkArgs(ac, av, port, password))
 		exit(1);
 	
-	// Create an instance of the server and program
+	// Create an instance of the server and IRC program
 	gIRC = new IRC(password);
 	gServer = new Server(port, password, *gIRC);
 	gServer->SetUp();

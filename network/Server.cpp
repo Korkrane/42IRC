@@ -153,7 +153,6 @@ void	Server::recvProcessCommand
 					_irc.ClientDisconnect(fd);	// Tell the program that client is disconnected
 					removeClient(fd);
 				}
-				// else if (!cmd.empty() && (disconnectList.find(fd) == disconnectList.end()) && _irc.ProcessClientCommand(std::make_pair(fd, cmd), responseQueue))
 				else if (!cmd.empty() && _irc.ProcessClientCommand(std::make_pair(fd, cmd), responseQueue))
 					disconnectList.insert(fd);
 				// Victim is the one being killed by an operator

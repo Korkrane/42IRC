@@ -16,14 +16,13 @@ void	IRC::execNOTICE(Command const &cmd, std::vector<t_clientCmd> &responseQueue
 		return;
 	}
 
-	// User	*target;
 	string const	&name(cmd._params[0]);
 	string const	&msg(cmd._params[1]);
 	if (Channel::IsPrefix(name[0]))
 	{
-		// Send notice to a channel user has joined
+		// Send notice to a channel
 		Channel	*chan(getChannelByName(name));
-		if (!chan || !chan->HasJoined(user))
+		if (!chan)
 			resp = getResponseFromCode(user, ERR_CANNOTSENDTOCHAN, (string[]){ name });
 		else
 			appendUserNotif(

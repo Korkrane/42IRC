@@ -53,7 +53,7 @@ void	IRC::chanMODE
 	}
 	
 	std::vector<string>	paramsList;
-	::splitStr(paramsList, params, " ");
+	::StrSplit(paramsList, params, " ");
 	size_t	paramIdx(0);
 
 	bool	plus(modes[0] != '-');

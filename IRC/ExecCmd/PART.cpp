@@ -13,7 +13,7 @@ void	IRC::execPART(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	}
 
 	std::vector<string>	names;
-	::splitStr(names, cmd._params[0], ",");
+	::StrSplit(names, cmd._params[0], ",");
 	for (std::vector<string>::iterator it(names.begin()); it != names.end(); ++it)
 	{
 		string const	&chanName(*it);

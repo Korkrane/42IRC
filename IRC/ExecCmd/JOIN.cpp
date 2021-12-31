@@ -13,11 +13,11 @@ void	IRC::execJOIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	}
 
 	std::vector<string>	chanNames, chanKeys;
-	::splitStr(chanNames, cmd._params[0], ",");
+	::StrSplit(chanNames, cmd._params[0], ",");
 	if (cmd._params.size() > 1)
-		::splitStr(chanKeys, cmd._params[1], ",");
+		::StrSplit(chanKeys, cmd._params[1], ",");
 
-	for (std::size_t i(0); i < chanNames.size(); ++i)
+	for (size_t i(0); i < chanNames.size(); ++i)
 	{
 		string const	&name(chanNames[i]);
 		string const	&key = (i < chanKeys.size())
@@ -29,6 +29,7 @@ void	IRC::execJOIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 			responseQueue.push_back(std::make_pair(user->_fd, resp));
 			continue;
 		}
+		
 		Channel	*chan(getChannelByName(name));
 		int	res(0);
 		if (!chan)

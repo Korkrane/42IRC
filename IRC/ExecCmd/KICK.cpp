@@ -18,8 +18,7 @@ string	IRC::kickTarget
 		return "";
 	}
 
-	target->_joined.erase(chan);
-	chan->RemoveUser(target);
+	userLeaveChannel(target, chan);
 	resp = user->_prefix
 		 + " KICK "
 		 + chan->_name + " "
@@ -56,7 +55,7 @@ void	IRC::execKICK(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	}
 
 	std::vector<string>	nicks;
-	::splitStr(nicks, cmd._params[1], ",");
+	::StrSplit(nicks, cmd._params[1], ",");
 	string	comment = (cmd._params.size() == 2)
 					? user->_nick
 					: cmd._params[2];

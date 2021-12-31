@@ -102,7 +102,7 @@ Command::~Command()
 // Determine the type of command from its string
 void	Command::deduceType(string &cmd)
 {
-	std::size_t	i(cmd.find(' ', 0));
+	size_t	i(cmd.find(' ', 0));
 	if (i == string::npos)
 	{
 		_type = cmd;
@@ -119,12 +119,12 @@ void	Command::deduceType(string &cmd)
 // Build the command's parameters from command string
 void	Command::buildParams(string const &strParams)
 {
-	std::size_t	i(strParams.find(" :", 0));
+	size_t	i(strParams.find(" :", 0));
 	if (i == string::npos)
 		i = strParams.size();
 	
 	string beforeLast(strParams.substr(0, i));
-	::splitStr(_params, beforeLast, " ");
+	::StrSplit(_params, beforeLast, " ");
 	i += 2;
 	if (i < strParams.size())
 		_params.push_back(strParams.substr(i, strParams.size() - i));

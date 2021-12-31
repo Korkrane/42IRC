@@ -150,10 +150,8 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 				<< params[2] << ">.";
 			break;
 
-
 		default: break;
 	}
-
 	ss	<< CMD_DELIM;
 	return ss.str();
 }

@@ -9,7 +9,6 @@ Client::Client(int fd) :
 
 Client::~Client()
 {
-	// Close fd before deconstructing object
 	close(_fd);
 	std::cout << "Client on socket #" << _fd << " disconnected\n";
 }
