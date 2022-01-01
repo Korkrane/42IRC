@@ -48,10 +48,8 @@ string	IRC::getResponseFromCode(User *user, int code, string params[]) const
 			ss  << ":You have been marked as being away"; break;
 		case RPL_ENDOFWHO:
 			ss  << params[0] << " :End of WHO list"; break;
-		case RPL_LISTSTART:
-			ss  << ":Start of LIST"; break;
 		case RPL_LIST:
-			ss  << ":" << params[0]; break;
+			ss  << params[0] << " " << params[1] << " :" << params[2]; break;
 		case RPL_LISTEND:
 			ss  << ":End of LIST"; break;
 		case RPL_CHANNELMODEIS:

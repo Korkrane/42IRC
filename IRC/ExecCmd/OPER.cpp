@@ -14,5 +14,5 @@ void	IRC::execOPER(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		user->_oper = true;
 		resp = getResponseFromCode(user, RPL_YOUREOPER, NULL);
 	}
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 }

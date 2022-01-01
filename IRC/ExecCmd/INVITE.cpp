@@ -8,7 +8,7 @@ void	IRC::execINVITE(Command const &cmd, std::vector<t_clientCmd> &responseQueue
 	if (cmd._params.size() < 2)
 	{
 		resp = getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ cmd._type });
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 
@@ -38,8 +38,8 @@ void	IRC::execINVITE(Command const &cmd, std::vector<t_clientCmd> &responseQueue
 			+ nick + " :"
 			+ chanName + CMD_DELIM
 		);
-		responseQueue.push_back(std::make_pair(target->_fd, invitation));
+		pushToQueue(target->_fd, invitation, responseQueue);
 		chan->_invitations.insert(target);
 	}
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 }

@@ -8,7 +8,7 @@ void	IRC::execTOPIC(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	if (cmd._params.empty())
 	{
 		resp = getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ cmd._type });
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 
@@ -38,5 +38,5 @@ void	IRC::execTOPIC(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 			chan->_users, responseQueue, true
 		);
 	}
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 }

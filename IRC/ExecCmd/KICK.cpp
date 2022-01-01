@@ -14,7 +14,7 @@ string	IRC::kickTarget
 		resp = getResponseFromCode(user, ERR_USERNOTINCHANNEL, (string[]){ nick, chan->_name });
 	if (!resp.empty())
 	{
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return "";
 	}
 
@@ -24,7 +24,7 @@ string	IRC::kickTarget
 		 + chan->_name + " "
 		 + nick + " :"
 		 + comment + CMD_DELIM;
-	responseQueue.push_back(std::make_pair(target->_fd, resp));
+	pushToQueue(target->_fd, resp, responseQueue);
 	return resp;
 }
 
@@ -36,7 +36,7 @@ void	IRC::execKICK(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	if (cmd._params.size() < 2)
 	{
 		resp = getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ cmd._type });
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 	
@@ -50,7 +50,7 @@ void	IRC::execKICK(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		resp = getResponseFromCode(user, ERR_CHANOPRIVSNEEDED, (string[]){ chanName });
 	if (!resp.empty())
 	{
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 
@@ -65,5 +65,5 @@ void	IRC::execKICK(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	
 	for (std::set<User *>::iterator it(chan->_users.begin());
 		it != chan->_users.end(); ++it)
-		responseQueue.push_back(std::make_pair((*it)->_fd, msgToAll));
+		pushToQueue((*it)->_fd, msgToAll, responseQueue);
 }

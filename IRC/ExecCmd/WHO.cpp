@@ -8,7 +8,7 @@ void	IRC::execWHO(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	if (cmd._params.empty())
 	{
 		resp = getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ cmd._type });
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return ;
 	}
 	
@@ -19,7 +19,7 @@ void	IRC::execWHO(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	else
 		userWHO(user, mask, o, responseQueue);
 	resp = getResponseFromCode(user, RPL_ENDOFWHO, (string[]){ mask });
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 }
 
 void	IRC::chanWHO(User *user, string const &mask, bool o, std::vector<t_clientCmd> &responseQueue) const
@@ -48,7 +48,7 @@ void	IRC::chanWHO(User *user, string const &mask, bool o, std::vector<t_clientCm
 			(string[]){ mask, u->_uname, u->_nick, flag, u->_rname }
 		);
 	}
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 }
 
 void	IRC::userWHO(User *user, string mask, bool o, std::vector<t_clientCmd> &responseQueue) const
@@ -92,5 +92,5 @@ void	IRC::userWHO(User *user, string mask, bool o, std::vector<t_clientCmd> &res
 		}
 	}
 	if (!resp.empty())
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 }

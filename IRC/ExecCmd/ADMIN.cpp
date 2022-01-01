@@ -25,5 +25,5 @@ void	IRC::execADMIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		+ getResponseFromCode(user, RPL_ADMINLOC2, (string[]){ admin.Location })
 		+ getResponseFromCode(user, RPL_ADMINEMAIL, (string[]){ admin.Email })
 	);
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 }

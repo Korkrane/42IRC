@@ -7,7 +7,7 @@ void	IRC::execDIE(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	if (!user->_oper)
 	{
 		string	resp(getResponseFromCode(user, ERR_NOPRIVILEGES, NULL));
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 	std::cout << RED << user->_nick << " killed the server\n" << NC;

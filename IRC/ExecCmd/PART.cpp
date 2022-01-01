@@ -8,7 +8,7 @@ void	IRC::execPART(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	if (cmd._params.empty())
 	{
 		resp = getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ cmd._type });
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 
@@ -22,14 +22,14 @@ void	IRC::execPART(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		{
 			// Channel not found
 			resp = getResponseFromCode(user, ERR_NOSUCHCHANNEL, (string[]){ chanName });
-			responseQueue.push_back(std::make_pair(user->_fd, resp));
+			pushToQueue(user->_fd, resp, responseQueue);
 			continue;
 		}
 		else if (!chan->HasJoined(user))
 		{
 			// User not joined channel
 			resp = getResponseFromCode(user, ERR_NOTONCHANNEL, (string[]){ chanName });
-			responseQueue.push_back(std::make_pair(user->_fd, resp));
+			pushToQueue(user->_fd, resp, responseQueue);
 			continue;
 		}
 		else if (cmd._params.size() == 1)

@@ -13,7 +13,7 @@ void	IRC::execKILL(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		resp = getResponseFromCode(user, ERR_CANTKILLSERVER, NULL);
 	if (!resp.empty())
 	{
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 
@@ -31,5 +31,5 @@ void	IRC::execKILL(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		return;
 	}
 	resp = getResponseFromCode(user, ERR_NOSUCHNICK, (string[]){ nick });
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 }

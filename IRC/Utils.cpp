@@ -23,13 +23,24 @@ void	StrSplit
 // consecutive wildcard characters
 bool	StrMatch(char const *mask, char const *str)
 {
+	// Mask matches str when the two end
 	if (*mask == '\0' && *str == '\0')
 		return true;
+
+	// If wildcard at the end of mask and str has ended, no match
 	if (*mask == '*' && *(mask+1) != '\0' && *str == '\0')
 		return false;
+
+	// If character in mask is the same as in str, continue searching
+	// the following char in the two strings
 	if (*mask == *str)
 		return StrMatch(mask+1, str+1);
+
+	// If a wildcard in mask is seen, search the next char in either
+	// mask or str
 	if (*mask == '*')
 		return StrMatch(mask+1, str) || StrMatch(mask, str+1);
+
+	// If none of the above is true, no match
 	return false;
 }

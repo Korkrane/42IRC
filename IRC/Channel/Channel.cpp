@@ -162,3 +162,13 @@ string	Channel::GetModes() const
 		mode += 't';
 	return mode;
 }
+
+// Get number of visible users in channel
+int		Channel::GetVisibleUsers() const
+{
+	int	count(0);
+	for (std::set<User *>::const_iterator it(_users.begin());
+		it != _users.end(); ++it)
+		count += (*it)->IsVisible();
+	return count;
+}

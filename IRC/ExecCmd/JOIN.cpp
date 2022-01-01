@@ -8,7 +8,7 @@ void	IRC::execJOIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	if (cmd._params.empty())
 	{
 		resp = getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ cmd._type });
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 
@@ -26,7 +26,7 @@ void	IRC::execJOIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		if (!Channel::NameLegal(name))
 		{
 			resp = getResponseFromCode(user, ERR_BADCHANMASK, (string[]){ name });
-			responseQueue.push_back(std::make_pair(user->_fd, resp));
+			pushToQueue(user->_fd, resp, responseQueue);
 			continue;
 		}
 		
@@ -39,7 +39,7 @@ void	IRC::execJOIN(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		if (res > 0)
 		{
 			resp = getResponseFromCode(user, res, (string[]){ name });
-			responseQueue.push_back(std::make_pair(user->_fd, resp));
+			pushToQueue(user->_fd, resp, responseQueue);
 		}
 		else if (!res)
 		{

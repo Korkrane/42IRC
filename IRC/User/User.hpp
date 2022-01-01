@@ -3,8 +3,8 @@
 
 #include "../../includes/Headers.hpp"
 
-#define USR_VALID_MODES	"aio"
-#define USR_ALL_MODES	"aiorwsO"
+#define USR_VALID_MODES	"aioB"
+#define USR_ALL_MODES	"aiorwsOB"
 
 #define DEFAULT_NAME	"*"
 #define VALID_CHARS		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-^_[]{}\\|"
@@ -27,7 +27,10 @@ private:
 	string	_awayMsg;		// (a) Away message
 	bool	_invisible;		// (i) Is invisible
 	bool	_oper;			// (o) Is server operator
+	bool	_bot;			// (B) Is a bot
 
+protected:
+	User(int fd, string const &botNick);
 	void	registrationOK();
 
 public:
@@ -38,6 +41,7 @@ public:
 
 	bool	IsUsernameDefault() const;
 	bool	IsAway() const;
+	bool	IsVisible() const;
 
 	void	SetNick(string const &nick);
 	void	SetUsername(string const &uname);

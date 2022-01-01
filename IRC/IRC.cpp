@@ -7,6 +7,8 @@ IRC::IRC(string const &password) :
 	_killing(-1)
 {
 	Command::InitCommandList();
+	_bot = new Bot();
+	_users[BOT_FD] = _bot;
 }
 
 IRC::~IRC()
@@ -31,10 +33,11 @@ bool	IRC::ProcessClientCommand(t_clientCmd const &command, std::vector<t_clientC
 		user = (_users[fd] = new User(fd));
 		if (_svPassword.empty())
 			user->_passwordOK = true;
-		stringstream	ss;
-		ss	<< "*** Your hostname is set to " << USR_HOST 
-			<< " like everybody else.";
-		responseQueue.push_back(std::make_pair(fd, getNoticeMsg(_prefix, user, ss.str())));
+		string	msg = getNoticeMsg(
+			_prefix, user,
+			string("*** Your hostname is set to ") + USR_HOST + " like everybody else."
+		);
+		pushToQueue(fd, getNoticeMsg(_prefix, user, msg), responseQueue);
 	}
 	else
 		user = _users[fd];
@@ -57,7 +60,15 @@ bool	IRC::ProcessClientCommand(t_clientCmd const &command, std::vector<t_clientC
 			if (!user->_passwordOK)
 				return passwordNotOK(user, responseQueue);
 			if (!reg && user->_registered)	// send welcome msg when user has just been registered
+			{
 				sendWelcomeMessage(user, responseQueue);
+				// Bot send welcome PRIVMSG
+				Command	botPRIVMSG(
+					_bot,
+					"PRIVMSG " + user->_nick + " :" + _bot->GetWelcomeMsg(user->_nick)
+				);
+				execPRIVMSG(botPRIVMSG, responseQueue);
+			}
 		}
 	}
 	return false;

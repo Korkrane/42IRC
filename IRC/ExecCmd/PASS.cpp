@@ -12,5 +12,5 @@ void	IRC::execPASS(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	else if (cmd._params[0] == _svPassword)
 		user->_passwordOK = true;
 	if (!resp.empty())
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 }

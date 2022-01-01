@@ -18,7 +18,6 @@
 #define RPL_UNAWAY			305
 #define RPL_NOWAWAY			306
 #define RPL_ENDOFWHO		315
-#define RPL_LISTSTART		321
 #define RPL_LIST			322
 #define RPL_LISTEND			323
 #define RPL_CHANNELMODEIS	324

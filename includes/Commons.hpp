@@ -21,6 +21,11 @@
 #define OPER_USERNAME	"admin"
 #define OPER_PASSWORD	"ftirc"
 
+// Bot-related stuffs
+
+#define BOT_FD			-1
+#define BOT_NICKNAME	"MrBot"
+
 using	std::string;
 using	std::stringstream;
 typedef std::pair<int, string>	t_clientCmd;
@@ -32,6 +37,7 @@ class	Client;
 class	IRC;
 class	Channel;
 class	User;
+class	Bot;
 class	Command;
 
 // No-scope utility functions

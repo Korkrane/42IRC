@@ -4,5 +4,5 @@ void	IRC::execVERSION(Command const &cmd, std::vector<t_clientCmd> &responseQueu
 {
 	User	*user(cmd._user);
 	string	resp(getResponseFromCode(user, RPL_VERSION, NULL));
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 }

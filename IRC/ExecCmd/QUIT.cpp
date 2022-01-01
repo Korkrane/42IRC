@@ -13,6 +13,6 @@ void	IRC::execQUIT(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		getCommonUsers(user), responseQueue
 	);
 	string	resp(getErrorResponse(user, msg));
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 	ClientDisconnect(user->_fd);
 }

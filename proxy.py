@@ -108,4 +108,4 @@ if __name__ == '__main__':
 	except KeyboardInterrupt:
 		for c in clients:
 			c.terminate()
-		server.close()
+		server.shutdown(socket.SHUT_RDWR)

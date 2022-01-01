@@ -7,8 +7,7 @@ OBJS		= $(SRCS:.cpp=.o)
 NAME		= ircserv
 
 CC			= clang++
-# FLAGS		= -Wall -Wextra -Werror -std=c++98 -g
-FLAGS		= -Wall -std=c++98 -g -fsanitize=address
+FLAGS		= -Wall -Wextra -Werror -std=c++98 #-g -fsanitize=address
 
 RM			= rm -f
 

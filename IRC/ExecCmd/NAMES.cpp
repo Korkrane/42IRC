@@ -35,5 +35,5 @@ void	IRC::execNAMES(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		}
 	}
 	resp += getResponseFromCode(user, RPL_ENDOFNAMES, (string[]){ chanName });
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 }

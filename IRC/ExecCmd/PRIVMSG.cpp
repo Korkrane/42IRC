@@ -11,7 +11,7 @@ void	IRC::execPRIVMSG(Command const &cmd, std::vector<t_clientCmd> &responseQueu
 		resp = getResponseFromCode(user, ERR_NOTEXTTOSEND, NULL);
 	if (!resp.empty())
 	{
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 
@@ -24,14 +24,14 @@ void	IRC::execPRIVMSG(Command const &cmd, std::vector<t_clientCmd> &responseQueu
 }
 
 void	IRC::chanPRIVMSG
-	(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const
+	(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue)
 {
 	Channel	*chan(getChannelByName(name));
 
 	if (!chan || !chan->HasJoined(user))
 	{
 		string	resp(getResponseFromCode(user, ERR_CANNOTSENDTOCHAN, (string[]){ name }));
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 	}
 	else
 		appendUserNotif(
@@ -42,7 +42,7 @@ void	IRC::chanPRIVMSG
 }
 
 void	IRC::userPRIVMSG
-	(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const
+	(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue)
 {
 	User	*target(getUserByNick(name));
 	int		fd(user->_fd);
@@ -50,15 +50,22 @@ void	IRC::userPRIVMSG
 
 	if (!target)
 		resp = getResponseFromCode(user, ERR_NOSUCHNICK, (string[]){ name });
+	else if (target == _bot)
+	{
+		resp = _bot->processUserMsg(msg);
+		Command	botResp(_bot, "PRIVMSG " + user->_nick + " :" + resp);
+		execPRIVMSG(botResp, responseQueue);
+		return;
+	}
 	else
 	{
 		if (target->IsAway())
 		{
 			resp = getResponseFromCode(user, RPL_AWAY, (string[]){ name, target->_awayMsg });
-			responseQueue.push_back(std::make_pair(user->_fd, resp));
+			pushToQueue(user->_fd, resp, responseQueue);
 		}
 		resp = user->_prefix + " PRIVMSG " + name + " :" + msg + CMD_DELIM;
 		fd = target->_fd;
 	}
-	responseQueue.push_back(std::make_pair(fd, resp));
+	pushToQueue(fd, resp, responseQueue);
 }

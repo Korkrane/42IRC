@@ -46,7 +46,7 @@ void	IRC::sendWelcomeMessage(User *user, std::vector<t_clientCmd> &responseQueue
 		+ getResponseFromCode(user, RPL_CREATED, NULL)
 		+ getResponseFromCode(user, RPL_MYINFO, NULL)
 	);
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 	// Create a MOTD command to be executed right away
 	Command	cmdMOTD(user, "MOTD");
 	execMOTD(cmdMOTD, responseQueue);

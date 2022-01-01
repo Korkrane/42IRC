@@ -9,7 +9,7 @@ void	IRC::execNICK(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	if (cmd._params.empty())
 	{
 		resp = getResponseFromCode(user, ERR_NONICKNAMEGIVEN, NULL);
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 
@@ -34,5 +34,5 @@ void	IRC::execNICK(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		user->SetNick(nick);
 	}
 	if (!newUser)
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 }

@@ -3,6 +3,7 @@
 
 #include "../includes/Headers.hpp"
 #include "User/User.hpp"
+#include "User/Bot.hpp"
 #include "Channel/Channel.hpp"
 #include "Command/Command.hpp"
 
@@ -15,7 +16,8 @@ private:
 	string const	_prefix;				// Server's prefix in responses
 	std::map<int, User *>		_users;		// Users list
 	std::map<string, Channel *>	_channels;	// Channels list
-	int	_killing;							// FD of user being killed by an operator 
+	int	_killing;							// FD of user being killed by an operator
+	Bot	*_bot;								// Server's bot
 
 	//// Manage users ////
 
@@ -36,6 +38,7 @@ private:
 	string	getErrorResponse(User *user, string const &msg) const;
 	string	getResponseFromCode(User *user, int code, string params[]) const;
 	string	appendUserNotif(User *user, string params[], std::set<User *> const &dest, std::vector<t_clientCmd> &responseQueue, bool excludeUser=false) const;
+	void	pushToQueue(int fd, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
 
 	//// Command executor ////
 
@@ -68,8 +71,8 @@ private:
 
 	// Methods specific to some commands
 
-	void	chanPRIVMSG(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
-	void	userPRIVMSG(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue) const;
+	void	chanPRIVMSG(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue);
+	void	userPRIVMSG(User *user, string const &name, string const &msg, std::vector<t_clientCmd> &responseQueue);
 
 	void	chanMODE(User *user, string const &chanName, string const &modes, string const &params, std::vector<t_clientCmd> &responseQueue);
 	void	userMODE(User *user, string const &nick, string const &modes, std::vector<t_clientCmd> &responseQueue);

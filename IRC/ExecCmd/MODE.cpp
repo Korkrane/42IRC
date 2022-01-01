@@ -7,14 +7,16 @@ void	IRC::execMODE(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 	if (cmd._params.empty())
 	{
 		string resp(getResponseFromCode(user, ERR_NEEDMOREPARAMS, (string[]){ cmd._type }));
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 
+	cmd.Print();
+
 	string const	&name(cmd._params[0]);
-	string const	&modes = (cmd._params.size() == 1)
+	string const	&modes = (cmd._params.size() < 2)
 						   ? "" : cmd._params[1];
-	string const	&params = (cmd._params.size() == 2)
+	string const	&params = (cmd._params.size() < 3)
 						   ? "" : cmd._params[2];
 	if (Channel::IsPrefix(name[0]))
 		chanMODE(user, name, modes, params, responseQueue);
@@ -48,7 +50,7 @@ void	IRC::chanMODE
 		resp = getResponseFromCode(user, ERR_CHANOPRIVSNEEDED, (string[]){ chanName });
 	if (!resp.empty())
 	{
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 	
@@ -91,7 +93,7 @@ void	IRC::chanMODE
 		}
 	}
 	if (!resp.empty())
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 
 	if (!modeChanges.empty())
 	{
@@ -132,7 +134,7 @@ void	IRC::userMODE
 		resp = getResponseFromCode(user, RPL_UMODEIS, (string[]){ user->GetModes() });
 	if (!resp.empty())
 	{
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 		return;
 	}
 
@@ -156,6 +158,6 @@ void	IRC::userMODE
 					? "+" + modeChanges
 					: "-" + modeChanges;
 		resp += user->_prefix + " MODE " + nick + " :" + modeChanges + CMD_DELIM;
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 	}
 }

@@ -46,5 +46,5 @@ void	IRC::execMOTD(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		}
 		motd += getResponseFromCode(user, RPL_ENDOFMOTD, NULL);
 	}
-	responseQueue.push_back(std::make_pair(user->_fd, motd));
+	pushToQueue(user->_fd, motd, responseQueue);
 }

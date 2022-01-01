@@ -6,14 +6,14 @@ void	IRC::unknownCmd(Command const &cmd, std::vector<t_clientCmd> &responseQueue
 	string	resp(
 		getResponseFromCode(cmd._user, ERR_UNKNOWNCOMMAND, (string[]) { cmd._type })
 	);
-	responseQueue.push_back(std::make_pair(cmd._user->_fd, resp));
+	pushToQueue(cmd._user->_fd, resp, responseQueue);
 }
 
 // Handle password not valid. Always return true
 bool	IRC::passwordNotOK(User *user, std::vector<t_clientCmd> &responseQueue)
 {
 	string	resp(getErrorResponse(user, "Access denied by configuration"));
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 	ClientDisconnect(user->_fd);
 	return true;
 }
@@ -56,6 +56,13 @@ string	IRC::appendUserNotif
 	std::set<User *>::iterator	it;
 	for (it = dest.begin(); it != dest.end(); ++it)
 		if (*it != user || !excludeUser)
-			responseQueue.push_back(std::make_pair((*it)->_fd, msg));
+			pushToQueue((*it)->_fd, msg, responseQueue);
 	return msg;
+}
+
+void	IRC::pushToQueue(int fd, string const &msg, std::vector<t_clientCmd> &responseQueue) const
+{
+	if (fd == BOT_FD)
+		return;
+	responseQueue.push_back(std::make_pair(fd, msg));
 }

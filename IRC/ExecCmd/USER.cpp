@@ -15,5 +15,5 @@ void	IRC::execUSER(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		user->_rname = cmd._params[3];
 	}
 	if (!resp.empty())
-		responseQueue.push_back(std::make_pair(user->_fd, resp));
+		pushToQueue(user->_fd, resp, responseQueue);
 }

@@ -15,5 +15,5 @@ void	IRC::execAWAY(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		user->_awayMsg = cmd._params[0];
 		resp = getResponseFromCode(user, RPL_NOWAWAY, NULL);
 	}
-	responseQueue.push_back(std::make_pair(user->_fd, resp));
+	pushToQueue(user->_fd, resp, responseQueue);
 }

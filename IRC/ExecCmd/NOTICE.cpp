@@ -12,7 +12,7 @@ void	IRC::execNOTICE(Command const &cmd, std::vector<t_clientCmd> &responseQueue
 		resp = getResponseFromCode(user, ERR_NOTEXTTOSEND, NULL);
 	if (!resp.empty())
 	{
-		responseQueue.push_back(std::make_pair(fd, resp));
+		pushToQueue(fd, resp, responseQueue);
 		return;
 	}
 
@@ -44,5 +44,5 @@ void	IRC::execNOTICE(Command const &cmd, std::vector<t_clientCmd> &responseQueue
 		}
 	}
 	if (!resp.empty())
-		responseQueue.push_back(std::make_pair(fd, resp));
+		pushToQueue(fd, resp, responseQueue);
 }

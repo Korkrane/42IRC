@@ -45,6 +45,7 @@ public:
 	bool	HasKey() const;
 	bool	IsInvited(User *user) const;
 	string	GetModes() const;
+	int		GetVisibleUsers() const;
 
 	friend class IRC;
 };

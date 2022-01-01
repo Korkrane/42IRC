@@ -1,6 +1,7 @@
 #include "User.hpp"
 #include "../Channel/Channel.hpp"
 
+// Public constructor taking a user's fd
 User::User(int fd) :
 	_fd(fd),
 	_passwordOK(false),
@@ -9,7 +10,21 @@ User::User(int fd) :
 	_uname(DEFAULT_NAME),
 	_rname(DEFAULT_NAME),
 	_invisible(false),
-	_oper(false)
+	_oper(false),
+	_bot(false)
+{}
+
+// Protected constructor for use in Bot class
+User::User(int fd, string const &botNick) :
+	_fd(fd),
+	_passwordOK(true),
+	_registered(true),
+	_nick(botNick),
+	_uname(botNick),
+	_rname(botNick),
+	_invisible(false),
+	_oper(false),
+	_bot(true)
 {}
 
 User::~User()
@@ -48,6 +63,10 @@ bool	User::IsUsernameDefault() const
 bool	User::IsAway() const
 { return (!_awayMsg.empty()); }
 
+// Check if user is currently not invisible
+bool	User::IsVisible() const
+{ return !_invisible; }
+
 // Set user's nickname. If user can be registered, register
 void	User::SetNick(string const &nick)
 {
@@ -74,6 +93,8 @@ string	User::GetModes() const
 		mode += "i";
 	if (_oper)
 		mode += "o";
+	if (_bot)
+		mode += "B";
 	return mode;
 }
 
