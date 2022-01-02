@@ -24,7 +24,7 @@ public:
 	bool	IsValid() const;
 	bool	IsExecutable() const;
 
-	void	Print() const;	// FOR TESTING ONLY
+	void	Print() const;	// for debugging
 
 	friend class IRC;
 };

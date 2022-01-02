@@ -11,8 +11,6 @@ void	IRC::execMODE(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 		return;
 	}
 
-	cmd.Print();
-
 	string const	&name(cmd._params[0]);
 	string const	&modes = (cmd._params.size() < 2)
 						   ? "" : cmd._params[1];

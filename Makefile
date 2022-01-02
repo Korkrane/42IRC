@@ -1,6 +1,42 @@
 INC_DIR		= .
 
-SRCS		= $(shell find . -type f -name '*.cpp')
+SRCS		=	./main.cpp \
+				./IRC/ManageUsers/ManUser.cpp \
+				./IRC/ExecCmd/PART.cpp \
+				./IRC/ExecCmd/PASS.cpp \
+				./IRC/ExecCmd/WHO.cpp \
+				./IRC/ExecCmd/TIME.cpp \
+				./IRC/ExecCmd/DIE.cpp \
+				./IRC/ExecCmd/KICK.cpp \
+				./IRC/ExecCmd/OPER.cpp \
+				./IRC/ExecCmd/KILL.cpp \
+				./IRC/ExecCmd/NAMES.cpp \
+				./IRC/ExecCmd/TOPIC.cpp \
+				./IRC/ExecCmd/PRIVMSG.cpp \
+				./IRC/ExecCmd/USER.cpp \
+				./IRC/ExecCmd/NICK.cpp \
+				./IRC/ExecCmd/LIST.cpp \
+				./IRC/ExecCmd/PING.cpp \
+				./IRC/ExecCmd/AWAY.cpp \
+				./IRC/ExecCmd/QUIT.cpp \
+				./IRC/ExecCmd/NOTICE.cpp \
+				./IRC/ExecCmd/INVITE.cpp \
+				./IRC/ExecCmd/JOIN.cpp \
+				./IRC/ExecCmd/MODE.cpp \
+				./IRC/ExecCmd/ADMIN.cpp \
+				./IRC/ExecCmd/MOTD.cpp \
+				./IRC/ExecCmd/VERSION.cpp \
+				./IRC/ManageChannels/ManChannel.cpp \
+				./IRC/Command/Command.cpp \
+				./IRC/Utils.cpp \
+				./IRC/ManageCommands/NumericResponses.cpp \
+				./IRC/ManageCommands/ManCmd.cpp \
+				./IRC/Channel/Channel.cpp \
+				./IRC/User/Bot.cpp \
+				./IRC/User/User.cpp \
+				./IRC/IRC.cpp \
+				./network/Client.cpp \
+				./network/Server.cpp
 
 OBJS		= $(SRCS:.cpp=.o)
 
