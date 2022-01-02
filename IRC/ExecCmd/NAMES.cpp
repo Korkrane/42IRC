@@ -2,17 +2,25 @@
 
 void	IRC::execNAMES(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 {
-	string const	&chanName = (cmd._params.empty())
-							  ? "*" : cmd._params[0];
+	std::vector<string>	chanNames;
+	string	name;
+	
+	// If no param, name of channel is *, else take the first splitted string as name
+	if (cmd._params.empty())
+		name = "*";
+	else
+	{
+		::StrSplit(chanNames, cmd._params[0], ",");
+		name = chanNames.front();
+	}
+
 	User	*user(cmd._user);
 	string	resp;
-
-	Channel	*chan(getChannelByName(chanName));
+	Channel	*chan(getChannelByName(name));
 	if (chan)
 	{
 		bool	joined(chan->HasJoined(user));
 		string	names;
-		names.reserve(1024);
 		std::set<User *>::iterator it;
 		for (it = chan->_users.begin(); it != chan->_users.end(); ++it)
 		{
@@ -30,10 +38,10 @@ void	IRC::execNAMES(Command const &cmd, std::vector<t_clientCmd> &responseQueue)
 			resp = getResponseFromCode(
 				user,
 				RPL_NAMREPLY,
-				(string[]){ "= " + chanName, names }
+				(string[]){ "= " + name, names }
 			);
 		}
 	}
-	resp += getResponseFromCode(user, RPL_ENDOFNAMES, (string[]){ chanName });
+	resp += getResponseFromCode(user, RPL_ENDOFNAMES, (string[]){ name });
 	pushToQueue(user->_fd, resp, responseQueue);
 }
